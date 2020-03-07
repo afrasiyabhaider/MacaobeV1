@@ -148,6 +148,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::resource('sells', 'SellController');
 
     Route::get('/sells/pos/get_product_row/{variation_id}/{location_id}', 'SellPosController@getProductRow');
+    Route::get('/sells/pos/get_bulk_product_detail/{variation_id}', 'SellPosController@getBulkProductDetails');
     Route::get('/sells/pos/verifyGiftCard/{variation_id}', 'SellPosController@verifyGiftCard');
     Route::get('/sells/pos/verifyCoupon/{variation_id}', 'SellPosController@verifyCoupon');
     Route::get('/sells/pos/getCustDiscount/{variation_id}', 'SellPosController@getCustDiscount');

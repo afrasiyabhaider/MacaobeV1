@@ -2385,7 +2385,10 @@ class ProductController extends Controller
             $tRef = "";
             DB::beginTransaction();
             for ($i = 0; $i < count($objInputs['name']); $i++) {
-                $deleteNameSeriesId = $objInputs['name_id'][$i];
+                $deleteNameSeriesId = 0;
+                if ($objInputs['name_id'][$i] != 0) {
+                    $deleteNameSeriesId = $objInputs['name_id'][$i];
+                }
                 $product_details = array();
                 $product_details['supplier_id'] = $objInputs['supplier_id'][$i];
                 $product_details['brand_id'] = $objInputs['brand_id'][$i];

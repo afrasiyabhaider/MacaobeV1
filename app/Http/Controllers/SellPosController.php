@@ -41,10 +41,13 @@ use App\Contact;
 use App\CustomerGroup;
 use App\Media;
 use App\Product;
+use App\ProductNameCategory;
 use App\SellingPriceGroup;
+use App\Supplier;
 use App\TaxRate;
 use App\Transaction;
 use App\TransactionSellLine;
+use App\Unit;
 use App\User;
 
 use App\Utils\BusinessUtil;
@@ -55,6 +58,7 @@ use App\Utils\ModuleUtil;
 use App\Utils\NotificationUtil;
 use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
+use App\Variation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -2388,8 +2392,7 @@ class SellPosController extends Controller
         }
     }
     /**
-     * Gives suggetion for product based on category and Where Refference is
-     * null
+     * Gives product for bulkAdd.blade.php
      *
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
@@ -2477,6 +2480,45 @@ class SellPosController extends Controller
             return view('sale_pos.partials.product_list')
                 ->with(compact('products'));
         }
+    }
+
+    /**
+     *  Get Product Details for bulkAdd.blade.php
+     * 
+     */
+    public function getBulkProductDetails($variation_id)
+    {
+        $business_id = request()->session()->get('user.business_id');
+
+        $variation_product = $this->productUtil->getDetailsFromVariation($variation_id, $business_id);
+
+        $data[] = 'null';
+        if ($variation_product != null) {
+            $product = Product::find($variation_product->product_id);
+            $product_name = ProductNameCategory::where('name', $product->name)->first();
+            $product_prices = Variation::find($variation_id);
+            $supplier = Supplier::find($product->supplier_id);
+            $sub_category = Category::find($product->sub_category_id);
+            if ($sub_category) {
+                $category = Category::find($sub_category->parent_id);
+            } else {
+                $sub_category = 'null';
+                $category = 'null';
+            }
+            $data = [
+                'product' => $product,
+                'product_name' => $product_name,
+                'variation' => $variation_product,
+                'product_price' => $product_prices,
+                'supplier' => $supplier,
+                'sub_category' => $sub_category,
+                'category' => $category
+            ];
+        }
+        // dd($data);
+        // $category = Category::find($product->category_id);
+
+        return response()->json($data);
     }
 
     /**
