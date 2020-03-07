@@ -284,4 +284,11 @@
 @section('javascript')
   @php $asset_v = env('APP_VERSION'); @endphp
   <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+  <script>
+    window.onbeforeunload = function() {
+      return "Do you really want to leave this page?";
+      //if we return nothing here (just calling return;) then there will be no pop-up question at all
+      //return;
+    };
+  </script>
 @endsection

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.9
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Mar 06, 2020 at 11:54 AM
--- Server version: 5.7.21
--- PHP Version: 7.3.9
+-- Host: localhost:3306
+-- Generation Time: Mar 02, 2020 at 02:23 AM
+-- Server version: 5.6.47-cll-lve
+-- PHP Version: 7.2.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `posdola`
+-- Database: `posDola`
 --
 
 -- --------------------------------------------------------
@@ -28,9 +28,8 @@ SET time_zone = "+00:00";
 -- Table structure for table `accounts`
 --
 
-DROP TABLE IF EXISTS `accounts`;
-CREATE TABLE IF NOT EXISTS `accounts` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `accounts` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(11) NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `account_number` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -40,8 +39,7 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   `is_closed` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -50,9 +48,8 @@ CREATE TABLE IF NOT EXISTS `accounts` (
 -- Table structure for table `account_transactions`
 --
 
-DROP TABLE IF EXISTS `account_transactions`;
-CREATE TABLE IF NOT EXISTS `account_transactions` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `account_transactions` (
+  `id` int(10) UNSIGNED NOT NULL,
   `account_id` int(11) NOT NULL,
   `type` enum('debit','credit') COLLATE utf8mb4_unicode_ci NOT NULL,
   `sub_type` enum('opening_balance','fund_transfer','deposit') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -66,13 +63,7 @@ CREATE TABLE IF NOT EXISTS `account_transactions` (
   `note` text COLLATE utf8mb4_unicode_ci,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `account_transactions_account_id_index` (`account_id`),
-  KEY `account_transactions_transaction_id_index` (`transaction_id`),
-  KEY `account_transactions_transaction_payment_id_index` (`transaction_payment_id`),
-  KEY `account_transactions_transfer_transaction_id_index` (`transfer_transaction_id`),
-  KEY `account_transactions_created_by_index` (`created_by`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -81,9 +72,8 @@ CREATE TABLE IF NOT EXISTS `account_transactions` (
 -- Table structure for table `activity_log`
 --
 
-DROP TABLE IF EXISTS `activity_log`;
-CREATE TABLE IF NOT EXISTS `activity_log` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `activity_log` (
+  `id` int(10) UNSIGNED NOT NULL,
   `log_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `subject_id` int(11) DEFAULT NULL,
@@ -92,9 +82,7 @@ CREATE TABLE IF NOT EXISTS `activity_log` (
   `causer_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `properties` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `activity_log_log_name_index` (`log_name`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -103,9 +91,8 @@ CREATE TABLE IF NOT EXISTS `activity_log` (
 -- Table structure for table `barcodes`
 --
 
-DROP TABLE IF EXISTS `barcodes`;
-CREATE TABLE IF NOT EXISTS `barcodes` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `barcodes` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci,
   `width` double(8,2) DEFAULT NULL,
@@ -122,10 +109,8 @@ CREATE TABLE IF NOT EXISTS `barcodes` (
   `stickers_in_one_sheet` int(11) DEFAULT NULL,
   `business_id` int(10) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `barcodes_business_id_foreign` (`business_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `barcodes`
@@ -146,9 +131,8 @@ INSERT INTO `barcodes` (`id`, `name`, `description`, `width`, `height`, `paper_w
 -- Table structure for table `bookings`
 --
 
-DROP TABLE IF EXISTS `bookings`;
-CREATE TABLE IF NOT EXISTS `bookings` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `bookings` (
+  `id` int(10) UNSIGNED NOT NULL,
   `contact_id` int(10) UNSIGNED NOT NULL,
   `waiter_id` int(10) UNSIGNED DEFAULT NULL,
   `table_id` int(10) UNSIGNED DEFAULT NULL,
@@ -161,14 +145,7 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   `booking_status` enum('booked','completed','cancelled') COLLATE utf8mb4_unicode_ci NOT NULL,
   `booking_note` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `bookings_contact_id_foreign` (`contact_id`),
-  KEY `bookings_business_id_foreign` (`business_id`),
-  KEY `bookings_created_by_foreign` (`created_by`),
-  KEY `bookings_table_id_index` (`table_id`),
-  KEY `bookings_waiter_id_index` (`waiter_id`),
-  KEY `bookings_location_id_index` (`location_id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -177,20 +154,16 @@ CREATE TABLE IF NOT EXISTS `bookings` (
 -- Table structure for table `brands`
 --
 
-DROP TABLE IF EXISTS `brands`;
-CREATE TABLE IF NOT EXISTS `brands` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `brands` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci,
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `brands_business_id_foreign` (`business_id`),
-  KEY `brands_created_by_foreign` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `brands`
@@ -205,9 +178,8 @@ INSERT INTO `brands` (`id`, `business_id`, `name`, `description`, `created_by`, 
 -- Table structure for table `business`
 --
 
-DROP TABLE IF EXISTS `business`;
-CREATE TABLE IF NOT EXISTS `business` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `business` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `product_serial` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT '1',
   `bulk_serial` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT '1',
@@ -266,12 +238,8 @@ CREATE TABLE IF NOT EXISTS `business` (
   `sms_settings` text COLLATE utf8mb4_unicode_ci,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `business_owner_id_foreign` (`owner_id`),
-  KEY `business_currency_id_foreign` (`currency_id`),
-  KEY `business_default_sales_tax_foreign` (`default_sales_tax`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `business`
@@ -286,9 +254,8 @@ INSERT INTO `business` (`id`, `name`, `product_serial`, `bulk_serial`, `prod_ref
 -- Table structure for table `business_locations`
 --
 
-DROP TABLE IF EXISTS `business_locations`;
-CREATE TABLE IF NOT EXISTS `business_locations` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `business_locations` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `location_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -312,12 +279,8 @@ CREATE TABLE IF NOT EXISTS `business_locations` (
   `custom_field4` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `business_locations_business_id_index` (`business_id`),
-  KEY `business_locations_invoice_scheme_id_foreign` (`invoice_scheme_id`),
-  KEY `business_locations_invoice_layout_id_foreign` (`invoice_layout_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `business_locations`
@@ -337,9 +300,8 @@ INSERT INTO `business_locations` (`id`, `business_id`, `location_id`, `name`, `l
 -- Table structure for table `cash_registers`
 --
 
-DROP TABLE IF EXISTS `cash_registers`;
-CREATE TABLE IF NOT EXISTS `cash_registers` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `cash_registers` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED DEFAULT NULL,
   `status` enum('close','open') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'open',
@@ -349,11 +311,8 @@ CREATE TABLE IF NOT EXISTS `cash_registers` (
   `total_cheques` int(11) NOT NULL DEFAULT '0',
   `closing_note` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `cash_registers_business_id_foreign` (`business_id`),
-  KEY `cash_registers_user_id_foreign` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `cash_registers`
@@ -374,9 +333,8 @@ INSERT INTO `cash_registers` (`id`, `business_id`, `user_id`, `status`, `closed_
 -- Table structure for table `cash_register_transactions`
 --
 
-DROP TABLE IF EXISTS `cash_register_transactions`;
-CREATE TABLE IF NOT EXISTS `cash_register_transactions` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `cash_register_transactions` (
+  `id` int(10) UNSIGNED NOT NULL,
   `cash_register_id` int(10) UNSIGNED NOT NULL,
   `amount` decimal(20,2) NOT NULL DEFAULT '0.00',
   `pay_method` enum('cash','card','cheque','bank_transfer','custom_pay_1','custom_pay_2','custom_pay_3','other') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -384,11 +342,8 @@ CREATE TABLE IF NOT EXISTS `cash_register_transactions` (
   `transaction_type` enum('initial','sell','transfer','refund') COLLATE utf8mb4_unicode_ci NOT NULL,
   `transaction_id` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `cash_register_transactions_cash_register_id_foreign` (`cash_register_id`),
-  KEY `cash_register_transactions_transaction_id_index` (`transaction_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `cash_register_transactions`
@@ -465,9 +420,8 @@ INSERT INTO `cash_register_transactions` (`id`, `cash_register_id`, `amount`, `p
 -- Table structure for table `categories`
 --
 
-DROP TABLE IF EXISTS `categories`;
-CREATE TABLE IF NOT EXISTS `categories` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `categories` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `short_code` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -475,11 +429,8 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `categories_business_id_foreign` (`business_id`),
-  KEY `categories_created_by_foreign` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `categories`
@@ -524,20 +475,16 @@ INSERT INTO `categories` (`id`, `name`, `business_id`, `short_code`, `parent_id`
 -- Table structure for table `colors`
 --
 
-DROP TABLE IF EXISTS `colors`;
-CREATE TABLE IF NOT EXISTS `colors` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `colors` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci,
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `colors_business_id_foreign` (`business_id`),
-  KEY `colors_created_by_foreign` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `colors`
@@ -557,9 +504,8 @@ INSERT INTO `colors` (`id`, `business_id`, `name`, `description`, `created_by`, 
 -- Table structure for table `contacts`
 --
 
-DROP TABLE IF EXISTS `contacts`;
-CREATE TABLE IF NOT EXISTS `contacts` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `contacts` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `type` enum('supplier','customer','both') COLLATE utf8mb4_unicode_ci NOT NULL,
   `supplier_business_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -591,11 +537,8 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   `custom_field4` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `contacts_business_id_foreign` (`business_id`),
-  KEY `contacts_created_by_foreign` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `contacts`
@@ -611,9 +554,8 @@ INSERT INTO `contacts` (`id`, `business_id`, `type`, `supplier_business_name`, `
 -- Table structure for table `coupons`
 --
 
-DROP TABLE IF EXISTS `coupons`;
-CREATE TABLE IF NOT EXISTS `coupons` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `coupons` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `barcode` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `gift_card_id` int(10) UNSIGNED DEFAULT NULL,
@@ -629,14 +571,8 @@ CREATE TABLE IF NOT EXISTS `coupons` (
   `created_by` int(10) UNSIGNED NOT NULL,
   `isUsed` int(11) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `coupons_name_index` (`name`),
-  KEY `coupons_business_id_index` (`business_id`),
-  KEY `coupons_barcode_index` (`barcode`),
-  KEY `coupons_start_date_index` (`start_date`),
-  KEY `coupons_created_by_index` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `coupons`
@@ -658,9 +594,8 @@ INSERT INTO `coupons` (`id`, `name`, `barcode`, `gift_card_id`, `coupon_id`, `bu
 -- Table structure for table `currencies`
 --
 
-DROP TABLE IF EXISTS `currencies`;
-CREATE TABLE IF NOT EXISTS `currencies` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `currencies` (
+  `id` int(10) UNSIGNED NOT NULL,
   `country` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `currency` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `code` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -668,9 +603,8 @@ CREATE TABLE IF NOT EXISTS `currencies` (
   `thousand_separator` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `decimal_separator` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=139 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `currencies`
@@ -822,17 +756,14 @@ INSERT INTO `currencies` (`id`, `country`, `currency`, `code`, `symbol`, `thousa
 -- Table structure for table `customer_groups`
 --
 
-DROP TABLE IF EXISTS `customer_groups`;
-CREATE TABLE IF NOT EXISTS `customer_groups` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `customer_groups` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` double(5,2) NOT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `customer_groups_business_id_foreign` (`business_id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -841,9 +772,8 @@ CREATE TABLE IF NOT EXISTS `customer_groups` (
 -- Table structure for table `discounts`
 --
 
-DROP TABLE IF EXISTS `discounts`;
-CREATE TABLE IF NOT EXISTS `discounts` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `discounts` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `business_id` int(11) NOT NULL,
   `brand_id` int(11) DEFAULT NULL,
@@ -858,13 +788,7 @@ CREATE TABLE IF NOT EXISTS `discounts` (
   `applicable_in_spg` tinyint(1) DEFAULT '0',
   `applicable_in_cg` tinyint(1) DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `discounts_business_id_index` (`business_id`),
-  KEY `discounts_brand_id_index` (`brand_id`),
-  KEY `discounts_category_id_index` (`category_id`),
-  KEY `discounts_location_id_index` (`location_id`),
-  KEY `discounts_priority_index` (`priority`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -873,18 +797,15 @@ CREATE TABLE IF NOT EXISTS `discounts` (
 -- Table structure for table `expense_categories`
 --
 
-DROP TABLE IF EXISTS `expense_categories`;
-CREATE TABLE IF NOT EXISTS `expense_categories` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `expense_categories` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `code` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `expense_categories_business_id_foreign` (`business_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `expense_categories`
@@ -900,9 +821,8 @@ INSERT INTO `expense_categories` (`id`, `name`, `business_id`, `code`, `deleted_
 -- Table structure for table `gift_cards`
 --
 
-DROP TABLE IF EXISTS `gift_cards`;
-CREATE TABLE IF NOT EXISTS `gift_cards` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `gift_cards` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `barcode` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
@@ -921,14 +841,8 @@ CREATE TABLE IF NOT EXISTS `gift_cards` (
   `isActive` enum('active','expired','consumed','inactive','cancell') COLLATE utf8mb4_unicode_ci NOT NULL,
   `isUsed` int(11) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `gift_cards_brand_id_foreign` (`brand_id`),
-  KEY `gift_cards_name_index` (`name`),
-  KEY `gift_cards_business_id_index` (`business_id`),
-  KEY `gift_cards_barcode_index` (`barcode`),
-  KEY `gift_cards_created_by_index` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `gift_cards`
@@ -950,12 +864,9 @@ INSERT INTO `gift_cards` (`id`, `name`, `barcode`, `business_id`, `type`, `appli
 -- Table structure for table `group_sub_taxes`
 --
 
-DROP TABLE IF EXISTS `group_sub_taxes`;
-CREATE TABLE IF NOT EXISTS `group_sub_taxes` (
+CREATE TABLE `group_sub_taxes` (
   `group_tax_id` int(10) UNSIGNED NOT NULL,
-  `tax_id` int(10) UNSIGNED NOT NULL,
-  KEY `group_sub_taxes_group_tax_id_foreign` (`group_tax_id`),
-  KEY `group_sub_taxes_tax_id_foreign` (`tax_id`)
+  `tax_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -964,9 +875,8 @@ CREATE TABLE IF NOT EXISTS `group_sub_taxes` (
 -- Table structure for table `invoice_layouts`
 --
 
-DROP TABLE IF EXISTS `invoice_layouts`;
-CREATE TABLE IF NOT EXISTS `invoice_layouts` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `invoice_layouts` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `header_text` text COLLATE utf8mb4_unicode_ci,
   `invoice_no_prefix` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -1040,10 +950,8 @@ CREATE TABLE IF NOT EXISTS `invoice_layouts` (
   `contact_custom_fields` text COLLATE utf8mb4_unicode_ci,
   `location_custom_fields` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `invoice_layouts_business_id_foreign` (`business_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `invoice_layouts`
@@ -1058,9 +966,8 @@ INSERT INTO `invoice_layouts` (`id`, `name`, `header_text`, `invoice_no_prefix`,
 -- Table structure for table `invoice_schemes`
 --
 
-DROP TABLE IF EXISTS `invoice_schemes`;
-CREATE TABLE IF NOT EXISTS `invoice_schemes` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `invoice_schemes` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `scheme_type` enum('blank','year') COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -1070,10 +977,8 @@ CREATE TABLE IF NOT EXISTS `invoice_schemes` (
   `total_digits` int(11) DEFAULT NULL,
   `is_default` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `invoice_schemes_business_id_foreign` (`business_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `invoice_schemes`
@@ -1088,17 +993,14 @@ INSERT INTO `invoice_schemes` (`id`, `business_id`, `name`, `scheme_type`, `pref
 -- Table structure for table `media`
 --
 
-DROP TABLE IF EXISTS `media`;
-CREATE TABLE IF NOT EXISTS `media` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `media` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(11) NOT NULL,
   `file_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `model_id` int(10) UNSIGNED NOT NULL,
   `model_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `media_model_id_model_type_index` (`model_id`,`model_type`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1107,13 +1009,11 @@ CREATE TABLE IF NOT EXISTS `media` (
 -- Table structure for table `migrations`
 --
 
-DROP TABLE IF EXISTS `migrations`;
-CREATE TABLE IF NOT EXISTS `migrations` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `migrations` (
+  `id` int(10) UNSIGNED NOT NULL,
   `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `batch` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=188 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `batch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `migrations`
@@ -1314,13 +1214,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 -- Table structure for table `model_has_permissions`
 --
 
-DROP TABLE IF EXISTS `model_has_permissions`;
-CREATE TABLE IF NOT EXISTS `model_has_permissions` (
+CREATE TABLE `model_has_permissions` (
   `permission_id` int(10) UNSIGNED NOT NULL,
   `model_id` int(10) UNSIGNED NOT NULL,
-  `model_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
-  KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`)
+  `model_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1329,13 +1226,10 @@ CREATE TABLE IF NOT EXISTS `model_has_permissions` (
 -- Table structure for table `model_has_roles`
 --
 
-DROP TABLE IF EXISTS `model_has_roles`;
-CREATE TABLE IF NOT EXISTS `model_has_roles` (
+CREATE TABLE `model_has_roles` (
   `role_id` int(10) UNSIGNED NOT NULL,
   `model_id` int(10) UNSIGNED NOT NULL,
-  `model_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`role_id`,`model_id`,`model_type`),
-  KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`)
+  `model_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1356,8 +1250,7 @@ INSERT INTO `model_has_roles` (`role_id`, `model_id`, `model_type`) VALUES
 -- Table structure for table `notifications`
 --
 
-DROP TABLE IF EXISTS `notifications`;
-CREATE TABLE IF NOT EXISTS `notifications` (
+CREATE TABLE `notifications` (
   `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `notifiable_id` int(10) UNSIGNED NOT NULL,
@@ -1365,9 +1258,7 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   `data` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `read_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `notifications_notifiable_id_notifiable_type_index` (`notifiable_id`,`notifiable_type`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1376,9 +1267,8 @@ CREATE TABLE IF NOT EXISTS `notifications` (
 -- Table structure for table `notification_templates`
 --
 
-DROP TABLE IF EXISTS `notification_templates`;
-CREATE TABLE IF NOT EXISTS `notification_templates` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `notification_templates` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(11) NOT NULL,
   `template_for` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_body` text COLLATE utf8mb4_unicode_ci,
@@ -1387,9 +1277,8 @@ CREATE TABLE IF NOT EXISTS `notification_templates` (
   `auto_send` tinyint(1) NOT NULL DEFAULT '0',
   `auto_send_sms` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `notification_templates`
@@ -1411,12 +1300,10 @@ INSERT INTO `notification_templates` (`id`, `business_id`, `template_for`, `emai
 -- Table structure for table `password_resets`
 --
 
-DROP TABLE IF EXISTS `password_resets`;
-CREATE TABLE IF NOT EXISTS `password_resets` (
+CREATE TABLE `password_resets` (
   `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `token` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  KEY `password_resets_email_index` (`email`)
+  `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1425,15 +1312,13 @@ CREATE TABLE IF NOT EXISTS `password_resets` (
 -- Table structure for table `permissions`
 --
 
-DROP TABLE IF EXISTS `permissions`;
-CREATE TABLE IF NOT EXISTS `permissions` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `permissions` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `guard_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `permissions`
@@ -1557,9 +1442,8 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 -- Table structure for table `printers`
 --
 
-DROP TABLE IF EXISTS `printers`;
-CREATE TABLE IF NOT EXISTS `printers` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `printers` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
   `connection_type` enum('network','windows','linux') COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -1570,9 +1454,7 @@ CREATE TABLE IF NOT EXISTS `printers` (
   `path` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `printers_business_id_foreign` (`business_id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1581,9 +1463,8 @@ CREATE TABLE IF NOT EXISTS `printers` (
 -- Table structure for table `products`
 --
 
-DROP TABLE IF EXISTS `products`;
-CREATE TABLE IF NOT EXISTS `products` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `products` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `business_location_id` int(10) UNSIGNED DEFAULT NULL,
@@ -1620,18 +1501,8 @@ CREATE TABLE IF NOT EXISTS `products` (
   `created_by` int(10) UNSIGNED NOT NULL,
   `is_inactive` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `products_business_location_id_foreign` (`business_location_id`),
-  KEY `products_brand_id_foreign` (`brand_id`),
-  KEY `products_category_id_foreign` (`category_id`),
-  KEY `products_sub_category_id_foreign` (`sub_category_id`),
-  KEY `products_tax_foreign` (`tax`),
-  KEY `products_name_index` (`name`),
-  KEY `products_business_id_index` (`business_id`),
-  KEY `products_unit_id_index` (`unit_id`),
-  KEY `products_created_by_index` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=293 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `products`
@@ -1648,7 +1519,7 @@ INSERT INTO `products` (`id`, `name`, `business_id`, `business_location_id`, `ty
 (10, 'CELIO', 1, NULL, 'single', 1, NULL, 'fff', 'BCD00002', 1, 1, 6, 10, 2, 6, NULL, 'exclusive', 1, 50, '7436484004', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2019-12-03 02:03:56', '2019-12-03 02:03:56'),
 (11, 'CELIO', 1, NULL, 'single', 1, NULL, 'fff', 'BCD00002', 1, 1, 6, 11, 2, 6, NULL, 'exclusive', 1, 50, '7436484005', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2019-12-03 02:03:56', '2019-12-03 02:03:56'),
 (12, 'carmela', 1, NULL, 'single', 1, NULL, 'BC00019900', 'BCD00003', 1, 1, 4, 5, 2, 6, NULL, 'exclusive', 1, 50, '74364840002', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2019-12-03 09:30:12', '2019-12-03 09:30:12'),
-(13, 'Product', 1, NULL, 'single', 1, NULL, NULL, NULL, 1, NULL, NULL, NULL, 13, NULL, NULL, 'exclusive', 1, 1, '5DB82F92', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 2, 0, '2019-12-04 03:37:37', '2019-12-04 03:37:37'),
+(13, 'Product', 1, NULL, 'single', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'exclusive', 1, 1, '5DB82F92', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 2, 0, '2019-12-04 03:37:37', '2019-12-04 03:37:37'),
 (14, 'Product', 1, NULL, 'single', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'exclusive', 1, 1, 'B8379E7D', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 2, 0, '2019-12-04 03:38:27', '2019-12-04 03:38:27'),
 (15, 'Product', 1, NULL, 'single', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'exclusive', 1, 1, 'C7233F38', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2019-12-04 03:39:14', '2019-12-04 03:39:14'),
 (16, 'Product', 1, NULL, 'single', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'exclusive', 1, 1, '67EAC4A5', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 2, 0, '2019-12-04 03:40:14', '2019-12-04 03:40:14'),
@@ -1872,21 +1743,16 @@ INSERT INTO `products` (`id`, `name`, `business_id`, `business_location_id`, `ty
 -- Table structure for table `product_name_categories`
 --
 
-DROP TABLE IF EXISTS `product_name_categories`;
-CREATE TABLE IF NOT EXISTS `product_name_categories` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `product_name_categories` (
+  `id` int(10) UNSIGNED NOT NULL,
   `row_no` int(11) NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `product_name_categories_row_no_unique` (`row_no`),
-  KEY `product_name_categories_business_id_foreign` (`business_id`),
-  KEY `product_name_categories_created_by_foreign` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=5604 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `product_name_categories`
@@ -7484,9 +7350,8 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 -- Table structure for table `product_racks`
 --
 
-DROP TABLE IF EXISTS `product_racks`;
-CREATE TABLE IF NOT EXISTS `product_racks` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `product_racks` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `location_id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
@@ -7494,8 +7359,7 @@ CREATE TABLE IF NOT EXISTS `product_racks` (
   `row` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `position` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -7504,19 +7368,15 @@ CREATE TABLE IF NOT EXISTS `product_racks` (
 -- Table structure for table `product_variations`
 --
 
-DROP TABLE IF EXISTS `product_variations`;
-CREATE TABLE IF NOT EXISTS `product_variations` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `product_variations` (
+  `id` int(10) UNSIGNED NOT NULL,
   `variation_template_id` int(11) DEFAULT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `is_dummy` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `product_variations_name_index` (`name`),
-  KEY `product_variations_product_id_index` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=270 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `product_variations`
@@ -7756,9 +7616,8 @@ INSERT INTO `product_variations` (`id`, `variation_template_id`, `name`, `produc
 -- Table structure for table `purchase_lines`
 --
 
-DROP TABLE IF EXISTS `purchase_lines`;
-CREATE TABLE IF NOT EXISTS `purchase_lines` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `purchase_lines` (
+  `id` int(10) UNSIGNED NOT NULL,
   `transaction_id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `variation_id` int(10) UNSIGNED NOT NULL,
@@ -7777,14 +7636,8 @@ CREATE TABLE IF NOT EXISTS `purchase_lines` (
   `lot_number` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `sub_unit_id` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `purchase_lines_transaction_id_foreign` (`transaction_id`),
-  KEY `purchase_lines_product_id_foreign` (`product_id`),
-  KEY `purchase_lines_variation_id_foreign` (`variation_id`),
-  KEY `purchase_lines_tax_id_foreign` (`tax_id`),
-  KEY `purchase_lines_sub_unit_id_index` (`sub_unit_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=249 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `purchase_lines`
@@ -8023,16 +7876,14 @@ INSERT INTO `purchase_lines` (`id`, `transaction_id`, `product_id`, `variation_i
 -- Table structure for table `reference_counts`
 --
 
-DROP TABLE IF EXISTS `reference_counts`;
-CREATE TABLE IF NOT EXISTS `reference_counts` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `reference_counts` (
+  `id` int(10) UNSIGNED NOT NULL,
   `ref_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `ref_count` int(11) NOT NULL,
   `business_id` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `reference_counts`
@@ -8052,11 +7903,9 @@ INSERT INTO `reference_counts` (`id`, `ref_type`, `ref_count`, `business_id`, `c
 -- Table structure for table `res_product_modifier_sets`
 --
 
-DROP TABLE IF EXISTS `res_product_modifier_sets`;
-CREATE TABLE IF NOT EXISTS `res_product_modifier_sets` (
+CREATE TABLE `res_product_modifier_sets` (
   `modifier_set_id` int(10) UNSIGNED NOT NULL,
-  `product_id` int(10) UNSIGNED NOT NULL COMMENT 'Table use to store the modifier sets applicable for a product',
-  KEY `res_product_modifier_sets_modifier_set_id_foreign` (`modifier_set_id`)
+  `product_id` int(10) UNSIGNED NOT NULL COMMENT 'Table use to store the modifier sets applicable for a product'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -8065,9 +7914,8 @@ CREATE TABLE IF NOT EXISTS `res_product_modifier_sets` (
 -- Table structure for table `res_tables`
 --
 
-DROP TABLE IF EXISTS `res_tables`;
-CREATE TABLE IF NOT EXISTS `res_tables` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `res_tables` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `location_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -8075,9 +7923,7 @@ CREATE TABLE IF NOT EXISTS `res_tables` (
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `res_tables_business_id_foreign` (`business_id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -8086,19 +7932,16 @@ CREATE TABLE IF NOT EXISTS `res_tables` (
 -- Table structure for table `roles`
 --
 
-DROP TABLE IF EXISTS `roles`;
-CREATE TABLE IF NOT EXISTS `roles` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `roles` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `guard_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `is_default` tinyint(1) NOT NULL DEFAULT '0',
   `is_service_staff` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `roles_business_id_foreign` (`business_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `roles`
@@ -8116,12 +7959,9 @@ INSERT INTO `roles` (`id`, `name`, `guard_name`, `business_id`, `is_default`, `i
 -- Table structure for table `role_has_permissions`
 --
 
-DROP TABLE IF EXISTS `role_has_permissions`;
-CREATE TABLE IF NOT EXISTS `role_has_permissions` (
+CREATE TABLE `role_has_permissions` (
   `permission_id` int(10) UNSIGNED NOT NULL,
-  `role_id` int(10) UNSIGNED NOT NULL,
-  PRIMARY KEY (`permission_id`,`role_id`),
-  KEY `role_has_permissions_role_id_foreign` (`role_id`)
+  `role_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -8291,17 +8131,14 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 -- Table structure for table `selling_price_groups`
 --
 
-DROP TABLE IF EXISTS `selling_price_groups`;
-CREATE TABLE IF NOT EXISTS `selling_price_groups` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `selling_price_groups` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci,
   `business_id` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `selling_price_groups_business_id_foreign` (`business_id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -8310,15 +8147,13 @@ CREATE TABLE IF NOT EXISTS `selling_price_groups` (
 -- Table structure for table `sessions`
 --
 
-DROP TABLE IF EXISTS `sessions`;
-CREATE TABLE IF NOT EXISTS `sessions` (
+CREATE TABLE `sessions` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` int(10) UNSIGNED DEFAULT NULL,
   `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `user_agent` text COLLATE utf8mb4_unicode_ci,
   `payload` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_activity` int(11) NOT NULL,
-  UNIQUE KEY `sessions_id_unique` (`id`)
+  `last_activity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -8327,9 +8162,8 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 -- Table structure for table `sizes`
 --
 
-DROP TABLE IF EXISTS `sizes`;
-CREATE TABLE IF NOT EXISTS `sizes` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `sizes` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `short_code` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -8337,11 +8171,8 @@ CREATE TABLE IF NOT EXISTS `sizes` (
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `sizes_business_id_foreign` (`business_id`),
-  KEY `sizes_created_by_foreign` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `sizes`
@@ -8370,8 +8201,7 @@ INSERT INTO `sizes` (`id`, `name`, `business_id`, `short_code`, `parent_id`, `cr
 -- Table structure for table `stock_adjustments_temp`
 --
 
-DROP TABLE IF EXISTS `stock_adjustments_temp`;
-CREATE TABLE IF NOT EXISTS `stock_adjustments_temp` (
+CREATE TABLE `stock_adjustments_temp` (
   `id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -8381,9 +8211,8 @@ CREATE TABLE IF NOT EXISTS `stock_adjustments_temp` (
 -- Table structure for table `stock_adjustment_lines`
 --
 
-DROP TABLE IF EXISTS `stock_adjustment_lines`;
-CREATE TABLE IF NOT EXISTS `stock_adjustment_lines` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `stock_adjustment_lines` (
+  `id` int(10) UNSIGNED NOT NULL,
   `transaction_id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `variation_id` int(10) UNSIGNED NOT NULL,
@@ -8392,11 +8221,7 @@ CREATE TABLE IF NOT EXISTS `stock_adjustment_lines` (
   `removed_purchase_line` int(11) DEFAULT NULL,
   `lot_no_line_id` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `stock_adjustment_lines_product_id_foreign` (`product_id`),
-  KEY `stock_adjustment_lines_variation_id_foreign` (`variation_id`),
-  KEY `stock_adjustment_lines_transaction_id_index` (`transaction_id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -8405,21 +8230,16 @@ CREATE TABLE IF NOT EXISTS `stock_adjustment_lines` (
 -- Table structure for table `suppliers`
 --
 
-DROP TABLE IF EXISTS `suppliers`;
-CREATE TABLE IF NOT EXISTS `suppliers` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `suppliers` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `description` text COLLATE utf8mb4_unicode_ci,
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`),
-  KEY `suppliers_business_id_foreign` (`business_id`),
-  KEY `suppliers_created_by_foreign` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `suppliers`
@@ -8432,9 +8252,7 @@ INSERT INTO `suppliers` (`id`, `business_id`, `name`, `description`, `created_by
 (6, 1, 'Daad', 'DA', 1, NULL, '2020-02-17 13:43:49', '2020-02-17 13:43:49'),
 (7, 1, 'GIORGIA', 'GG', 1, NULL, '2020-02-23 00:56:31', '2020-02-23 00:56:31'),
 (10, 1, 'BELLE COPIN', 'BC', 1, NULL, '2020-02-25 14:07:33', '2020-02-25 14:07:33'),
-(11, 1, 'IBAGS', 'BG', 1, NULL, '2020-02-26 18:41:47', '2020-02-26 18:41:47'),
-(12, 1, 'Gucci', 'GC', 1, NULL, '2020-03-02 16:01:50', '2020-03-02 16:01:50'),
-(13, 1, 'Test', 'Ts-', 1, NULL, '2020-03-02 16:05:03', '2020-03-02 16:05:03');
+(11, 1, 'IBAGS', 'BG', 1, NULL, '2020-02-26 18:41:47', '2020-02-26 18:41:47');
 
 -- --------------------------------------------------------
 
@@ -8442,13 +8260,11 @@ INSERT INTO `suppliers` (`id`, `business_id`, `name`, `description`, `created_by
 -- Table structure for table `system`
 --
 
-DROP TABLE IF EXISTS `system`;
-CREATE TABLE IF NOT EXISTS `system` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `system` (
+  `id` int(10) UNSIGNED NOT NULL,
   `key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` text COLLATE utf8mb4_unicode_ci,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `value` text COLLATE utf8mb4_unicode_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `system`
@@ -8464,9 +8280,8 @@ INSERT INTO `system` (`id`, `key`, `value`) VALUES
 -- Table structure for table `tax_rates`
 --
 
-DROP TABLE IF EXISTS `tax_rates`;
-CREATE TABLE IF NOT EXISTS `tax_rates` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tax_rates` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` double(8,2) NOT NULL,
@@ -8474,11 +8289,8 @@ CREATE TABLE IF NOT EXISTS `tax_rates` (
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `tax_rates_business_id_foreign` (`business_id`),
-  KEY `tax_rates_created_by_foreign` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `tax_rates`
@@ -8493,9 +8305,8 @@ INSERT INTO `tax_rates` (`id`, `business_id`, `name`, `amount`, `is_tax_group`, 
 -- Table structure for table `transactions`
 --
 
-DROP TABLE IF EXISTS `transactions`;
-CREATE TABLE IF NOT EXISTS `transactions` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `transactions` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `location_id` int(10) UNSIGNED NOT NULL,
   `res_table_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'fields to restaurant module',
@@ -8547,20 +8358,8 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   `pay_term_type` enum('days','months') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `selling_price_group_id` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `transactions_tax_id_foreign` (`tax_id`),
-  KEY `transactions_business_id_index` (`business_id`),
-  KEY `transactions_type_index` (`type`),
-  KEY `transactions_contact_id_index` (`contact_id`),
-  KEY `transactions_transaction_date_index` (`transaction_date`),
-  KEY `transactions_created_by_index` (`created_by`),
-  KEY `transactions_location_id_index` (`location_id`),
-  KEY `transactions_expense_for_foreign` (`expense_for`),
-  KEY `transactions_expense_category_id_index` (`expense_category_id`),
-  KEY `transactions_sub_type_index` (`sub_type`),
-  KEY `transactions_return_parent_id_index` (`return_parent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=290 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `transactions`
@@ -8830,9 +8629,8 @@ INSERT INTO `transactions` (`id`, `business_id`, `location_id`, `res_table_id`, 
 -- Table structure for table `transaction_payments`
 --
 
-DROP TABLE IF EXISTS `transaction_payments`;
-CREATE TABLE IF NOT EXISTS `transaction_payments` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `transaction_payments` (
+  `id` int(10) UNSIGNED NOT NULL,
   `transaction_id` int(11) UNSIGNED DEFAULT NULL,
   `business_id` int(11) DEFAULT NULL,
   `is_return` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Used during sales to return the change',
@@ -8863,12 +8661,8 @@ CREATE TABLE IF NOT EXISTS `transaction_payments` (
   `payment_ref_no` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `account_id` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `transaction_payments_transaction_id_foreign` (`transaction_id`),
-  KEY `transaction_payments_created_by_index` (`created_by`),
-  KEY `transaction_payments_parent_id_index` (`parent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `transaction_payments`
@@ -8915,9 +8709,8 @@ INSERT INTO `transaction_payments` (`id`, `transaction_id`, `business_id`, `is_r
 -- Table structure for table `transaction_sell_lines`
 --
 
-DROP TABLE IF EXISTS `transaction_sell_lines`;
-CREATE TABLE IF NOT EXISTS `transaction_sell_lines` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `transaction_sell_lines` (
+  `id` int(10) UNSIGNED NOT NULL,
   `transaction_id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `variation_id` int(10) UNSIGNED NOT NULL,
@@ -8939,13 +8732,8 @@ CREATE TABLE IF NOT EXISTS `transaction_sell_lines` (
   `parent_sell_line_id` int(11) DEFAULT NULL,
   `sub_unit_id` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `transaction_sell_lines_transaction_id_foreign` (`transaction_id`),
-  KEY `transaction_sell_lines_product_id_foreign` (`product_id`),
-  KEY `transaction_sell_lines_variation_id_foreign` (`variation_id`),
-  KEY `transaction_sell_lines_tax_id_foreign` (`tax_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `transaction_sell_lines`
@@ -8994,21 +8782,16 @@ INSERT INTO `transaction_sell_lines` (`id`, `transaction_id`, `product_id`, `var
 -- Table structure for table `transaction_sell_lines_purchase_lines`
 --
 
-DROP TABLE IF EXISTS `transaction_sell_lines_purchase_lines`;
-CREATE TABLE IF NOT EXISTS `transaction_sell_lines_purchase_lines` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `transaction_sell_lines_purchase_lines` (
+  `id` int(10) UNSIGNED NOT NULL,
   `sell_line_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'id from transaction_sell_lines',
   `stock_adjustment_line_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'id from stock_adjustment_lines',
   `purchase_line_id` int(10) UNSIGNED NOT NULL COMMENT 'id from purchase_lines',
   `quantity` decimal(20,4) NOT NULL,
   `qty_returned` decimal(20,4) NOT NULL DEFAULT '0.0000',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `sell_line_id` (`sell_line_id`),
-  KEY `stock_adjustment_line_id` (`stock_adjustment_line_id`),
-  KEY `purchase_line_id` (`purchase_line_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `transaction_sell_lines_purchase_lines`
@@ -9053,9 +8836,8 @@ INSERT INTO `transaction_sell_lines_purchase_lines` (`id`, `sell_line_id`, `stoc
 -- Table structure for table `units`
 --
 
-DROP TABLE IF EXISTS `units`;
-CREATE TABLE IF NOT EXISTS `units` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `units` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `actual_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `short_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -9065,12 +8847,8 @@ CREATE TABLE IF NOT EXISTS `units` (
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `units_business_id_foreign` (`business_id`),
-  KEY `units_created_by_foreign` (`created_by`),
-  KEY `units_base_unit_id_index` (`base_unit_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `units`
@@ -9085,9 +8863,8 @@ INSERT INTO `units` (`id`, `business_id`, `actual_name`, `short_name`, `allow_de
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `users` (
+  `id` int(10) UNSIGNED NOT NULL,
   `business_id` int(10) UNSIGNED DEFAULT NULL,
   `business_location_id` int(10) UNSIGNED NOT NULL,
   `surname` char(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -9106,11 +8883,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `selected_contacts` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `users_username_unique` (`username`),
-  KEY `users_business_id_foreign` (`business_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
@@ -9131,12 +8905,10 @@ INSERT INTO `users` (`id`, `business_id`, `business_location_id`, `surname`, `fi
 -- Table structure for table `user_contact_access`
 --
 
-DROP TABLE IF EXISTS `user_contact_access`;
-CREATE TABLE IF NOT EXISTS `user_contact_access` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `user_contact_access` (
+  `id` int(10) UNSIGNED NOT NULL,
   `user_id` int(11) NOT NULL,
-  `contact_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
+  `contact_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -9145,9 +8917,8 @@ CREATE TABLE IF NOT EXISTS `user_contact_access` (
 -- Table structure for table `variations`
 --
 
-DROP TABLE IF EXISTS `variations`;
-CREATE TABLE IF NOT EXISTS `variations` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `variations` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `sub_sku` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -9160,14 +8931,8 @@ CREATE TABLE IF NOT EXISTS `variations` (
   `sell_price_inc_tax` decimal(20,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `variations_product_id_foreign` (`product_id`),
-  KEY `variations_product_variation_id_foreign` (`product_variation_id`),
-  KEY `variations_name_index` (`name`),
-  KEY `variations_sub_sku_index` (`sub_sku`),
-  KEY `variations_variation_value_id_index` (`variation_value_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=270 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `variations`
@@ -9407,17 +9172,13 @@ INSERT INTO `variations` (`id`, `name`, `product_id`, `sub_sku`, `product_variat
 -- Table structure for table `variation_group_prices`
 --
 
-DROP TABLE IF EXISTS `variation_group_prices`;
-CREATE TABLE IF NOT EXISTS `variation_group_prices` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `variation_group_prices` (
+  `id` int(10) UNSIGNED NOT NULL,
   `variation_id` int(10) UNSIGNED NOT NULL,
   `price_group_id` int(10) UNSIGNED NOT NULL,
   `price_inc_tax` decimal(20,2) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `variation_group_prices_variation_id_foreign` (`variation_id`),
-  KEY `variation_group_prices_price_group_id_foreign` (`price_group_id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -9426,22 +9187,16 @@ CREATE TABLE IF NOT EXISTS `variation_group_prices` (
 -- Table structure for table `variation_location_details`
 --
 
-DROP TABLE IF EXISTS `variation_location_details`;
-CREATE TABLE IF NOT EXISTS `variation_location_details` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `variation_location_details` (
+  `id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `product_variation_id` int(10) UNSIGNED NOT NULL COMMENT 'id from product_variations table',
   `variation_id` int(10) UNSIGNED NOT NULL,
   `location_id` int(10) UNSIGNED NOT NULL,
   `qty_available` decimal(20,4) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `variation_location_details_location_id_foreign` (`location_id`),
-  KEY `variation_location_details_product_id_index` (`product_id`),
-  KEY `variation_location_details_product_variation_id_index` (`product_variation_id`),
-  KEY `variation_location_details_variation_id_index` (`variation_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=268 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `variation_location_details`
@@ -9693,15 +9448,12 @@ INSERT INTO `variation_location_details` (`id`, `product_id`, `product_variation
 -- Table structure for table `variation_templates`
 --
 
-DROP TABLE IF EXISTS `variation_templates`;
-CREATE TABLE IF NOT EXISTS `variation_templates` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `variation_templates` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `variation_templates_business_id_foreign` (`business_id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -9710,17 +9462,822 @@ CREATE TABLE IF NOT EXISTS `variation_templates` (
 -- Table structure for table `variation_value_templates`
 --
 
-DROP TABLE IF EXISTS `variation_value_templates`;
-CREATE TABLE IF NOT EXISTS `variation_value_templates` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `variation_value_templates` (
+  `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `variation_template_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `variation_value_templates_name_index` (`name`),
-  KEY `variation_value_templates_variation_template_id_index` (`variation_template_id`)
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `accounts`
+--
+ALTER TABLE `accounts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `account_transactions`
+--
+ALTER TABLE `account_transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `account_transactions_account_id_index` (`account_id`),
+  ADD KEY `account_transactions_transaction_id_index` (`transaction_id`),
+  ADD KEY `account_transactions_transaction_payment_id_index` (`transaction_payment_id`),
+  ADD KEY `account_transactions_transfer_transaction_id_index` (`transfer_transaction_id`),
+  ADD KEY `account_transactions_created_by_index` (`created_by`);
+
+--
+-- Indexes for table `activity_log`
+--
+ALTER TABLE `activity_log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `activity_log_log_name_index` (`log_name`);
+
+--
+-- Indexes for table `barcodes`
+--
+ALTER TABLE `barcodes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `barcodes_business_id_foreign` (`business_id`);
+
+--
+-- Indexes for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `bookings_contact_id_foreign` (`contact_id`),
+  ADD KEY `bookings_business_id_foreign` (`business_id`),
+  ADD KEY `bookings_created_by_foreign` (`created_by`),
+  ADD KEY `bookings_table_id_index` (`table_id`),
+  ADD KEY `bookings_waiter_id_index` (`waiter_id`),
+  ADD KEY `bookings_location_id_index` (`location_id`);
+
+--
+-- Indexes for table `brands`
+--
+ALTER TABLE `brands`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `brands_business_id_foreign` (`business_id`),
+  ADD KEY `brands_created_by_foreign` (`created_by`);
+
+--
+-- Indexes for table `business`
+--
+ALTER TABLE `business`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `business_owner_id_foreign` (`owner_id`),
+  ADD KEY `business_currency_id_foreign` (`currency_id`),
+  ADD KEY `business_default_sales_tax_foreign` (`default_sales_tax`);
+
+--
+-- Indexes for table `business_locations`
+--
+ALTER TABLE `business_locations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `business_locations_business_id_index` (`business_id`),
+  ADD KEY `business_locations_invoice_scheme_id_foreign` (`invoice_scheme_id`),
+  ADD KEY `business_locations_invoice_layout_id_foreign` (`invoice_layout_id`);
+
+--
+-- Indexes for table `cash_registers`
+--
+ALTER TABLE `cash_registers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cash_registers_business_id_foreign` (`business_id`),
+  ADD KEY `cash_registers_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `cash_register_transactions`
+--
+ALTER TABLE `cash_register_transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cash_register_transactions_cash_register_id_foreign` (`cash_register_id`),
+  ADD KEY `cash_register_transactions_transaction_id_index` (`transaction_id`);
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `categories_business_id_foreign` (`business_id`),
+  ADD KEY `categories_created_by_foreign` (`created_by`);
+
+--
+-- Indexes for table `colors`
+--
+ALTER TABLE `colors`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `colors_business_id_foreign` (`business_id`),
+  ADD KEY `colors_created_by_foreign` (`created_by`);
+
+--
+-- Indexes for table `contacts`
+--
+ALTER TABLE `contacts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `contacts_business_id_foreign` (`business_id`),
+  ADD KEY `contacts_created_by_foreign` (`created_by`);
+
+--
+-- Indexes for table `coupons`
+--
+ALTER TABLE `coupons`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `coupons_name_index` (`name`),
+  ADD KEY `coupons_business_id_index` (`business_id`),
+  ADD KEY `coupons_barcode_index` (`barcode`),
+  ADD KEY `coupons_start_date_index` (`start_date`),
+  ADD KEY `coupons_created_by_index` (`created_by`);
+
+--
+-- Indexes for table `currencies`
+--
+ALTER TABLE `currencies`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customer_groups`
+--
+ALTER TABLE `customer_groups`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `customer_groups_business_id_foreign` (`business_id`);
+
+--
+-- Indexes for table `discounts`
+--
+ALTER TABLE `discounts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `discounts_business_id_index` (`business_id`),
+  ADD KEY `discounts_brand_id_index` (`brand_id`),
+  ADD KEY `discounts_category_id_index` (`category_id`),
+  ADD KEY `discounts_location_id_index` (`location_id`),
+  ADD KEY `discounts_priority_index` (`priority`);
+
+--
+-- Indexes for table `expense_categories`
+--
+ALTER TABLE `expense_categories`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `expense_categories_business_id_foreign` (`business_id`);
+
+--
+-- Indexes for table `gift_cards`
+--
+ALTER TABLE `gift_cards`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `gift_cards_brand_id_foreign` (`brand_id`),
+  ADD KEY `gift_cards_name_index` (`name`),
+  ADD KEY `gift_cards_business_id_index` (`business_id`),
+  ADD KEY `gift_cards_barcode_index` (`barcode`),
+  ADD KEY `gift_cards_created_by_index` (`created_by`);
+
+--
+-- Indexes for table `group_sub_taxes`
+--
+ALTER TABLE `group_sub_taxes`
+  ADD KEY `group_sub_taxes_group_tax_id_foreign` (`group_tax_id`),
+  ADD KEY `group_sub_taxes_tax_id_foreign` (`tax_id`);
+
+--
+-- Indexes for table `invoice_layouts`
+--
+ALTER TABLE `invoice_layouts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `invoice_layouts_business_id_foreign` (`business_id`);
+
+--
+-- Indexes for table `invoice_schemes`
+--
+ALTER TABLE `invoice_schemes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `invoice_schemes_business_id_foreign` (`business_id`);
+
+--
+-- Indexes for table `media`
+--
+ALTER TABLE `media`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `media_model_id_model_type_index` (`model_id`,`model_type`);
+
+--
+-- Indexes for table `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `model_has_permissions`
+--
+ALTER TABLE `model_has_permissions`
+  ADD PRIMARY KEY (`permission_id`,`model_id`,`model_type`),
+  ADD KEY `model_has_permissions_model_id_model_type_index` (`model_id`,`model_type`);
+
+--
+-- Indexes for table `model_has_roles`
+--
+ALTER TABLE `model_has_roles`
+  ADD PRIMARY KEY (`role_id`,`model_id`,`model_type`),
+  ADD KEY `model_has_roles_model_id_model_type_index` (`model_id`,`model_type`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `notifications_notifiable_id_notifiable_type_index` (`notifiable_id`,`notifiable_type`);
+
+--
+-- Indexes for table `notification_templates`
+--
+ALTER TABLE `notification_templates`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD KEY `password_resets_email_index` (`email`);
+
+--
+-- Indexes for table `permissions`
+--
+ALTER TABLE `permissions`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `printers`
+--
+ALTER TABLE `printers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `printers_business_id_foreign` (`business_id`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `products_business_location_id_foreign` (`business_location_id`),
+  ADD KEY `products_brand_id_foreign` (`brand_id`),
+  ADD KEY `products_category_id_foreign` (`category_id`),
+  ADD KEY `products_sub_category_id_foreign` (`sub_category_id`),
+  ADD KEY `products_tax_foreign` (`tax`),
+  ADD KEY `products_name_index` (`name`),
+  ADD KEY `products_business_id_index` (`business_id`),
+  ADD KEY `products_unit_id_index` (`unit_id`),
+  ADD KEY `products_created_by_index` (`created_by`);
+
+--
+-- Indexes for table `product_name_categories`
+--
+ALTER TABLE `product_name_categories`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `product_name_categories_row_no_unique` (`row_no`),
+  ADD KEY `product_name_categories_business_id_foreign` (`business_id`),
+  ADD KEY `product_name_categories_created_by_foreign` (`created_by`);
+
+--
+-- Indexes for table `product_racks`
+--
+ALTER TABLE `product_racks`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `product_variations`
+--
+ALTER TABLE `product_variations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_variations_name_index` (`name`),
+  ADD KEY `product_variations_product_id_index` (`product_id`);
+
+--
+-- Indexes for table `purchase_lines`
+--
+ALTER TABLE `purchase_lines`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `purchase_lines_transaction_id_foreign` (`transaction_id`),
+  ADD KEY `purchase_lines_product_id_foreign` (`product_id`),
+  ADD KEY `purchase_lines_variation_id_foreign` (`variation_id`),
+  ADD KEY `purchase_lines_tax_id_foreign` (`tax_id`),
+  ADD KEY `purchase_lines_sub_unit_id_index` (`sub_unit_id`);
+
+--
+-- Indexes for table `reference_counts`
+--
+ALTER TABLE `reference_counts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `res_product_modifier_sets`
+--
+ALTER TABLE `res_product_modifier_sets`
+  ADD KEY `res_product_modifier_sets_modifier_set_id_foreign` (`modifier_set_id`);
+
+--
+-- Indexes for table `res_tables`
+--
+ALTER TABLE `res_tables`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `res_tables_business_id_foreign` (`business_id`);
+
+--
+-- Indexes for table `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `roles_business_id_foreign` (`business_id`);
+
+--
+-- Indexes for table `role_has_permissions`
+--
+ALTER TABLE `role_has_permissions`
+  ADD PRIMARY KEY (`permission_id`,`role_id`),
+  ADD KEY `role_has_permissions_role_id_foreign` (`role_id`);
+
+--
+-- Indexes for table `selling_price_groups`
+--
+ALTER TABLE `selling_price_groups`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `selling_price_groups_business_id_foreign` (`business_id`);
+
+--
+-- Indexes for table `sessions`
+--
+ALTER TABLE `sessions`
+  ADD UNIQUE KEY `sessions_id_unique` (`id`);
+
+--
+-- Indexes for table `sizes`
+--
+ALTER TABLE `sizes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sizes_business_id_foreign` (`business_id`),
+  ADD KEY `sizes_created_by_foreign` (`created_by`);
+
+--
+-- Indexes for table `stock_adjustment_lines`
+--
+ALTER TABLE `stock_adjustment_lines`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `stock_adjustment_lines_product_id_foreign` (`product_id`),
+  ADD KEY `stock_adjustment_lines_variation_id_foreign` (`variation_id`),
+  ADD KEY `stock_adjustment_lines_transaction_id_index` (`transaction_id`);
+
+--
+-- Indexes for table `suppliers`
+--
+ALTER TABLE `suppliers`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `suppliers_business_id_foreign` (`business_id`),
+  ADD KEY `suppliers_created_by_foreign` (`created_by`);
+
+--
+-- Indexes for table `system`
+--
+ALTER TABLE `system`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tax_rates`
+--
+ALTER TABLE `tax_rates`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `tax_rates_business_id_foreign` (`business_id`),
+  ADD KEY `tax_rates_created_by_foreign` (`created_by`);
+
+--
+-- Indexes for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `transactions_tax_id_foreign` (`tax_id`),
+  ADD KEY `transactions_business_id_index` (`business_id`),
+  ADD KEY `transactions_type_index` (`type`),
+  ADD KEY `transactions_contact_id_index` (`contact_id`),
+  ADD KEY `transactions_transaction_date_index` (`transaction_date`),
+  ADD KEY `transactions_created_by_index` (`created_by`),
+  ADD KEY `transactions_location_id_index` (`location_id`),
+  ADD KEY `transactions_expense_for_foreign` (`expense_for`),
+  ADD KEY `transactions_expense_category_id_index` (`expense_category_id`),
+  ADD KEY `transactions_sub_type_index` (`sub_type`),
+  ADD KEY `transactions_return_parent_id_index` (`return_parent_id`);
+
+--
+-- Indexes for table `transaction_payments`
+--
+ALTER TABLE `transaction_payments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `transaction_payments_transaction_id_foreign` (`transaction_id`),
+  ADD KEY `transaction_payments_created_by_index` (`created_by`),
+  ADD KEY `transaction_payments_parent_id_index` (`parent_id`);
+
+--
+-- Indexes for table `transaction_sell_lines`
+--
+ALTER TABLE `transaction_sell_lines`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `transaction_sell_lines_transaction_id_foreign` (`transaction_id`),
+  ADD KEY `transaction_sell_lines_product_id_foreign` (`product_id`),
+  ADD KEY `transaction_sell_lines_variation_id_foreign` (`variation_id`),
+  ADD KEY `transaction_sell_lines_tax_id_foreign` (`tax_id`);
+
+--
+-- Indexes for table `transaction_sell_lines_purchase_lines`
+--
+ALTER TABLE `transaction_sell_lines_purchase_lines`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sell_line_id` (`sell_line_id`),
+  ADD KEY `stock_adjustment_line_id` (`stock_adjustment_line_id`),
+  ADD KEY `purchase_line_id` (`purchase_line_id`);
+
+--
+-- Indexes for table `units`
+--
+ALTER TABLE `units`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `units_business_id_foreign` (`business_id`),
+  ADD KEY `units_created_by_foreign` (`created_by`),
+  ADD KEY `units_base_unit_id_index` (`base_unit_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_username_unique` (`username`),
+  ADD KEY `users_business_id_foreign` (`business_id`);
+
+--
+-- Indexes for table `user_contact_access`
+--
+ALTER TABLE `user_contact_access`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `variations`
+--
+ALTER TABLE `variations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `variations_product_id_foreign` (`product_id`),
+  ADD KEY `variations_product_variation_id_foreign` (`product_variation_id`),
+  ADD KEY `variations_name_index` (`name`),
+  ADD KEY `variations_sub_sku_index` (`sub_sku`),
+  ADD KEY `variations_variation_value_id_index` (`variation_value_id`);
+
+--
+-- Indexes for table `variation_group_prices`
+--
+ALTER TABLE `variation_group_prices`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `variation_group_prices_variation_id_foreign` (`variation_id`),
+  ADD KEY `variation_group_prices_price_group_id_foreign` (`price_group_id`);
+
+--
+-- Indexes for table `variation_location_details`
+--
+ALTER TABLE `variation_location_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `variation_location_details_location_id_foreign` (`location_id`),
+  ADD KEY `variation_location_details_product_id_index` (`product_id`),
+  ADD KEY `variation_location_details_product_variation_id_index` (`product_variation_id`),
+  ADD KEY `variation_location_details_variation_id_index` (`variation_id`);
+
+--
+-- Indexes for table `variation_templates`
+--
+ALTER TABLE `variation_templates`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `variation_templates_business_id_foreign` (`business_id`);
+
+--
+-- Indexes for table `variation_value_templates`
+--
+ALTER TABLE `variation_value_templates`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `variation_value_templates_name_index` (`name`),
+  ADD KEY `variation_value_templates_variation_template_id_index` (`variation_template_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `accounts`
+--
+ALTER TABLE `accounts`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `account_transactions`
+--
+ALTER TABLE `account_transactions`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `activity_log`
+--
+ALTER TABLE `activity_log`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `barcodes`
+--
+ALTER TABLE `barcodes`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `bookings`
+--
+ALTER TABLE `bookings`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `brands`
+--
+ALTER TABLE `brands`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `business`
+--
+ALTER TABLE `business`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `business_locations`
+--
+ALTER TABLE `business_locations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `cash_registers`
+--
+ALTER TABLE `cash_registers`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `cash_register_transactions`
+--
+ALTER TABLE `cash_register_transactions`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT for table `colors`
+--
+ALTER TABLE `colors`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `contacts`
+--
+ALTER TABLE `contacts`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `coupons`
+--
+ALTER TABLE `coupons`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `currencies`
+--
+ALTER TABLE `currencies`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
+
+--
+-- AUTO_INCREMENT for table `customer_groups`
+--
+ALTER TABLE `customer_groups`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `discounts`
+--
+ALTER TABLE `discounts`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `expense_categories`
+--
+ALTER TABLE `expense_categories`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `gift_cards`
+--
+ALTER TABLE `gift_cards`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `invoice_layouts`
+--
+ALTER TABLE `invoice_layouts`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `invoice_schemes`
+--
+ALTER TABLE `invoice_schemes`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `media`
+--
+ALTER TABLE `media`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=188;
+
+--
+-- AUTO_INCREMENT for table `notification_templates`
+--
+ALTER TABLE `notification_templates`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `permissions`
+--
+ALTER TABLE `permissions`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
+
+--
+-- AUTO_INCREMENT for table `printers`
+--
+ALTER TABLE `printers`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=293;
+
+--
+-- AUTO_INCREMENT for table `product_name_categories`
+--
+ALTER TABLE `product_name_categories`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5604;
+
+--
+-- AUTO_INCREMENT for table `product_racks`
+--
+ALTER TABLE `product_racks`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `product_variations`
+--
+ALTER TABLE `product_variations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=270;
+
+--
+-- AUTO_INCREMENT for table `purchase_lines`
+--
+ALTER TABLE `purchase_lines`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=249;
+
+--
+-- AUTO_INCREMENT for table `reference_counts`
+--
+ALTER TABLE `reference_counts`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `res_tables`
+--
+ALTER TABLE `res_tables`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `selling_price_groups`
+--
+ALTER TABLE `selling_price_groups`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sizes`
+--
+ALTER TABLE `sizes`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `stock_adjustment_lines`
+--
+ALTER TABLE `stock_adjustment_lines`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `suppliers`
+--
+ALTER TABLE `suppliers`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `system`
+--
+ALTER TABLE `system`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `tax_rates`
+--
+ALTER TABLE `tax_rates`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=290;
+
+--
+-- AUTO_INCREMENT for table `transaction_payments`
+--
+ALTER TABLE `transaction_payments`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+
+--
+-- AUTO_INCREMENT for table `transaction_sell_lines`
+--
+ALTER TABLE `transaction_sell_lines`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+
+--
+-- AUTO_INCREMENT for table `transaction_sell_lines_purchase_lines`
+--
+ALTER TABLE `transaction_sell_lines_purchase_lines`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `units`
+--
+ALTER TABLE `units`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `user_contact_access`
+--
+ALTER TABLE `user_contact_access`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `variations`
+--
+ALTER TABLE `variations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=270;
+
+--
+-- AUTO_INCREMENT for table `variation_group_prices`
+--
+ALTER TABLE `variation_group_prices`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `variation_location_details`
+--
+ALTER TABLE `variation_location_details`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=268;
+
+--
+-- AUTO_INCREMENT for table `variation_templates`
+--
+ALTER TABLE `variation_templates`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `variation_value_templates`
+--
+ALTER TABLE `variation_value_templates`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

@@ -62,12 +62,12 @@ class ProductController extends Controller
 
     public function getProductId()
     {
-        $objBuss = \App\Business::find(request()->session()->get('user.business_id')); 
+        $objBuss = \App\Business::find(request()->session()->get('user.business_id'));
         return str_pad($objBuss->prod_refference, 4, '0', STR_PAD_LEFT);
     }
     public function updateProductId()
     {
-        $objBuss = \App\Business::find(request()->session()->get('user.business_id')); 
+        $objBuss = \App\Business::find(request()->session()->get('user.business_id'));
         $objBuss->prod_refference += 1;
         $number = str_pad($objBuss->prod_refference, 4, '0', STR_PAD_LEFT);
         $objBuss->save();
@@ -81,8 +81,8 @@ class ProductController extends Controller
         $business_id = request()->session()->get('user.business_id');
         //Update USER SESSION
         $user_id = request()->session()->get('user.id');
-        $user = \App\User::find($user_id); 
-        request()->session()->put('user',$user->toArray());
+        $user = \App\User::find($user_id);
+        request()->session()->put('user', $user->toArray());
         $business_location_id = request()->session()->get('user.business_location_id');
         //Update USER SESSION
         $selling_price_group_count = SellingPriceGroup::countSellingPriceGroups($business_id);
@@ -128,7 +128,7 @@ class ProductController extends Controller
             if (!empty($category_id)) {
                 $products->where('products.sub_category_id', $category_id);
             }
-            
+
 
             $brand_id = request()->get('brand_id', null);
             if (!empty($brand_id)) {
@@ -143,46 +143,46 @@ class ProductController extends Controller
             $tax_id = request()->get('tax_id', null);
             if (!empty($tax_id)) {
                 $products->where('products.tax', $tax_id);
-            } 
-                $products->orderBy('products.id','DESC');
+            }
+            $products->orderBy('products.id', 'DESC');
 
             $from_date = request()->get('from_date', null);
             $to_date = request()->get('to_date', null);
             if (!empty($to_date)) {
                 $products->whereDate('products.created_at', '>=', $from_date)
-                        ->whereDate('products.created_at', '<=', $to_date) ;
+                    ->whereDate('products.created_at', '<=', $to_date);
             }
-           
+
 
             return Datatables::of($products)
                 ->addColumn(
                     'action',
                     function ($row) use ($selling_price_group_count) {
                         $html =
-                        '<div class="btn-group">
-                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">'. __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                            '<div class="btn-group">
+                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="' . action('LabelsController@show') . '?product_id=' . $row->id . '" data-toggle="tooltip" title="Print Barcode/Label"><i class="fa fa-barcode"></i> ' . __('barcode.labels') . '</a></li>';
 
                         if (auth()->user()->can('product.view')) {
                             $html .=
-                            '<li><a href="' . action('ProductController@view', [$row->id]) . '" class="view-product"><i class="fa fa-eye"></i> ' . __("messages.view") . '</a></li>';
+                                '<li><a href="' . action('ProductController@view', [$row->id]) . '" class="view-product"><i class="fa fa-eye"></i> ' . __("messages.view") . '</a></li>';
                         }
 
                         if (auth()->user()->can('product.update')) {
                             $html .=
-                            '<li><a href="' . action('ProductController@edit', [$row->id]) . '"><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a></li>';
+                                '<li><a href="' . action('ProductController@edit', [$row->id]) . '"><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a></li>';
                         }
 
                         if (auth()->user()->can('product.delete')) {
                             $html .=
-                            '<li><a href="' . action('ProductController@destroy', [$row->id]) . '" class="delete-product"><i class="fa fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                                '<li><a href="' . action('ProductController@destroy', [$row->id]) . '" class="delete-product"><i class="fa fa-trash"></i> ' . __("messages.delete") . '</a></li>';
                         }
 
                         if ($row->is_inactive == 1) {
                             $html .=
-                            '<li><a href="' . action('ProductController@activate', [$row->id]) . '" class="activate-product"><i class="fa fa-circle-o"></i> ' . __("lang_v1.reactivate") . '</a></li>';
+                                '<li><a href="' . action('ProductController@activate', [$row->id]) . '" class="activate-product"><i class="fa fa-circle-o"></i> ' . __("lang_v1.reactivate") . '</a></li>';
                         }
 
                         $html .= '<li class="divider"></li>';
@@ -190,12 +190,12 @@ class ProductController extends Controller
                         if (auth()->user()->can('product.create')) {
                             if ($row->enable_stock == 1) {
                                 $html .=
-                                '<li><a href="#" data-href="' . action('OpeningStockController@add', ['product_id' => $row->id]) . '" class="add-opening-stock"><i class="fa fa-database"></i> ' . __("lang_v1.add_edit_opening_stock") . '</a></li>';
+                                    '<li><a href="#" data-href="' . action('OpeningStockController@add', ['product_id' => $row->id]) . '" class="add-opening-stock"><i class="fa fa-database"></i> ' . __("lang_v1.add_edit_opening_stock") . '</a></li>';
                             }
-            
+
                             if ($selling_price_group_count > 0) {
                                 $html .=
-                                '<li><a href="' . action('ProductController@addSellingPrices', [$row->id]) . '"><i class="fa fa-money"></i> ' . __("lang_v1.add_selling_price_group_prices") . '</a></li>';
+                                    '<li><a href="' . action('ProductController@addSellingPrices', [$row->id]) . '"><i class="fa fa-money"></i> ' . __("lang_v1.add_selling_price_group_prices") . '</a></li>';
                             }
 
                             $html .=
@@ -223,7 +223,7 @@ class ProductController extends Controller
                 })
                 ->editColumn('type', '@lang("lang_v1." . $type)')
                 ->addColumn('mass_delete', function ($row) {
-                    return  '<input type="checkbox" class="row-select" value="' . $row->id .'">' ;
+                    return  '<input type="checkbox" class="row-select" value="' . $row->id . '">';
                 })
                 ->editColumn('current_stock', '@if($enable_stock == 1) {{@number_format($current_stock)}} @else -- @endif {{$unit}}')
                 ->addColumn(
@@ -233,11 +233,12 @@ class ProductController extends Controller
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can("product.view")) {
-                            return  action('ProductController@view', [$row->id]) ;
+                            return  action('ProductController@view', [$row->id]);
                         } else {
                             return '';
                         }
-                    }])
+                    }
+                ])
                 ->rawColumns(['action', 'image', 'mass_delete', 'product', 'price'])
                 ->make(true);
         }
@@ -278,10 +279,10 @@ class ProductController extends Controller
         $business_id = request()->session()->get('user.business_id');
         //Update USER SESSION
         $user_id = request()->session()->get('user.id');
-        $user = \App\User::find($user_id); 
-        request()->session()->put('user',$user->toArray());
+        $user = \App\User::find($user_id);
+        request()->session()->put('user', $user->toArray());
         $business_location_id = request()->session()->get('user.business_location_id');
-        
+
         //Update USER SESSION
         $selling_price_group_count = SellingPriceGroup::countSellingPriceGroups($business_id);
         if (request()->ajax()) {
@@ -321,7 +322,7 @@ class ProductController extends Controller
             }
 
 
-              $category_id = request()->get('category_id', null);
+            $category_id = request()->get('category_id', null);
             if (!empty($category_id)) {
                 $products->where('products.sub_category_id', $category_id);
             }
@@ -339,45 +340,45 @@ class ProductController extends Controller
             $tax_id = request()->get('tax_id', null);
             if (!empty($tax_id)) {
                 $products->where('products.tax', $tax_id);
-            } 
-                $products->orderBy('products.id','DESC');
+            }
+            $products->orderBy('products.id', 'DESC');
 
             $from_date = request()->get('from_date', null);
             $to_date = request()->get('to_date', null);
             if (!empty($to_date)) {
                 $products->whereBetween('products.created_at', [$from_date, $to_date]);
             }
-           
+
 
             return Datatables::of($products)
                 ->addColumn(
                     'action',
                     function ($row) use ($selling_price_group_count) {
                         $html =
-                        '<div class="btn-group">
-                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">'. __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                            '<div class="btn-group">
+                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="' . action('LabelsController@show') . '?product_id=' . $row->id . '" data-toggle="tooltip" title="Print Barcode/Label"><i class="fa fa-barcode"></i> ' . __('barcode.labels') . '</a></li>';
 
                         if (auth()->user()->can('product.view')) {
                             $html .=
-                            '<li><a href="' . action('ProductController@view', [$row->id]) . '" class="view-product"><i class="fa fa-eye"></i> ' . __("messages.view") . '</a></li>';
+                                '<li><a href="' . action('ProductController@view', [$row->id]) . '" class="view-product"><i class="fa fa-eye"></i> ' . __("messages.view") . '</a></li>';
                         }
 
                         if (auth()->user()->can('product.update')) {
                             $html .=
-                            '<li><a href="' . action('ProductController@edit', [$row->id]) . '"><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a></li>';
+                                '<li><a href="' . action('ProductController@edit', [$row->id]) . '"><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a></li>';
                         }
 
                         if (auth()->user()->can('product.delete')) {
                             $html .=
-                            '<li><a href="' . action('ProductController@destroy', [$row->id]) . '" class="delete-product"><i class="fa fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                                '<li><a href="' . action('ProductController@destroy', [$row->id]) . '" class="delete-product"><i class="fa fa-trash"></i> ' . __("messages.delete") . '</a></li>';
                         }
 
                         if ($row->is_inactive == 1) {
                             $html .=
-                            '<li><a href="' . action('ProductController@activate', [$row->id]) . '" class="activate-product"><i class="fa fa-circle-o"></i> ' . __("lang_v1.reactivate") . '</a></li>';
+                                '<li><a href="' . action('ProductController@activate', [$row->id]) . '" class="activate-product"><i class="fa fa-circle-o"></i> ' . __("lang_v1.reactivate") . '</a></li>';
                         }
 
                         $html .= '<li class="divider"></li>';
@@ -385,12 +386,12 @@ class ProductController extends Controller
                         if (auth()->user()->can('product.create')) {
                             if ($row->enable_stock == 1) {
                                 $html .=
-                                '<li><a href="#" data-href="' . action('OpeningStockController@add', ['product_id' => $row->id]) . '" class="add-opening-stock"><i class="fa fa-database"></i> ' . __("lang_v1.add_edit_opening_stock") . '</a></li>';
+                                    '<li><a href="#" data-href="' . action('OpeningStockController@add', ['product_id' => $row->id]) . '" class="add-opening-stock"><i class="fa fa-database"></i> ' . __("lang_v1.add_edit_opening_stock") . '</a></li>';
                             }
-            
+
                             if ($selling_price_group_count > 0) {
                                 $html .=
-                                '<li><a href="' . action('ProductController@addSellingPrices', [$row->id]) . '"><i class="fa fa-money"></i> ' . __("lang_v1.add_selling_price_group_prices") . '</a></li>';
+                                    '<li><a href="' . action('ProductController@addSellingPrices', [$row->id]) . '"><i class="fa fa-money"></i> ' . __("lang_v1.add_selling_price_group_prices") . '</a></li>';
                             }
 
                             $html .=
@@ -418,8 +419,8 @@ class ProductController extends Controller
                 })
                 ->editColumn('type', '@lang("lang_v1." . $type)')
                 ->addColumn('mass_delete', function ($row) {
-                   if(number_format($row->current_stock) > 0)
-                    return  '<input type="checkbox" class="row-select" value="' . $row->id .'"><input type="number" class="row-qty form-control" value="' .number_format($row->current_stock) .'" max="' .number_format($row->current_stock) .'" style="width:70px;" id="qty_' . $row->id .'">' ;
+                    if (number_format($row->current_stock) > 0)
+                        return  '<input type="checkbox" class="row-select" value="' . $row->id . '"><input type="number" class="row-qty form-control" value="' . number_format($row->current_stock) . '" max="' . number_format($row->current_stock) . '" style="width:70px;" id="qty_' . $row->id . '">';
                 })
                 ->editColumn('current_stock', '@if($enable_stock == 1) {{@number_format($current_stock)}} @else -- @endif {{$unit}}')
                 ->addColumn(
@@ -429,11 +430,12 @@ class ProductController extends Controller
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can("product.view")) {
-                            return  action('ProductController@nothing', [$row->id]) ;
+                            return  action('ProductController@nothing', [$row->id]);
                         } else {
                             return '';
                         }
-                    }])
+                    }
+                ])
                 ->rawColumns(['action', 'image', 'mass_delete', 'product', 'price'])
                 ->make(true);
         }
@@ -485,10 +487,10 @@ class ProductController extends Controller
         }
 
         $categories = Category::where('business_id', $business_id)
-                            ->where('parent_id', 0)
-                            ->pluck('name', 'id');
+            ->where('parent_id', 0)
+            ->pluck('name', 'id');
         $brands = Brands::where('business_id', $business_id)
-                            ->pluck('name', 'id');
+            ->pluck('name', 'id');
         $units = Unit::forDropdown($business_id, true);
 
         $tax_dropdown = TaxRate::forBusinessDropdown($business_id, true, true);
@@ -514,9 +516,9 @@ class ProductController extends Controller
 
             if (!empty($duplicate_product->category_id)) {
                 $sub_categories = Category::where('business_id', $business_id)
-                        ->where('parent_id', $duplicate_product->category_id)
-                        ->pluck('name', 'id')
-                        ->toArray();
+                    ->where('parent_id', $duplicate_product->category_id)
+                    ->pluck('name', 'id')
+                    ->toArray();
             }
 
             //Rack details
@@ -553,17 +555,17 @@ class ProductController extends Controller
             if (!empty($module_form_fields)) {
                 $form_fields = array_merge($form_fields, $module_form_fields);
             }
-            
+
             $product_details = $request->only($form_fields);
             $product_details['business_id'] = $business_id;
             $product_details['created_by'] = $request->session()->get('user.id');
 
             if (!empty($request->input('enable_stock')) &&  $request->input('enable_stock') == 1) {
-                $product_details['enable_stock'] = 1 ;
+                $product_details['enable_stock'] = 1;
             }
 
             if (!empty($request->input('sub_category_id'))) {
-                $product_details['sub_category_id'] = $request->input('sub_category_id') ;
+                $product_details['sub_category_id'] = $request->input('sub_category_id');
             }
 
             if (empty($product_details['sku'])) {
@@ -577,7 +579,7 @@ class ProductController extends Controller
             }
 
             if (!empty($request->input('enable_sr_no')) &&  $request->input('enable_sr_no') == 1) {
-                $product_details['enable_sr_no'] = 1 ;
+                $product_details['enable_sr_no'] = 1;
             }
 
             //upload document
@@ -592,7 +594,7 @@ class ProductController extends Controller
                 $product->sku = $sku;
                 $product->save();
             }
-            
+
             if ($product->type == 'single') {
                 $this->productUtil->createSingleProductVariation($product->id, $product->sku, $request->input('single_dpp'), $request->input('single_dpp_inc_tax'), $request->input('profit_percent'), $request->input('single_dsp'), $request->input('single_dsp_inc_tax'));
             } elseif ($product->type == 'variable') {
@@ -609,16 +611,18 @@ class ProductController extends Controller
             }
 
             DB::commit();
-            $output = ['success' => 1,
-                            'msg' => __('product.product_added_success')
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __('product.product_added_success')
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong")
+            ];
             return redirect('products')->with('status', $output);
         }
 
@@ -673,33 +677,33 @@ class ProductController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $categories = Category::where('business_id', $business_id)
-                            ->where('parent_id', 0)
-                            ->pluck('name', 'id');
+            ->where('parent_id', 0)
+            ->pluck('name', 'id');
         $brands = Brands::where('business_id', $business_id)
-                            ->pluck('name', 'id');
+            ->pluck('name', 'id');
         $units = Unit::forDropdown($business_id, true);
-        
+
         $tax_dropdown = TaxRate::forBusinessDropdown($business_id, true, true);
         $taxes = $tax_dropdown['tax_rates'];
         $tax_attributes = $tax_dropdown['attributes'];
 
         $barcode_types = $this->barcode_types;
-        
+
         $product = Product::where('business_id', $business_id)
-                            ->where('id', $id)
-                            ->first();
+            ->where('id', $id)
+            ->first();
 
         $sub_categories = [];
-        
+
         $sub_categories = Category::where('business_id', $business_id)
-                        ->where('parent_id', $product->category_id)
-                        ->pluck('name', 'id')
-                        ->toArray();
-                        
-        $sub_categories = [ "" => "None"] + $sub_categories;
-        
+            ->where('parent_id', $product->category_id)
+            ->pluck('name', 'id')
+            ->toArray();
+
+        $sub_categories = ["" => "None"] + $sub_categories;
+
         $default_profit_percent = Business::where('id', $business_id)->value('default_profit_percent');
-        
+
         //Get all business locations
         $business_locations = BusinessLocation::forDropdown($business_id);
         //Rack details
@@ -710,7 +714,7 @@ class ProductController extends Controller
         $module_form_parts = $this->moduleUtil->getModuleData('product_form_part');
 
         return view('product.edit')
-                ->with(compact('categories', 'brands', 'units', 'taxes', 'tax_attributes', 'barcode_types', 'product', 'sub_categories', 'default_profit_percent', 'business_locations', 'rack_details', 'selling_price_group_count', 'module_form_parts'));
+            ->with(compact('categories', 'brands', 'units', 'taxes', 'tax_attributes', 'barcode_types', 'product', 'sub_categories', 'default_profit_percent', 'business_locations', 'rack_details', 'selling_price_group_count', 'module_form_parts'));
     }
 
     /**
@@ -731,11 +735,11 @@ class ProductController extends Controller
             $product_details = $request->only(['name', 'brand_id', 'unit_id', 'category_id', 'tax', 'barcode_type', 'sku', 'alert_quantity', 'tax_type', 'weight', 'product_custom_field1', 'product_custom_field2', 'product_custom_field3', 'product_custom_field4', 'product_description']);
 
             DB::beginTransaction();
-            
+
             $product = Product::where('business_id', $business_id)
-                                ->where('id', $id)
-                                ->with(['product_variations'])
-                                ->first();
+                ->where('id', $id)
+                ->with(['product_variations'])
+                ->first();
 
             $module_form_fields = $this->moduleUtil->getModuleFormField('product_form_fields');
             if (!empty($module_form_fields)) {
@@ -743,7 +747,7 @@ class ProductController extends Controller
                     $product->$column = $request->input($column);
                 }
             }
-            
+
             $product->name = $product_details['name'];
             $product->brand_id = $product_details['brand_id'];
             $product->unit_id = $product_details['unit_id'];
@@ -770,7 +774,7 @@ class ProductController extends Controller
             } else {
                 $product->sub_category_id = null;
             }
-            
+
             $expiry_enabled = $request->session()->get('business.enable_product_expiry');
             if (!empty($expiry_enabled)) {
                 if (!empty($request->input('expiry_period_type')) && !empty($request->input('expiry_period')) && ($product->enable_stock == 1)) {
@@ -795,7 +799,7 @@ class ProductController extends Controller
             }
 
             $product->save();
-            
+
             if ($product->type == 'single') {
                 $single_data = $request->only(['single_variation_id', 'single_dpp', 'single_dpp_inc_tax', 'single_dsp_inc_tax', 'profit_percent', 'single_dsp']);
                 $variation = Variation::find($single_data['single_variation_id']);
@@ -833,16 +837,18 @@ class ProductController extends Controller
             }
 
             DB::commit();
-            $output = ['success' => 1,
-                            'msg' => __('product.product_updated_success')
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __('product.product_updated_success')
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
         if ($request->input('submit_type') == 'update_n_edit_opening_stock') {
@@ -890,10 +896,10 @@ class ProductController extends Controller
                     '=',
                     'T.id'
                 )
-                                    ->whereIn('T.type', ['purchase'])
-                                    ->where('T.business_id', $business_id)
-                                    ->where('purchase_lines.product_id', $id)
-                                    ->count();
+                    ->whereIn('T.type', ['purchase'])
+                    ->where('T.business_id', $business_id)
+                    ->where('purchase_lines.product_id', $id)
+                    ->count();
                 if ($count > 0) {
                     $can_be_deleted = false;
                     $error_msg = __('lang_v1.purchase_already_exist');
@@ -904,12 +910,12 @@ class ProductController extends Controller
                         'purchase_lines.transaction_id',
                         '=',
                         'T.id'
-                     )
-                                    ->where('T.type', 'opening_stock')
-                                    ->where('T.business_id', $business_id)
-                                    ->where('purchase_lines.product_id', $id)
-                                    ->where('purchase_lines.quantity_sold', '>', 0)
-                                    ->count();
+                    )
+                        ->where('T.type', 'opening_stock')
+                        ->where('T.business_id', $business_id)
+                        ->where('purchase_lines.product_id', $id)
+                        ->where('purchase_lines.quantity_sold', '>', 0)
+                        ->count();
                     if ($count > 0) {
                         $can_be_deleted = false;
                         $error_msg = __('lang_v1.opening_stock_sold');
@@ -921,10 +927,10 @@ class ProductController extends Controller
                             '=',
                             'T.id'
                         )
-                                    ->where('T.business_id', $business_id)
-                                    ->where('purchase_lines.product_id', $id)
-                                    ->where('purchase_lines.quantity_adjusted', '>', 0)
-                                    ->count();
+                            ->where('T.business_id', $business_id)
+                            ->where('purchase_lines.product_id', $id)
+                            ->where('purchase_lines.quantity_adjusted', '>', 0)
+                            ->count();
                         if ($count > 0) {
                             $can_be_deleted = false;
                             $error_msg = __('lang_v1.stock_adjusted');
@@ -934,39 +940,42 @@ class ProductController extends Controller
 
                 if ($can_be_deleted) {
                     $product = Product::where('id', $id)
-                                ->where('business_id', $business_id)
-                                ->first();
+                        ->where('business_id', $business_id)
+                        ->first();
                     if (!empty($product)) {
                         DB::beginTransaction();
                         //Delete variation location details
                         VariationLocationDetails::where('product_id', $id)
-                                                ->delete();
+                            ->delete();
                         $product->delete();
 
                         DB::commit();
                     }
 
-                    $output = ['success' => true,
-                                'msg' => __("lang_v1.product_delete_success")
-                            ];
+                    $output = [
+                        'success' => true,
+                        'msg' => __("lang_v1.product_delete_success")
+                    ];
                 } else {
-                    $output = ['success' => false,
-                                'msg' => $error_msg
-                            ];
+                    $output = [
+                        'success' => false,
+                        'msg' => $error_msg
+                    ];
                 }
             } catch (\Exception $e) {
                 DB::rollBack();
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-                
-                $output = ['success' => false,
-                                'msg' => __("messages.something_went_wrong")
-                            ];
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = [
+                    'success' => false,
+                    'msg' => __("messages.something_went_wrong")
+                ];
             }
 
             return $output;
         }
     }
-    
+
     /**
      * Get subcategories list for a category.
      *
@@ -979,13 +988,13 @@ class ProductController extends Controller
             $category_id = $request->input('cat_id');
             $business_id = $request->session()->get('user.business_id');
             $sub_categories = Category::where('business_id', $business_id)
-                        ->where('parent_id', $category_id)
-                        ->select(['name', 'id'])
-                        ->get();
+                ->where('parent_id', $category_id)
+                ->select(['name', 'id'])
+                ->get();
             $html = '<option value="">None</option>';
             if (!empty($sub_categories)) {
                 foreach ($sub_categories as $sub_category) {
-                    $html .= '<option value="' . $sub_category->id .'">' .$sub_category->name . '</option>';
+                    $html .= '<option value="' . $sub_category->id . '">' . $sub_category->name . '</option>';
                 }
             }
             echo $html;
@@ -999,13 +1008,13 @@ class ProductController extends Controller
             $category_id = $request->input('cat_id');
             $business_id = $request->session()->get('user.business_id');
             $sub_categories = Size::where('business_id', $business_id)
-                        ->where('parent_id', $category_id)
-                        ->select(['name', 'id'])
-                        ->get();
+                ->where('parent_id', $category_id)
+                ->select(['name', 'id'])
+                ->get();
             $html = '<option value="">None</option>';
             if (!empty($sub_categories)) {
                 foreach ($sub_categories as $sub_category) {
-                    $html .= '<option value="' . $sub_category->id .'">' .$sub_category->name . '</option>';
+                    $html .= '<option value="' . $sub_category->id . '">' . $sub_category->name . '</option>';
                 }
             }
             echo $html;
@@ -1016,9 +1025,9 @@ class ProductController extends Controller
     public function getSupplierDetails($id)
     {
         $sub_categories = Supplier::where('id', $id)
-                    ->select(['id','name', 'description'])
-                    ->first();
-        
+            ->select(['id', 'name', 'description'])
+            ->first();
+
         echo $sub_categories->description;
         exit;
     }
@@ -1039,33 +1048,33 @@ class ProductController extends Controller
         if ($request->input('action') == "add") {
             if ($request->input('type') == 'single') {
                 return view('product.partials.single_product_form_part')
-                        ->with(['profit_percent' => $profit_percent]);
+                    ->with(['profit_percent' => $profit_percent]);
             } elseif ($request->input('type') == 'variable') {
                 $variation_templates = VariationTemplate::where('business_id', $business_id)->pluck('name', 'id')->toArray();
-                $variation_templates = [ "" => __('messages.please_select')] + $variation_templates;
+                $variation_templates = ["" => __('messages.please_select')] + $variation_templates;
 
                 return view('product.partials.variable_product_form_part')
-                        ->with(compact('variation_templates', 'profit_percent', 'action'));
+                    ->with(compact('variation_templates', 'profit_percent', 'action'));
             }
         } elseif ($request->input('action') == "edit" || $request->input('action') == "duplicate") {
             $product_id = $request->input('product_id');
             if ($request->input('type') == 'single') {
                 $product_deatails = ProductVariation::where('product_id', $product_id)
-                                                    ->with(['variations'])
-                                                    ->first();
-                
+                    ->with(['variations'])
+                    ->first();
+
                 return view('product.partials.edit_single_product_form_part')
-                            ->with(compact('product_deatails'));
+                    ->with(compact('product_deatails'));
             } elseif ($request->input('type') == 'variable') {
                 $product_variations = ProductVariation::where('product_id', $product_id)
-                                                    ->with(['variations'])
-                                                    ->get();
+                    ->with(['variations'])
+                    ->get();
                 return view('product.partials.variable_product_form_part')
-                        ->with(compact('product_variations', 'profit_percent', 'action'));
+                    ->with(compact('product_variations', 'profit_percent', 'action'));
             }
         }
     }
-    
+
     /**
      * Get product form parts.
      *
@@ -1084,7 +1093,7 @@ class ProductController extends Controller
         $row_type = $request->input('row_type', 'add');
 
         return view('product.partials.variation_value_row')
-                ->with(compact('profit_percent', 'variation_index', 'value_index', 'row_type'));
+            ->with(compact('profit_percent', 'variation_index', 'value_index', 'row_type'));
     }
 
     /**
@@ -1100,14 +1109,14 @@ class ProductController extends Controller
         $profit_percent = $business->default_profit_percent;
 
         $variation_templates = VariationTemplate::where('business_id', $business_id)
-                                                ->pluck('name', 'id')->toArray();
-        $variation_templates = [ "" => __('messages.please_select')] + $variation_templates;
+            ->pluck('name', 'id')->toArray();
+        $variation_templates = ["" => __('messages.please_select')] + $variation_templates;
 
         $row_index = $request->input('row_index', 0);
         $action = $request->input('action');
 
         return view('product.partials.product_variation_row')
-                    ->with(compact('variation_templates', 'row_index', 'action', 'profit_percent'));
+            ->with(compact('variation_templates', 'row_index', 'action', 'profit_percent'));
     }
 
     /**
@@ -1123,12 +1132,12 @@ class ProductController extends Controller
         $profit_percent = $business->default_profit_percent;
 
         $template = VariationTemplate::where('id', $request->input('template_id'))
-                                                ->with(['values'])
-                                                ->first();
+            ->with(['values'])
+            ->first();
         $row_index = $request->input('row_index');
 
         return view('product.partials.product_variation_template')
-                    ->with(compact('template', 'row_index', 'profit_percent'));
+            ->with(compact('template', 'row_index', 'profit_percent'));
     }
 
     /**
@@ -1167,8 +1176,7 @@ class ProductController extends Controller
                                 //Check null to show products even if no quantity is available in a location.
                                 //TODO: Maybe add a settings to show product not available at a location or not.
                                 $query->orWhereNull('VLD.location_id');
-                            });
-                            ;
+                            });;
                         }
                     }
                 );
@@ -1187,9 +1195,9 @@ class ProductController extends Controller
             //Include search
             if (!empty($term)) {
                 $products->where(function ($query) use ($term) {
-                    $query->where('products.name', 'like', '%' . $term .'%');
-                    $query->orWhere('sku', 'like', '%' . $term .'%');
-                    $query->orWhere('sub_sku', 'like', '%' . $term .'%');
+                    $query->where('products.name', 'like', '%' . $term . '%');
+                    $query->orWhere('sku', 'like', '%' . $term . '%');
+                    $query->orWhere('sub_sku', 'like', '%' . $term . '%');
                 });
             }
 
@@ -1197,7 +1205,7 @@ class ProductController extends Controller
             if ($check_qty) {
                 $products->where('VLD.qty_available', '>', 0);
             }
-            
+
             $products->select(
                 'products.id as product_id',
                 'products.name',
@@ -1214,7 +1222,7 @@ class ProductController extends Controller
                 $products->addSelect('VGP.price_inc_tax as variation_group_price');
             }
             $result = $products->orderBy('products.id', 'desc')
-                        ->get();
+                ->get();
             return json_encode($result);
         }
     }
@@ -1240,13 +1248,13 @@ class ProductController extends Controller
             $products = Product::join('variations', 'products.id', '=', 'variations.product_id')
                 ->where('products.business_id', $business_id)
                 ->where('products.type', '!=', 'modifier');
-                
+
             //Include search
             if (!empty($term)) {
                 $products->where(function ($query) use ($term) {
-                    $query->where('products.name', 'like', '%' . $term .'%');
-                    $query->orWhere('sku', 'like', '%' . $term .'%');
-                    $query->orWhere('sub_sku', 'like', '%' . $term .'%');
+                    $query->where('products.name', 'like', '%' . $term . '%');
+                    $query->orWhere('sku', 'like', '%' . $term . '%');
+                    $query->orWhere('sub_sku', 'like', '%' . $term . '%');
                 });
             }
 
@@ -1254,7 +1262,7 @@ class ProductController extends Controller
             // if($check_qty){
             //     $products->where('VLD.qty_available', '>', 0);
             // }
-            
+
             $products = $products->groupBy('products.id')
                 ->select(
                     'products.id as product_id',
@@ -1263,8 +1271,8 @@ class ProductController extends Controller
                     'products.enable_stock',
                     'products.sku'
                 )
-                    ->orderBy('products.name')
-                    ->get();
+                ->orderBy('products.name')
+                ->get();
             return json_encode($products);
         }
     }
@@ -1283,19 +1291,19 @@ class ProductController extends Controller
 
         //check in products table
         $query = Product::where('business_id', $business_id)
-                        ->where('sku', $sku);
+            ->where('sku', $sku);
         if (!empty($product_id)) {
             $query->where('id', '!=', $product_id);
         }
         $count = $query->count();
-        
+
         //check in variation table if $count = 0
         if ($count == 0) {
             $count = Variation::where('sub_sku', $sku)
-                            ->join('products', 'variations.product_id', '=', 'products.id')
-                            ->where('product_id', '!=', $product_id)
-                            ->where('business_id', $business_id)
-                            ->count();
+                ->join('products', 'variations.product_id', '=', 'products.id')
+                ->where('product_id', '!=', $product_id)
+                ->where('business_id', $business_id)
+                ->count();
         }
         if ($count == 0) {
             echo "true";
@@ -1317,19 +1325,19 @@ class ProductController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $product_name = !empty(request()->input('product_name'))? request()->input('product_name') : '';
+        $product_name = !empty(request()->input('product_name')) ? request()->input('product_name') : '';
 
-        $product_for = !empty(request()->input('product_for'))? request()->input('product_for') : null;
+        $product_for = !empty(request()->input('product_for')) ? request()->input('product_for') : null;
 
 
         $business_id = request()->session()->get('user.business_id');
         $categories = Category::where('business_id', $business_id)
-                            ->where('parent_id', 0)
-                            ->pluck('name', 'id');
+            ->where('parent_id', 0)
+            ->pluck('name', 'id');
         $brands = Brands::where('business_id', $business_id)
-                            ->pluck('name', 'id');
+            ->pluck('name', 'id');
         $units = Unit::where('business_id', $business_id)
-                            ->pluck('short_name', 'id');
+            ->pluck('short_name', 'id');
 
         $tax_dropdown = TaxRate::forBusinessDropdown($business_id, true, true);
         $taxes = $tax_dropdown['tax_rates'];
@@ -1347,7 +1355,7 @@ class ProductController extends Controller
         $module_form_parts = $this->moduleUtil->getModuleData('product_form_part');
 
         return view('product.partials.quick_add_product')
-                    ->with(compact('categories', 'brands', 'units', 'taxes', 'barcode_types', 'default_profit_percent', 'tax_attributes', 'product_name', 'locations', 'product_for', 'enable_expiry', 'enable_lot', 'module_form_parts'));
+            ->with(compact('categories', 'brands', 'units', 'taxes', 'barcode_types', 'default_profit_percent', 'tax_attributes', 'product_name', 'locations', 'product_for', 'enable_expiry', 'enable_lot', 'module_form_parts'));
     }
 
     /**
@@ -1361,23 +1369,23 @@ class ProductController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $product_name = !empty(request()->input('product_name'))? request()->input('product_name') : 'Product ';
+        $product_name = !empty(request()->input('product_name')) ? request()->input('product_name') : 'Product ';
         $autoBarcode =   $this->productUtil->generateProductSku("1");
-         
 
-        $product_for = !empty(request()->input('product_for'))? request()->input('product_for') : null;
+
+        $product_for = !empty(request()->input('product_for')) ? request()->input('product_for') : null;
 
 
         $business_id = request()->session()->get('user.business_id');
         $user_location_id = request()->session()->get('user.business_location_id');
-             
+
         $categories = Category::where('business_id', $business_id)
-                            ->where('parent_id', 0)
-                            ->pluck('name', 'id');
+            ->where('parent_id', 0)
+            ->pluck('name', 'id');
         $brands = Brands::where('business_id', $business_id)
-                            ->pluck('name', 'id');
+            ->pluck('name', 'id');
         $units = Unit::where('business_id', $business_id)
-                            ->pluck('short_name', 'id');
+            ->pluck('short_name', 'id');
 
         $tax_dropdown = TaxRate::forBusinessDropdown($business_id, true, true);
         $taxes = $tax_dropdown['tax_rates'];
@@ -1395,7 +1403,7 @@ class ProductController extends Controller
         $module_form_parts = $this->moduleUtil->getModuleData('product_form_part');
 
         return view('product.partials.quick_add_product_only')
-                    ->with(compact('categories', 'brands', 'units', 'taxes', 'barcode_types', 'default_profit_percent', 'tax_attributes', 'product_name', 'locations', 'product_for', 'enable_expiry', 'enable_lot', 'module_form_parts','autoBarcode'));
+            ->with(compact('categories', 'brands', 'units', 'taxes', 'barcode_types', 'default_profit_percent', 'tax_attributes', 'product_name', 'locations', 'product_for', 'enable_expiry', 'enable_lot', 'module_form_parts', 'autoBarcode'));
     }
 
     /**
@@ -1409,12 +1417,14 @@ class ProductController extends Controller
         if (!auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         try {
             $business_id = $request->session()->get('user.business_id');
             $location_id = $request->session()->get('user.business_location_id');
-            $form_fields = ['name', 'brand_id', 'unit_id', 'category_id', 'tax', 'barcode_type','tax_type', 'sku',
-                'alert_quantity', 'type'];
+            $form_fields = [
+                'name', 'brand_id', 'unit_id', 'category_id', 'tax', 'barcode_type', 'tax_type', 'sku',
+                'alert_quantity', 'type'
+            ];
 
             $module_form_fields = $this->moduleUtil->getModuleData('product_form_fields');
             if (!empty($module_form_fields)) {
@@ -1425,13 +1435,13 @@ class ProductController extends Controller
                 }
             }
             $product_details = $request->only($form_fields);
-            
+
             $product_details['type'] = empty($product_details['type']) ? 'single' : $product_details['type'];
             $product_details['product_description'] = $request->input('product_description');
             $product_details['business_id'] = $business_id;
             $product_details['created_by'] = $request->session()->get('user.id');
             if (!empty($request->input('enable_stock')) &&  $request->input('enable_stock') == 1) {
-                $product_details['enable_stock'] = 1 ;
+                $product_details['enable_stock'] = 1;
                 //TODO: Save total qty
                 //$product_details['total_qty_available'] = 0;
             }
@@ -1444,11 +1454,11 @@ class ProductController extends Controller
                 $product_details['expiry_period_type'] = $request->input('expiry_period_type');
                 $product_details['expiry_period'] = $this->productUtil->num_uf($request->input('expiry_period'));
             }
-            
+
             if (!empty($request->input('enable_sr_no')) &&  $request->input('enable_sr_no') == 1) {
-                $product_details['enable_sr_no'] = 1 ;
+                $product_details['enable_sr_no'] = 1;
             }
-            
+
             DB::beginTransaction();
 
             $product = Product::create($product_details);
@@ -1458,7 +1468,7 @@ class ProductController extends Controller
                 $product->sku = $sku;
                 $product->save();
             }
-            
+
             $this->productUtil->createSingleProductVariation(
                 $product->id,
                 $product->sku,
@@ -1470,28 +1480,30 @@ class ProductController extends Controller
             );
 
             if ($product->enable_stock == 1 && !empty($request->input('opening_stock'))) {
-                $user_id = $request->session()->get('user.id'); 
+                $user_id = $request->session()->get('user.id');
 
                 $transaction_date = $request->session()->get("financial_year.start");
                 $transaction_date = \Carbon::createFromFormat('Y-m-d', $transaction_date)->toDateTimeString();
 
-                $this->productUtil->addSingleProductOpeningStock($business_id, $product, $request->input('opening_stock'), $transaction_date, $user_id,true);
+                $this->productUtil->addSingleProductOpeningStock($business_id, $product, $request->input('opening_stock'), $transaction_date, $user_id, true);
             }
 
             DB::commit();
 
-            $output = ['success' => 1,
-                            'msg' => __('product.product_added_success'),
-                            'product' => $product,
-                            'variation' => $product->variations->first()
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __('product.product_added_success'),
+                'product' => $product,
+                'variation' => $product->variations->first()
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong"). $e->getMessage()
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong") . $e->getMessage()
+            ];
         }
 
         return $output;
@@ -1502,12 +1514,14 @@ class ProductController extends Controller
         if (!auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         try {
             $business_id = $request->session()->get('user.business_id');
             $location_id = $request->session()->get('user.business_location_id');
-            $form_fields = ['name', 'brand_id', 'unit_id', 'category_id', 'tax', 'barcode_type','tax_type', 'sku',
-                'alert_quantity', 'type'];
+            $form_fields = [
+                'name', 'brand_id', 'unit_id', 'category_id', 'tax', 'barcode_type', 'tax_type', 'sku',
+                'alert_quantity', 'type'
+            ];
 
             $module_form_fields = $this->moduleUtil->getModuleData('product_form_fields');
             if (!empty($module_form_fields)) {
@@ -1518,17 +1532,17 @@ class ProductController extends Controller
                 }
             }
             $product_details = $request->only($form_fields);
-            
+
             $product_details['type'] = empty($product_details['type']) ? 'single' : $product_details['type'];
             $product_details['product_description'] = $request->input('product_description');
             $product_details['business_id'] = $business_id;
             $product_details['created_by'] = $request->session()->get('user.id');
             if (!empty($request->input('enable_stock')) &&  $request->input('enable_stock') == 1) {
-                $product_details['enable_stock'] = 1 ;
+                $product_details['enable_stock'] = 1;
                 //TODO: Save total qty
                 //$product_details['total_qty_available'] = 0;
             }
-            $product_details['enable_stock'] = 1 ;
+            $product_details['enable_stock'] = 1;
             if (empty($product_details['sku'])) {
                 $product_details['sku'] = ' ';
             }
@@ -1538,12 +1552,12 @@ class ProductController extends Controller
                 $product_details['expiry_period_type'] = $request->input('expiry_period_type');
                 $product_details['expiry_period'] = $this->productUtil->num_uf($request->input('expiry_period'));
             }
-            
+
             if (!empty($request->input('enable_sr_no')) &&  $request->input('enable_sr_no') == 1) {
-                $product_details['enable_sr_no'] = 1 ;
+                $product_details['enable_sr_no'] = 1;
             }
-            
-            DB::beginTransaction(); 
+
+            DB::beginTransaction();
 
             $product = Product::create($product_details);
 
@@ -1552,7 +1566,7 @@ class ProductController extends Controller
                 $product->sku = $sku;
                 $product->save();
             }
-            
+
             $this->productUtil->createSingleProductVariation(
                 $product->id,
                 $product->sku,
@@ -1563,18 +1577,18 @@ class ProductController extends Controller
                 $request->input('CustomPrice')
             );
 
-            if ($product->enable_stock == 1 ) {
+            if ($product->enable_stock == 1) {
                 $user_id = $request->session()->get('user.id');
 
                 $transaction_date = $request->session()->get("financial_year.start");
                 $transaction_date = \Carbon::createFromFormat('Y-m-d', $transaction_date)->toDateTimeString();
                 $variatArr = array(
                     $location_id => array(
-                        "purchase_price"=>"1", 
-                        "quantity"=>"1",
-                        "exp_date"=>"",
-                        "lot_number"=>""
-                     )
+                        "purchase_price" => "1",
+                        "quantity" => "1",
+                        "exp_date" => "",
+                        "lot_number" => ""
+                    )
                 );
 
                 $this->productUtil->addSingleProductOpeningStock($business_id, $product, $variatArr, $transaction_date, $user_id);
@@ -1582,18 +1596,20 @@ class ProductController extends Controller
 
             DB::commit();
 
-            $output = ['success' => 1,
-                            'msg' => __('product.product_added_success'),
-                            'product' => $product,
-                            'variation' => $product->variations->first()
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __('product.product_added_success'),
+                'product' => $product,
+                'variation' => $product->variations->first()
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong"). $e->getMessage()
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong") . $e->getMessage()
+            ];
         }
 
         return $output;
@@ -1614,9 +1630,9 @@ class ProductController extends Controller
         $business_id = request()->session()->get('user.business_id');
 
         $product = Product::where('business_id', $business_id)
-                            ->where('id', $id)
-                            ->with(['color','brand','supplier', 'unit', 'category', 'sub_category', 'product_tax', 'variations', 'variations.product_variation', 'variations.group_prices'])
-                            ->first();
+            ->where('id', $id)
+            ->with(['color', 'brand', 'supplier', 'unit', 'category', 'sub_category', 'product_tax', 'variations', 'variations.product_variation', 'variations.group_prices'])
+            ->first();
 
         $price_groups = SellingPriceGroup::where('business_id', $business_id)->pluck('name', 'id');
 
@@ -1665,9 +1681,9 @@ class ProductController extends Controller
                 $selected_rows = explode(',', $request->input('selected_rows'));
 
                 $products = Product::where('business_id', $business_id)
-                                    ->whereIn('id', $selected_rows)
-                                    ->with('purchase_lines')
-                                    ->get();
+                    ->whereIn('id', $selected_rows)
+                    ->with('purchase_lines')
+                    ->get();
                 $deletable_products = [];
 
                 DB::beginTransaction();
@@ -1677,7 +1693,7 @@ class ProductController extends Controller
                     if (empty($product->purchase_lines->toArray())) {
                         //Delete variation location details
                         VariationLocationDetails::where('product_id', $product->id)
-                                                    ->delete();
+                            ->delete();
                         $product->delete();
                     } else {
                         $purchase_exist = true;
@@ -1688,21 +1704,24 @@ class ProductController extends Controller
             }
 
             if (!$purchase_exist) {
-                $output = ['success' => 1,
-                            'msg' => __('lang_v1.deleted_success')
-                        ];
+                $output = [
+                    'success' => 1,
+                    'msg' => __('lang_v1.deleted_success')
+                ];
             } else {
-                $output = ['success' => 0,
-                            'msg' => __('lang_v1.products_could_not_be_deleted')
-                        ];
+                $output = [
+                    'success' => 0,
+                    'msg' => __('lang_v1.products_could_not_be_deleted')
+                ];
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
         return redirect()->back()->with(['status' => $output]);
@@ -1722,11 +1741,11 @@ class ProductController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $product = Product::where('business_id', $business_id)
-                    ->with(['variations', 'variations.group_prices', 'variations.product_variation'])
-                            ->findOrFail($id);
+            ->with(['variations', 'variations.group_prices', 'variations.product_variation'])
+            ->findOrFail($id);
 
         $price_groups = SellingPriceGroup::where('business_id', $business_id)
-                                            ->get();
+            ->get();
         $variation_prices = [];
         foreach ($product->variations as $variation) {
             foreach ($variation->group_prices as $group_price) {
@@ -1751,22 +1770,22 @@ class ProductController extends Controller
         try {
             $business_id = $request->session()->get('user.business_id');
             $product = Product::where('business_id', $business_id)
-                            ->with(['variations'])
-                            ->findOrFail($request->input('product_id'));
+                ->with(['variations'])
+                ->findOrFail($request->input('product_id'));
             DB::beginTransaction();
             foreach ($product->variations as $variation) {
                 $variation_group_prices = [];
                 foreach ($request->input('group_prices') as $key => $value) {
                     if (isset($value[$variation->id])) {
                         $variation_group_price =
-                        VariationGroupPrice::where('variation_id', $variation->id)
-                                            ->where('price_group_id', $key)
-                                            ->first();
+                            VariationGroupPrice::where('variation_id', $variation->id)
+                            ->where('price_group_id', $key)
+                            ->first();
                         if (empty($variation_group_price)) {
                             $variation_group_price = new VariationGroupPrice([
-                                    'variation_id' => $variation->id,
-                                    'price_group_id' => $key
-                                ]);
+                                'variation_id' => $variation->id,
+                                'price_group_id' => $key
+                            ]);
                         }
 
                         $variation_group_price->price_inc_tax = $this->productUtil->num_uf($value[$variation->id]);
@@ -1779,16 +1798,18 @@ class ProductController extends Controller
                 }
             }
             DB::commit();
-            $output = ['success' => 1,
-                            'msg' => __("lang_v1.updated_success")
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __("lang_v1.updated_success")
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
         if ($request->input('submit_type') == 'submit_n_add_opening_stock') {
@@ -1814,9 +1835,9 @@ class ProductController extends Controller
         $business_id = request()->session()->get('user.business_id');
 
         $product = Product::where('business_id', $business_id)
-                            ->where('id', $id)
-                            ->with(['variations', 'variations.product_variation', 'variations.group_prices'])
-                            ->first();
+            ->where('id', $id)
+            ->with(['variations', 'variations.product_variation', 'variations.group_prices'])
+            ->first();
 
         $price_groups = SellingPriceGroup::where('business_id', $business_id)->pluck('name', 'id');
 
@@ -1858,22 +1879,24 @@ class ProductController extends Controller
                 DB::beginTransaction();
 
                 $products = Product::where('business_id', $business_id)
-                                    ->whereIn('id', $selected_products)
-                                    ->update(['is_inactive' => 1]);
+                    ->whereIn('id', $selected_products)
+                    ->update(['is_inactive' => 1]);
 
                 DB::commit();
             }
 
-            $output = ['success' => 1,
-                            'msg' => __('lang_v1.products_deactivated_success')
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __('lang_v1.products_deactivated_success')
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
         return redirect()->back()->with(['status' => $output]);
@@ -1892,63 +1915,65 @@ class ProductController extends Controller
                 $selected_products = explode(',', $request->input('selected_products_bulkPrint'));
 
                 $product = Product::where('business_id', $business_id)
-                ->whereIn('id', $selected_products)
-                                    ->get();
+                    ->whereIn('id', $selected_products)
+                    ->get();
                 $product = Product::leftJoin('brands', 'products.brand_id', '=', 'brands.id')
-                ->join('units', 'products.unit_id', '=', 'units.id')
-                ->leftJoin('categories as c1', 'products.category_id', '=', 'c1.id')
-                ->leftJoin('categories as c2', 'products.sub_category_id', '=', 'c2.id')
-                ->leftJoin('sizes as s', 'products.size_id', '=', 's.id')
-                ->leftJoin('sizes as ss', 'products.sub_size_id', '=', 'ss.id')
-                ->leftJoin('colors as c', 'products.color_id', '=', 'c.id')
-                ->leftJoin('tax_rates', 'products.tax', '=', 'tax_rates.id')
-                ->leftJoin('variation_location_details as vld', 'vld.product_id', '=', 'products.id')
-                ->join('variations as v', 'v.product_id', '=', 'products.id')
-                ->where('products.business_id', $business_id)
-                ->where('products.type', '!=', 'modifier')
-                ->whereIn('products.id', $selected_products)
-                ->select(
-                    'products.id',
-                    'products.name as product',
-                    'products.type',
-                    'products.refference',
-                    'c1.name as category',
-                    'c2.name as sub_category',
-                    's.name as SizeName',
-                    'ss.name as SubSizeName',
-                    'c.name as ColorName',
-                    'units.actual_name as unit',
-                    'brands.name as brand',
-                    'tax_rates.name as tax',
-                    'products.sku',
-                    'products.created_at',
-                    'products.bulk_add',
-                    'products.image',
-                    'products.enable_stock',
-                    'products.is_inactive',
-                    DB::raw('SUM(vld.qty_available) as current_stock'),
-                    DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
-                    DB::raw('MIN(v.sell_price_inc_tax) as min_price')
-                )->groupBy('products.id')->get();
+                    ->join('units', 'products.unit_id', '=', 'units.id')
+                    ->leftJoin('categories as c1', 'products.category_id', '=', 'c1.id')
+                    ->leftJoin('categories as c2', 'products.sub_category_id', '=', 'c2.id')
+                    ->leftJoin('sizes as s', 'products.size_id', '=', 's.id')
+                    ->leftJoin('sizes as ss', 'products.sub_size_id', '=', 'ss.id')
+                    ->leftJoin('colors as c', 'products.color_id', '=', 'c.id')
+                    ->leftJoin('tax_rates', 'products.tax', '=', 'tax_rates.id')
+                    ->leftJoin('variation_location_details as vld', 'vld.product_id', '=', 'products.id')
+                    ->join('variations as v', 'v.product_id', '=', 'products.id')
+                    ->where('products.business_id', $business_id)
+                    ->where('products.type', '!=', 'modifier')
+                    ->whereIn('products.id', $selected_products)
+                    ->select(
+                        'products.id',
+                        'products.name as product',
+                        'products.type',
+                        'products.refference',
+                        'c1.name as category',
+                        'c2.name as sub_category',
+                        's.name as SizeName',
+                        'ss.name as SubSizeName',
+                        'c.name as ColorName',
+                        'units.actual_name as unit',
+                        'brands.name as brand',
+                        'tax_rates.name as tax',
+                        'products.sku',
+                        'products.created_at',
+                        'products.bulk_add',
+                        'products.image',
+                        'products.enable_stock',
+                        'products.is_inactive',
+                        DB::raw('SUM(vld.qty_available) as current_stock'),
+                        DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
+                        DB::raw('MIN(v.sell_price_inc_tax) as min_price')
+                    )->groupBy('products.id')->get();
 
-                
+
                 return view('product.massBulkPrint')
-                ->with(compact( 'product' ));
-
+                    ->with(compact('product'));
             }
 
-            $output = ['success' => 1,
-                            'msg' => __('lang_v1.products_deactivated_success')
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __('lang_v1.products_deactivated_success')
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong"). "Message:" . $e->getMessage()
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong") . "Message:" . $e->getMessage()
+            ];
         }
-        dd($output);die();
+        dd($output);
+        die();
         // return redirect()->back()->with(['status' => $output]);
     }
 
@@ -1968,94 +1993,86 @@ class ProductController extends Controller
                 $location_id = $business_location_id;
                 foreach ($selected_products as $key => $objProduct) {
                     # code...
-                     $purchase_total = 0;
+                    $purchase_total = 0;
                     $arr = explode("@", $objProduct);
                     $productId = $arr[0];
                     $productQty = $arr[1];
                     $productOrignalQty = $arr[2];
                     $LeftQty = $productOrignalQty - $productQty;
-                    if(strcmp($productQty, $productOrignalQty) == 0)
-                    {
-                       DB::beginTransaction();
-                        $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id",$business_location_id)->where("purchase_lines.product_id",$productId)->first(); 
-                        if(empty($objOldPurchaseLine))
-                        {
-                            $objPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id",$user_location_id)->where("purchase_lines.product_id",$productId)->first(); 
+                    if (strcmp($productQty, $productOrignalQty) == 0) {
+                        DB::beginTransaction();
+                        $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $business_location_id)->where("purchase_lines.product_id", $productId)->first();
+                        if (empty($objOldPurchaseLine)) {
+                            $objPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $user_location_id)->where("purchase_lines.product_id", $productId)->first();
 
-                            $objTransaction = \App\Transaction::where("id",$objPurchaseLine->transaction_id)->update(['location_id' => $business_location_id]);
+                            $objTransaction = \App\Transaction::where("id", $objPurchaseLine->transaction_id)->update(['location_id' => $business_location_id]);
 
-                            $oldPurchaseLine = VariationLocationDetails::where("location_id",$user_location_id)->where("variation_id",$objPurchaseLine->variation_id)->where("product_id",$productId)->update(['location_id' => $business_location_id]);
-                        }else
-                        {
+                            $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objPurchaseLine->variation_id)->where("product_id", $productId)->update(['location_id' => $business_location_id]);
+                        } else {
                             // PL with new bussiness location id 
                             $objNewPurchaseLine = $objOldPurchaseLine;
                             $qtyForPurchaseLine = $productQty + $objNewPurchaseLine->quantity;
                             // PL with exisiting  location id 
-                            $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id",$user_location_id)->where("purchase_lines.product_id",$productId)->first(); 
-                            
+                            $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $user_location_id)->where("purchase_lines.product_id", $productId)->first();
+
                             // $product = Product::where('id', $productId)->update(['business_location_id' => $business_location_id]);
-                            $oldPurchaseLine = PurchaseLine::where("transaction_id",$objOldPurchaseLine->transaction_id)->where("product_id",$objOldPurchaseLine->product_id)->where("variation_id",$objOldPurchaseLine->variation_id)->update(['quantity' => $LeftQty]); //Update OLD ONE AND THEN NEW ONE
-                            $oldPurchaseLine = PurchaseLine::where("transaction_id",$objNewPurchaseLine->transaction_id)->where("product_id",$objNewPurchaseLine->product_id)->where("variation_id",$objNewPurchaseLine->variation_id)->update(['quantity' => $qtyForPurchaseLine]);  
-                              
+                            $oldPurchaseLine = PurchaseLine::where("transaction_id", $objOldPurchaseLine->transaction_id)->where("product_id", $objOldPurchaseLine->product_id)->where("variation_id", $objOldPurchaseLine->variation_id)->update(['quantity' => $LeftQty]); //Update OLD ONE AND THEN NEW ONE
+                            $oldPurchaseLine = PurchaseLine::where("transaction_id", $objNewPurchaseLine->transaction_id)->where("product_id", $objNewPurchaseLine->product_id)->where("variation_id", $objNewPurchaseLine->variation_id)->update(['quantity' => $qtyForPurchaseLine]);
+
                             //Update Variation_location_details Qty Remaining 
-                            $oldPurchaseLine = VariationLocationDetails::where("location_id",$user_location_id)->where("variation_id",$objOldPurchaseLine->variation_id)->where("product_id",$objOldPurchaseLine->product_id)->update(['qty_available' => $LeftQty]);
-                            $oldPurchaseLine = VariationLocationDetails::where("location_id",$business_location_id)->where("variation_id",$objNewPurchaseLine->variation_id)->where("product_id",$objNewPurchaseLine->product_id)->update(['qty_available' => $qtyForPurchaseLine]);
+                            $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $objOldPurchaseLine->product_id)->update(['qty_available' => $LeftQty]);
+                            $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objNewPurchaseLine->variation_id)->where("product_id", $objNewPurchaseLine->product_id)->update(['qty_available' => $qtyForPurchaseLine]);
                         }
-                        DB::commit(); 
+                        DB::commit();
+                    } else {
+                        DB::beginTransaction();
+                        $tempProduct = Product::with(['variations', 'purchase_lines', 'product_tax'])->findOrFail($productId);
+                        $oldTranscationLine = $tempProduct->purchase_lines;
+                        $objOrignalPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $user_location_id)->where("purchase_lines.product_id", $productId)->first();
+                        $objOrignalPurchaseLine = PurchaseLine::where("transaction_id", $objOrignalPurchaseLine->transaction_id)->where("product_id", $objOrignalPurchaseLine->product_id)->first();
 
-                        
-                    }else
-                    {
-                       DB::beginTransaction();
-                       $tempProduct = Product::with(['variations','purchase_lines', 'product_tax'])->findOrFail($productId); 
-                       $oldTranscationLine = $tempProduct->purchase_lines;
-                       $objOrignalPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id",$user_location_id)->where("purchase_lines.product_id",$productId)->first();
-                       $objOrignalPurchaseLine = PurchaseLine::where("transaction_id",$objOrignalPurchaseLine->transaction_id)->where("product_id",$objOrignalPurchaseLine->product_id)->first();
+                        $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $business_location_id)->where("purchase_lines.product_id", $productId)->first();
 
-                       $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id",$business_location_id)->where("purchase_lines.product_id",$productId)->first(); 
+                        $isPurchaseLineExist = false;
+                        if (!empty($objOldPurchaseLine)) {
+                            $isPurchaseLineExist = true;
+                            $ExisitngPurchaseLine = $objOldPurchaseLine;
+                        }
 
-                       $isPurchaseLineExist = false;
-                       if(!empty($objOldPurchaseLine))
-                       {
-                        $isPurchaseLineExist = true;
-                        $ExisitngPurchaseLine = $objOldPurchaseLine;
-                       }
+                        // $ExisitngPurchaseLine = NULL;
+                        // foreach ($oldTranscationLine as $key => $PurchaseLine ) {
+                        //     # code...
+                        //     if($PurchaseLine ->transaction->location_id == $business_location_id && $PurchaseLine->product_id == $productId)
+                        //     {
+                        //       $isPurchaseLineExist = true;
+                        //       $ExisitngPurchaseLine = $PurchaseLine;
+                        //     }
+                        // }
 
-                       // $ExisitngPurchaseLine = NULL;
-                       // foreach ($oldTranscationLine as $key => $PurchaseLine ) {
-                       //     # code...
-                       //     if($PurchaseLine ->transaction->location_id == $business_location_id && $PurchaseLine->product_id == $productId)
-                       //     {
-                       //       $isPurchaseLineExist = true;
-                       //       $ExisitngPurchaseLine = $PurchaseLine;
-                       //     }
-                       // }
+                        $ProductVariation = $tempProduct->variations[count($tempProduct->variations) - 1];
+                        $product = $tempProduct;
 
-                       $ProductVariation = $tempProduct->variations[count($tempProduct->variations)-1];
-                       $product = $tempProduct;
-
-                       $tax_percent = !empty($product->product_tax->amount) ? $product->product_tax->amount : 0;
-                       $tax_id = !empty($product->product_tax->id) ? $product->product_tax->id : null;
-                       $product_details = $tempProduct->toArray();
-                       $product_details['id'] = NULL;
-                       $product_details['business_location_id'] = $business_location_id;
+                        $tax_percent = !empty($product->product_tax->amount) ? $product->product_tax->amount : 0;
+                        $tax_id = !empty($product->product_tax->id) ? $product->product_tax->id : null;
+                        $product_details = $tempProduct->toArray();
+                        $product_details['id'] = NULL;
+                        $product_details['business_location_id'] = $business_location_id;
 
                         // $product = Product::create($product_details);
-                       $objVariation = $ProductVariation;
-                       $k = $objVariation->id;
-                       $purchase_price = $this->productUtil->num_uf(trim($objVariation->default_purchase_price));
-                       $item_tax = $this->productUtil->calc_percentage($objVariation->default_purchase_price, 0);
+                        $objVariation = $ProductVariation;
+                        $k = $objVariation->id;
+                        $purchase_price = $this->productUtil->num_uf(trim($objVariation->default_purchase_price));
+                        $item_tax = $this->productUtil->calc_percentage($objVariation->default_purchase_price, 0);
                         $purchase_price_inc_tax = $purchase_price + $item_tax;
 
                         $qty_remaining = $this->productUtil->num_uf(trim($productQty));
 
-                        $exp_date = null; 
-                        $lot_number = null; 
+                        $exp_date = null;
+                        $lot_number = null;
                         $purchase_line = null;
 
-                        if($isPurchaseLineExist)
-                        {
-                            $purchase_line = PurchaseLine::where("transaction_id",$ExisitngPurchaseLine->transaction_id)->where("product_id",$ExisitngPurchaseLine->product_id)->first();
+                        if ($isPurchaseLineExist) {
+                            $purchase_line = PurchaseLine::where("transaction_id", $ExisitngPurchaseLine->transaction_id)->where("product_id", $ExisitngPurchaseLine->product_id)->first();
                             //Quantity = remaining + used
                             $qty_remaining = $qty_remaining + $purchase_line->quantity_used;
 
@@ -2064,8 +2081,7 @@ class ProductController extends Controller
                                 $purchase_total += ($purchase_price_inc_tax * $qty_remaining);
                                 $old_qty = $purchase_line->quantity;
                             }
-                        }else 
-                        {
+                        } else {
                             if ($qty_remaining != 0) {
                                 //create newly added purchase lines
                                 $purchase_line = new PurchaseLine();
@@ -2076,7 +2092,7 @@ class ProductController extends Controller
 
                                 //Calculate transaction total
                                 $purchase_total += ($purchase_price_inc_tax * $qty_remaining);
-                            } 
+                            }
                         }
                         if (!is_null($purchase_line)) {
                             $purchase_line->item_tax = $item_tax;
@@ -2094,8 +2110,7 @@ class ProductController extends Controller
                         $transaction_date = \Carbon::createFromFormat('Y-m-d', $transaction_date)->toDateTimeString();
                         $is_new_transaction = false;
 
-                        if($isPurchaseLineExist)
-                        {
+                        if ($isPurchaseLineExist) {
                             $transaction = \App\Transaction::findOrFail($ExisitngPurchaseLine->transaction->id);
                             if (!empty($transaction)) {
                                 $transaction->total_before_tax = $purchase_total;
@@ -2104,15 +2119,13 @@ class ProductController extends Controller
                             }
                             $transaction_id = $transaction->id;
                             $qtyForPurchaseLine = $productQty + $purchase_line->quantity;
-
-                        }else
-                        {
+                        } else {
                             $qtyForPurchaseLine = $productQty;
                             $transaction = \App\Transaction::where('type', 'opening_stock')
-                                    ->where('business_id', $business_id)
-                                    ->where('opening_stock_product_id', $product->id)
-                                    ->where('location_id', $business_location_id)
-                                    ->first();
+                                ->where('business_id', $business_id)
+                                ->where('opening_stock_product_id', $product->id)
+                                ->where('location_id', $business_location_id)
+                                ->first();
                             if (!empty($transaction)) {
                                 $transaction->total_before_tax = $purchase_total;
                                 $transaction->final_total = $purchase_total;
@@ -2127,7 +2140,7 @@ class ProductController extends Controller
                                         'business_id' => $business_id,
                                         'transaction_date' => $transaction_date,
                                         'total_before_tax' => $purchase_total,
-                                        'document' => "Transfer At ".date("Y-m-d"),
+                                        'document' => "Transfer At " . date("Y-m-d"),
                                         'location_id' => $business_location_id,
                                         'final_total' => $purchase_total,
                                         'payment_status' => 'paid',
@@ -2146,47 +2159,47 @@ class ProductController extends Controller
                         // $this->productUtil->adjustStockOverSelling($transaction);
 
                         //adjust it 
-                        if($isPurchaseLineExist)
-                        {
-                            $oldPurchaseLine = PurchaseLine::where("id",$objOrignalPurchaseLine->id)->update(['quantity' => $LeftQty]);
-                             $oldPurchaseLine = PurchaseLine::where("transaction_id",$objOldPurchaseLine->transaction_id)->where("product_id",$product->id)->update(['quantity' => $qtyForPurchaseLine]);
-                        }else
-                        {
-                            $oldPurchaseLine = PurchaseLine::where("id",$objOrignalPurchaseLine->id)->update(['quantity' => $LeftQty]); //Update OLD ONE AND THEN NEW ONE
-                            $oldPurchaseLine = PurchaseLine::where("transaction_id",$objOldPurchaseLine->transaction_id)->where("product_id",$product->id)->update(['quantity' => $qtyForPurchaseLine]);
-
-
+                        if ($isPurchaseLineExist) {
+                            $oldPurchaseLine = PurchaseLine::where("id", $objOrignalPurchaseLine->id)->update(['quantity' => $LeftQty]);
+                            $oldPurchaseLine = PurchaseLine::where("transaction_id", $objOldPurchaseLine->transaction_id)->where("product_id", $product->id)->update(['quantity' => $qtyForPurchaseLine]);
+                        } else {
+                            $oldPurchaseLine = PurchaseLine::where("id", $objOrignalPurchaseLine->id)->update(['quantity' => $LeftQty]); //Update OLD ONE AND THEN NEW ONE
+                            $oldPurchaseLine = PurchaseLine::where("transaction_id", $objOldPurchaseLine->transaction_id)->where("product_id", $product->id)->update(['quantity' => $qtyForPurchaseLine]);
                         }
                         //Update Variation_location_details Qty Remaining 
-                        $oldPurchaseLine = VariationLocationDetails::where("location_id",$user_location_id)->where("variation_id",$objOrignalPurchaseLine->variation_id)->where("product_id",$product->id)->update(['qty_available' => $LeftQty]);
-                        $oldPurchaseLine = VariationLocationDetails::where("location_id",$business_location_id)->where("variation_id",$objOldPurchaseLine->variation_id)->where("product_id",$product->id)->update(['qty_available' => $qtyForPurchaseLine]);
+                        $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOrignalPurchaseLine->variation_id)->where("product_id", $product->id)->update(['qty_available' => $LeftQty]);
+                        $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $product->id)->update(['qty_available' => $qtyForPurchaseLine]);
 
-                         //create transaction & purchase lines
-                        DB::commit(); 
+                        //create transaction & purchase lines
+                        DB::commit();
                     }
                 }
-                
-                $output = ['success' => 1,
-                            'msg' => "TRANSFER SUCCESSFULY !"
-                        ];
+
+                $output = [
+                    'success' => 1,
+                    'msg' => "TRANSFER SUCCESSFULY !"
+                ];
                 return redirect('products')->with('status', $output);
-                
+
                 // return view('product.massBulkTransfer')->with(compact( 'product' ));
 
             }
 
-            $output = ['success' => 1,
-                            'msg' => __('lang_v1.products_deactivated_success')
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __('lang_v1.products_deactivated_success')
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong"). "Message:" . $e->getMessage()
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong") . "Message:" . $e->getMessage()
+            ];
         }
-        dd($output);die();
+        dd($output);
+        die();
         // return redirect()->back()->with(['status' => $output]);
     }
 
@@ -2206,18 +2219,20 @@ class ProductController extends Controller
             try {
                 $business_id = request()->session()->get('user.business_id');
                 $product = Product::where('id', $id)
-                                ->where('business_id', $business_id)
-                                ->update(['is_inactive' => 0]);
+                    ->where('business_id', $business_id)
+                    ->update(['is_inactive' => 0]);
 
-                $output = ['success' => true,
-                                'msg' => __("lang_v1.updated_success")
-                            ];
+                $output = [
+                    'success' => true,
+                    'msg' => __("lang_v1.updated_success")
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-                
-                $output = ['success' => false,
-                                'msg' => __("messages.something_went_wrong")
-                            ];
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = [
+                    'success' => false,
+                    'msg' => __("messages.something_went_wrong")
+                ];
             }
 
             return $output;
@@ -2238,23 +2253,34 @@ class ProductController extends Controller
         } elseif (!$this->moduleUtil->isQuotaAvailable('products', $business_id)) {
             return $this->moduleUtil->quotaExpiredResponse('products', $business_id, action('ProductController@index'));
         }
+        // $noRefferenceProducts = Product::where('refference', '=', null)->get();
+        //If brands, category are enabled then send else false.
+        $noRefferenceProducts = (request()->session()->get('business.enable_category') == 1) ? Category::catAndSubCategories($business_id) : false;
+        $suppliers = (request()->session()->get('business.enable_brand') == 1) ? Supplier::where('business_id', $business_id)
+            ->pluck('name', 'id')
+            ->prepend(__('lang_v1.all_suppliers'), 'all') : false;
+        // dd($suppliers);
+        // $brands = (request()->session()->get('business.enable_brand') == 1) ? Brands::where('business_id', $business_id)
+        //     ->pluck('name', 'id')
+        //     ->prepend(__('lang_v1.all_brands'), 'all') : false;
 
+        // dd($noRefferenceProducts->pluck('name'));
         $categories = Category::where('business_id', $business_id)
-                            ->where('parent_id', 0)
-                            ->pluck('name', 'id');
+            ->where('parent_id', 0)
+            ->pluck('name', 'id');
         $sizes = Size::where('business_id', $business_id)
-                            ->where('parent_id', 0)
-                            ->select('name', 'id')->get();
+            ->where('parent_id', 0)
+            ->select('name', 'id')->get();
 
         $brands = Brands::where('business_id', $business_id)->pluck('name', 'id');
         $ProductNameCategory = ProductNameCategory::where('business_id', $business_id)->pluck('name', 'id', 'row_no');
         $pnc = array();
         foreach ($ProductNameCategory as $key => $objPNC) {
             # code...
-            $pnc[] = $key."@".$objPNC;
+            $pnc[] = $key . "@" . $objPNC;
         }
         $pnc = json_encode($pnc);
-        $objBuss = \App\Business::find(request()->session()->get('user.business_id'));  
+        $objBuss = \App\Business::find(request()->session()->get('user.business_id'));
         $refferenceCount = str_pad($objBuss->prod_refference, 4, '0', STR_PAD_LEFT);
 
         $suppliers = Supplier::where('business_id', $business_id)->pluck('name', 'id');
@@ -2284,9 +2310,9 @@ class ProductController extends Controller
 
             if (!empty($duplicate_product->category_id)) {
                 $sub_categories = Category::where('business_id', $business_id)
-                        ->where('parent_id', $duplicate_product->category_id)
-                        ->pluck('name', 'id')
-                        ->toArray();
+                    ->where('parent_id', $duplicate_product->category_id)
+                    ->pluck('name', 'id')
+                    ->toArray();
             }
 
             //Rack details
@@ -2302,9 +2328,9 @@ class ProductController extends Controller
 
             if (!empty($duplicate_product->size_id)) {
                 $sub_sizes = Size::where('business_id', $business_id)
-                        ->where('parent_id', $duplicate_product->size_id)
-                        ->pluck('name', 'id')
-                        ->toArray();
+                    ->where('parent_id', $duplicate_product->size_id)
+                    ->pluck('name', 'id')
+                    ->toArray();
             }
 
             //Rack details
@@ -2318,7 +2344,7 @@ class ProductController extends Controller
         $module_form_parts = $this->moduleUtil->getModuleData('product_form_part');
 
         return view('product.bulkAdd')
-            ->with(compact('categories', 'brands', 'refferenceCount', 'pnc', 'suppliers', 'sizes','sub_sizes', 'colors', 'units', 'taxes', 'barcode_types', 'default_profit_percent', 'tax_attributes', 'barcode_default', 'business_locations', 'duplicate_product', 'sub_categories', 'rack_details', 'selling_price_group_count', 'module_form_parts'));
+            ->with(compact('categories', 'suppliers', 'noRefferenceProducts', 'brands', 'refferenceCount', 'pnc', 'suppliers', 'sizes', 'sub_sizes', 'colors', 'units', 'taxes', 'barcode_types', 'default_profit_percent', 'tax_attributes', 'barcode_default', 'business_locations', 'duplicate_product', 'sub_categories', 'rack_details', 'selling_price_group_count', 'module_form_parts'));
     }
 
     public function bulkAddStore(Request $request)
@@ -2329,55 +2355,56 @@ class ProductController extends Controller
 
         try {
             $business_id = $request->session()->get('user.business_id');
-            $form_fields = ['supplier_id',
-                            'brand_id',
-                            'category_id',
-                            'sub_category_id',
-                            'name',
-                            'name_id',
-                            'custom_price',
-                            'size_id',
-                            'sub_size_id',
-                            'qty',
-                            'refference',
-                            'sku',
-                            'color_id',
-                            'single_dpp',
-                            'single_dpp_inc_tax',
-                            'profit_percent',
-                            'single_dsp',
-                            'single_dsp_inc_tax','file'];
-            
+            $form_fields = [
+                'supplier_id',
+                'brand_id',
+                'category_id',
+                'sub_category_id',
+                'name',
+                'name_id',
+                'custom_price',
+                'size_id',
+                'sub_size_id',
+                'qty',
+                'refference',
+                'sku',
+                'color_id',
+                'single_dpp',
+                'single_dpp_inc_tax',
+                'profit_percent',
+                'single_dsp',
+                'single_dsp_inc_tax', 'file'
+            ];
+
             $objInputs = $request->only($form_fields);
             $requesst = $request->file('file');
-            $bulkAddCode = "BCD".$this->productUtil->getBulkSerial();
+            $bulkAddCode = "BCD" . $this->productUtil->getBulkSerial();
             $tempReff = 0;
-            $objBuss = \App\Business::find(request()->session()->get('user.business_id')); 
-            $tempReff = (int)$objBuss->prod_refference;
+            $objBuss = \App\Business::find(request()->session()->get('user.business_id'));
+            $tempReff = (int) $objBuss->prod_refference;
             $tRef = "";
-                DB::beginTransaction();
-            for($i=0;$i<count($objInputs['name']);$i++)
-            {
-                $deleteNameSeriesId = $objInputs['name_id'][$i]; 
+            DB::beginTransaction();
+            for ($i = 0; $i < count($objInputs['name']); $i++) {
+                $deleteNameSeriesId = $objInputs['name_id'][$i];
                 $product_details = array();
                 $product_details['supplier_id'] = $objInputs['supplier_id'][$i];
                 $product_details['brand_id'] = $objInputs['brand_id'][$i];
                 $product_details['category_id'] = $objInputs['category_id'][$i];
                 $product_details['name'] = $objInputs['name'][$i];
-                $product_details['color_id'] = $objInputs['color_id'][$i];  
-                $product_details['size_id'] = $objInputs['size_id'][$i]; 
-                $product_details['sub_size_id'] = $objInputs['sub_size_id'][$i]; 
-                $product_details['refference']  = $cRef = $objInputs['refference'][$i]; 
+                $product_details['color_id'] = $objInputs['color_id'][$i];
+                $product_details['size_id'] = $objInputs['size_id'][$i];
+                $product_details['sub_size_id'] = $objInputs['sub_size_id'][$i];
+                $product_details['refference']  = $cRef = $objInputs['refference'][$i];
 
-                
+
 
                 $product_details['type'] = "single";
                 $product_details['barcode_type'] = "C128";
                 $product_details['alert_quantity'] = "50";
                 $product_details['tax_type'] = "exclusive";
-                $product_details['enable_stock'] = 1 ;
-                $product_details['unit_id'] = 1 ;
-                $product_details['bulk_add'] = $bulkAddCode ;
+                $product_details['enable_stock'] = 1;
+                $product_details['unit_id'] = 1;
+                $product_details['bulk_add'] = $bulkAddCode;
 
                 $product_details['business_id'] = $business_id;
                 $product_details['created_by'] = $request->session()->get('user.id');
@@ -2386,7 +2413,7 @@ class ProductController extends Controller
                 if (!empty($objInputs['sub_category_id'][$i])) {
                     $product_details['sub_category_id'] = $objInputs['sub_category_id'][$i];
                 }
- 
+
                 $expiry_enabled = $request->session()->get('business.enable_product_expiry');
                 if (!empty($request->input('expiry_period_type')) && !empty($request->input('expiry_period')) && !empty($expiry_enabled) && ($product_details['enable_stock'] == 1)) {
                     $product_details['expiry_period_type'] = $request->input('expiry_period_type');
@@ -2394,43 +2421,41 @@ class ProductController extends Controller
                 }
 
                 if (!empty($request->input('enable_sr_no')) &&  $request->input('enable_sr_no') == 1) {
-                    $product_details['enable_sr_no'] = 1 ;
+                    $product_details['enable_sr_no'] = 1;
                 }
 
                 //upload document
-                if(!empty($objInputs['file'][$i]))
-                {
-                      $product_details['image'] =  $this->productUtil->uploadFileArr($request, 'file', config('constants.product_img_path'),$i);   
+                if (!empty($objInputs['file'][$i])) {
+                    $product_details['image'] =  $this->productUtil->uploadFileArr($request, 'file', config('constants.product_img_path'), $i);
                 }
-                
+
 
 
                 $product = Product::create($product_details);
-                if($deleteNameSeriesId != '0')
-                {
+                if ($deleteNameSeriesId != '0') {
                     ProductNameCategory::where('id', $deleteNameSeriesId)->delete();
                 }
 
                 $sku = $this->productUtil->generateProductSku($product->id);
-                    $product->sku = $sku;
-                    $product->save();
+                $product->sku = $sku;
+                $product->save();
 
                 if ($product->type == 'single') {
                     $this->productUtil->createSingleProductVariation($product->id, $product->sku, $objInputs['single_dpp'][$i], $objInputs['single_dpp_inc_tax'][$i], $objInputs['profit_percent'][$i], $objInputs['single_dsp'][$i], $objInputs['single_dsp_inc_tax'][$i]);
                 }
 
-                 if ($product->enable_stock == 1) {
+                if ($product->enable_stock == 1) {
                     $user_id = $request->session()->get('user.id');
 
                     $transaction_date = $request->session()->get("financial_year.start");
                     $transaction_date = \Carbon::createFromFormat('Y-m-d', $transaction_date)->toDateTimeString();
                     $variatArr = array(
                         "1" => array(
-                            "purchase_price"=>$objInputs['custom_price'][$i], 
-                            "quantity"=>$objInputs['qty'][$i],
-                            "exp_date"=>"",
-                            "lot_number"=>""
-                         )
+                            "purchase_price" => $objInputs['custom_price'][$i],
+                            "quantity" => $objInputs['qty'][$i],
+                            "exp_date" => "",
+                            "lot_number" => ""
+                        )
                     );
 
                     $this->productUtil->addSingleProductOpeningStock($business_id, $product, $variatArr, $transaction_date, $user_id);
@@ -2447,8 +2472,7 @@ class ProductController extends Controller
                 // if (!empty($product_racks)) {
                 //     $this->productUtil->addRackDetails($business_id, $product->id, $product_racks);
                 // } 
-                if($cRef != $tRef)
-                {
+                if ($cRef != $tRef) {
                     $tempReff++;
                     $tRef = $cRef;
                 }
@@ -2456,29 +2480,32 @@ class ProductController extends Controller
 
             // $reffCountArr = explode("0",$tempReff);
             // $reffCount = (int)$reffCountArr[count($reffCountArr)-1];
-             
-             $number = str_pad($tempReff, 4, '0', STR_PAD_LEFT);
-             $objBuss->prod_refference = $number;
+
+            $number = str_pad($tempReff, 4, '0', STR_PAD_LEFT);
+            $objBuss->prod_refference = $number;
             $objBuss->save();
             DB::commit();
-            
-            
 
-            $output = ['success' => 1,
-                            'msg' => "Bulk ".__('product.product_added_success')
-                        ];
+
+
+            $output = [
+                'success' => 1,
+                'msg' => "Bulk " . __('product.product_added_success')
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong").  "Line:" . $e->getLine(). "Message:" . $e->getMessage()
-                        ];
-            dd($e);die();
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong") .  "Line:" . $e->getLine() . "Message:" . $e->getMessage()
+            ];
+            dd($e);
+            die();
             return redirect('products/bulk_add')->with('status', $output);
         }
 
-        
+
         return redirect('products/bulk_add')->with('status', $output);
     }
 
@@ -2492,12 +2519,13 @@ class ProductController extends Controller
         $BulkId = $id;
 
         $product = Product::where('business_id', $business_id)
-                            ->where('bulk_add', $id)
-                            ->with(['color','brand', 'unit', 'category', 'sub_category', 'product_tax', 'variations'])
-                            ->get();
-  
+            ->where('bulk_add', $id)
+            ->with(['color', 'brand', 'unit', 'category', 'sub_category', 'product_tax', 'variations'])
+            ->get();
+
         return view('product.bulk_package')->with(compact(
-            'product' ,'BulkId'
+            'product',
+            'BulkId'
         ));
     }
 }

@@ -41,7 +41,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('/home/sales-payment-dues', 'HomeController@getSalesPaymentDues');
 
     Route::get('/load-more-notifications', 'HomeController@loadMoreNotifications');
-    
+
     Route::get('/business/settings', 'BusinessController@getBusinessSettings')->name('business.getBusinessSettings');
     Route::post('/business/update', 'BusinessController@postBusinessSettings')->name('business.postBusinessSettings');
     Route::get('/user/profile', 'UserController@getProfile')->name('user.getProfile');
@@ -49,7 +49,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::post('/user/update-password', 'UserController@updatePassword')->name('user.updatePassword');
 
     Route::resource('brands', 'BrandController');
-    
+
     Route::resource('payment-account', 'PaymentAccountController');
 
     Route::resource('tax-rates', 'TaxRateController');
@@ -83,9 +83,9 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('/products/viewBulkPackage/{id}', 'ProductController@viewBulkPackage');
     Route::get('/products/list', 'ProductController@getProducts');
     Route::get('/products/list-no-variation', 'ProductController@getProductsWithoutVariations');
-    
-     Route::post('/product_name_category/storeExcell', 'ProductNameCategoryController@storeExcell');
-     Route::get('/product_name_category/addExcell', 'ProductNameCategoryController@addExcell');
+
+    Route::post('/product_name_category/storeExcell', 'ProductNameCategoryController@storeExcell');
+    Route::get('/product_name_category/addExcell', 'ProductNameCategoryController@addExcell');
     Route::resource('/product_name_category', 'ProductNameCategoryController');
     Route::post('/products/get_sub_categories', 'ProductController@getSubCategories');
     Route::post('/products/get_sub_sizes', 'ProductController@getSubSizes');
@@ -107,7 +107,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('/products/updateProductId', 'ProductController@updateProductId');
     Route::get('/products/getProductId', 'ProductController@getProductId');
     Route::post('/products/bulk_add_store', 'ProductController@bulkAddStore');
-    
+
     Route::resource('products', 'ProductController');
     Route::resource('suppliers', 'SupplierController');
     Route::get('/sizes/getSubSize/{id}', 'SizeController@getSubSize');
@@ -141,7 +141,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('/sells/subscriptions', 'SellPosController@listSubscriptions');
     Route::get('/sells/invoice-url/{id}', 'SellPosController@showInvoiceUrl');
     Route::get('/sells/duplicate/{id}', 'SellController@duplicateSell');
-    Route::get('/sells/drafts', 'SellController@getDrafts'); 
+    Route::get('/sells/drafts', 'SellController@getDrafts');
     Route::get('/sells/quotations', 'SellController@getQuotations');
     Route::get('/sells/draft-dt', 'SellController@getDraftDatables');
     Route::get('/sells/showThis/{id}', 'SellController@showThis');
@@ -155,8 +155,9 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('/sells/pos/get-recent-transactions', 'SellPosController@getRecentTransactions');
     Route::get('/sells/{transaction_id}/print', 'SellPosController@printInvoice')->name('sell.printInvoice');
     Route::get('/sells/pos/get-product-suggestion', 'SellPosController@getProductSuggestion');
+    Route::get('/sells/pos/get-product-refference-suggestion', 'SellPosController@getProductRefferenceSuggestion');
     // Route::post('/ajaxSaleGiftCard', 'SellPosController@verifyCoupon');
-    Route::get('/pos/return/{transaction_id}', 'SellPosController@returnAndAdjust'); 
+    Route::get('/pos/return/{transaction_id}', 'SellPosController@returnAndAdjust');
     Route::post('/pos/returnCreate', 'SellPosController@returnCreate');
     Route::post('/pos/bulkHide', 'SellPosController@bulkHide')->name("bulkHide");
     Route::post('/pos/bulkUnHide', 'SellPosController@bulkUnHide')->name("bulkUnHide");
@@ -216,7 +217,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('/reports/product-stock-details', 'ReportController@productStockDetails');
     Route::get('/reports/adjust-product-stock', 'ReportController@adjustProductStock');
     Route::get('/reports/get-profit/{by?}', 'ReportController@getProfit');
-    
+
     //Business Location Settings...
     Route::prefix('business-location/{location_id}')->name('location.')->group(function () {
         Route::get('settings', 'LocationSettingsController@index')->name('settings');
@@ -267,7 +268,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     //Stock Transfer
     Route::get('stock-transfers/print/{id}', 'StockTransferController@printInvoice');
     Route::resource('stock-transfers', 'StockTransferController');
-    
+
     Route::get('/opening-stock/add/{product_id}', 'OpeningStockController@add');
     Route::post('/opening-stock/save', 'OpeningStockController@save');
 
@@ -283,7 +284,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('sell-return/get-product-row', 'SellReturnController@getProductRow');
     Route::get('/sell-return/print/{id}', 'SellReturnController@printInvoice');
     Route::get('/sell-return/add/{id}', 'SellReturnController@add');
-    
+
     //Backup
     Route::get('backup/download/{file_name}', 'BackUpController@download');
     Route::get('backup/delete/{file_name}', 'BackUpController@delete');
@@ -326,7 +327,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
         Route::post('/link-account', 'AccountReportsController@postLinkAccount');
         Route::get('/cash-flow', 'AccountController@cashFlow');
     });
-    
+
 
     //Restaurant module
     Route::group(['prefix' => 'modules'], function () {
