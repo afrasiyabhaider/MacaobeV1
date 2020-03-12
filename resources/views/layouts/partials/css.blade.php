@@ -5,6 +5,8 @@
 
 <!-- Styles -->
 <link rel="stylesheet" href="{{ asset('plugins/jquery-ui/jquery-ui.min.css?v='.$asset_v) }}">
+<!-- Bootstrap 4.3.1 -->
+{{-- <link rel="stylesheet" href="{{ asset('bootstrap-4.3.1/css/bootstrap.min.css?v='.$asset_v) }}"> --}}
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css?v='.$asset_v) }}">
 

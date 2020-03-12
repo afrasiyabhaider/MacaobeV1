@@ -671,6 +671,109 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
+        if (!auth()->user()->can('product.create')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $business_id = request()->session()->get('user.business_id');
+
+        //Check if subscribed or not, then check for products quota
+        if (!$this->moduleUtil->isSubscribed($business_id)) {
+            return $this->moduleUtil->expiredResponse();
+        } elseif (!$this->moduleUtil->isQuotaAvailable('products', $business_id)) {
+            return $this->moduleUtil->quotaExpiredResponse('products', $business_id, action('ProductController@index'));
+        }
+        $product = Product::find($id)->where('business_id', '=', $business_id)->first();
+        //If brands, category are enabled then send else false.
+        $noRefferenceProducts = (request()->session()->get('business.enable_category') == 1) ? Category::catAndSubCategories($business_id) : false;
+        $suppliers = (request()->session()->get('business.enable_brand') == 1) ? Supplier::where('business_id', $business_id)
+            ->pluck('name', 'id')
+            ->prepend(__('lang_v1.all_suppliers'), 'all') : false;
+        $categories = Category::where('parent_id', 0)
+            ->pluck('name', 'id');
+        $sizes = Size::where('business_id', $business_id)
+            ->where('parent_id', 0)
+            ->select('name', 'id')->get();
+
+        $brands = Brands::where('business_id', $business_id)->pluck('name', 'id');
+        $ProductNameCategory = ProductNameCategory::where('business_id', $business_id)->pluck('name', 'id', 'row_no');
+        $pnc = array();
+        foreach ($ProductNameCategory as $key => $objPNC) {
+            # code...
+            $pnc[] = $key . "@" . $objPNC;
+        }
+        $pnc = json_encode($pnc);
+        $objBuss = \App\Business::find(request()->session()->get('user.business_id'));
+        $refferenceCount = str_pad($objBuss->prod_refference, 4, '0', STR_PAD_LEFT);
+
+        $suppliers = Supplier::where('business_id', $business_id)->pluck('name', 'id');
+        $colors = Color::where('business_id', $business_id)->pluck('name', 'id');
+        $units = Unit::forDropdown($business_id, true);
+
+        $tax_dropdown = TaxRate::forBusinessDropdown($business_id, true, true);
+        $taxes = $tax_dropdown['tax_rates'];
+        $tax_attributes = $tax_dropdown['attributes'];
+
+        $barcode_types = $this->barcode_types;
+        $barcode_default =  $this->productUtil->barcode_default();
+
+        $default_profit_percent = Business::where('id', $business_id)->value('default_profit_percent');
+
+        //Get all business locations
+        $business_locations = BusinessLocation::forDropdown($business_id);
+
+        //Duplicate product
+        $duplicate_product = null;
+        $rack_details = null;
+
+        $sub_categories = [];
+        if (!empty(request()->input('d'))) {
+            $duplicate_product = Product::where('business_id', $business_id)->find(request()->input('d'));
+            $duplicate_product->name .= ' (copy)';
+
+            if (!empty($duplicate_product->category_id)) {
+                $sub_categories = Category::where('business_id', $business_id)
+                    ->where('parent_id', $duplicate_product->category_id)
+                    ->pluck('name', 'id')
+                    ->toArray();
+            }
+
+            //Rack details
+            if (!empty($duplicate_product->id)) {
+                $rack_details = $this->productUtil->getRackDetails($business_id, $duplicate_product->id);
+            }
+        }
+
+        $sub_sizes = [];
+        if (!empty(request()->input('d'))) {
+            $duplicate_product = Product::where('business_id', $business_id)->find(request()->input('d'));
+            $duplicate_product->name .= ' (copy)';
+
+            if (!empty($duplicate_product->size_id)) {
+                $sub_sizes = Size::where('business_id', $business_id)
+                    ->where('parent_id', $duplicate_product->size_id)
+                    ->pluck('name', 'id')
+                    ->toArray();
+            }
+
+            //Rack details
+            if (!empty($duplicate_product->id)) {
+                $rack_details = $this->productUtil->getRackDetails($business_id, $duplicate_product->id);
+            }
+        }
+
+        $selling_price_group_count = SellingPriceGroup::countSellingPriceGroups($business_id);
+
+        $module_form_parts = $this->moduleUtil->getModuleData('product_form_part');
+
+        // dd($categories);
+        // dd($product);
+        // dd($sub_categories);
+        return view('product.edit')
+            ->with(compact('product', 'categories', 'suppliers', 'noRefferenceProducts', 'brands', 'refferenceCount', 'pnc', 'suppliers', 'sizes', 'sub_sizes', 'colors', 'units', 'taxes', 'barcode_types', 'default_profit_percent', 'tax_attributes', 'barcode_default', 'business_locations', 'duplicate_product', 'sub_categories', 'rack_details', 'selling_price_group_count', 'module_form_parts'));
+    }
+    public function old_edit($id)
+    {
         if (!auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
         }
@@ -2241,6 +2344,7 @@ class ProductController extends Controller
 
     public function bulkAdd()
     {
+
         if (!auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
@@ -2259,12 +2363,6 @@ class ProductController extends Controller
         $suppliers = (request()->session()->get('business.enable_brand') == 1) ? Supplier::where('business_id', $business_id)
             ->pluck('name', 'id')
             ->prepend(__('lang_v1.all_suppliers'), 'all') : false;
-        // dd($suppliers);
-        // $brands = (request()->session()->get('business.enable_brand') == 1) ? Brands::where('business_id', $business_id)
-        //     ->pluck('name', 'id')
-        //     ->prepend(__('lang_v1.all_brands'), 'all') : false;
-
-        // dd($noRefferenceProducts->pluck('name'));
         $categories = Category::where('business_id', $business_id)
             ->where('parent_id', 0)
             ->pluck('name', 'id');

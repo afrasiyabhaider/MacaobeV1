@@ -41,10 +41,15 @@
 {!! Form::open(['url' => action('ProductController@bulkAddStore'), 'method' => 'post', 
     'id' => 'product_add_form','class' => 'product_form', 'files' => true ]) !!}
    <div class="row">
-	   <div class="col-md-8">
+	   <div class="col-md-12">
 			@component('components.widget', ['class' => 'box-primary'])
-				<div class="row">
-					<div class="col-sm-4 @if(!session('business.enable_brand')) hide @endif">
+			<div class="row">
+				<div class="col-sm-12">
+					<h3 class="text-muted">Product Detail</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4 @if(!session('business.enable_brand')) hide @endif">
 					<div class="form-group">
 						{!! Form::label('supplier_id', __('product.supplier') . ':') !!}
 						<div class="input-group">
@@ -154,8 +159,11 @@
 					</div>
 					</div>
 					<div class="clearfix"></div>
-					<div class="">
+					<div style="margin-top:50px">
 						<div class="col-sm-4">
+							{{-- This is only for alternative of offset --}}
+						</div>
+						<div class="col-sm-3">
 							<div class="form-group">
 								{{-- {!! Form::label('size_id', __('product.size') . ':') !!} --}}
 								<div class="input-group">
@@ -167,7 +175,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-4">
+						<div class="col-sm-5">
 							<div class="form-group">
 								
 								<div class="input-group">
@@ -216,10 +224,24 @@
 				</div>
 			@endcomponent
 		</div>
-		<div class="col-md-4">
-			{{-- <h1>Hello There</h1> --}}
-			<div class="box box-widget">
+		{{-- Right Sidebar --}}
+		{{-- <div class="col-md-4">
+			<div class="box box-primary">
+				<div class="box-header">
+					<h3 class="text-muted">
+						Recently Added
+					</h3>
+				</div>
+				<div class="box-body">
+				</div>
+			</div>
+		</div> --}}
+		{{-- <div class="col-md-4">
+			<h1>Hello There</h1>
+			box-widget
+			<div class="box box-primary">
 				<div class="box-header with-border">
+					<h3 class="text-muted">Choose Product</h3>
 
 				@if(!empty($noRefferenceProducts))
 					<select class="select2" id="product_category" style="width:45% !important">
@@ -243,12 +265,6 @@
 
 				@if(!empty($suppliers))
 					&nbsp;
-					{{-- {{dd($brands)}} --}}
-					{{-- {!! Form::select('suppliers', $suppliers, null, ['id' => 'supplier', 'class' => 'select2','placeholder' => __('All Suppliers'), 'name' => null, 'style' => 'width:45% !important']) !!}
-					 --}}
-					 {{-- {{
-						 dd($suppliers)
-					 }} --}}
 					 <select class="select2" id="supplier" style="width:45% !important">
 						<option value="all">All Suppliers</option>
 						@foreach($suppliers as $key=>$noRefference)
@@ -281,8 +297,8 @@
 				</div>
 				<!-- /.box-body -->
 			</div>
-			{{-- @include('sale_pos.partials.product_list_box') --}}
-		</div>
+			@include('sale_pos.partials.product_list_box')
+		</div> --}}
    </div>
 
     <div class="hide">
@@ -433,20 +449,22 @@
     </div>
     <div class="row">
 		<div class="col-sm-12">
-		<input type="hidden" name="submit_type" id="submit_type">
-		<div class="text-center">
-		<div class="btn-group">
-			
+			<input type="hidden" name="submit_type" id="submit_type">
+			<div class="text-center row">
+				<div class="btn-group">
+					{{-- <button type="button"   class="btn bg-maroon "  onclick="clearAll();">Clear & Move NEXT</button> --}}
 
-			<button type="button"   class="btn bg-maroon "  onclick="clearAll();">Clear & Move NEXT</button>
-
-			<button type="button"  class="btn btn-primary" onclick="addThis();">@lang('messages.save')</button>
-			<button type="submit"  class="btn btn-primary hide" id="btnSubmit">@lang('messages.save')</button>
+					<button type="button" class="btn btn-success col-12" onclick="addThis();">
+						<i class="fa fa-save"></i>
+						@lang('messages.save')</button>
+					<button type="submit"  class="btn btn-primary hide" id="btnSubmit">
+						<i class="fa fa-save"></i>
+						@lang('messages.save')
+					</button>
+				</div>
+			</div>
 		</div>
-		
-		</div>
-		</div>
-  </div>
+	</div>
   <hr/>
   <div class="row box box-primary" id="c"> 
       <div class="col-md-12">
@@ -456,8 +474,9 @@
           <div class="col-md-1"><b>SubCategory</b></div>
           {{-- <div class="col-md-1"><b>Unit</b></div> --}}
           <div class="col-md-1"><b>Name</b></div>
-          <div class="col-md-1"><b>Refference</b></div>
-          <div class="col-md-1"><b>Price</b></div>
+          {{-- <div class="col-md-1"><b>Refference</b></div> --}}
+          <div class="col-md-1"><b>Unit Price</b></div>
+          <div class="col-md-1"><b>Sale Price</b></div>
           <div class="col-md-1"><b>Color</b></div>
           <div class="col-md-1"><b>Qty</b></div>
           <div class="col-md-1"><b>Size</b></div>
@@ -467,7 +486,8 @@
     </div>
     <div class="row box box-primary" id="bulk_product_home"> 
       
-    </div>
+	</div>
+	
 {!! Form::close() !!}
   
 </section>
@@ -482,7 +502,18 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" id="btnClose">&times;</button>
         <h4 class="modal-title">Choose Size</h4>
-      </div>
+	  </div>
+	  <div class="row" style="margin: 10px;">
+			<div class="col-md-12">
+				@foreach($sizes as $id => $objSize)
+					<div class="col-sm-4">
+						<input type="radio" id="btnSize_{{$objSize->id}}" name="chooseSize" class="" value="{{$objSize->id}}">
+						{{-- onclick="getSizes({{$objSize->id}})" --}}
+						<label class="custom-control-label" for="btnSize_{{$objSize->id}}">{{$objSize->name}} </label>
+					</div>
+				@endforeach
+			</div> 
+        </div>
       <div class="col-sm-12 @if(!session('business.enable_brand')) hide @endif">
           <div class="form-group">
             {!! Form::label('color_id', __('product.color') . ':') !!}
@@ -494,14 +525,13 @@
             </div>
           </div>
         </div>
-       <div class="row" style="margin: 10px;">
-
-        <div class="col-md-12">
-          @foreach($sizes as $id => $objSize)
-          <button type="button" class="col-md-4 btn btn-md btn-danger" id="btnSize_{{$objSize->id}}" onclick="getSizes({{$objSize->id}})">{{$objSize->name}}</button>
-          @endforeach
-        </div> 
-        </div>
+        {{-- <div class="row" style="margin: 10px;">
+			<div class="col-md-12">
+				@foreach($sizes as $id => $objSize)
+					<button type="button" class="col-md-4 btn btn-md btn-danger" id="btnSize_{{$objSize->id}}" onclick="getSizes({{$objSize->id}})">{{$objSize->name}}</button>
+				@endforeach
+			</div> 
+        </div> --}}
         <div class="row" id="sizeArea">
           <div class="col-md-12">
             <div class="col-md-4"><b>Size</b></div>
@@ -590,6 +620,50 @@
      {
       obj.defaultValue = obj.value;
      }
+	$("#color_idc").change(function(){
+		var chooseSizeRadio = $("input[name='chooseSize']").is(':checked')
+		if(chooseSizeRadio){
+			// console.log($("input[name='chooseSize']:checked").val());
+			sizeId = $("input[name='chooseSize']:checked").val();
+			name = sizeId;
+		}else{
+			alert("Please Select Size First "); 
+			return(false);
+		}
+		var html = $("#sizeArea").html(); 
+		$.ajax({
+			type:'GET',
+			url:'/sizes/getSubSize/'+name, 
+			success:function(data){
+				if(data.success)
+				{ 
+					var obj = data.msg;
+					size_idtext = $("#btnSize_"+sizeId).html();
+					
+					for (i = 0  ; i < obj.length; i++) {
+					rowSize++ ;
+					html += "<div class=' col-md-12' id='sizeRow_"+rowSize+"'> ";
+					html += "<div class=' col-md-2'><select class='form-control' readonly><option value='"+sizeId+"'>"+size_idtext+"</option></select></div>";
+					html += "<div class=' col-md-2'><select class='form-control'  readonly><option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option></select></div>";
+					html += "<div class=' col-md-2'><select onchange='setColorWithSize("+i+");' class='form-control' form='product_add_form'  readonly required id='color_id_"+i+"'> <option selected='selected' value='"+$("#color_idc option:selected").val()+"'>"+$("#color_idc option:selected").text()+"</option></select></div>";
+
+					html += "<div class=' col-md-3'><input tab-index='"+i+"' onChange='setValue(this);' type='number' data-size='"+sizeId+"' data-size-name='"+size_idtext+"' data-size-sub='"+obj[i]['id']+"' data-size-sub-name='"+obj[i]['name']+"' data-color='"+$("#color_idc option:selected").val()+"' data-color-name='"+$("#color_idc option:selected").text()+"' class='form-control sizeQty'  value='1'  id='datasize_"+i+"'/></div>";
+
+					html += "<div class=' col-md-1'><button onclick='removeSize("+rowSize+")' class='btn btn-sm btn-danger'>X</button></div>";
+					html += "</div>";
+					}
+					$("#sizeArea").html(html);
+
+				}else
+				{
+					alert(" "+data.msg);
+					$("#amount_"+rowIndex).val(0).change();
+					$("#note_"+rowIndex).val('');
+			ResetFields(rowIndex);
+				}
+			}
+		});
+	});
      function getSizes(sizeId)
      {
       if($("#color_idc").val() == "")
@@ -791,7 +865,8 @@
         alert("Please Fill All Required Fields \n"+emptyFields); return(false);
       }
         Style = " style='padding: 10px; '";
-      if(row%2 == 0 ) Style = "style='background-color:#3c8dbc;padding: 10px; color: white;'";
+		// 3c8dbc
+      if(row%2 == 0 ) Style = "style='background-color:#45b9d6;padding: 10px;color:white'";
       if(IsAnother) Style = lastBG;
       lastBG = Style;
       var html = '<div class="col-md-12 " '+Style+' id="product_row_'+row+'"> ';
@@ -836,8 +911,8 @@
             html += ' <div class="col-md-'+size+'"><select title="Color" class="custom-form-control" name="color_id[]"><option value="'+$(this).attr("data-color")+'">'+$(this).attr("data-color-name")+'</option></select> </div>'; 
 
             html += ' <div class="col-md-'+size+'"><input class="custom-form-control bulkProducts" title="QTY" name="qty[]" type="number" value="'+$(this).val()+'" /> </div>';
-
-            html += ' <div class="col-md-'+size+'"><select title="SIZE" class="custom-form-control" name="size_id[]"><option value="'+$(this).attr("data-size")+'">'+$(this).attr("data-size-name")+'</option></select><select title="Sub Size" class="custom-form-control" name="sub_size_id[]"><option value="'+$(this).attr("data-size-sub")+'">'+$(this).attr("data-size-sub-name")+'</option></select></div>'; 
+//  <select title="SIZE" class="custom-form-control" name="size_id[]"><option value="'+$(this).attr("data-size")+'">'+$(this).attr("data-size-name")+'</option></select>
+            html += '<div class="col-md-'+size+'"><input type="hidden" name="size_id[]" value="'+$(this).val()+'"><select title="Sub Size" class="custom-form-control" name="sub_size_id[]"><option value="'+$(this).attr("data-size-sub")+'">'+$(this).attr("data-size-sub-name")+'</option></select></div>'; 
 
             if($(".file-preview-image").attr("src")==undefined)
             {
@@ -1014,6 +1089,7 @@
 						$("#unit_price").val(result.product_price.dpp_inc_tax);
 						$("#single_dpp").val(result.product_price.dpp_inc_tax).trigger("change");
 						$("#custom_price").val(result.product_price.sell_price_inc_tax);
+						DittoThis(result.product_price.sell_price_inc_tax,result.product_price.dpp_inc_tax)
 						
 					} else {
 						toastr.error('No record found. Please try another product or insert record manually.');

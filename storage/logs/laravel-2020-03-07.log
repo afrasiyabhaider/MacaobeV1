@@ -9544,3 +9544,4 @@
 #55 G:\\Wamps\\wamp\\www\\github\\MacaobeV1\\public\\index.php(53): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #56 {main}
 "} 
+[2020-03-07 20:32:26] live.EMERGENCY: File:G:\Wamps\wamp\www\github\MacaobeV1\app\Http\Controllers\ProductController.phpLine:2398Message:Undefined index: size_id  

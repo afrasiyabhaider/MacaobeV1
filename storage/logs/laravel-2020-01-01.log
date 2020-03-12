@@ -1,6 +1,0 @@
-[2020-01-01 11:47:12] live.EMERGENCY: File:/home/jtvxoa2jr8nu/macaobe.com/app/Utils/TransactionUtil.phpLine:770Message:Undefined property: Illuminate\Database\Eloquent\Relations\BelongsTo::$first_name  
-[2020-01-01 11:50:12] live.EMERGENCY: File:/home/jtvxoa2jr8nu/macaobe.com/app/Utils/TransactionUtil.phpLine:755Message:Undefined property: Illuminate\Database\Eloquent\Relations\BelongsTo::$first_name  
-[2020-01-01 12:18:58] live.EMERGENCY: ERROR: NOT ALLOWED: Mismatch between sold and purchase quantity. Product: carmela SKU: 74364840002 Quantity: 1 Business: MaCaO Location: Main Shop  
-[2020-01-01 12:18:58] live.EMERGENCY: File:/home/jtvxoa2jr8nu/macaobe.com/app/Utils/TransactionUtil.phpLine:2550Message:ERROR: NOT ALLOWED: Mismatch between sold and purchase quantity. Product: carmela SKU: 74364840002 Quantity: 1  
-[2020-01-01 12:38:24] live.EMERGENCY: ERROR: NOT ALLOWED: Mismatch between sold and purchase quantity. Product: carmela SKU: 74364840002 Quantity: 1 Business: MaCaO Location: Main Shop  
-[2020-01-01 12:38:24] live.EMERGENCY: File:/home/jtvxoa2jr8nu/macaobe.com/app/Utils/TransactionUtil.phpLine:2550Message:ERROR: NOT ALLOWED: Mismatch between sold and purchase quantity. Product: carmela SKU: 74364840002 Quantity: 1  
