@@ -69,6 +69,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
 
     Route::resource('variation-templates', 'VariationTemplateController');
 
+    Route::post('/products/bulkUpdate', 'ProductController@bulkUpdate');
     Route::post('/products/mass-deactivate', 'ProductController@massDeactivate');
     Route::get('/products/transfer', 'ProductController@transfer');
     Route::post('/products/mass-print', 'ProductController@massBulkPrint');

@@ -711,6 +711,7 @@ class ComposerStaticInitd25fe27e03ec6c501754f7b68aafaf3d
         'App\\Http\\Controllers\\PesaPalController' => __DIR__ . '/../..' . '/app/Http/Controllers/PesaPalController.php',
         'App\\Http\\Controllers\\PrinterController' => __DIR__ . '/../..' . '/app/Http/Controllers/PrinterController.php',
         'App\\Http\\Controllers\\ProductController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProductController.php',
+        'App\\Http\\Controllers\\ProductNameCategoryController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProductNameCategoryController.php',
         'App\\Http\\Controllers\\PurchaseController' => __DIR__ . '/../..' . '/app/Http/Controllers/PurchaseController.php',
         'App\\Http\\Controllers\\PurchaseReturnController' => __DIR__ . '/../..' . '/app/Http/Controllers/PurchaseReturnController.php',
         'App\\Http\\Controllers\\ReportController' => __DIR__ . '/../..' . '/app/Http/Controllers/ReportController.php',

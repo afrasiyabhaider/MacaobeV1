@@ -266,7 +266,7 @@ class SellPosController extends Controller
      */
     public function create()
     {
-        
+
         if (!auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
         }

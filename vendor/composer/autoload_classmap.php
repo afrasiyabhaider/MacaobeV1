@@ -177,6 +177,7 @@ return array(
     'App\\Http\\Controllers\\PesaPalController' => $baseDir . '/app/Http/Controllers/PesaPalController.php',
     'App\\Http\\Controllers\\PrinterController' => $baseDir . '/app/Http/Controllers/PrinterController.php',
     'App\\Http\\Controllers\\ProductController' => $baseDir . '/app/Http/Controllers/ProductController.php',
+    'App\\Http\\Controllers\\ProductNameCategoryController' => $baseDir . '/app/Http/Controllers/ProductNameCategoryController.php',
     'App\\Http\\Controllers\\PurchaseController' => $baseDir . '/app/Http/Controllers/PurchaseController.php',
     'App\\Http\\Controllers\\PurchaseReturnController' => $baseDir . '/app/Http/Controllers/PurchaseReturnController.php',
     'App\\Http\\Controllers\\ReportController' => $baseDir . '/app/Http/Controllers/ReportController.php',
