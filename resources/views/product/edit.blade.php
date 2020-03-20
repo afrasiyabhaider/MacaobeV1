@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', __('product.add_new_product'))
+@section('title', __('Update Product'))
 
 @section('content')
 <style type="text/css">
@@ -22,226 +22,209 @@
     background-image: none;
     border: 1px solid #ccc;
   }
+  
 </style>
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <h1>@lang('product.add_new_product') 
-	 <!-- ---- Row Series  | 
-		<input type="number" onchange="editPnc(this);" value="0"> 
-	 -->
-   </h1>
-    <!-- <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-        <li class="active">Here</li>
-    </ol> -->
-</section>
 
 <!-- Main content -->
 <section class="content">
-{!! Form::open(['url' => action('ProductController@bulkAddStore'), 'method' => 'post', 
-    'id' => 'product_add_form','class' => 'product_form', 'files' => true ]) !!}
+	@if ($errors->any())
+	    <div class="container">
+		    <div class="row">
+				<div class="col-sm-6">
+					<div>
+						<div class="alert alert-danger alert-dismissable">
+							<button type="button " class="close float-right" data-dismiss="alert" aria-label="Close">
+								<span aria-hidden="true">
+									<i class="fa fa-2x fa-times-circle"></i>
+								</span>
+							</button>
+							<h4>
+								Must Remove Following Errors
+							</h4>
+							<ul>
+								@foreach ($errors->all() as $item)
+									<li>
+										{{ $item}}
+									</li>
+								@endforeach
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+	    </div>
+	@endif
+{!! Form::open(['url' => action('ProductController@bulkUpdate'), 'method' => 'post', 
+    'id' => 'product_update_form','class' => 'product_update_form', 'files' => true ]) !!}
+    <input type="hidden" name="product_id" value="{{$product->id}}" id="product_id">
    <div class="row">
-	   <div class="col-md-12">
-			@component('components.widget', ['class' => 'box-primary'])
-			<div class="row">
-				<div class="col-sm-12">
-					<h3 class="text-muted">Product Detail</h3>
+	   <div class="col-md-8">
+		   <h3 class="text-muted">
+			   Update Product
+		   </h3>
+          @component('components.widget', ['class' => 'box-primary'])
+               <div class="row mb-5">
+                    <div class="col-md-4">
+                         <label>Supplier</label>
+                         <select name="supplier" id="supplier_id" onchange="getSupplierDetails();" class="select2 form-control">
+                              <optgroup>
+                                   <option value="0">
+                                        Please Select Supplier
+                                   </option>
+                                   @foreach ($suppliers as $key=>$value)
+                                        <option value="{{$key}}" @if ($product->supplier_id == $key)
+                                            selected
+                                        @endif>
+                                             {{
+                                                  $value
+                                             }}
+                                        </option>
+                                   @endforeach
+                              </optgroup>
+                         </select>
+				</div>
+				<div class="col-md-4">
+					<label>Category</label>
+					<select name="category" id="category_id"  class="select2 form-control">
+                              <optgroup>
+                                   <option value="0">
+                                        Please Select Category
+                                   </option>
+                                   @foreach ($categories as $key=>$value)
+								<option value="{{$key}}" @if ($product->category_id == $key)
+								    selected
+								@endif>
+                                             {{
+                                                  $value
+                                             }}
+                                        </option>
+                                   @endforeach
+                              </optgroup>
+                         </select>
+				</div>
+				<div class="col-md-4">
+					<label>Sub-Category</label>
+					<select name="sub_category" id="sub_category_id"  class="select2 form-control">
+                              <optgroup>
+                                   <option value="0">
+                                        Please Select Sub-Category
+                                   </option>
+                                   @foreach ($sub_categories as $key=>$value)
+                                        <option value="{{$key}}">
+                                             {{
+                                                  $value
+                                             }}
+                                        </option>
+                                   @endforeach
+                              </optgroup>
+                         </select>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-sm-4 @if(!session('business.enable_brand')) hide @endif">
+			<div class="row" style="margin-top: 20px">
+				<div class="col-sm-4">
+					@if ($product->image != null)
+						<img src="{{asset('uploads/img/'.$product->image)}}" class="img-thumbnail img-responsive" style="width:100px" id="img-previewer" name="image">
+					@else
+						<img src="{{asset('img/default.png')}}" class="img-thumbnail img-responsive" style="width:100px" id="img-previewer" name="image">	    
+					@endif
 					<div class="form-group">
-						{!! Form::label('supplier_id', __('product.supplier') . ':') !!}
-						<div class="input-group">
-						{!! Form::select('supplier_id', $suppliers, !empty($duplicate_product->supplier_id) ? $duplicate_product->supplier_id : null, ['placeholder' => __('messages.please_select'), 'class' => 'req form-control select2', 'required' => 'true', 'onchange' => 'getSupplierDetails()']); !!}
-						<span class="input-group-btn">
-							<button type="button" @if(!auth()->user()->can('supplier.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('SupplierController@create', ['quick_add' => true])}}" title="@lang('supplier.add_brand')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
-						</span>
-						</div>
-					</div>
-					</div>
-					<div class="col-sm-4 @if(!session('business.enable_category')) hide @endif">
-					<div class="form-group">
-						{!! Form::label('category_id', __('product.category') . ':') !!}
-						<div class="input-group">
-						{!! Form::select('category_id', $categories, !empty($duplicate_product->category_id) ? $duplicate_product->category_id: null, ['placeholder' => __('messages.please_select'), 'class' => 'req form-control select2', 'required' => 'true']); !!}
-						<span class="input-group-btn">
-							<button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('CategoryController@createCategory', ['quick_add' => true])}}" title="@lang('brand.add_brand')" data-container=".view_modal">
-							<i class="fa fa-plus-circle text-primary fa-lg"></i>
-							</button>
-						</span>
-						</div>
-					</div>
-					</div>
-
-					<div class="col-sm-4 @if(!(session('business.enable_category') && session('business.enable_sub_category'))) hide @endif">
-					<div class="form-group">
-						{!! Form::label('sub_category_id', __('product.sub_category') . ':') !!}
-						<div class="input-group">
-						{!! Form::select('sub_category_id', $sub_categories, !empty($duplicate_product->sub_category_id) ? $duplicate_product->sub_category_id : null, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2']); !!}
-						<span class="input-group-btn">
-							<button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal mt-2" data-href="{{action('CategoryController@createSubCategory', ['quick_add' => true])}}" title="@lang('brand.add_brand')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
-						</span>
-						</div>
-					</div>
-					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-							{!! Form::label('image', __('lang_v1.product_image') . ':') !!}
-							{!! Form::file('image', ['id' => 'upload_image', 'accept' => 'image/*']); !!}
-							<small><span class="help-block">@lang('purchase.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)]) <br> @lang('lang_v1.aspect_ratio_should_be_1_1')</span></small>
-						</div>
-					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-							{!! Form::label('name', __('product.product_name') . ': *') !!}
-							{!! Form::text('name', !empty($duplicate_product->name) ? $duplicate_product->name : null, ['class' => 'req form-control', 'required',
-							'placeholder' => __('product.product_name')]); !!}
-						</div>
-					</div>
-					{{-- <div class="clearfix"></div> --}}
-					
-					<div class="col-sm-4">
-						<div class="form-group">
-							{!! 
-							Form::label('refference', __('product.refference') . ':') 
-							!!} 
-							@show_tooltip(__('tooltip.sku'))
-							{!! Form::text('refference', null, ['id'=>'refference_id','class' => 'req form-control','placeholder' => "Refference", 'required' => 'true','autofocus']); !!}
-							<input type="hidden" value="noValue" id="temp_reff">
-						</div>
-					</div>
-
-					<div class="col-sm-4  ">
-					<div class="form-group">
-						{!! 
-						Form::label('unit_price', __('product.unit') . ' Price:*') 
-						!!}
-						<input name="unit_price" required="true" type="text" class="req  form-control col-12" placeholder="Unit Price" id="unit_price" onchange="changeUnitPrice(this);">
-					</div>
-					</div>
-					
-					<div class="col-sm-4">
-					<div class="form-group">
-						{!! Form::label('custom_price', __('product.sale_price') . ':') !!} 
-						{!! Form::text('custom_price', null, ['class' => 'req form-control',
-						'placeholder' => __('product.sale_price'), 'required' => 'true', 'onChange' => "DittoThis(this,'single_dsp');", 'required' => 'true']); !!}
-					</div>
-					</div>
-
-					
-					<div class="hide col-sm-3 @if(!session('business.enable_brand')) hide @endif">
-					<div class="form-group">
-						{!! Form::label('brand_id', __('product.brand') . ':') !!}
-						<div class="input-group">
-						{!! Form::select('brand_id', $brands, !empty($duplicate_product->brand_id) ? $duplicate_product->brand_id : null, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2']); !!}
-						<span class="input-group-btn">
-							<button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('BrandController@create', ['quick_add' => true])}}" title="@lang('brand.add_brand')" data-container=".view_modal">
-								<i class="fa fa-plus-circle text-primary fa-lg"></i>
-							</button>
-						</span>
-						</div>
-					</div> 
-					</div>
-					
-					<div class="col-sm-3 hide">
-					<div class="form-group">
-						{!! Form::label('name_id',  ' Id :*') !!}
-						{!! Form::text('name_id', 0, ['class' => 'req form-control', 'required', 'placeholder' => __('product.product_name')]); !!}
-					</div>
-					</div>
-
-					<div class="col-sm-3 hide">
-					<div class="form-group">
-						{!! Form::label('sku', __('product.sku') . ':') !!} @show_tooltip(__('tooltip.sku'))
-						{!! Form::text('sku', null, ['class' => 'form-control',
-						'placeholder' => "Auto Generated", 'readonly' => 'true']); !!}
-					</div>
-					</div>
-					<div class="clearfix"></div>
-					<div style="margin-top:50px">
-						<div class="col-sm-4">
-							{{-- This is only for alternative of offset --}}
-						</div>
-						<div class="col-sm-3">
-							<div class="form-group">
-								{{-- {!! Form::label('size_id', __('product.size') . ':') !!} --}}
-								<div class="input-group">
-								
-								<span class="input-group-btn">
-								<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" onclick="$('#btnClose').focus();console.log('dnoe');"><i class="fa fa-plus-circle"></i> Choose Size</button>
-
-								</span>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-5">
-							<div class="form-group">
-								
-								<div class="input-group">
-								
-								<span class="input-group-btn">
-								<button type="button" onclick="openPrintProducts();" class="btn btn-success btn-lg" ><i class="fa fa-print"></i> Print Products</button>
-
-								</span>
-								</div>
-							</div>
-						</div>
-					</div>  
-					<!-- data-toggle="modal" data-target="#myModal" -->
-				
-
-					<div class="clearfix"></div>
-				
-					<div class="col-sm-4 hide">
-					<div class="form-group">
-						{!! Form::label('barcode_type', __('product.barcode_type') . ':*') !!}
-						{!! Form::select('barcode_type', $barcode_types, !empty($duplicate_product->barcode_type) ? $duplicate_product->barcode_type : $barcode_default, ['class' => 'form-control select2']); !!}
-					</div>
-					</div>
-					<div class="col-sm-4 hide">
-					<div class="form-group">
-					<br>
 						<label>
-						{!! Form::checkbox('enable_stock', 1, !empty($duplicate_product) ? $duplicate_product->enable_stock : true, ['class' => 'input-icheck', 'id' => 'enable_stock']); !!} <strong>@lang('product.manage_stock')</strong>
-						</label>@show_tooltip(__('tooltip.enable_stock')) <p class="help-block"><i>@lang('product.enable_stock_help')</i></p>
-					</div>
-					</div>
-					<div class="col-sm-4 hide @if(!empty($duplicate_product) && $duplicate_product->enable_stock == 0) hide @endif" id="alert_quantity_div">
-					<div class="form-group">
-						{!! Form::label('alert_quantity',  __('product.alert_quantity') . ':*') !!} @show_tooltip(__('tooltip.alert_quantity'))
-						{!! Form::number('alert_quantity', !empty($duplicate_product->alert_quantity) ? $duplicate_product->alert_quantity : null , ['class' => 'form-control',
-						'placeholder' => __('product.alert_quantity'), 'min' => '0']); !!}
-					</div>
-					</div>
-					<div class="clearfix"></div>
-					<div class="col-sm-8 hide">
-					<div class="form-group">
-						{!! Form::label('product_description', __('lang_v1.product_description') . ':') !!}
-						{!! Form::textarea('product_description', !empty($duplicate_product->product_description) ? $duplicate_product->product_description : null, ['class' => 'form-control']); !!}
-					</div>
+						Product Image:
+						</label>
+						<input type="file" name="file[]" id="img-input"
+						    value="{{$product->image}}">
+						<small>
+							<span class="help-block">
+								@lang('purchase.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)]) <br> @lang('lang_v1.aspect_ratio_should_be_1_1')
+							</span>
+						</small>
 					</div>
 				</div>
-			@endcomponent
-		</div>
-		{{-- Right Sidebar --}}
-		{{-- <div class="col-md-4">
-			<div class="box box-primary">
-				<div class="box-header">
-					<h3 class="text-muted">
-						Recently Added
-					</h3>
+				<div class="col-md-4">
+					<label>Product Name *</label>
+					<input type="text" name="product_name" value="{{$product->name}}" class="req form-control" required>
 				</div>
-				<div class="box-body">
+				<div class="col-md-4">
+					<label>Refference * @show_tooltip(__('tooltip.sku'))</label>
+					<input type="text" name="refference" value="{{$product->refference}}" id="refference_id" class="req form-control @error('refference') is-invalid @enderror" required>
+				</div>
+				<div class="col-md-4" style="margin-top: 30px">
+					<label>Unit Price * </label>
+					<input name="unit_price" required="true" type="text" class="req form-control col-12" value="{{$product->variations()->first()->dpp_inc_tax}}" id="unit_price" onchange="changeUnitPrice(this);">
+				</div>
+				<div class="col-md-4" style="margin-top: 30px">
+					<label>Sale Price * </label>
+					<input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$product->variations()->first()->sell_price_inc_tax}}" id="sale_price" onchange="DittoThis(this,'profit_percent')">
 				</div>
 			</div>
-		</div> --}}
-		{{-- <div class="col-md-4">
-			<h1>Hello There</h1>
-			box-widget
+			<div class="row" style="margin-top: 10px">
+				<div class="col-md-4">
+					<label>Color *</label>
+					{{-- <input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$product->color()->first()->name}}" id="unit_price" onchange="DittoThis(this,'single_dsp')"> --}}
+					<select name="color" id="color_id" class="select2 form-control">
+						<optgroup>
+							<option value="0">
+								Please Select
+							</option>
+							@foreach ($colors as $key=>$item)
+								<option value="{{$key}}" @if ($key == $product->color()->first()->id)
+								    selected
+								@endif>
+									{{$item}}
+								</option>
+							@endforeach
+						</optgroup>
+					</select>
+				</div>
+				<div class="col-md-4">
+					<label>Quantity *</label>
+					<input name="quantity" required="true" type="number" class="req form-control col-12" min="1" value="{{$product->purchase_lines()->first()->quantity}}" id="qty_id">
+				</div>
+				<div class="col-md-4">
+					<label>Size *</label>
+					{{-- <input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$product->sub_size()->first()->name}}" id="unit_price"> --}}
+					<select name="size" id="sizes_id" class="select2 form-control">
+						<optgroup>
+							<option value="0">
+								Please Select
+							</option>
+							@foreach ($sizes as $key=>$item)
+								<option value="{{$item->id}}" @if ($item->id == $product->sub_size_id)
+								    selected
+								@endif>
+									{{$item->name}}
+								</option>
+							@endforeach
+						</optgroup>
+					</select>
+				</div>
+			</div>
+			<div class="row" style="margin-top: 30px">
+				<div class="col-sm-12">
+					<input type="hidden" name="submit_type" id="submit_type">
+					<div class="text-center row">
+						<div class="btn-group">
+							{{-- <a href="{{url('products/bulk_add')}}" class="btn btn-info">
+								<i class="fa fa-plus"></i>
+								Add New Product
+							</a> --}}
+							{{-- onclick="addThis();" --}}
+							<button type="submit" class="btn btn-success col-12 fa-2x" style="width:150px;padding:10px;font-size:20px" id="btnSubmit">
+								<i class="fa fa-save"></i>
+								@lang('messages.update')
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+          @endcomponent
+	   </div>
+		<div class="col-md-4">
+			{{-- <h1>Hello There</h1> --}}
+			{{-- box-widget --}}
+			<h3 class="text-muted">Choose Product</h3>
 			<div class="box box-primary">
 				<div class="box-header with-border">
-					<h3 class="text-muted">Choose Product</h3>
 
 				@if(!empty($noRefferenceProducts))
 					<select class="select2" id="product_category" style="width:45% !important">
@@ -297,184 +280,38 @@
 				</div>
 				<!-- /.box-body -->
 			</div>
-			@include('sale_pos.partials.product_list_box')
-		</div> --}}
-   </div>
-
-    <div class="hide">
-		@component('components.widget', ['class' => 'box-primary'])
-			<div class="row">
-			@if(session('business.enable_product_expiry'))
-
-				@if(session('business.expiry_type') == 'add_expiry')
-				@php
-					$expiry_period = 12;
-					$hide = true;
-				@endphp
-				@else
-				@php
-					$expiry_period = null;
-					$hide = false;
-				@endphp
-				@endif
-			<div class="col-sm-4 @if($hide) hide @endif">
-				<div class="form-group">
-				<div class="multi-input">
-					{!! Form::label('expiry_period', __('product.expires_in') . ':') !!}<br>
-					{!! Form::text('expiry_period', !empty($duplicate_product->expiry_period) ? @num_format($duplicate_product->expiry_period) : $expiry_period, ['class' => 'form-control pull-left input_number',
-					'placeholder' => __('product.expiry_period'), 'style' => 'width:60%;']); !!}
-					{!! Form::select('expiry_period_type', ['months'=>__('product.months'), 'days'=>__('product.days'), '' =>__('product.not_applicable') ], !empty($duplicate_product->expiry_period_type) ? $duplicate_product->expiry_period_type : 'months', ['class' => 'form-control select2 pull-left', 'style' => 'width:40%;', 'id' => 'expiry_period_type']); !!}
-				</div>
-				</div>
-			</div>
-			@endif
-
-			<div class="col-sm-4">
-			<div class="form-group">
-			<br>
-				<label>
-				{!! Form::checkbox('enable_sr_no', 1, !(empty($duplicate_product)) ? $duplicate_product->enable_sr_no : false, ['class' => 'input-icheck']); !!} <strong>@lang('lang_v1.enable_imei_or_sr_no')</strong>
-				</label> @show_tooltip(__('lang_v1.tooltip_sr_no'))
-			</div>
-			</div>
-
-			<div class="clearfix"></div>
-
-			<!-- Rack, Row & position number -->
-			@if(session('business.enable_racks') || session('business.enable_row') || session('business.enable_position'))
-			<div class="col-md-12">
-				<h4>@lang('lang_v1.rack_details'):
-				@show_tooltip(__('lang_v1.tooltip_rack_details'))
-				</h4>
-			</div>
-			@foreach($business_locations as $id => $location)
-				<div class="col-sm-3">
-				<div class="form-group">
-					{!! Form::label('rack_' . $id,  $location . ':') !!}
-					
-					@if(session('business.enable_racks'))
-					{!! Form::text('product_racks[' . $id . '][rack]', !empty($rack_details[$id]['rack']) ? $rack_details[$id]['rack'] : null, ['class' => 'form-control', 'id' => 'rack_' . $id, 
-						'placeholder' => __('lang_v1.rack')]); !!}
-					@endif
-
-					@if(session('business.enable_row'))
-					{!! Form::text('product_racks[' . $id . '][row]', !empty($rack_details[$id]['row']) ? $rack_details[$id]['row'] : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.row')]); !!}
-					@endif
-					
-					@if(session('business.enable_position'))
-					{!! Form::text('product_racks[' . $id . '][position]', !empty($rack_details[$id]['position']) ? $rack_details[$id]['position'] : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.position')]); !!}
-					@endif
-				</div>
-				</div>
-			@endforeach
-			@endif
-			
-			<div class="col-sm-4">
-			<div class="form-group">
-				{!! Form::label('weight',  __('lang_v1.weight') . ':') !!}
-				{!! Form::text('weight', !empty($duplicate_product->weight) ? $duplicate_product->weight : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.weight')]); !!}
-			</div>
-			</div>
-			<!--custom fields-->
-			<div class="clearfix"></div>
-			<div class="col-sm-3">
-			<div class="form-group">
-				{!! Form::label('product_custom_field1',  __('lang_v1.product_custom_field1') . ':') !!}
-				{!! Form::text('product_custom_field1', !empty($duplicate_product->product_custom_field1) ? $duplicate_product->product_custom_field1 : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.product_custom_field1')]); !!}
-			</div>
-			</div>
-
-			<div class="col-sm-3">
-			<div class="form-group">
-				{!! Form::label('product_custom_field2',  __('lang_v1.product_custom_field2') . ':') !!}
-				{!! Form::text('product_custom_field2', !empty($duplicate_product->product_custom_field2) ? $duplicate_product->product_custom_field2 : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.product_custom_field2')]); !!}
-			</div>
-			</div>
-
-			<div class="col-sm-3">
-			<div class="form-group">
-				{!! Form::label('product_custom_field3',  __('lang_v1.product_custom_field3') . ':') !!}
-				{!! Form::text('product_custom_field3', !empty($duplicate_product->product_custom_field3) ? $duplicate_product->product_custom_field3 : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.product_custom_field3')]); !!}
-			</div>
-			</div>
-
-			<div class="col-sm-3">
-			<div class="form-group">
-				{!! Form::label('product_custom_field4',  __('lang_v1.product_custom_field4') . ':') !!}
-				{!! Form::text('product_custom_field4', !empty($duplicate_product->product_custom_field4) ? $duplicate_product->product_custom_field4 : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.product_custom_field4')]); !!}
-			</div>
-			</div>
-			<!--custom fields-->
-			<div class="clearfix"></div>
-			@include('layouts.partials.module_form_part')
-			</div>
-		@endcomponent
-    </div>
-    <div class="hide">
-		@component('components.widget', ['class' => 'box-primary'])
-			<div class="row">
-
-			<div class="col-sm-4 @if(!session('business.enable_price_tax')) hide @endif">
-			<div class="form-group">
-				{!! Form::label('tax', __('product.applicable_tax') . ':') !!}
-				{!! Form::select('tax', $taxes, !empty($duplicate_product->tax) ? $duplicate_product->tax : null, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2'], $tax_attributes); !!}
-			</div>
-			</div>
-
-			<div class="col-sm-4 @if(!session('business.enable_price_tax')) hide @endif">
-			<div class="form-group">
-				{!! Form::label('tax_type', __('product.selling_price_tax_type') . ':*') !!}
-				{!! Form::select('tax_type', ['inclusive' => __('product.inclusive'), 'exclusive' => __('product.exclusive')], !empty($duplicate_product->tax_type) ? $duplicate_product->tax_type : 'exclusive',
-				['class' => 'form-control select2']); !!}
-			</div>
-			</div>
-
-			<div class="clearfix"></div>
-
-			<div class="col-sm-4">
-			<div class="form-group">
-				{!! Form::label('type', __('product.product_type') . ':*') !!} @show_tooltip(__('tooltip.product_type'))
-				{!! Form::select('type', ['single' => __('lang_v1.single'), 'variable' => __('lang_v1.variable')], !empty($duplicate_product->type) ? $duplicate_product->type : null, ['class' => 'form-control select2', 'data-action' => !empty($duplicate_product) ? 'duplicate' : 'add', 'data-product_id' => !empty($duplicate_product) ? $duplicate_product->id : '0']); !!}
-			</div>
-			</div>
-
-			<div class="form-group col-sm-11 col-sm-offset-1" id="product_form_part"></div>
-
-			<input type="hidden" id="variation_counter" value="1">
-			<input type="hidden" id="default_profit_percent" 
-			value="{{ $default_profit_percent }}">
-
-			</div>
-		@endcomponent
-    </div>
-    <div class="row">
-		<div class="col-sm-12">
-			<input type="hidden" name="submit_type" id="submit_type">
-			<div class="text-center row">
-				<div class="btn-group">
-					{{-- <button type="button"   class="btn bg-maroon "  onclick="clearAll();">Clear & Move NEXT</button> --}}
-
-					<button type="button" class="btn btn-success col-12" onclick="addThis();">
-						<i class="fa fa-save"></i>
-						@lang('messages.save')</button>
-					<button type="submit"  class="btn btn-primary hide" id="btnSubmit">
-						<i class="fa fa-save"></i>
-						@lang('messages.save')
-					</button>
-				</div>
-			</div>
+			{{-- @include('sale_pos.partials.product_list_box') --}}
 		</div>
-	</div>
-  <hr/>
-  <div class="row box box-primary" id="c"> 
+		</div>
+		{{-- <div class="row">
+			<div class="col-sm-12">
+				<input type="hidden" name="submit_type" id="submit_type">
+				<div class="text-center row">
+					<div class="btn-group">
+						<!--<button type="button"   class="btn bg-maroon "  onclick="clearAll();">Clear & Move NEXT</button> -->
+
+						<button type="button" class="btn btn-success col-12" onclick="addThis();">
+							<i class="fa fa-save"></i>
+							@lang('messages.update')</button>
+						<button type="submit"  class="btn btn-primary hide" id="btnSubmit">
+							<i class="fa fa-save"></i>
+							@lang('messages.update')
+						</button>
+					</div>
+				</div>
+			</div>
+		</div> --}}
+{{-- 
+	<hr/>
+	<div class="row box box-primary" id="c"> 
       <div class="col-md-12">
           <div class="col-md-1"><b>No</b></div>
           <div class="col-md-1"><b>Supplier</b></div>
           <div class="col-md-1"><b>Category</b></div>
           <div class="col-md-1"><b>SubCategory</b></div>
-          {{-- <div class="col-md-1"><b>Unit</b></div> --}}
+          <div class="col-md-1"><b>Unit</b></div>
           <div class="col-md-1"><b>Name</b></div>
-          {{-- <div class="col-md-1"><b>Refference</b></div> --}}
+          <div class="col-md-1"><b>Refference</b></div>
           <div class="col-md-1"><b>Unit Price</b></div>
           <div class="col-md-1"><b>Sale Price</b></div>
           <div class="col-md-1"><b>Color</b></div>
@@ -486,7 +323,7 @@
     </div>
     <div class="row box box-primary" id="bulk_product_home"> 
       
-	</div>
+	</div> --}}
 	
 {!! Form::close() !!}
   
@@ -557,20 +394,22 @@
   @php $asset_v = env('APP_VERSION'); @endphp
   <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
   <script type="text/javascript">
+	var url = {!! json_encode(url('')) !!};
      $(document).ready(function (){
-		 /**
-		 * editPnc(x) will randomly get product name and id from DB 
-		 *
-		 */
-		var x = Math.round(Math.random()*(0-200))+200;
-		editPnc(x);
+		$("#refference_id").focus();
+		// console.log(url);
+		// addAnother();
+		var supplier_id = {!! json_encode($product->supplier_id) !!};
+		var supplier_id = {!! json_encode($product->supplier_id) !!};
+		// $("#product_update_id").val({!! json_encode($product->id) !!});
+		// getSupplierDetailsOnload(supplier_id);
+		// getDataOnLoad();
 
-    	var arrName = objPNC[pncRow].split("@");
-    	$("#name_id").val(arrName[0]);
-    	$("#name").val(arrName[1]);
-    //console.log("Arr Name : "+arrName);
-    //    $("#unit_price").focus();
-       $("#refference_id").focus();
+		//     window.onbeforeunload = function() {
+//         return "Do you really want to leave this page?";
+//         //if we return nothing here (just calling return;) then there will be no pop-up question at all
+//         //return;
+// 	  }
     });
      objPNC = <?=$pnc?>;
      rowSize = 0;
@@ -594,11 +433,11 @@
 		}
      }
      $("#sub_category_id").change(function () {
-    	$("#refference_id").focus();
+		$("#refference_id").focus();
      });
      function changeUnitPrice(obj)
      {
-		 console.log(obj.value);
+		//  console.log(obj.value);
         if(obj.value < 1)
         {
           alert("Please Enter Positve Value");
@@ -633,7 +472,7 @@
 		var html = $("#sizeArea").html(); 
 		$.ajax({
 			type:'GET',
-			url:'/sizes/getSubSize/'+name, 
+			url:url+'/sizes/getSubSize/'+name, 
 			success:function(data){
 				if(data.success)
 				{ 
@@ -675,7 +514,7 @@
       var html = $("#sizeArea").html(); 
       $.ajax({
            type:'GET',
-           url:'/sizes/getSubSize/'+name, 
+           url: url+'/sizes/getSubSize/'+name, 
            success:function(data){
               if(data.success)
               { 
@@ -711,9 +550,27 @@
      function getSupplierDetails()
      {
       name = $("#supplier_id option:selected").val();
+	//  console.log(name);
       $.ajax({
            type:'GET',
-           url:'/sizes/getSupplierDetails/'+name, 
+           url: '/sizes/getSupplierDetails/'+name, 
+           success:function(data){
+              $("#temp_reff").val(data); 
+              var n = reffCount;
+              var result = (pad+n).slice(-pad.length);
+              // console.log('Refference : '+data+result);
+              $("#refference_id").val("");
+              $("#refference_id").val(data+result );
+            //
+                
+           }
+        });
+     }
+     function getSupplierDetailsOnload(id)
+     {
+      $.ajax({
+           type:'GET',
+           url:url+'/sizes/getSupplierDetails/'+id, 
            success:function(data){
             $("#temp_reff").val(data); 
             var n = reffCount;
@@ -771,6 +628,7 @@
     {
       $("#"+target).val(obj.value);
       $("#profit_percent").val(0);
+	//  console.log($("#profit_percent").value);
       $("#"+target).change();
     }
 
@@ -830,12 +688,18 @@
       pncRow--;
       // reffCount--;
     }
-    var row =1;var lastBG = " padding: 10px; ";var pncRow = 0;
+    var row =1;
+    var lastBG = " padding: 10px; ";
+    var pncRow = 0;
     function addAnotherSize()
     {
       addAnother(1);
     }
     var IsAnother =0;
+    /**
+    * Below function is responsible for adding data in div #bulk_product_home
+    *
+    **/
     function addAnother(WantIsAnother = 0)
     {
       $("#product_add_form :input.redborder").removeClass("redborder");
@@ -875,7 +739,7 @@
       size = 1; 
 
       $(".req").each(function() { 
-        console.log($(this).attr("id"));
+     //    console.log($(this).attr("id"));
         if(fieldsArr.includes($(this).attr("id")))
         {
           if($(this).attr("type") == undefined)
@@ -892,6 +756,7 @@
 
           }else
           {
+			// Custom_price
              html += ' <div class="col-md-'+size+'"><input title="'+$(this).attr("id")+'" name="'+$(this).attr("id")+'[]" type="'+$(this).attr("type")+'" class="custom-form-control" value="'+$(this).val()+'"/></div>';
           }
            
@@ -911,20 +776,27 @@
             html += ' <div class="col-md-'+size+'"><select title="Color" class="custom-form-control" name="color_id[]"><option value="'+$(this).attr("data-color")+'">'+$(this).attr("data-color-name")+'</option></select> </div>'; 
 
             html += ' <div class="col-md-'+size+'"><input class="custom-form-control bulkProducts" title="QTY" name="qty[]" type="number" value="'+$(this).val()+'" /> </div>';
-		html+='<select title="SIZE" class="custom-form-control hide" name="size_id[]"><option value="'+$(this).attr("data-size")+'">'+$(this).attr("data-size-name")+'</option></select>';
+		//  <select title="SIZE" class="custom-form-control" name="size_id[]"><option value="'+$(this).attr("data-size")+'">'+$(this).attr("data-size-name")+'</option></select>
             html += '<div class="col-md-'+size+'"><input type="hidden" name="size_id[]" value="'+$(this).val()+'"><select title="Sub Size" class="custom-form-control" name="sub_size_id[]"><option value="'+$(this).attr("data-size-sub")+'">'+$(this).attr("data-size-sub-name")+'</option></select></div>'; 
-
-            if($(".file-preview-image").attr("src")==undefined)
-            {
-              var file = ""; 
-              html += ' <div class="col-md-1"><img src="{{url("img/default.png")}}" width="86px" height="28px" /> <span class="hide" id="file_'+picRow+'"></span></div>';
-            }else
-            {
-              var file = $("#upload_image").clone();
-              file.attr("name","file[]");
-              html += ' <div class="col-md-1"><img src="'+$(".file-preview-image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
-            }
-             html += '<div class="col-md-1" style="float:right;"><button class="btn btn-sm btn-danger" onclick="removeThisRow('+row+');"><i class="fa fa-close"></i></button></div>';
+		if ($(".file-preview-image").attr("src")==undefined) {
+			if($("#product_image").attr("src")==undefined )
+			{
+			var file = ""; 
+			html += ' <div class="col-md-1"><img src="{{asset("img/default.png")}}" width="86px" height="28px" /> <span class="hide" id="file_'+picRow+'"></span></div>';
+			}else
+			{
+			var file = $("#upload_image").clone();
+			//     .file-preview-image
+			file.attr("name","file[]");
+			html += ' <div class="col-md-1"><img src="'+$("#product_image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
+			}	
+		}else{
+			var file = $("#upload_image").clone();
+			//     .file-preview-image
+			file.attr("name","file[]");
+			html += ' <div class="col-md-1"><img src="'+$(".file-preview-image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
+		}
+             html += '<div class="col-md-1""><button class="btn btn-danger" onclick="removeThisRow('+row+');"><i class="fa fa-trash"></i></button></div>';
                
               html += ' <div class="clearfix"></div></div>';
               PreviousHTML = $("#bulk_product_home").html();
@@ -935,19 +807,155 @@
           picRow++;
       }); 
       row++;
-      IsAnother = 0;
-      if(WantIsAnother) IsAnother=1;
-      pncRow++;
-      reffCount++;
+	//  Changed
+	/**
+	* Clear Product Details
+	*
+	*/
+     //  IsAnother = 0;
+     //  if(WantIsAnother) IsAnother=1;
+     //  pncRow++;
+     //  reffCount++;
 
-      if(IsAnother)
-      {
-        clearAll(1);
+     //  if(IsAnother)
+     //  {
+     //    clearAll(1);
 
-      }else
-      {
-        clearAll();
-      }
+     //  }else
+     //  {
+     //    clearAll();
+     //  }
+    }
+    /**
+    * Below function is responsible for adding data in div #bulk_product_home on 
+    * page load
+    *
+    **/
+    function addDataOnLoad(supplier_id = null,unit_id = null, unit_price = null,category_id = null, name =  null, refference = null,sku = null, custom_qty = null, custom_price = null, color_id = null, size_id = null, upload_image = null)
+    {
+      $("#product_add_form :input.redborder").removeClass("redborder");
+      // Check all required fields have text, you can even check other values
+      var isErrorFree = true;
+      var emptyFields = "";
+     //  $(".req").each(function() {
+     //      if ($.trim($(this).val()) == ""){
+     //        $(this).addClass("redborder");
+     //        isErrorFree = false;
+     //        emptyFields += $(this).attr("id")+"\n";
+     //      } 
+     //  });
+     //  QtyErrorFree = false;
+     //  $(".sizeQty").each(function() {
+     //      if ($.trim($(this).val()) > "0"){ 
+     //        QtyErrorFree = true;
+     //      } 
+     //  });
+     //  if(!QtyErrorFree)
+     //  {
+     //    alert("Please Choose Size and Qty");return(false);
+     //  }
+
+     //  if(!isErrorFree)
+     //  {
+     //    alert("Please Fill All Required Fields \n"+emptyFields); return(false);
+     //  }
+        Style = " style='padding: 10px; '";
+		// 3c8dbc
+      if(row%2 == 0 ) Style = "style='background-color:#45b9d6;padding: 10px;color:white'";
+      if(IsAnother) Style = lastBG;
+      lastBG = Style;
+      var html = '<div class="col-md-12 " '+Style+' id="product_row_'+row+'"> ';
+      html += '<div class="col-md-1">'+row+'</div>';
+      var fieldsArr = ["supplier_id", "unit_id", "unit_price", "category_id" , "name" , "refference", "sku", "custom_qty", "custom_price", "color_id", "size_id","upload_image"];
+      size = 1; 
+
+      $(".req").each(function() { 
+     //    console.log($(this).attr("id"));
+        if(fieldsArr.includes($(this).attr("id")))
+        {
+          if($(this).attr("type") == undefined)
+          {
+            if($(this).attr("id") == "category_id")
+            {
+              html += ' <div class="col-md-'+size+'"><select class="custom-form-control" name="'+$(this).attr("id")+'[]" title="'+$(this).attr("id")+'"><option value="'+$(this).val()+'">'+$( "#"+$(this).attr("id")+" option:selected" ).text()+'</option></select></div>';
+              html += ' <div class="col-md-'+size+'"><select class="custom-form-control" name="sub_category_id[]" title="sub_category_id"><option value="'+$("#sub_category_id").val()+'">'+$( "#sub_category_id option:selected" ).text()+'</option></select></div>';
+            }else
+            {
+              html += ' <div class="col-md-'+size+'"><select class="custom-form-control" name="'+$(this).attr("id")+'[]" title="'+$(this).attr("id")+'"><option value="'+$(this).val()+'">'+$( "#"+$(this).attr("id")+" option:selected" ).text()+'</option></select></div>';
+
+            }
+
+          }else
+          {
+			// custom_price
+             html += ' <div class="col-md-'+size+'"><input title="'+$(this).attr("id")+'" name="'+$(this).attr("id")+'[]" type="'+$(this).attr("type")+'" class="custom-form-control" value="'+$(this).val()+'"/></div>';
+          }
+           
+        }else
+        {
+          html += ' <div class="col-md-'+size+' hide ss '+$(this).attr("id")+'"><input  name="'+$(this).attr("id")+'[]" type="text" class="custom-form-control" value="'+$(this).val()+'"/></div>';
+
+        }
+         size = 1; 
+      });
+
+      var tempHTML = html;
+      picRow = row;
+      $(".sizeQty").each(function() {
+          if ($.trim($(this).val()) > "0"){ 
+            html = tempHTML;
+            html += ' <div class="col-md-'+size+'"><select title="Color" class="custom-form-control" name="color_id[]"><option value="'+$(this).attr("data-color")+'">'+$(this).attr("data-color-name")+'</option></select> </div>'; 
+
+            html += ' <div class="col-md-'+size+'"><input class="custom-form-control bulkProducts" title="QTY" name="qty[]" type="number" value="'+$(this).val()+'" /> </div>';
+	//  <select title="SIZE" class="custom-form-control" name="size_id[]"><option value="'+$(this).attr("data-size")+'">'+$(this).attr("data-size-name")+'</option></select>
+            html += '<div class="col-md-'+size+'"><input type="hidden" name="size_id[]" value="'+$(this).val()+'"><select title="Sub Size" class="custom-form-control" name="sub_size_id[]"><option value="'+$(this).attr("data-size-sub")+'">'+$(this).attr("data-size-sub-name")+'</option></select></div>'; 
+		if ($(".file-preview-image").attr("src")==undefined) {
+			if($("#product_image").attr("src")==undefined )
+			{
+			var file = ""; 
+			html += ' <div class="col-md-1"><img src="{{asset("img/default.png")}}" width="86px" height="28px" /> <span class="hide" id="file_'+picRow+'"></span></div>';
+			}else
+			{
+			var file = $("#upload_image").clone();
+			//     .file-preview-image
+			file.attr("name","file[]");
+			html += ' <div class="col-md-1"><img src="'+$("#product_image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
+			}	
+		}else{
+			var file = $("#upload_image").clone();
+			//     .file-preview-image
+			file.attr("name","file[]");
+			html += ' <div class="col-md-1"><img src="'+$(".file-preview-image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
+		}
+             html += '<div class="col-md-1""><button class="btn btn-danger" onclick="removeThisRow('+row+');"><i class="fa fa-trash"></i></button></div>';
+               
+              html += ' <div class="clearfix"></div></div>';
+              PreviousHTML = $("#bulk_product_home").html();
+
+              $("#bulk_product_home").prepend(html);
+              $("#"+row+"_file_"+picRow).append(file);
+          } 
+          picRow++;
+      }); 
+      row++;
+	//  Changed
+	/**
+	* Clear Product Details
+	*
+	*/
+     //  IsAnother = 0;
+     //  if(WantIsAnother) IsAnother=1;
+     //  pncRow++;
+     //  reffCount++;
+
+     //  if(IsAnother)
+     //  {
+     //    clearAll(1);
+
+     //  }else
+     //  {
+     //    clearAll();
+     //  }
     }
 
     function openPrintProducts()
@@ -956,11 +964,12 @@
      window.open(link, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=200,width=1200,height=800");
     }
 
-    window.onbeforeunload = function() {
-        return "Do you really want to leave this page?";
-        //if we return nothing here (just calling return;) then there will be no pop-up question at all
-        //return;
-	  }
+
+//     window.onbeforeunload = function() {
+//         return "Do you really want to leave this page?";
+//         //if we return nothing here (just calling return;) then there will be no pop-up question at all
+//         //return;
+// 	  }
 	  
 	// Get Products on right side
 		function get_product_suggestion_list(category_id, supplier_id, location_id, url = null) {
@@ -1054,12 +1063,12 @@
 		}
 
 		if (add_via_ajax) {
-			console.log("Variation ID : "+variation_id);
+			// console.log("Variation ID : "+variation_id);
 			$.ajax({
 				method: 'GET',
 				// SellPosController @ line 2484
 
-				url: '/sells/pos/get_bulk_product_detail/' + variation_id,
+				url:url+ '/sells/pos/get_bulk_product_detail/' + variation_id,
 				async: false,
 				// data: {
 				// 	// product_row: product_row,
@@ -1071,25 +1080,50 @@
 				success: function(result) {
 					if (result != 'null') {
 						// console.log(result.category);
-						$("#supplier_id").val(result.supplier.id).change();
-						if (result.category != null) {
-							// console.log('Cat Id : '+result.category.id);
-							// console.log('Sub-Cat Id : '+result.sub_category.id);
-							$("#category_id").val(result.category.id).change();
-							$("#sub_category_id").val(result.sub_category.id).change();	
-							toastr.info('Please select Sub-Category manually.');
-						} else {
+						if (result.product.supplier_id) {
+							$("#supplier_id").val(result.product.supplier_id).change();
+						}else{
+							$("#supplier_id").val(0).change();
+							toastr.error('Supplier not found. Please select manually.');
+
+						}
+						$("#category_id").val(result.product.category_id).change();
+						toastr.success('Please select Sub-Category manually.');
+						if (result.product.category_id == null) {
 							toastr.error('Category and Sub-Category not found. Please select manually.');
 						}
+						
 						// .attr('selected',true);
+						var img = result.product.image;
+						if (img == null) {
+							img = url+'/img/default.png';
+						}else{
+							img = url+'/uploads/img/'+img;
+						}
 						$("#name").val(result.product.name);
-						// $("#upload_image").val(result.product.image);
+						$("#sku").val(result.product.sku);
+						$("#product_id").val(result.product.id);
+						$("#img-previewer").attr("src",img);
+						$("#img-input").val(img);
 						$("#name_id").val(0); //important
 						$("#refference_id").val(result.product.refference);
+						// console.log("Ref : "+result.product.refference);
 						$("#unit_price").val(result.product_price.dpp_inc_tax);
+						// console.log(result);
 						$("#single_dpp").val(result.product_price.dpp_inc_tax).trigger("change");
 						$("#custom_price").val(result.product_price.sell_price_inc_tax);
-						DittoThis(result.product_price.sell_price_inc_tax,result.product_price.dpp_inc_tax)
+						$("#color_id").val(result.color.id).change();
+						$("#qty_id").val(result.variation_location_details.qty_available);
+						$("#sizes_id").val(result.sub_size.id).change();
+						// var product = result.product;
+						// var supplier = result.supplier;
+						// var price = result.product_price;
+						// var purchase_line = result.purchase_lines;
+						// Add Data into 
+						// addDataOnLoad(supplier.id,product.unit_id,price.dpp_inc_tax,result.category.id,product.name,product.refference,product.sku,purchase_line.quantity,price.sell_price_inc_tax,product.color_id,product.size_id,product.image);
+
+						// DittoThis(result.product_price.sell_price_inc_tax,result.product_price.dpp_inc_tax);
+						
 						
 					} else {
 						toastr.error('No record found. Please try another product or insert record manually.');
@@ -1097,6 +1131,36 @@
 				},
 			});
 		}
+	}
+
+	function getDataOnLoad() {
+		var variation_id = $("#product_variation_id").val();
+		// console.log("Var Id: "+ variation_id);
+		$.ajax({
+				method: 'GET',
+				// SellPosController @ line 2484
+
+				url:url+ '/sells/pos/get_bulk_product_detail/' + variation_id,
+				async: false,
+				// data: {
+				// 	// product_row: product_row,
+				// 	customer_id: customer_id,
+				// 	is_direct_sell: is_direct_sell,
+				// 	price_group: price_group,
+				// },
+				dataType: 'json',
+				success: function(result) {
+					// console.log(result);
+					if (result != "null") {
+						var product = result.product;
+						var supplier = result.supplier;
+						var price = result.product_price;
+						var purchase_line = result.purchase_lines;
+						// Add Data into 
+						addDataOnLoad(supplier.id,product.unit_id,price.dpp_inc_tax,result.category.id,product.name,product.refference,product.sku,purchase_line.quantity,price.sell_price_inc_tax,product.color_id,product.size_id,product.image);
+					}
+				},
+			});
 	}
 
 	</script>

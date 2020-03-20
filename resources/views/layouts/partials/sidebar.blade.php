@@ -228,13 +228,14 @@
             <ul class="treeview-menu">
               @can('product.view')
                 <li class="{{ $request->segment(1) == 'products' && $request->segment(2) == '' ? 'active' : '' }}"><a href="{{action('ProductController@index')}}"><i class="fa fa-list"></i>@lang('lang_v1.list_products')</a></li>
-                <li class="{{ $request->segment(1) == 'products' && $request->segment(2) == 'transfer' ? 'active' : '' }}"><a href="{{action('ProductController@transfer')}}"><i class="fa fa-list"></i>Transfer Products</a></li>
+                <li class="{{ $request->segment(1) == 'products' && $request->segment(2) == 'transfer' ? 'active' : '' }}"><a href="{{action('ProductController@transfer')}}"><i class="fa fa-random"></i>Transfer Products</a></li>
               @endcan
-              @can('product.create')
+              {{-- @can('product.create')
                 <li class="{{ $request->segment(1) == 'products' && $request->segment(2) == 'create' ? 'active' : '' }}"><a href="{{action('ProductController@create')}}"><i class="fa fa-plus-circle"></i>@lang('product.add_product')</a></li>
-              @endcan
+              @endcan --}}
               @can('product.create')
-                <li class="{{ $request->segment(1) == 'products' && $request->segment(2) == 'create' ? 'active' : '' }}"><a href="{{action('ProductController@bulkAdd')}}"><i class="fa fa-plus-circle"></i>@lang('product.add_bulk_product')</a></li>
+              {{-- Bulk Product Add --}}
+                <li class="{{ $request->segment(1) == 'products' && $request->segment(2) == 'create' ? 'active' : '' }}"><a href="{{action('ProductController@bulkAdd')}}"><i class="fa fa-plus-circle"></i>@lang('product.add_product')</a></li>
               @endcan
               @can('product.create')
                 <li class="{{ $request->segment(1) == 'products' && $request->segment(2) == 'product_name_category' ? 'active' : '' }}"><a href="{{action('ProductNameCategoryController@index')}}"><i class="fa fa-plus-circle"></i>Product Name Series</a></li>

@@ -12,7 +12,7 @@ class Product extends Model
      * @var array
      */
     protected $guarded = ['id'];
-    
+
     /**
      * Get the products image.
      *
@@ -32,7 +32,11 @@ class Product extends Model
     {
         return $this->hasMany(\App\ProductVariation::class);
     }
-    
+    public function variation_location_details()
+    {
+        return $this->hasMany(\App\VariationLocationDetails::class);
+    }
+
     /**
      * Get the brand associated with the product.
      */
@@ -46,16 +50,16 @@ class Product extends Model
         return $this->belongsTo(\App\Color::class);
     }
 
-     
 
-     public function supplier()
+
+    public function supplier()
     {
         return $this->belongsTo(\App\Supplier::class);
     }
-    
+
     /**
-    * Get the unit associated with the product.
-    */
+     * Get the unit associated with the product.
+     */
     public function unit()
     {
         return $this->belongsTo(\App\Unit::class);
@@ -74,7 +78,7 @@ class Product extends Model
     {
         return $this->belongsTo(\App\Category::class, 'sub_category_id', 'id');
     }
-    
+
 
     /**
      * Get category associated with the product.
@@ -90,7 +94,7 @@ class Product extends Model
     {
         return $this->belongsTo(\App\Size::class, 'sub_size_id', 'id');
     }
-    
+
     /**
      * Get the brand associated with the product.
      */

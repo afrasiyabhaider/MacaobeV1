@@ -11,6 +11,10 @@
 
 <!-- jQuery 2.2.3 -->
 <script src="{{ asset('AdminLTE/plugins/jQuery/jquery-2.2.3.min.js?v=' . $asset_v) }}"></script>
+
+{{-- imoViewer for Product Update Page --}}
+<script src="{{ asset('AdminLTE/plugins/imo_viewer/imoViewer.js?v=' . $asset_v) }}"></script>
+
 <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js?v=' . $asset_v) }}"></script>
 <!-- Bootstrap 3.3.6 -->
 <script src="{{ asset('bootstrap/js/bootstrap.min.js?v=' . $asset_v) }}"></script>

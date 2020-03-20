@@ -2400,7 +2400,8 @@ class SellPosController extends Controller
      */
     public function getProductRefferenceSuggestion(Request $request)
     {
-        if ($request->ajax()) {
+        // $request->ajax()
+        if (true) {
             $category_id = $request->get('category_id');
             $supplier_id = $request->get('supplier_id');
             $location_id = $request->get('location_id');
@@ -2413,23 +2414,22 @@ class SellPosController extends Controller
                 'products.id',
                 '=',
                 'variations.product_id'
-            )
-                ->leftjoin(
-                    'variation_location_details AS VLD',
-                    function ($join) use ($location_id) {
-                        $join->on('variations.id', '=', 'VLD.variation_id');
+            )->leftjoin(
+                'variation_location_details AS VLD',
+                function ($join) use ($location_id) {
+                    $join->on('variations.id', '=', 'VLD.variation_id');
 
-                        //Include Location
-                        if (!empty($location_id)) {
-                            $join->where(function ($query) use ($location_id) {
-                                $query->where('VLD.location_id', '=', $location_id);
-                                //Check null to show products even if no quantity is available in a location.
-                                //TODO: Maybe add a settings to show product not available at a location or not.
-                                $query->orWhereNull('VLD.location_id');
-                            });;
-                        }
+                    //Include Location
+                    if (!empty($location_id)) {
+                        $join->where(function ($query) use ($location_id) {
+                            $query->where('VLD.location_id', '=', $location_id);
+                            //Check null to show products even if no quantity is available in a location.
+                            //TODO: Maybe add a settings to show product not available at a location or not.
+                            $query->orWhereNull('VLD.location_id');
+                        });;
                     }
-                )
+                }
+            )
                 ->active()->where('products.type', '!=', 'modifier');
 
             if (isset($location_id)) {
@@ -2459,26 +2459,50 @@ class SellPosController extends Controller
                 $products->where('products.supplier_id', $supplier_id);
             }
 
+            // $products = Product::join(
+            //     'colors',
+            //     'products.color_id',
+            //     '=',
+            //     'colors.id'
+            // )->leftjoin(
+            //     'variation_location_details AS VLD',
+            //     function ($join) use ($location_id) {
+            //         $join->on('variations.id', '=', 'VLD.variation_id');
+
+            //         //Include Location
+            //         if (!empty($location_id)) {
+            //             $join->where(function ($query) use ($location_id) {
+            //                 $query->where('VLD.location_id', '=', $location_id);
+            //                 //Check null to show products even if no quantity is available in a location.
+            //                 //TODO: Maybe add a settings to show product not available at a location or not.
+            //                 $query->orWhereNull('VLD.location_id');
+            //             });;
+            //         }
+            //     }
+            // )->active()->where('products.type', '!=', 'modifier');
+            // $products->first()->color()->first();
+
             $products = $products->select(
                 'products.id as product_id',
                 'products.name',
                 'products.type',
+                'products.color_id',
                 'products.enable_stock',
                 'variations.id as variation_id',
                 'variations.name as variation',
                 'VLD.qty_available',
                 'variations.default_sell_price as selling_price',
                 'variations.sub_sku',
-                'products.image'
+                'products.image',
+                'products.size_id'
             )
                 ->where("p_type", "product")
                 ->orderBy('products.name', 'asc')
                 ->groupBy('variations.id')
-                ->paginate(20);
+                ->paginate(50);
 
-
-
-            return view('sale_pos.partials.product_list')
+            // dd($products->first());
+            return view('sale_pos.partials.bulk_product_list')
                 ->with(compact('products'));
         }
     }
@@ -2500,6 +2524,12 @@ class SellPosController extends Controller
             $product_prices = Variation::find($variation_id);
             $supplier = Supplier::find($product->supplier_id);
             $sub_category = Category::find($product->sub_category_id);
+            $size = $product->size()->first();
+            $sub_size = $product->sub_size()->first();
+            $purchase_lines = $product->purchase_lines()->first();
+            $color = $product->color()->first();
+            $VariationLocationDetail = $product->variation_location_details()->first();
+            // dd($color);
             if ($sub_category) {
                 $category = Category::find($sub_category->parent_id);
             } else {
@@ -2510,10 +2540,15 @@ class SellPosController extends Controller
                 'product' => $product,
                 'product_name' => $product_name,
                 'variation' => $variation_product,
+                'variation_location_details' => $VariationLocationDetail,
                 'product_price' => $product_prices,
                 'supplier' => $supplier,
                 'sub_category' => $sub_category,
-                'category' => $category
+                'category' => $category,
+                'purchase_lines' => $purchase_lines,
+                'size' => $size,
+                'sub_size' => $sub_size,
+                'color' => $color,
             ];
         }
         // dd($data);

@@ -26,6 +26,8 @@
                 <th>&nbsp;</th>
                 <th>@lang('sale.product')</th>
                 <th>@lang('lang_v1.selling_price')</th>
+                <th>@lang('product.color')</th>
+                <th>@lang('product.size')</th>
                 <th>@lang('report.current_stock')</th>
                 <th>@lang('product.product_type')</th>
                 <th>@lang('product.category')</th>

@@ -170,6 +170,8 @@
                         { data: 'image', name: 'products.image'  },
                         { data: 'product', name: 'products.name'  },
                         { data: 'price', name: 'max_price', searchable: false},
+                        { data: 'color', name: 'color'},
+                        { data: 'size', name: 'size'},
                         { data: 'current_stock', searchable: false},
                         { data: 'type', name: 'products.type'},
                         { data: 'category', name: 'c1.name'},

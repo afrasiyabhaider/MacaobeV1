@@ -177,8 +177,8 @@ $(document).ready(function() {
                         depends: function(element) {
                             return (
                                 $('#expiry_period_type')
-                                    .val()
-                                    .trim() != ''
+                                .val()
+                                .trim() != ''
                             );
                         },
                     },
@@ -307,8 +307,8 @@ $(document).ready(function() {
 
         if (
             $(this)
-                .closest('.variation_row')
-                .find('.row_edit').length >= 1
+            .closest('.variation_row')
+            .find('.row_edit').length >= 1
         ) {
             var row_type = 'edit';
         } else {
@@ -341,8 +341,8 @@ $(document).ready(function() {
         if ($(this).val() !== '') {
             tr_obj.find('input.variation_name').val(
                 $(this)
-                    .find('option:selected')
-                    .text()
+                .find('option:selected')
+                .text()
             );
 
             var template_id = $(this).val();
@@ -710,12 +710,24 @@ $(document).on('submit', 'form#sub_category_add_form', function(e) {
             if (result.success == true) {
                 var newOption = new Option(result.data.name, result.data.id, true, true);
                 // Append it to the select
-                $('#category_id').val(null).trigger('change');
+                $('#category_id')
+                    .val(null)
+                    .trigger('change');
                 $('div.view_modal').modal('hide');
                 toastr.success(result.msg);
             } else {
                 toastr.error(result.msg);
             }
         },
+    });
+});
+
+/**
+ * Image Previewer
+ *
+ */
+$(function() {
+    $('#img-input').imoViewer({
+        preview: '#img-previewer',
     });
 });
