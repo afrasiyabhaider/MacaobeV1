@@ -7,6 +7,7 @@ use App\ProductNameCategory;
 use Illuminate\Http\Request;
 use Excel;
 use DB;
+
 class ProductNameCategoryController extends Controller
 {
     /**
@@ -24,7 +25,7 @@ class ProductNameCategoryController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $category = ProductNameCategory::where('business_id', $business_id)
-                        ->select(['name', 'row_no','id']);
+                ->select(['name', 'row_no', 'id']);
 
             return Datatables::of($category)
                 ->addColumn(
@@ -35,8 +36,7 @@ class ProductNameCategoryController extends Controller
                     @endcan'
                 )
                 ->editColumn('name', function ($row) {
-                        return $row->name;
-                     
+                    return $row->name;
                 })
                 ->removeColumn('id')
                 ->removeColumn('parent_id')
@@ -60,15 +60,15 @@ class ProductNameCategoryController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $categories = ProductNameCategory::where('business_id', $business_id)
-                        ->select(['name', 'row_no', 'id'])
-                        ->get();
+            ->select(['name', 'row_no', 'id'])
+            ->get();
         $parent_categories = [];
-        
+
         return view('ProductNameCategory.create')
-                    ->with(compact('parent_categories'));
+            ->with(compact('parent_categories'));
     }
 
-     public function createCategory()
+    public function createCategory()
     {
         if (!auth()->user()->can('category.create')) {
             abort(403, 'Unauthorized action.');
@@ -76,15 +76,15 @@ class ProductNameCategoryController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $categories = ProductNameCategory::where('business_id', $business_id)
-                        ->select(['name', 'row_no', 'id'])
-                        ->get();
+            ->select(['name', 'row_no', 'id'])
+            ->get();
         $parent_categories = [];
-         
+
         return view('ProductNameCategory.createQuick')
-                    ->with(compact('parent_categories'));
+            ->with(compact('parent_categories'));
     }
 
-      
+
     /**
      * Store a newly created resource in storage.
      *
@@ -99,21 +99,23 @@ class ProductNameCategoryController extends Controller
 
         try {
             $input = $request->only(['name', 'row_no']);
-            
+
             $input['business_id'] = $request->session()->get('user.business_id');
             $input['created_by'] = $request->session()->get('user.id');
 
             $category = ProductNameCategory::create($input);
-            $output = ['success' => true,
-                            'data' => $category,
-                            'msg' => __("category.added_success")
-                        ];
+            $output = [
+                'success' => true,
+                'data' => $category,
+                'msg' => __("category.added_success")
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong") . '--- ' . $e->getMessage()
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => false,
+                'msg' => __("messages.something_went_wrong") . '--- ' . $e->getMessage()
+            ];
         }
 
         return $output;
@@ -121,12 +123,12 @@ class ProductNameCategoryController extends Controller
 
     public function addExcell()
     {
-          if (!auth()->user()->can('category.create')) {
+        if (!auth()->user()->can('category.create')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
-         
+
         return view('ProductNameCategory.createExcell');
     }
 
@@ -149,18 +151,16 @@ class ProductNameCategoryController extends Controller
                 $input['created_by'] = $request->session()->get('user.id');
 
                 $category = ProductNameCategory::create($input);
-               
             }
             DB::commit();
             return redirect(action('ProductNameCategoryController@index'));
-
-             
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong") . '--- '. "Line:" . $e->getLine(). "Message:" . $e->getMessage()
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => false,
+                'msg' => __("messages.something_went_wrong") . '--- ' . "Line:" . $e->getLine() . "Message:" . $e->getMessage()
+            ];
         }
 
         return $output;
@@ -192,13 +192,13 @@ class ProductNameCategoryController extends Controller
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
             $category = ProductNameCategory::where('business_id', $business_id)->find($id);
-            
+
             $parent_categories = ProductNameCategory::where('business_id', $business_id)
-                                        ->where('id', '!=', $id)
-                                        ->pluck('name', 'id');
-            
+                ->where('id', '!=', $id)
+                ->pluck('name', 'id');
+
             $is_parent = false;
-            
+
 
             return view('ProductNameCategory.edit')
                 ->with(compact('category'));
@@ -233,15 +233,17 @@ class ProductNameCategoryController extends Controller
                 }
                 $category->save();
 
-                $output = ['success' => true,
-                            'msg' => __("category.updated_success")
-                            ];
+                $output = [
+                    'success' => true,
+                    'msg' => __("category.updated_success")
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-                $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = [
+                    'success' => false,
+                    'msg' => __("messages.something_went_wrong")
+                ];
             }
 
             return $output;
@@ -267,18 +269,20 @@ class ProductNameCategoryController extends Controller
                 $category = ProductNameCategory::where('business_id', $business_id)->findOrFail($id);
                 $category->delete();
 
-                $output = ['success' => true,
-                            'msg' => __("category.deleted_success")
-                            ];
+                $output = [
+                    'success' => true,
+                    'msg' => __("category.deleted_success")
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-                $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = [
+                    'success' => false,
+                    'msg' => __("messages.something_went_wrong")
+                ];
             }
 
-            return $output;
+            return redirect()->back()->with('output', $output);
         }
     }
 }

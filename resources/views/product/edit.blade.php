@@ -142,7 +142,7 @@
 				</div>
 				<div class="col-md-4">
 					<label>Product Name *</label>
-					<input type="text" name="product_name" value="{{$product->name}}" class="req form-control" required>
+					<input type="text" name="product_name" value="{{$product->name}}" class="req form-control" id="product_name" required>
 				</div>
 				<div class="col-md-4">
 					<label>Refference * @show_tooltip(__('tooltip.sku'))</label>
@@ -1100,11 +1100,11 @@
 						}else{
 							img = url+'/uploads/img/'+img;
 						}
-						$("#name").val(result.product.name);
+						$("#product_name").val(result.product.name);
 						$("#sku").val(result.product.sku);
 						$("#product_id").val(result.product.id);
 						$("#img-previewer").attr("src",img);
-						$("#img-input").val(img);
+						// $("#img-input").val(img);
 						$("#name_id").val(0); //important
 						$("#refference_id").val(result.product.refference);
 						// console.log("Ref : "+result.product.refference);

@@ -77,17 +77,17 @@ class LoginController extends Controller
         if (!$user->business->is_active) {
             \Auth::logout();
             return redirect('/login')
-              ->with(
-                  'status',
-                  ['success' => 0, 'msg' => __('lang_v1.business_inactive')]
-              );
+                ->with(
+                    'status',
+                    ['success' => 0, 'msg' => __('lang_v1.business_inactive')]
+                );
         } elseif ($user->status != 'active') {
             \Auth::logout();
             return redirect('/login')
-              ->with(
-                  'status',
-                  ['success' => 0, 'msg' => __('lang_v1.user_inactive')]
-              );
+                ->with(
+                    'status',
+                    ['success' => 0, 'msg' => __('lang_v1.user_inactive')]
+                );
         }
     }
 
@@ -97,7 +97,7 @@ class LoginController extends Controller
         if (!$user->can('dashboard.data') && $user->can('sell.create')) {
             return '/pos/create';
         }
- return '/pos/create';
+        return '/pos/create';
         return '/home';
     }
 }

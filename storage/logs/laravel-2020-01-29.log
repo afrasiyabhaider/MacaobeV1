@@ -1,8 +1,0 @@
-[2020-01-29 20:03:45] live.ERROR: Can't use method return value in write context {"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Can't use method return value in write context at /home/jtvxoa2jr8nu/macaobe.com/app/Http/Controllers/SellController.php:73)
-[stacktrace]
-#0 {main}
-"} 
-[2020-01-29 20:04:31] live.ERROR: Can't use method return value in write context {"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 64): Can't use method return value in write context at /home/jtvxoa2jr8nu/macaobe.com/app/Http/Controllers/SellController.php:73)
-[stacktrace]
-#0 {main}
-"} 
