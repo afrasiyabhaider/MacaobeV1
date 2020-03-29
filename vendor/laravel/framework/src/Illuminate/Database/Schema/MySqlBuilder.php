@@ -2,8 +2,26 @@
 
 namespace Illuminate\Database\Schema;
 
+use Illuminate\Database\Connection;
+use Illuminate\Database\Schema\Types\TinyInteger;
+
 class MySqlBuilder extends Builder
 {
+    /**
+     * Create a new builder instance.
+     *
+     * @param  \Illuminate\Database\Connection  $connection
+     * @return void
+     *
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function __construct(Connection $connection)
+    {
+        parent::__construct($connection);
+
+        $this->registerCustomDoctrineTypes();
+    }
+
     /**
      * Determine if the given table exists.
      *
@@ -65,6 +83,30 @@ class MySqlBuilder extends Builder
     }
 
     /**
+     * Drop all views from the database.
+     *
+     * @return void
+     */
+    public function dropAllViews()
+    {
+        $views = [];
+
+        foreach ($this->getAllViews() as $row) {
+            $row = (array) $row;
+
+            $views[] = reset($row);
+        }
+
+        if (empty($views)) {
+            return;
+        }
+
+        $this->connection->statement(
+            $this->grammar->compileDropAllViews($views)
+        );
+    }
+
+    /**
      * Get all of the table names for the database.
      *
      * @return array
@@ -74,5 +116,33 @@ class MySqlBuilder extends Builder
         return $this->connection->select(
             $this->grammar->compileGetAllTables()
         );
+    }
+
+    /**
+     * Get all of the view names for the database.
+     *
+     * @return array
+     */
+    protected function getAllViews()
+    {
+        return $this->connection->select(
+            $this->grammar->compileGetAllViews()
+        );
+    }
+
+    /**
+     * Register the custom Doctrine mapping types for the MySQL builder.
+     *
+     * @return void
+     *
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    protected function registerCustomDoctrineTypes()
+    {
+        if ($this->connection->isDoctrineAvailable()) {
+            $this->registerCustomDoctrineType(
+                TinyInteger::class, TinyInteger::NAME, 'TINYINT'
+            );
+        }
     }
 }

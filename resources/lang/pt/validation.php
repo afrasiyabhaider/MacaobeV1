@@ -76,10 +76,10 @@ return [
     'required_without_all' => ':attribute field: é obrigatório quando nenhum dos valores: estiver presente.',
     'same' => ':attribute e: other must match.',
     'size'                 => [
-        'numeric'  => 'O tamanho de :attribute deve ser :size'.,
+        'numeric'  => 'O tamanho de :attribute deve ser :size',
          'file'     => 'O tamanho de :attribute deve ser :size kilobytes.',
          'string'   => ':attribute deve conter :size caracteres de tamanho.',
-         'array'    => ':attribute deve conter :size elementos de tamanho'.,
+         'array'    => ':attribute deve conter :size elementos de tamanho.',
     ],
     'string'               => 'El campo :attribute debe ser una cadena de caracteres.',
     'timezone'             => 'El :attribute debe ser una zona válida.',

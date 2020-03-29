@@ -2,6 +2,197 @@
 
 All notable changes to `laravel-permission` will be documented in this file
 
+## 3.11.0 - 2020-03-03
+- Allow guardName() as a function with priority over $guard_name property #1395
+
+## 3.10.1 - 2020-03-03
+- Update patch to handle intermittent error in #1370
+
+## 3.10.0 - 2020-03-02
+- Ugly patch to handle intermittent error: `Trying to access array offset on value of type null` in #1370
+
+## 3.9.0 - 2020-02-26
+- Add Wildcard Permissions feature #1381 (see PR or docs for details)
+
+## 3.8.0 - 2020-02-18
+- Clear in-memory permissions on boot, for benefit of long running processes like Swoole. #1378
+
+## 3.7.2 - 2020-02-17
+- Refine test for Lumen dependency. Ref #1371, Fixes #1372.
+
+## 3.7.1 - 2020-02-15
+- Internal refactoring of scopes to use whereIn instead of orWhere #1334, #1335
+- Internal refactoring to flatten collection on splat #1341
+
+## 3.7.0 - 2020-02-15
+- Added methods to check any/all when querying direct permissions #1245
+- Removed older Lumen dependencies #1371
+
+## 3.6.0 - 2020-01-17
+- Added Laravel 7.0 support
+- Allow splat operator for passing roles to `hasAnyRole()`
+
+## 3.5.0 - 2020-01-07
+- Added missing `guardName` to Exception `PermissionDoesNotExist` #1316
+
+## 3.4.1 - 2019-12-28
+- Fix 3.4.0 for Lumen
+
+## 3.4.0 - 2019-12-27
+- Make compatible with Swoole - ie: for long-running Laravel instances
+
+## 3.3.1 - 2019-12-24
+- Expose Artisan commands to app layer, not just to console
+
+## 3.3.0 - 2019-11-22
+- Remove duplicate and unreachable code
+- Remove checks for older Laravel versions
+
+## 3.2.0 - 2019-10-16
+- Implementation of optional guard check for hasRoles and hasAllRoles - See #1236
+
+## 3.1.0 - 2019-10-16
+- Use bigIncrements/bigInteger in migration - See #1224
+
+## 3.0.0 - 2019-09-02
+- Update dependencies to allow for Laravel 6.0
+- Drop support for Laravel 5.7 and older, and PHP 7.1 and older. (They can use v2 of this package until they upgrade.)
+To be clear: v3 requires minimum Laravel 5.8 and PHP 7.2 
+
+
+## 2.38.0 - 2019-09-02
+- Allow support for multiple role/permission models
+- Load roles relationship only when missing
+- Wrap helpers in function_exists() check
+
+## 2.37.0 - 2019-04-09
+- Added `permission:show` CLI command to display a table of roles/permissions
+- `removeRole` now returns the model, consistent with other methods
+- model `$guarded` properties updated to `protected`
+- README updates
+
+## 2.36.1 - 2019-03-05
+- reverts the changes made in 2.36.0 due to some reported breaks.
+
+## 2.36.0 - 2019-03-04
+- improve performance by reducing another iteration in processing query results and returning earlier
+
+## 2.35.0 - 2019-03-01
+- overhaul internal caching strategy for better performance and fix cache miss when permission names contained spaces
+- deprecated hasUncachedPermissionTo() (use hasPermissionTo() instead)
+- added getPermissionNames() method
+
+## 2.34.0 - 2019-02-26
+- Add explicit pivotKeys to roles/permissions BelongsToMany relationships
+
+## 2.33.0 - 2019-02-20
+- Laravel 5.8 compatibility
+
+## 2.32.0 - 2019-02-13
+- Fix duplicate permissions being created through artisan command
+
+## 2.31.0 - 2019-02-03
+- Add custom guard query to role scope
+- Remove use of array_wrap helper function due to future deprecation
+
+## 2.30.0 - 2019-01-28
+- Change cache config time to DateInterval instead of integer
+
+This is in preparation for compatibility with Laravel 5.8's cache TTL change to seconds instead of minutes.
+
+NOTE: If you leave your existing `config/permission.php` file alone, then with Laravel 5.8 the `60 * 24` will change from being treated as 24 hours to just 24 minutes. Depending on your app, this may or may not make a significant difference.  Updating your config file to a specific DateInterval will add specificity and insulate you from the TTL change in Laravel 5.8.
+
+Refs:
+
+https://laravel-news.com/cache-ttl-change-coming-to-laravel-5-8
+https://github.com/laravel/framework/commit/fd6eb89b62ec09df1ffbee164831a827e83fa61d
+
+## 2.29.0 - 2018-12-15
+- Fix bound `saved` event from firing on all subsequent models when calling assignRole or givePermissionTo on unsaved models. However, it is preferable to save the model first, and then add roles/permissions after saving. See #971.
+
+## 2.28.2 - 2018-12-10
+- Use config settings for cache reset in migration stub
+
+## 2.28.1 - 2018-12-07
+- Remove use of Cache facade, for Lumen compatibility
+
+## 2.28.0 - 2018-11-30
+- Rename `getCacheKey` method in HasPermissions trait to `getPermissionCacheKey` for clearer specificity. 
+
+## 2.27.0 - 2018-11-21
+- Add ability to specify a cache driver for roles/permissions caching
+
+## 2.26.2 - 2018-11-20
+- Added the ability to reset the permissions cache via an Artisan command:
+`php artisan permission:cache-reset`
+
+## 2.26.1 - 2018-11-19
+- minor update to de-duplicate code overhead
+- numerous internal updates to cache tests infrastructure
+
+## 2.26.0 - 2018-11-19
+- Substantial speed increase by caching the associations between models and permissions
+
+### NOTES: ###
+The following changes are not "breaking", but worth making the updates to your app for consistency.
+
+1. Config file: The `config/permission.php` file changed to move cache-related settings into a sub-array. **You should review the changes and merge the updates into your own config file.** Specifically the `expiration_time` value has moved into a sub-array entry, and the old top-level entry is no longer used.
+See the master config file here: 
+https://github.com/spatie/laravel-permission/blob/master/config/permission.php
+
+2. Cache Resets: If your `app` or `tests` are clearing the cache by specifying the cache key, **it is better to use the built-in forgetCachedPermissions() method** so that it properly handles tagged cache entries. Here is the recommended change:
+```diff
+- app()['cache']->forget('spatie.permission.cache');
++ $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+```
+
+3. Also this is a good time to point out that now with v2.25.0 and v2.26.0 most permission-cache-reset scenarios may no longer be needed in your app, so it's worth reviewing those cases, as you may gain some app speed improvement by removing unnecessary cache resets.
+
+
+## 2.25.0 - 2018-11-07
+- A model's `roles` and `permissions` relations (respectively) are now automatically reloaded after an Assign/Remove role or Grant/Revoke of permissions. This means there's no longer a need to call `->fresh()` on the model if the only reason is to reload the role/permission relations. (That said, you may want to call it for other reasons.)
+- Added support for passing id to HasRole()
+
+## 2.24.0 - 2018-11-06
+- Fix operator used on RoleOrPermissionMiddleware, and avoid throwing PermissionDoesNotExist if invalid permission passed
+- Auto-reload model role relation after using AssignRole
+- Avoid empty permission creation when using the CreateRole command
+
+## 2.23.0 - 2018-10-15
+- Avoid unnecessary queries of user roles when fetching all permissions
+
+## 2.22.1 - 2018-10-15
+- Fix Lumen issue with Route helper added in 2.22.0
+
+## 2.22.0 - 2018-10-11
+- Added `Route::role()` and `Route::permission()` middleware helper functions
+- Added new `role_or_permission` middleware to allow specifying "or" combinations
+
+## 2.21.0 - 2018-09-29
+- Revert changes from 2.17.1 in order to support Lumen 5.7
+
+## 2.20.0 - 2018-09-19
+- It will sync roles/permissions to models that are not persisted, by registering a `saved` callback. 
+(It would previously throw an Integrity constraint violation QueryException on the pivot table insertion.)
+
+## 2.19.2 - 2018-09-19
+- add `@elserole` directive:
+ Usage: 
+```php
+@role('roleA')
+ // user hasRole 'roleA'
+@elserole('roleB')
+ // user hasRole 'roleB' but not 'roleA'
+@endrole
+```
+
+## 2.19.1 - 2018-09-14
+- Spark-related fix to accommodate missing guard[providers] config
+
+## 2.19.0 - 2018-09-10
+- Add ability to pass in IDs or mixed values to `role` scope
+- Add `@unlessrole`/`@endunlessrole` Blade directives
+
 ## 2.18.0 - 2018-09-06
 - Expanded CLI `permission:create-role` command to create optionally create-and-link permissions in one command. Also now no longer throws an error if the role already exists.
 

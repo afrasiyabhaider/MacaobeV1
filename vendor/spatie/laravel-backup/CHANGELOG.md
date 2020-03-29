@@ -2,6 +2,30 @@
 
 All notable changes to `laravel-backup` will be documented in this file.
 
+## 5.12.0 - 2018-11-28
+
+- added the ability to use `backup_options` on a disk defined in the `filesystems` config file
+
+## 5.11.4 - 2018-11-27
+
+- restore lumen compatibility
+
+## 5.11.3 - 2018-11-03
+
+- fix bugs regarding cleaning backups
+
+## 5.11.2 - 2018-10-30
+
+- make sure the backup size is correctly displayed
+
+## 5.11.1 - 2018-10-20
+
+- fix bug where compressor config option would not be respected
+
+## 5.11.0 - 2018-10-18
+
+- add support for database compressors
+
 ## 5.10.1 - 2018-08-24
 
 - allow Laravel 5.7

@@ -20,10 +20,27 @@
     <div class="col-md-12">
     @component('components.filters', ['title' => __('report.filters')])
         <div class="col-md-4">
-            <div class="form-group">
+            {{-- <div class="form-group">
                 {!! Form::label('type', __('product.product_type') . ':') !!}
                 {!! Form::select('type', ['product' => 'Products', 'gift_card' => 'Gift Cards', 'coupon' => 'Coupons'], null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'product_list_filter_type', 'placeholder' => __('lang_v1.all')]); !!}
+            </div> --}}
+            <div class="form-group">
+                {!! Form::label('supplier_id', __('product.supplier') . ':') !!}
+                {!! Form::select('supplier_id', $suppliers, null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'product_list_filter_type', 'placeholder' => __('lang_v1.all')]); !!}
             </div>
+            {{-- <div class="form-group">
+                <label>
+                    Supplier
+                </label>
+                <select name="supplier_id" id="product_list_filter_type" class="form-control select2">
+                    <option value="">All</option>
+                    @foreach ($suppliers as $key=>$item)
+                        <option value="{{$key}}">
+                            {{$item}}
+                        </option>
+                    @endforeach
+                </select>
+            </div> --}}
         </div>
         <div class="col-md-4">
             <div class="form-group">
@@ -68,15 +85,17 @@
         <!--        {!! Form::select('p_type', ['product' => 'Products', 'gift_card' => 'Gift Cards'], null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'product_list_filter_brand_id', 'placeholder' => __('lang_v1.all')]); !!}-->
         <!--    </div>-->
         <!--</div>-->
-        <div class="col-md-12  " id="location_filter">
-            <div class="form-group col-md-6">
-                {!! Form::label('from_date',   ' From Date:') !!}
-                <input type="date" name="product_list_from_date" value="{{date('Y-m-d')}}" id="product_list_from_date" class="form-control">
+        <div class="form-row">
+            <div id="location_filter">
+                <div class="form-group col-md-6">
+                    {!! Form::label('from_date',   ' From Date:') !!}
+                    <input type="date" name="product_list_from_date" value="{{date('Y-m-d')}}" id="product_list_from_date" class="form-control">
+                </div>
+                <div class="form-group col-md-6">
+                    {!! Form::label('to_date',   ' To Date:') !!}
+                    <input type="date" name="product_list_to_date" id="product_list_to_date" value="" class="form-control">
+                </div> 
             </div>
-            <div class="form-group col-md-6">
-                {!! Form::label('to_date',   ' To Date:') !!}
-                <input type="date" name="product_list_to_date" id="product_list_to_date" value="" class="form-control">
-            </div> 
         </div>
     @endcomponent
     </div>
@@ -150,7 +169,8 @@
                 "ajax": {
                     "url": "/products",
                     "data": function ( d ) {
-                        d.type = $('#product_list_filter_type').val();
+                        // console.log(d);
+                        d.supplier_id = $('#product_list_filter_type').val();
                         d.category_id = $('#product_list_filter_category_id').val();
                         d.brand_id = $('#product_list_filter_brand_id').val();
                         d.unit_id = $('#product_list_filter_unit_id').val();
@@ -169,11 +189,13 @@
                         { data: 'mass_delete'  },
                         { data: 'image', name: 'products.image'  },
                         { data: 'product', name: 'products.name'  },
-                        { data: 'price', name: 'max_price', searchable: false},
+                        { data: 'purchase_price', name: 'purchase_price', searchable: false},
+                        { data: 'selling_price', name: 'selling_price', searchable: false},
                         { data: 'color', name: 'color'},
                         { data: 'size', name: 'size'},
                         { data: 'current_stock', searchable: false},
                         { data: 'type', name: 'products.type'},
+                        { data: 'supplier_name', name: 'products.supplier_name'},
                         { data: 'category', name: 'c1.name'},
                         { data: 'sub_category', name: 'c2.name'},
                         { data: 'date', name: 'products.created_at'},
@@ -377,18 +399,18 @@
             });
 
             $(document).on('change', '#product_list_filter_type, #product_list_filter_category_id, #product_list_filter_brand_id, #product_list_filter_unit_id, #product_list_filter_tax_id, #location_id', 
-                function() {
-                    if ($("#product_list_tab").hasClass('active')) {
-                        product_table.ajax.reload();
-                    }
+            function() {
+                if ($("#product_list_tab").hasClass('active')) {
+                    product_table.ajax.reload();
+                }
 
-                    if ($("#product_stock_report").hasClass('active')) {
-                        stock_report_table.ajax.reload();
-                    }
+                if ($("#product_stock_report").hasClass('active')) {
+                    stock_report_table.ajax.reload();
+                }
             });
             $(document).on('change', '#product_list_from_date', 
                 function() {
-                     $("#product_list_to_date").val(null);
+                    $("#product_list_to_date").val(null);
             });
             $(document).on('change', '#product_list_to_date', 
                 function() {

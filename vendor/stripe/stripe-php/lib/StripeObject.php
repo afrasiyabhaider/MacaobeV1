@@ -153,7 +153,7 @@ class StripeObject implements \ArrayAccess, \Countable, \JsonSerializable
         $nullval = null;
         if (!empty($this->_values) && array_key_exists($k, $this->_values)) {
             return $this->_values[$k];
-        } else if (!empty($this->_transientValues) && $this->_transientValues->includes($k)) {
+        } elseif (!empty($this->_transientValues) && $this->_transientValues->includes($k)) {
             $class = get_class($this);
             $attrs = join(', ', array_keys($this->_values));
             $message = "Stripe Notice: Undefined property of $class instance: $k. "
@@ -220,7 +220,7 @@ class StripeObject implements \ArrayAccess, \Countable, \JsonSerializable
      * @param array $values
      * @param null|string|array|Util\RequestOptions $opts
      *
-     * @return StripeObject The object constructed from the given values.
+     * @return static The object constructed from the given values.
      */
     public static function constructFrom($values, $opts = null)
     {
@@ -280,7 +280,7 @@ class StripeObject implements \ArrayAccess, \Countable, \JsonSerializable
             // This is necessary in case metadata is empty, as PHP arrays do
             // not differentiate between lists and hashes, and we consider
             // empty arrays to be lists.
-            if ($k === "metadata") {
+            if (($k === "metadata") && (is_array($v))) {
                 $this->_values[$k] = StripeObject::constructFrom($v, $opts);
             } else {
                 $this->_values[$k] = Util\Util::convertToStripeObject($v, $opts);
@@ -499,9 +499,10 @@ class StripeObject implements \ArrayAccess, \Countable, \JsonSerializable
     }
 
     /**
-     * @param ApiResponse
+     * Sets the last response from the Stripe API
      *
-     * @return void Set the last response from the Stripe API
+     * @param ApiResponse $resp
+     * @return void
      */
     public function setLastResponse($resp)
     {

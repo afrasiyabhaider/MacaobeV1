@@ -157,7 +157,7 @@ class DNS1D {
      * @return image or false in case of error.
      * @protected
      */
-    protected function getBarcodePNG($code, $type, $w = 2, $h = 30, $color = array(0, 0, 0), $showCode = false) {
+    protected function getBarcodePNG($code, $type, $w = 2, $h = 30, $color = array(0, 0, 0)) {
         if (!$this->store_path) {
             $this->setStorPath(app('config')->get("barcode.store_path"));
         }
@@ -188,8 +188,6 @@ class DNS1D {
         foreach ($this->barcode_array['bcode'] as $k => $v) {
             $bw = round(($v['w'] * $w), 3);
             $bh = round(($v['h'] * $h / $this->barcode_array['maxh']), 3);
-        if($showCode)
-                $bh -= imagefontheight(3) ;
             if ($v['t']) {
                 $y = round(($v['p'] * $h / $this->barcode_array['maxh']), 3);
                 // draw a vertical bar
@@ -202,17 +200,6 @@ class DNS1D {
             $x += $bw;
         }
         ob_start();
-        
-    // Add Code String in bottom
-        if($showCode)
-            if ($imagick) {
-            $bar->setTextAlignment(\Imagick::ALIGN_CENTER);
-            $bar->annotation( 10 , $h - $bh +10 , $code );
-        } else {
-            $width_text = imagefontwidth(5) * strlen($code);
-            $height_text = imagefontheight(5);
-            imagestring($png, 100, ($width/2) - ($width_text/2) , ($height - $height_text) , $code, $fgcol);
-        }    
         // get image out put
         if ($imagick) {
             $png->drawimage($bar);
@@ -226,7 +213,6 @@ class DNS1D {
         //$image = 'data:image/png;base64,' . base64_encode($image);
         return $image;
     }
-
 
     /**
      * Get the array representation of last generated barcode.

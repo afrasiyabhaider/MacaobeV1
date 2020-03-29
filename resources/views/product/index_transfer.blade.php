@@ -42,22 +42,28 @@
 <div class="row">
     <div class="col-md-12">
     @component('components.filters', ['title' => __('report.filters')])
-        <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('type', __('product.product_type') . ':') !!}
-                {!! Form::select('type', ['product' => 'Products', 'gift_card' => 'Gift Cards', 'coupon' => 'Coupons'], null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'product_list_filter_type', 'placeholder' => __('lang_v1.all')]); !!}
+        <div class="row">
+            <div class="col-md-4">
+                {{-- <div class="form-group">
+                    {!! Form::label('type', __('product.product_type') . ':') !!}
+                    {!! Form::select('type', ['product' => 'Products', 'gift_card' => 'Gift Cards', 'coupon' => 'Coupons'], null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'product_list_filter_type', 'placeholder' => __('lang_v1.all')]); !!}
+                </div> --}}
+                <div class="form-group">
+                    {!! Form::label('supplier_id', __('product.supplier') . ':') !!}
+                    {!! Form::select('supplier_id', $suppliers, null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'product_list_filter_type', 'placeholder' => __('lang_v1.all')]); !!}
+                </div>
             </div>
-        </div>
-         <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('category_id', __('product.category') . ':') !!}
-                {!! Form::select('category_id', $categories, null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'category_id', 'placeholder' => __('lang_v1.all')]); !!}
+            <div class="col-md-4">
+                <div class="form-group">
+                    {!! Form::label('category_id', __('product.category') . ':') !!}
+                    {!! Form::select('category_id', $categories, null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'category_id', 'placeholder' => __('lang_v1.all')]); !!}
+                </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                {!! Form::label('sub_category_id', __('product.subcategory') . ':') !!}
-                {!! Form::select('sub_category_id', [], null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'product_list_filter_category_id', 'placeholder' => __('lang_v1.all')]); !!}
+            <div class="col-md-4">
+                <div class="form-group">
+                    {!! Form::label('sub_category_id', __('product.subcategory') . ':') !!}
+                    {!! Form::select('sub_category_id', [], null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'product_list_filter_category_id', 'placeholder' => __('lang_v1.all')]); !!}
+                </div>
             </div>
         </div>
 
@@ -91,7 +97,7 @@
                 {!! Form::select('p_type', ['product' => 'Products', 'gift_card' => 'Gift Cards'], null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'product_list_filter_brand_id', 'placeholder' => __('lang_v1.all')]); !!}
             </div>
         </div> -->
-        <div class="col-md-12  " id="location_filter">
+        <div class="row" id="location_filter">
             <div class="form-group col-md-6">
                 {!! Form::label('from_date',   ' From Date:') !!}
                 <input type="date" name="product_list_from_date" value="{{date('Y-m-d')}}" id="product_list_from_date" class="form-control">
@@ -121,10 +127,8 @@
 
                 <div class="tab-content">
                     <div class="tab-pane active" id="product_list_tab">
-                       
                         @include('product.partials.product_list')
                     </div>
-
                     <div class="tab-pane" id="product_stock_report">
                         @include('report.partials.stock_report_table')
                     </div>
@@ -173,7 +177,8 @@
                 "ajax": {
                     "url": "/products/transfer",
                     "data": function ( d ) {
-                        d.type = $('#product_list_filter_type').val();
+                        // d.type = $('#product_list_filter_type').val();
+                        d.supplier_id = $('#product_list_filter_type').val();
                         d.category_id = $('#product_list_filter_category_id').val();
                         d.brand_id = $('#product_list_filter_brand_id').val();
                         d.unit_id = $('#product_list_filter_unit_id').val();
@@ -189,12 +194,16 @@
                 } ],
                 aaSorting: [2, 'asc'],
                 columns: [
-                        { data: 'mass_delete'  },
+                        { data: 'mass_delete'},
                         { data: 'image', name: 'products.image'  },
                         { data: 'product', name: 'products.name'  },
-                        { data: 'price', name: 'max_price', searchable: false},
+                        { data: 'purchase_price', name: 'purchase_price', searchable: false},
+                        { data: 'selling_price', name: 'selling_price', searchable: false},
+                        { data: 'color', name: 'color'},
+                        { data: 'size', name: 'size'},
                         { data: 'current_stock', searchable: false},
                         { data: 'type', name: 'products.type'},
+                         { data: 'supplier_name', name: 'products.supplier_name'},
                         { data: 'category', name: 'c1.name'},
                         { data: 'sub_category', name: 'c2.name'},
                         { data: 'date', name: 'products.created_at'},
@@ -405,6 +414,7 @@
 
             $(document).on('change', '#product_list_filter_type, #product_list_filter_category_id, #product_list_filter_brand_id, #product_list_filter_unit_id, #product_list_filter_tax_id, #location_id', 
                 function() {
+                    // console.log($(this).val());
                     if ($("#product_list_tab").hasClass('active')) {
                         product_table.ajax.reload();
                     }

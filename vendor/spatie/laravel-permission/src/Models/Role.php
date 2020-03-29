@@ -18,7 +18,7 @@ class Role extends Model implements RoleContract
     use HasPermissions;
     use RefreshesPermissionCache;
 
-    public $guarded = ['id'];
+    protected $guarded = ['id'];
 
     public function __construct(array $attributes = [])
     {
@@ -37,10 +37,6 @@ class Role extends Model implements RoleContract
             throw RoleAlreadyExists::create($attributes['name'], $attributes['guard_name']);
         }
 
-        if (isNotLumen() && app()::VERSION < '5.4') {
-            return parent::create($attributes);
-        }
-
         return static::query()->create($attributes);
     }
 
@@ -51,7 +47,9 @@ class Role extends Model implements RoleContract
     {
         return $this->belongsToMany(
             config('permission.models.permission'),
-            config('permission.table_names.role_has_permissions')
+            config('permission.table_names.role_has_permissions'),
+            'role_id',
+            'permission_id'
         );
     }
 
@@ -137,6 +135,10 @@ class Role extends Model implements RoleContract
      */
     public function hasPermissionTo($permission): bool
     {
+        if (config('permission.enable_wildcard_permission', false)) {
+            return $this->hasWildcardPermission($permission, $this->getDefaultGuardName());
+        }
+
         $permissionClass = $this->getPermissionClass();
 
         if (is_string($permission)) {

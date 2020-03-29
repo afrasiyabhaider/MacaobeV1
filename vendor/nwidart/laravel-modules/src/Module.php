@@ -2,12 +2,16 @@
 
 namespace Nwidart\Modules;
 
+use Illuminate\Cache\CacheManager;
 use Illuminate\Container\Container;
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Illuminate\Translation\Translator;
+use Nwidart\Modules\Contracts\ActivatorInterface;
 
-abstract class Module extends ServiceProvider
+abstract class Module
 {
     use Macroable;
 
@@ -36,29 +40,38 @@ abstract class Module extends ServiceProvider
      * @var array of cached Json objects, keyed by filename
      */
     protected $moduleJson = [];
+    /**
+     * @var CacheManager
+     */
+    private $cache;
+    /**
+     * @var Filesystem
+     */
+    private $files;
+    /**
+     * @var Translator
+     */
+    private $translator;
+    /**
+     * @var ActivatorInterface
+     */
+    private $activator;
 
     /**
      * The constructor.
-     *
      * @param Container $app
      * @param $name
      * @param $path
      */
-    public function __construct(Container $app, $name, $path)
+    public function __construct(Container $app, string $name, $path)
     {
-        parent::__construct($app);
         $this->name = $name;
         $this->path = $path;
-    }
-
-    /**
-     * Get laravel instance.
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Laravel\Lumen\Application
-     */
-    public function getLaravel()
-    {
-        return $this->app;
+        $this->cache = $app['cache'];
+        $this->files = $app['files'];
+        $this->translator = $app['translator'];
+        $this->activator = $app[ActivatorInterface::class];
+        $this->app = $app;
     }
 
     /**
@@ -66,7 +79,7 @@ abstract class Module extends ServiceProvider
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -76,7 +89,7 @@ abstract class Module extends ServiceProvider
      *
      * @return string
      */
-    public function getLowerName()
+    public function getLowerName(): string
     {
         return strtolower($this->name);
     }
@@ -86,7 +99,7 @@ abstract class Module extends ServiceProvider
      *
      * @return string
      */
-    public function getStudlyName()
+    public function getStudlyName(): string
     {
         return Str::studly($this->name);
     }
@@ -96,7 +109,7 @@ abstract class Module extends ServiceProvider
      *
      * @return string
      */
-    public function getSnakeName()
+    public function getSnakeName(): string
     {
         return Str::snake($this->name);
     }
@@ -106,7 +119,7 @@ abstract class Module extends ServiceProvider
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->get('description');
     }
@@ -116,7 +129,7 @@ abstract class Module extends ServiceProvider
      *
      * @return string
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return $this->get('alias');
     }
@@ -126,7 +139,7 @@ abstract class Module extends ServiceProvider
      *
      * @return string
      */
-    public function getPriority()
+    public function getPriority(): string
     {
         return $this->get('priority');
     }
@@ -136,7 +149,7 @@ abstract class Module extends ServiceProvider
      *
      * @return array
      */
-    public function getRequires()
+    public function getRequires(): array
     {
         return $this->get('requires');
     }
@@ -146,7 +159,7 @@ abstract class Module extends ServiceProvider
      *
      * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -158,7 +171,7 @@ abstract class Module extends ServiceProvider
      *
      * @return $this
      */
-    public function setPath($path)
+    public function setPath($path): Module
     {
         $this->path = $path;
 
@@ -168,7 +181,7 @@ abstract class Module extends ServiceProvider
     /**
      * Bootstrap the application events.
      */
-    public function boot()
+    public function boot(): void
     {
         if (config('modules.register.translations', true) === true) {
             $this->registerTranslation();
@@ -186,7 +199,7 @@ abstract class Module extends ServiceProvider
      *
      * @return void
      */
-    protected function registerTranslation()
+    protected function registerTranslation(): void
     {
         $lowerName = $this->getLowerName();
 
@@ -210,8 +223,8 @@ abstract class Module extends ServiceProvider
             $file = 'module.json';
         }
 
-        return array_get($this->moduleJson, $file, function () use ($file) {
-            return $this->moduleJson[$file] = new Json($this->getPath() . '/' . $file, $this->app['files']);
+        return Arr::get($this->moduleJson, $file, function () use ($file) {
+            return $this->moduleJson[$file] = new Json($this->getPath() . '/' . $file, $this->files);
         });
     }
 
@@ -244,7 +257,7 @@ abstract class Module extends ServiceProvider
     /**
      * Register the module.
      */
-    public function register()
+    public function register(): void
     {
         $this->registerAliases();
 
@@ -262,31 +275,31 @@ abstract class Module extends ServiceProvider
      *
      * @param string $event
      */
-    protected function fireEvent($event)
+    protected function fireEvent($event): void
     {
-        $this->app['events']->fire(sprintf('modules.%s.' . $event, $this->getLowerName()), [$this]);
+        $this->app['events']->dispatch(sprintf('modules.%s.' . $event, $this->getLowerName()), [$this]);
     }
     /**
      * Register the aliases from this module.
      */
-    abstract public function registerAliases();
+    abstract public function registerAliases(): void;
 
     /**
      * Register the service providers from this module.
      */
-    abstract public function registerProviders();
+    abstract public function registerProviders(): void;
 
     /**
      * Get the path to the cached *_module.php file.
      *
      * @return string
      */
-    abstract public function getCachedServicesPath();
+    abstract public function getCachedServicesPath(): string;
 
     /**
      * Register the files from this module.
      */
-    protected function registerFiles()
+    protected function registerFiles(): void
     {
         foreach ($this->get('files', []) as $file) {
             include $this->path . '/' . $file;
@@ -306,13 +319,13 @@ abstract class Module extends ServiceProvider
     /**
      * Determine whether the given status same with the current module status.
      *
-     * @param $status
+     * @param bool $status
      *
      * @return bool
      */
-    public function isStatus($status) : bool
+    public function isStatus(bool $status) : bool
     {
-        return $this->get('active', 0) === $status;
+        return $this->activator->hasStatus($this, $status);
     }
 
     /**
@@ -320,9 +333,9 @@ abstract class Module extends ServiceProvider
      *
      * @return bool
      */
-    public function enabled() : bool
+    public function isEnabled() : bool
     {
-        return $this->isStatus(1);
+        return $this->activator->hasStatus($this, true);
     }
 
     /**
@@ -330,31 +343,32 @@ abstract class Module extends ServiceProvider
      *
      * @return bool
      */
-    public function disabled() : bool
+    public function isDisabled() : bool
     {
-        return !$this->enabled();
+        return !$this->isEnabled();
     }
 
     /**
      * Set active state for current module.
      *
-     * @param $active
+     * @param bool $active
      *
-     * @return bool
+     * @return void
      */
-    public function setActive($active)
+    public function setActive(bool $active): void
     {
-        return $this->json()->set('active', $active)->save();
+        $this->activator->setActive($this, $active);
     }
 
     /**
      * Disable the current module.
      */
-    public function disable()
+    public function disable(): void
     {
         $this->fireEvent('disabling');
 
-        $this->setActive(0);
+        $this->activator->disable($this);
+        $this->flushCache();
 
         $this->fireEvent('disabled');
     }
@@ -362,11 +376,12 @@ abstract class Module extends ServiceProvider
     /**
      * Enable the current module.
      */
-    public function enable()
+    public function enable(): void
     {
         $this->fireEvent('enabling');
 
-        $this->setActive(1);
+        $this->activator->enable($this);
+        $this->flushCache();
 
         $this->fireEvent('enabled');
     }
@@ -376,8 +391,10 @@ abstract class Module extends ServiceProvider
      *
      * @return bool
      */
-    public function delete()
+    public function delete(): bool
     {
+        $this->activator->delete($this);
+
         return $this->json()->getFilesystem()->deleteDirectory($this->getPath());
     }
 
@@ -394,26 +411,33 @@ abstract class Module extends ServiceProvider
     }
 
     /**
-     * Handle call to __get method.
-     *
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function __get($key)
-    {
-        return $this->get($key);
-    }
-
-    /**
      * Check if can load files of module on boot method.
      *
      * @return bool
      */
-    protected function isLoadFilesOnBoot()
+    protected function isLoadFilesOnBoot(): bool
     {
         return config('modules.register.files', 'register') === 'boot' &&
             // force register method if option == boot && app is AsgardCms
             !class_exists('\Modules\Core\Foundation\AsgardCms');
+    }
+
+    private function flushCache(): void
+    {
+        if (config('modules.cache.enabled')) {
+            $this->cache->store()->flush();
+        }
+    }
+
+    /**
+     * Register a translation file namespace.
+     *
+     * @param  string  $path
+     * @param  string  $namespace
+     * @return void
+     */
+    private function loadTranslationsFrom(string $path, string $namespace): void
+    {
+        $this->translator->addNamespace($namespace, $path);
     }
 }

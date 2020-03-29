@@ -24,6 +24,13 @@ class CollectionDataTable extends DataTableAbstract
     public $original;
 
     /**
+     * The offset of the first record in the full dataset.
+     *
+     * @var int
+     */
+    private $offset = 0;
+
+    /**
      * Can the DataTable engine be created with these parameters.
      *
      * @param mixed $source
@@ -93,35 +100,38 @@ class CollectionDataTable extends DataTableAbstract
     {
         $columns = $this->request->get('columns', []);
         for ($i = 0, $c = count($columns); $i < $c; $i++) {
-            if ($this->request->isColumnSearchable($i)) {
-                $this->isFilterApplied = true;
+            $column  = $this->getColumnName($i);
 
-                $regex   = $this->request->isRegex($i);
-                $column  = $this->getColumnName($i);
-                $keyword = $this->request->columnKeyword($i);
-
-                $this->collection = $this->collection->filter(
-                    function ($row) use ($column, $keyword, $regex) {
-                        $data = $this->serialize($row);
-
-                        $value = Arr::get($data, $column);
-
-                        if ($this->config->isCaseInsensitive()) {
-                            if ($regex) {
-                                return preg_match('/' . $keyword . '/i', $value) == 1;
-                            }
-
-                            return strpos(Str::lower($value), Str::lower($keyword)) !== false;
-                        }
-
-                        if ($regex) {
-                            return preg_match('/' . $keyword . '/', $value) == 1;
-                        }
-
-                        return strpos($value, $keyword) !== false;
-                    }
-                );
+            if (! $this->request->isColumnSearchable($i) || $this->isBlacklisted($column)) {
+                continue;
             }
+
+            $this->isFilterApplied = true;
+
+            $regex   = $this->request->isRegex($i);
+            $keyword = $this->request->columnKeyword($i);
+
+            $this->collection = $this->collection->filter(
+                function ($row) use ($column, $keyword, $regex) {
+                    $data = $this->serialize($row);
+
+                    $value = Arr::get($data, $column);
+
+                    if ($this->config->isCaseInsensitive()) {
+                        if ($regex) {
+                            return preg_match('/' . $keyword . '/i', $value) == 1;
+                        }
+
+                        return strpos(Str::lower($value), Str::lower($keyword)) !== false;
+                    }
+
+                    if ($regex) {
+                        return preg_match('/' . $keyword . '/', $value) == 1;
+                    }
+
+                    return strpos($value, $keyword) !== false;
+                }
+            );
         }
     }
 
@@ -133,7 +143,7 @@ class CollectionDataTable extends DataTableAbstract
     public function paging()
     {
         $this->collection = $this->collection->slice(
-            $this->request->input('start'),
+            $this->request->input('start') - $this->offset,
             (int) $this->request->input('length') > 0 ? $this->request->input('length') : 10
         );
     }
@@ -189,14 +199,14 @@ class CollectionDataTable extends DataTableAbstract
     }
 
     /**
-     * Revert transformed DT_Row_Index back to it's original values.
+     * Revert transformed DT_RowIndex back to it's original values.
      *
      * @param bool $mDataSupport
      */
     private function revertIndexColumn($mDataSupport)
     {
         if ($this->columnDef['index']) {
-            $index = $mDataSupport ? config('datatables.index_column', 'DT_Row_Index') : 0;
+            $index = $mDataSupport ? config('datatables.index_column', 'DT_RowIndex') : 0;
             $start = (int) $this->request->input('start');
             $this->collection->transform(function ($data) use ($index, &$start) {
                 $data[$index] = ++$start;
@@ -251,13 +261,13 @@ class CollectionDataTable extends DataTableAbstract
 
             $this->collection = $this->collection
                 ->map(function ($data) {
-                    return array_dot($data);
+                    return Arr::dot($data);
                 })
                 ->sort($sorter)
                 ->map(function ($data) {
                     foreach ($data as $key => $value) {
                         unset($data[$key]);
-                        array_set($data, $key, $value);
+                        Arr::set($data, $key, $value);
                     }
 
                     return $data;
@@ -308,6 +318,21 @@ class CollectionDataTable extends DataTableAbstract
      */
     protected function resolveCallbackParameter()
     {
+        return $this;
+    }
+
+    /**
+     * Define the offset of the first item of the collection with respect to
+     * the FULL dataset the collection was sliced from. It effectively allows the
+     * collection to be "pre-sliced".
+     *
+     * @param int $offset
+     * @return $this
+     */
+    public function setOffset(int $offset)
+    {
+        $this->offset = $offset;
+
         return $this;
     }
 }

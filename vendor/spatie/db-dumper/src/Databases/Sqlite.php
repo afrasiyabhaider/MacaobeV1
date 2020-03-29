@@ -18,11 +18,7 @@ class Sqlite extends DbDumper
     {
         $command = $this->getDumpCommand($dumpFile);
 
-        $process = new Process($command);
-
-        if (! is_null($this->timeout)) {
-            $process->setTimeout($this->timeout);
-        }
+        $process = Process::fromShellCommandline($command, null, null, null, $this->timeout);
 
         $process->run();
 
@@ -38,8 +34,14 @@ class Sqlite extends DbDumper
      */
     public function getDumpCommand(string $dumpFile): string
     {
+        $dumpInSqlite = "echo 'BEGIN IMMEDIATE;\n.dump'";
+        if ($this->isWindows()) {
+            $dumpInSqlite = '(echo BEGIN IMMEDIATE; & echo .dump)';
+        }
+        $quote = $this->determineQuote();
+
         $command = sprintf(
-            "echo 'BEGIN IMMEDIATE;\n.dump' | '%ssqlite3' --bail '%s'",
+            "{$dumpInSqlite} | {$quote}%ssqlite3{$quote} --bail {$quote}%s{$quote}",
             $this->dumpBinaryPath,
             $this->dbName
         );

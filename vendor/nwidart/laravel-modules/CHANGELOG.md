@@ -4,6 +4,111 @@ All Notable changes to `laravel-modules` will be documented in this file.
 
 ## Next
 
+## 7.0.0 - 2020-03-26
+
+### Added
+
+- Laravel 7.0 support 
+
+## 6.2.0 - 2019-11-12
+
+### Changed
+
+- Properly guessing the namespace from the path (in `GeneratorPath` class)
+- Fixing generation of resource file if the resource has been disabled to generate
+- Fix when using a custom service provider namespace, namespace is correctly referenced in module.json and compose.json
+- Fix when using custom service provider namespace, module path is correctly referenced in the `RouteServiceProvider` and `ModuleServiceProvider`
+- Fix when using a custom path for controllers in the controller stub
+
+## 6.1.0 - 2019-11-01
+
+### Added
+
+- Added new `module:delete` command
+
+### Changed
+
+- Add optional path parameter to `module_path` helper (PR#861)
+- The default path of the `module_statuses.json` file has been moved to the Application's base path. This is to improve its visibility and the fact that it can be committed by default.
+- Throw an exception when no proper activator class was configured
+
+## 6.0.0 - 2019-09-19
+
+### Added
+
+- New File Activator feature. [PR #790](https://github.com/nWidart/laravel-modules/pull/790) from @ryssbowh
+    
+    This feature changes how modules are activated and de-activated. Currently module statuses are stored on disk, this features adds the possibility of storing this status information in a database.
+    
+    **Use the command `php artisan module:v6:migrate` to have old modules active status migrated to the new system.**
+    
+### Changed
+
+- Alternate way to define the namespace of modules in [PR #776](https://github.com/nWidart/laravel-modules/pull/776) by @daison12006013
+
+    This allows to have the content of the module under an `src/` folder for example.
+- **BREAKING** New way to handle active and inactive modules.
+
+    Modules don't store their active status in their module.json file anymore, but in a file under the storage folder.
+    Run `php artisan module:v6:migrate` to use the new system.
+- **BREAKING** Renamed method `enabled` to `isEnabled` in `\Nwidart\Modules\Module`.
+- **BREAKING** Renamed method `disabled` to `isDisabled` in `\Nwidart\Modules\Module`.
+- **BREAKING** Renamed method `enabled` to `isEnabled` in `\Nwidart\Modules\FileRepository`.
+- **BREAKING** Renamed method `disabled` to `isDisabled` in `\Nwidart\Modules\FileRepository`.
+- **BREAKING** Removed the `__get` magic method on the `\Nwidart\Modules\Module` class. Use `get()` or `json()->get()` instead.
+- The `module:make-listener` command now correctly uses the namespace configuration
+- The generated Factories now has type hints for the `\Illuminate\Database\Eloquent\Factory` class
+- Improved foreign key constraint generation
+- Exception handling in the `SeedCommand` has been improved
+
+## 5.0.1 - 2019-05-11
+
+### Added
+
+- `artisan module:route-provider` has a `--force` option to overwrite existing file
+
+### Changed
+
+- Fixing the `RouteServiceProvider` generation to properly use the `routes/web` and `routes/api` stubs
+- Replacing `@stop` with `@endsection` in the view stub file
+- `Module` class does not extend Laravel's Service Provider class anymore
+
+## 5.0.0 - 2019-03-18
+
+### Added
+
+- Laravel 5.8 support
+
+### Changed
+
+- Deprecated string and array methods have been replaced
+- Fixed caching not being cleared after disabling and enabling modules
+- Update Route Provider stub to not affect the root namespace of the URL generator (#727)
+
+### Removed
+
+- **PHP 7.1 support** 
+
+## 4.1.0 - 2019-03-04
+
+### Changed
+
+- Updated to laravel mix 4
+- Add `--api` argument to `module:make-controller` command
+- Seeding modules outside out `Modules` namespace
+
+## 4.0.0 - 2018-09-30
+
+### Added
+
+- New way of handling routes by default using a RouteServiceProvider (instead of start.php)
+- Laravel 5.7 support
+
+### Changed
+
+- Allow class resolution on short name and abstract
+- `module:seed` accepts a `--class` option
+
 ## 3.3.1 - 2018-07-13
 
 ### Changed

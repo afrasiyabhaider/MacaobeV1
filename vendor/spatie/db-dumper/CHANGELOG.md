@@ -2,6 +2,63 @@
 
 All notable changes to `db-dumper` will be documented in this file
 
+## 2.15.3 - 2020-01-26
+
+- Fix incomplete credential guard (#126)
+
+## 2.15.2 - 2020-01-16
+
+- Fix sqlite3 dump on Windows
+
+## 2.15.1 - 2019-11-23
+
+- allow symfony 5 components
+
+## 2.15.0 - 2019-11-11
+
+- add `doNotCreateTables` to Postgres driver (#116)
+
+## 2.14.3 - 2019-08-21
+
+- fix memory leak (issue #109)
+
+## 2.14.2 - 2019-06-28
+
+- Determine quotes for windows for MongoDB and PostgreSql dumps (#107)
+
+## 2.14.1 - 2019-05-10
+
+- wrap the dump command in an `if` statement when using compression (#100)
+- drop support for PHP 7.2 and lower
+
+## 2.14.0 - 2019-04-17
+
+- add --skip-lock-tables and --quick option (#95)
+
+## 2.13.2 - 2019-03-03
+
+- fix process warnings
+
+## 2.13.1 - 2019-03-01
+
+- remove pipefail operator when compressing dump
+
+## 2.13.0 - 2019-03-01
+
+- add ability to specify all databases as MySQL option
+
+## 2.12.0 - 2018-12-10
+
+- add `doNotCreateTables`
+
+## 2.11.1 - 2018-09-27
+
+- add `useExtension`
+
+## 2.11.0 - 2018-09-26
+
+- add `Compressor`
+
 ## 2.10.1 - 2018-08-30
 
 - allow destination paths to have a space character

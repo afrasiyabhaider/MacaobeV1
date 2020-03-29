@@ -1,5 +1,5 @@
-# Pesapal Laravel 5 API
-Laravel 5 Package for the Pesapal API
+# Pesapal Laravel 5,6 API
+Laravel 5,6 Package for the Pesapal API
 
 ## Installation
 
@@ -9,7 +9,7 @@ From the command line inside your project directory, simply type:
 
 `composer require knox/pesapal`
 
-### Update your config
+### Update your config (for Laravel 5.4 and below)
 
 Add the service provider to the providers array in config/app.php:
 
@@ -19,13 +19,16 @@ Add the facade to the aliases array in config/app.php:
 
 `'Pesapal' => Knox\Pesapal\Facades\Pesapal::class,` 
 
-### Publish the package configuration
+### Publish the package configuration (for Laravel 5.4 and below)
 
 Publish the configuration file and migrations by running the provided console command:
 
 `php artisan vendor:publish --provider="Knox\Pesapal\PesapalServiceProvider"`
 
 ## Setup
+### Pesapal IPN
+For the url of the route use /pesapal-ipn eg mysite.com/pesapal-ipn as the IPN on the Pesapal Merchant settings dashboard
+ 
 ### Environmental Variables
 PESAPAL\_CONSUMER\_KEY `pesapal consumer key`<br/>
 
@@ -135,6 +138,11 @@ class PaymentsController extends Controller
  PESAPAL_IPN=PaymentsController@paymentconfirmation
  PESAPAL_LIVE=true
  PESAPAL_CALLBACK_ROUTE=paymentsuccess
+```
+#### Example View
+
+```
+ {{ iframe }}
 ```
 #### Example Routes
 Relevant routes example, to help exclude entire webhooks route group in Csrf check in VerifyCsrfToken Middleware<br/>

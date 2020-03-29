@@ -97,7 +97,7 @@ class ProductController extends Controller
                 ->leftJoin('sizes', 'products.sub_size_id', '=', 'sizes.id')
                 ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
                 ->leftJoin('variation_location_details as vld', 'vld.product_id', '=', 'products.id')
-                ->join('variations as v', 'v.product_id', '=', 'products.id')
+                ->join('variations as v', 'v.product_id', '=', 'products.id')->join('suppliers','suppliers.id','=','products.supplier_id')
                 ->where('products.business_id', $business_id)
                 ->where('vld.location_id', $business_location_id)
                 ->where('products.type', '!=', 'modifier')
@@ -105,6 +105,8 @@ class ProductController extends Controller
                     'products.id',
                     'products.name as product',
                     'products.type',
+                    'products.supplier_id',
+                    'suppliers.name as supplier_name',
                     'c1.name as category',
                     'c2.name as sub_category',
                     'units.actual_name as unit',
@@ -118,22 +120,27 @@ class ProductController extends Controller
                     'products.is_inactive',
                     'sizes.name as size',
                     'colors.name as color',
+                    'v.dpp_inc_tax as purchase_price',
+                    'v.sell_price_inc_tax as selling_price',
                     DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                     DB::raw('MIN(v.sell_price_inc_tax) as min_price')
                 )->groupBy('products.id');
 
-            $type = request()->get('type', null);
-            if (!empty($type)) {
-                $products->where('products.p_type', $type);
+            // $type = request()->get('type', null);
+            // if (!empty($type)) {
+            //     $products->where('products.p_type', $type);
+            // }
+            
+            $supplier_id = request()->input('supplier_id');
+            if(!empty($supplier_id)){
+                $products->where('products.supplier_id', '=',$supplier_id);
             }
-
 
             $category_id = request()->get('category_id', null);
             if (!empty($category_id)) {
                 $products->where('products.sub_category_id', $category_id);
             }
-
 
             $brand_id = request()->get('brand_id', null);
             if (!empty($brand_id)) {
@@ -152,12 +159,13 @@ class ProductController extends Controller
             $products->orderBy('products.id', 'DESC');
 
             $from_date = request()->get('from_date', null);
+
             $to_date = request()->get('to_date', null);
+
             if (!empty($to_date)) {
                 $products->whereDate('products.created_at', '>=', $from_date)
                     ->whereDate('products.created_at', '<=', $to_date);
             }
-
 
             return Datatables::of($products)
                 ->addColumn(
@@ -251,6 +259,7 @@ class ProductController extends Controller
         $rack_enabled = (request()->session()->get('business.enable_racks') || request()->session()->get('business.enable_row') || request()->session()->get('business.enable_position'));
 
         $categories = Category::forDropdown($business_id);
+        $suppliers = Supplier::forDropdown($business_id);
         $businessArr = Business::forDropdown($business_id);
 
         $brands = Brands::forDropdown($business_id);
@@ -262,17 +271,18 @@ class ProductController extends Controller
 
         $business_locations = BusinessLocation::forDropdown($business_id, true);
 
-        return view('product.index')
-            ->with(compact(
+        return view('product.index',compact(
                 'rack_enabled',
                 'categories',
                 'brands',
                 'units',
                 'taxes',
                 'businessArr',
-                'business_locations'
+                'business_locations',
+                'suppliers'
             ));
-    }
+    // }
+}
 
 
 
@@ -298,13 +308,16 @@ class ProductController extends Controller
                 ->leftJoin('tax_rates', 'products.tax', '=', 'tax_rates.id')
                 ->leftJoin('variation_location_details as vld', 'vld.product_id', '=', 'products.id')
                 ->join('variations as v', 'v.product_id', '=', 'products.id')
+                ->leftJoin('sizes', 'products.sub_size_id', '=', 'sizes.id')
+                ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
                 ->where('products.business_id', $business_id)
-                ->where('vld.location_id', $business_location_id)
+                ->where('vld.location_id', $business_location_id)->join('suppliers','suppliers.id','=','products.supplier_id')
                 ->where('products.type', '!=', 'modifier')
                 ->select(
                     'products.id',
                     'products.name as product',
                     'products.type',
+                    'suppliers.name as supplier_name',
                     'c1.name as category',
                     'c2.name as sub_category',
                     'units.actual_name as unit',
@@ -316,6 +329,10 @@ class ProductController extends Controller
                     'products.image',
                     'products.enable_stock',
                     'products.is_inactive',
+                    'sizes.name as size',
+                    'colors.name as color',
+                    'v.dpp_inc_tax as purchase_price',
+                    'v.sell_price_inc_tax as selling_price',
                     DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                     DB::raw('MIN(v.sell_price_inc_tax) as min_price')
@@ -324,6 +341,11 @@ class ProductController extends Controller
             $type = request()->get('type', null);
             if (!empty($type)) {
                 $products->where('products.p_type', $type);
+            }
+
+            $supplier_id = request()->get('supplier_id',null);
+            if(!empty($supplier_id)){
+                $products->where('products.supplier_id', '=',$supplier_id);
             }
 
 
@@ -448,6 +470,7 @@ class ProductController extends Controller
         $rack_enabled = (request()->session()->get('business.enable_racks') || request()->session()->get('business.enable_row') || request()->session()->get('business.enable_position'));
 
         $categories = Category::forDropdown($business_id);
+        $suppliers = Supplier::forDropdown($business_id);
         $businessArr = Business::forDropdown($business_id);
 
         $brands = Brands::forDropdown($business_id);
@@ -467,7 +490,8 @@ class ProductController extends Controller
                 'units',
                 'taxes',
                 'businessArr',
-                'business_locations'
+                'business_locations',
+                'suppliers'
             ));
     }
 

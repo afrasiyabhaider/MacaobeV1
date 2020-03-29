@@ -46,6 +46,20 @@ class QueryDataTable extends DataTableAbstract
     protected $limitCallback;
 
     /**
+     * Flag to skip total records count query.
+     *
+     * @var bool
+     */
+    protected $skipTotalRecords = false;
+
+    /**
+     * Flag to keep the select bindings.
+     *
+     * @var bool
+     */
+    protected $keepSelectBindings = false;
+
+    /**
      * Can the DataTable engine be created with these parameters.
      *
      * @param mixed $source
@@ -112,13 +126,59 @@ class QueryDataTable extends DataTableAbstract
     }
 
     /**
+     * Skip total records and set the recordsTotal equals to recordsFiltered.
+     * This will improve the performance by skipping the total count query.
+     *
+     * @return $this
+     */
+    public function skipTotalRecords()
+    {
+        $this->skipTotalRecords = true;
+
+        return $this;
+    }
+
+    /**
+     * Keep the select bindings.
+     *
+     * @return $this
+     */
+    public function keepSelectBindings()
+    {
+        $this->keepSelectBindings = true;
+
+        return $this;
+    }
+
+    /**
      * Count total items.
      *
      * @return int
      */
     public function totalCount()
     {
+        if ($this->skipTotalRecords) {
+            $this->isFilterApplied = true;
+
+            return 1;
+        }
+
         return $this->totalRecords ? $this->totalRecords : $this->count();
+    }
+
+    /**
+     * Count filtered items.
+     *
+     * @return int
+     */
+    protected function filteredCount()
+    {
+        $this->filteredRecords = $this->filteredRecords ?: $this->count();
+        if ($this->skipTotalRecords) {
+            $this->totalRecords = $this->filteredRecords;
+        }
+
+        return $this->filteredRecords;
     }
 
     /**
@@ -148,7 +208,9 @@ class QueryDataTable extends DataTableAbstract
         if (! $this->isComplexQuery($builder)) {
             $row_count = $this->wrap('row_count');
             $builder->select($this->connection->raw("'1' as {$row_count}"));
-            $builder->setBindings([], 'select');
+            if (! $this->keepSelectBindings) {
+                $builder->setBindings([], 'select');
+            }
         }
 
         return $builder;
@@ -218,11 +280,11 @@ class QueryDataTable extends DataTableAbstract
         $columns = $this->request->columns();
 
         foreach ($columns as $index => $column) {
-            if (! $this->request->isColumnSearchable($index)) {
+            $column = $this->getColumnName($index);
+
+            if (! $this->request->isColumnSearchable($index) || $this->isBlacklisted($column) && ! $this->hasFilterColumn($column)) {
                 continue;
             }
-
-            $column = $this->getColumnName($index);
 
             if ($this->hasFilterColumn($column)) {
                 $keyword = $this->getColumnSearchKeyword($index, $raw = true);
@@ -433,6 +495,10 @@ class QueryDataTable extends DataTableAbstract
      */
     protected function prepareKeyword($keyword)
     {
+        if ($this->config->isStartsWithSearch()) {
+            return "$keyword%";
+        }
+
         if ($this->config->isCaseInsensitive()) {
             $keyword = Str::lower($keyword);
         }
@@ -609,10 +675,14 @@ class QueryDataTable extends DataTableAbstract
      */
     protected function applyOrderColumn($column, $orderable)
     {
-        $sql      = $this->columnDef['order'][$column]['sql'];
-        $sql      = str_replace('$1', $orderable['direction'], $sql);
-        $bindings = $this->columnDef['order'][$column]['bindings'];
-        $this->query->orderByRaw($sql, $bindings);
+        $sql = $this->columnDef['order'][$column]['sql'];
+        if (is_callable($sql)) {
+            call_user_func($sql, $this->query, $orderable['direction']);
+        } else {
+            $sql      = str_replace('$1', $orderable['direction'], $sql);
+            $bindings = $this->columnDef['order'][$column]['bindings'];
+            $this->query->orderByRaw($sql, $bindings);
+        }
     }
 
     /**
@@ -626,7 +696,11 @@ class QueryDataTable extends DataTableAbstract
     {
         $sql = $this->config->get('datatables.nulls_last_sql', '%s %s NULLS LAST');
 
-        return sprintf($sql, $column, $direction);
+        return str_replace(
+            [':column', ':direction'],
+            [$column, $direction],
+            sprintf($sql, $column, $direction)
+        );
     }
 
     /**
@@ -664,7 +738,12 @@ class QueryDataTable extends DataTableAbstract
      */
     protected function showDebugger(array $output)
     {
-        $output['queries'] = $this->connection->getQueryLog();
+        $query_log = $this->connection->getQueryLog();
+        array_walk_recursive($query_log, function (&$item, $key) {
+            $item = utf8_encode($item);
+        });
+
+        $output['queries'] = $query_log;
         $output['input']   = $this->request->all();
 
         return $output;

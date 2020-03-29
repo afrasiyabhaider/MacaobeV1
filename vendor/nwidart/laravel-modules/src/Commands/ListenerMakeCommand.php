@@ -2,6 +2,7 @@
 
 namespace Nwidart\Modules\Commands;
 
+use Illuminate\Support\Str;
 use Nwidart\Modules\Module;
 use Nwidart\Modules\Support\Config\GenerateConfigReader;
 use Nwidart\Modules\Support\Stub;
@@ -60,20 +61,18 @@ class ListenerMakeCommand extends GeneratorCommand
         $module = $this->laravel['modules']->findOrFail($this->getModuleName());
 
         return (new Stub($this->getStubName(), [
-            'NAMESPACE' => $this->getNamespace($module),
+            'NAMESPACE' => $this->getClassNamespace($module),
             'EVENTNAME' => $this->getEventName($module),
             'SHORTEVENTNAME' => $this->option('event'),
             'CLASS' => $this->getClass(),
         ]))->render();
     }
 
-    private function getNamespace($module)
+    public function getDefaultNamespace() : string
     {
-        $listenerPath = GenerateConfigReader::read('listener');
+        $module = $this->laravel['modules'];
 
-        $namespace = str_replace('/', '\\', $listenerPath->getPath());
-
-        return $this->getClassNamespace($module) . "\\" . $namespace;
+        return $module->config('paths.generator.listener.namespace') ?: $module->config('paths.generator.listener.path', 'Listeners');
     }
 
     protected function getEventName(Module $module)
@@ -97,7 +96,7 @@ class ListenerMakeCommand extends GeneratorCommand
      */
     protected function getFileName()
     {
-        return studly_case($this->argument('name'));
+        return Str::studly($this->argument('name'));
     }
 
     /**

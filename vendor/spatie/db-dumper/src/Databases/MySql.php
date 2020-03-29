@@ -3,8 +3,8 @@
 namespace Spatie\DbDumper\Databases;
 
 use Spatie\DbDumper\DbDumper;
-use Symfony\Component\Process\Process;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Symfony\Component\Process\Process;
 
 class MySql extends DbDumper
 {
@@ -17,14 +17,26 @@ class MySql extends DbDumper
     /** @var bool */
     protected $useSingleTransaction = false;
 
+    /** @var bool */
+    protected $skipLockTables = false;
+
+    /** @var bool */
+    protected $useQuick = false;
+
     /** @var string */
     protected $defaultCharacterSet = '';
 
     /** @var bool */
     protected $dbNameWasSetAsExtraOption = false;
 
+    /** @var bool */
+    protected $allDatabasesWasSetAsExtraOption = false;
+
     /** @var string */
     protected $setGtidPurged = 'AUTO';
+
+    /** @var bool */
+    protected $createTables = true;
 
     public function __construct()
     {
@@ -92,6 +104,46 @@ class MySql extends DbDumper
     }
 
     /**
+     * @return $this
+     */
+    public function skipLockTables()
+    {
+        $this->skipLockTables = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function dontSkipLockTables()
+    {
+        $this->skipLockTables = false;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function useQuick()
+    {
+        $this->useQuick = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function dontUseQuick()
+    {
+        $this->useQuick = false;
+
+        return $this;
+    }
+
+    /**
      * @param string $characterSet
      *
      * @return $this
@@ -131,11 +183,7 @@ class MySql extends DbDumper
 
         $command = $this->getDumpCommand($dumpFile, $temporaryCredentialsFile);
 
-        $process = new Process($command);
-
-        if (! is_null($this->timeout)) {
-            $process->setTimeout($this->timeout);
-        }
+        $process = Process::fromShellCommandline($command, null, null, null, $this->timeout);
 
         $process->run();
 
@@ -144,12 +192,27 @@ class MySql extends DbDumper
 
     public function addExtraOption(string $extraOption)
     {
+        if (strpos($extraOption, '--all-databases') !== false) {
+            $this->dbNameWasSetAsExtraOption = true;
+            $this->allDatabasesWasSetAsExtraOption = true;
+        }
+
         if (preg_match('/^--databases (\S+)/', $extraOption, $matches) === 1) {
             $this->setDbName($matches[1]);
             $this->dbNameWasSetAsExtraOption = true;
         }
 
         return parent::addExtraOption($extraOption);
+    }
+
+    /**
+     * @return $this
+     */
+    public function doNotCreateTables()
+    {
+        $this->createTables = false;
+
+        return $this;
     }
 
     /**
@@ -169,6 +232,10 @@ class MySql extends DbDumper
             "--defaults-extra-file=\"{$temporaryCredentialsFile}\"",
         ];
 
+        if (! $this->createTables) {
+            $command[] = '--no-create-info';
+        }
+
         if ($this->skipComments) {
             $command[] = '--skip-comments';
         }
@@ -177,6 +244,14 @@ class MySql extends DbDumper
 
         if ($this->useSingleTransaction) {
             $command[] = '--single-transaction';
+        }
+
+        if ($this->skipLockTables) {
+            $command[] = '--skip-lock-tables';
+        }
+
+        if ($this->useQuick) {
+            $command[] = '--quick';
         }
 
         if ($this->socket !== '') {
@@ -226,15 +301,14 @@ class MySql extends DbDumper
 
     protected function guardAgainstIncompleteCredentials()
     {
-        foreach (['userName', 'dbName', 'host'] as $requiredProperty) {
+        foreach (['userName', 'host'] as $requiredProperty) {
             if (strlen($this->$requiredProperty) === 0) {
                 throw CannotStartDump::emptyParameter($requiredProperty);
             }
         }
-    }
 
-    protected function determineQuote(): string
-    {
-        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? '"' : "'";
+        if (strlen($this->dbName) === 0 && ! $this->allDatabasesWasSetAsExtraOption) {
+            throw CannotStartDump::emptyParameter('dbName');
+        }
     }
 }

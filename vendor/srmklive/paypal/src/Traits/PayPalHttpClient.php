@@ -2,13 +2,38 @@
 
 namespace Srmklive\PayPal\Traits;
 
+use Exception;
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\BadResponseException as HttpBadResponseException;
-use GuzzleHttp\Exception\ClientException as HttpClientException;
-use GuzzleHttp\Exception\ServerException as HttpServerException;
+use Psr\Http\Message\StreamInterface;
+use RuntimeException;
+use Throwable;
 
 trait PayPalHttpClient
 {
+    /**
+     * Set curl constants if not defined.
+     *
+     * @return void
+     */
+    protected function setCurlConstants()
+    {
+        if (!defined('CURLOPT_SSLVERSION')) {
+            define('CURLOPT_SSLVERSION', 32);
+        }
+
+        if (!defined('CURL_SSLVERSION_TLSv1_2')) {
+            define('CURL_SSLVERSION_TLSv1_2', 6);
+        }
+
+        if (!defined('CURLOPT_SSL_VERIFYPEER')) {
+            define('CURLOPT_SSL_VERIFYPEER', 64);
+        }
+
+        if (!defined('CURLOPT_SSLCERT')) {
+            define('CURLOPT_SSLCERT', 10025);
+        }
+    }
+
     /**
      * Function to initialize Http Client.
      *
@@ -28,6 +53,8 @@ trait PayPalHttpClient
      */
     protected function setHttpClientConfiguration()
     {
+        $this->setCurlConstants();
+
         $this->httpClientConfig = [
             CURLOPT_SSLVERSION     => CURL_SSLVERSION_TLSv1_2,
             CURLOPT_SSL_VERIFYPEER => $this->validateSSL,
@@ -53,9 +80,9 @@ trait PayPalHttpClient
     /**
      * Perform PayPal API request & return response.
      *
-     * @throws \Exception
+     * @throws Exception
      *
-     * @return \Psr\Http\Message\StreamInterface
+     * @return StreamInterface
      */
     private function makeHttpRequest()
     {
@@ -63,12 +90,8 @@ trait PayPalHttpClient
             return $this->client->post($this->apiUrl, [
                 $this->httpBodyParam => $this->post->toArray(),
             ])->getBody();
-        } catch (HttpClientException $e) {
-            throw new \Exception($e->getRequest().' '.$e->getResponse());
-        } catch (HttpServerException $e) {
-            throw new \Exception($e->getRequest().' '.$e->getResponse());
-        } catch (HttpBadResponseException $e) {
-            throw new \Exception($e->getRequest().' '.$e->getResponse());
+        } catch (Throwable $t) {
+            throw new RuntimeException($t->getRequest().' '.$t->getResponse());
         }
     }
 
@@ -77,9 +100,9 @@ trait PayPalHttpClient
      *
      * @param string $method
      *
-     * @throws \Exception
+     * @throws Exception
      *
-     * @return array|\Psr\Http\Message\StreamInterface
+     * @return array|StreamInterface
      */
     private function doPayPalRequest($method)
     {
@@ -91,8 +114,8 @@ trait PayPalHttpClient
             $response = $this->makeHttpRequest();
 
             return $this->retrieveData($method, $response);
-        } catch (\Exception $e) {
-            $message = collect($e->getTrace())->implode('\n');
+        } catch (Throwable $t) {
+            $message = collect($t->getTrace())->implode('\n');
         }
 
         return [
