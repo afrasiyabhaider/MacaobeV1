@@ -11,6 +11,9 @@
 |
 */
 
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Auth;
+
 include_once('install_r.php');
 
 Route::middleware(['IsInstalled'])->group(function () {
@@ -357,3 +360,10 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('bookings/get-todays-bookings', 'Restaurant\BookingController@getTodaysBookings');
     Route::resource('bookings', 'Restaurant\BookingController');
 });
+
+/**
+ *  Site Routes Starts from here
+ * 
+ */
+
+Route::get('site/home/', 'SiteController@home')->name('site.home');
