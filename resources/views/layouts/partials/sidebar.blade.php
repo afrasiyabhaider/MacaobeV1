@@ -79,7 +79,7 @@
                   </a>
                 </li>
               @endcan
-              @can('user.create')
+              {{-- @can('user.create')
                 <li class="{{ $request->segment(1) == 'sales-commission-agents' ? 'active active-sub' : '' }}">
                   <a href="{{action('SalesCommissionAgentController@index')}}">
                       <i class="fa fa-handshake-o"></i>
@@ -88,7 +88,7 @@
                       </span>
                   </a>
                 </li>
-              @endcan
+              @endcan --}}
             </ul>
         </li>
         @endif
@@ -193,9 +193,9 @@
               </span>
             </a>
             <ul class="treeview-menu">
-              @can('supplier.view')
+              {{-- @can('supplier.view')
                 <li class="{{ $request->input('type') == 'supplier' ? 'active' : '' }}"><a href="{{action('ContactController@index', ['type' => 'supplier'])}}"><i class="fa fa-star"></i> @lang('report.supplier')</a></li>
-              @endcan
+              @endcan --}}
 
               @can('customer.view')
                 <li class="{{ $request->input('type') == 'customer' ? 'active' : '' }}"><a href="{{action('ContactController@index', ['type' => 'customer'])}}"><i class="fa fa-star"></i> @lang('report.customer')</a></li>
@@ -203,9 +203,9 @@
                 <li class="{{ $request->segment(1) == 'customer-group' ? 'active' : '' }}"><a href="{{action('CustomerGroupController@index')}}"><i class="fa fa-users"></i> @lang('lang_v1.customer_groups')</a></li>
               @endcan
 
-              @if(auth()->user()->can('supplier.create') || auth()->user()->can('customer.create') )
+              {{-- @if(auth()->user()->can('supplier.create') || auth()->user()->can('customer.create') )
                 <li class="{{ $request->segment(1) == 'contacts' && $request->segment(2) == 'import' ? 'active' : '' }}"><a href="{{action('ContactController@getImportContacts')}}"><i class="fa fa-download"></i> @lang('lang_v1.import_contacts')</a></li>
-              @endcan
+              @endcan --}}
 
             </ul>
           </li>
@@ -240,21 +240,21 @@
               @can('product.create')
                 <li class="{{ $request->segment(1) == 'products' && $request->segment(2) == 'product_name_category' ? 'active' : '' }}"><a href="{{action('ProductNameCategoryController@index')}}"><i class="fa fa-plus-circle"></i>Product Name Series</a></li>
               @endcan
-              @can('product.view')
+              {{-- @can('product.view')
                 <li class="{{ $request->segment(1) == 'labels' && $request->segment(2) == 'show' ? 'active' : '' }}"><a href="{{action('LabelsController@show')}}"><i class="fa fa-barcode"></i>@lang('barcode.print_labels')</a></li>
-              @endcan
-              @can('product.create')
+              @endcan --}}
+              {{-- @can('product.create')
                 <li class="{{ $request->segment(1) == 'variation-templates' ? 'active' : '' }}"><a href="{{action('VariationTemplateController@index')}}"><i class="fa fa-circle-o"></i><span>@lang('product.variations')</span></a></li>
-              @endcan
+              @endcan --}}
               @can('product.create')
                 <li class="{{ $request->segment(1) == 'import-products' ? 'active' : '' }}"><a href="{{action('ImportProductsController@index')}}"><i class="fa fa-download"></i><span>@lang('product.import_products')</span></a></li>
               @endcan
-              @can('product.opening_stock')
+              {{-- @can('product.opening_stock')
                 <li class="{{ $request->segment(1) == 'import-opening-stock' ? 'active' : '' }}"><a href="{{action('ImportOpeningStockController@index')}}"><i class="fa fa-download"></i><span>@lang('lang_v1.import_opening_stock')</span></a></li>
-              @endcan
-              @can('product.create')
+              @endcan --}}
+              {{-- @can('product.create')
                 <li class="{{ $request->segment(1) == 'selling-price-group' ? 'active' : '' }}"><a href="{{action('SellingPriceGroupController@index')}}"><i class="fa fa-circle-o"></i><span>@lang('lang_v1.selling_price_group')</span></a></li>
-              @endcan
+              @endcan --}}
               
               @if(auth()->user()->can('unit.view') || auth()->user()->can('unit.create'))
                 <li class="{{ $request->segment(1) == 'units' ? 'active' : '' }}">
@@ -270,19 +270,19 @@
 
               @if(auth()->user()->can('category.view') || auth()->user()->can('category.create'))
                 <li class="{{ $request->segment(1) == 'sizes' ? 'active' : '' }}">
-                  <a href="{{action('SizeController@index')}}"><i class="fa fa-scale"></i> <span>@lang('size.category') </span></a>
+                  <a href="{{action('SizeController@index')}}"><i class="fa fa-columns"></i> <span>@lang('size.category') </span></a>
                 </li>
               @endif
-
-              @if(auth()->user()->can('brand.view') || auth()->user()->can('brand.create'))
+                {{-- Seasons --}}
+              {{-- @if(auth()->user()->can('brand.view') || auth()->user()->can('brand.create'))
                 <li class="{{ $request->segment(1) == 'brands' ? 'active' : '' }}">
                   <a href="{{action('BrandController@index')}}"><i class="fa fa-diamond"></i> <span>@lang('brand.brands')</span></a>
                 </li>
-              @endif
+              @endif --}}
             </ul>
           </li>
         @endif
-        @if(auth()->user()->can('purchase.view') || auth()->user()->can('purchase.create') || auth()->user()->can('purchase.update') )
+        {{-- @if(auth()->user()->can('purchase.view') || auth()->user()->can('purchase.create') || auth()->user()->can('purchase.update') )
         <li class="treeview {{in_array($request->segment(1), ['purchases', 'purchase-return']) ? 'active active-sub' : '' }}" id="tour_step6">
           <a href="#" id="tour_step6_menu"><i class="fa fa-arrow-circle-down"></i> <span>@lang('purchase.purchases')</span>
             <span class="pull-right-container">
@@ -301,11 +301,11 @@
             @endcan
           </ul>
         </li>
-        @endif
+        @endif --}}
 
         @if(auth()->user()->can('sell.view') || auth()->user()->can('sell.create') || auth()->user()->can('direct_sell.access') )
           <li class="treeview {{  in_array( $request->segment(1), ['sells', 'pos', 'sell-return', 'ecommerce', 'discount']) ? 'active active-sub' : '' }}" id="tour_step7">
-            <a href="#" id="tour_step7_menu"><i class="fa fa-arrow-circle-up"></i> <span>@lang('sale.sale')</span>
+            <a href="#" id="tour_step7_menu"><i class="fa fa-dollar"></i> <span>@lang('sale.sells')</span>
               <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
@@ -318,18 +318,18 @@
               @if(Module::has('Ecommerce'))
                 @includeIf('ecommerce::layouts.partials.sell_sidebar')
               @endif
-              @can('direct_sell.access')
+              {{-- @can('direct_sell.access')
                 <li class="{{ $request->segment(1) == 'sells' && $request->segment(2) == 'create' ? 'active' : '' }}"><a href="{{action('SellController@create')}}"><i class="fa fa-plus-circle"></i>@lang('sale.add_sale')</a></li>
-              @endcan
-              @can('sell.view')
+              @endcan --}}
+              {{-- @can('sell.view')
                 <li class="{{ $request->segment(1) == 'pos' && $request->segment(2) == null ? 'active' : '' }}" ><a href="{{action('SellPosController@index')}}"><i class="fa fa-list"></i>@lang('sale.list_pos')</a></li>
-              @endcan
-              @can('sell.create')
+              @endcan --}}
+              {{-- @can('sell.create')
                 <li class="{{ $request->segment(1) == 'pos' && $request->segment(2) == 'create' ? 'active' : '' }}"><a href="{{action('SellPosController@create')}}"><i class="fa fa-plus-circle"></i>@lang('sale.pos_sale')</a></li>
                 <li class="{{ $request->segment(1) == 'sells' && $request->segment(2) == 'drafts' ? 'active' : '' }}" ><a href="{{action('SellController@getDrafts')}}"><i class="fa fa-pencil-square" aria-hidden="true"></i>@lang('lang_v1.list_drafts')</a></li>
 
                 <li class="{{ $request->segment(1) == 'sells' && $request->segment(2) == 'quotations' ? 'active' : '' }}" ><a href="{{action('SellController@getQuotations')}}"><i class="fa fa-pencil-square" aria-hidden="true"></i>@lang('lang_v1.list_quotations')</a></li>
-              @endcan
+              @endcan --}}
               @can('sell.view')
                 <li class="{{ $request->segment(1) == 'sell-return' && $request->segment(2) == null ? 'active' : '' }}" ><a href="{{action('SellReturnController@index')}}"><i class="fa fa-undo"></i>@lang('lang_v1.list_sell_return')</a></li>
               @endcan
@@ -448,9 +448,9 @@
                 <li class="{{ $request->segment(2) == 'purchase-sell' ? 'active' : '' }}" ><a href="{{action('ReportController@getPurchaseSell')}}"><i class="fa fa-exchange"></i>@lang('report.purchase_sell_report')</a></li>
               @endcan
 
-              @can('tax_report.view')
+              {{-- @can('tax_report.view')
                 <li class="{{ $request->segment(2) == 'tax-report' ? 'active' : '' }}" ><a href="{{action('ReportController@getTaxReport')}}"><i class="fa fa-tumblr" aria-hidden="true"></i>@lang('report.tax_report')</a></li>
-              @endcan
+              @endcan --}}
 
               @can('contacts_report.view')
                 <li class="{{ $request->segment(2) == 'customer-supplier' ? 'active' : '' }}" ><a href="{{action('ReportController@getCustomerSuppliers')}}"><i class="fa fa-address-book"></i>@lang('report.contacts')</a></li>
@@ -468,9 +468,9 @@
                 @endif
               @endcan
 
-              @can('stock_report.view')
+              {{-- @can('stock_report.view')
                 <li class="{{ $request->segment(2) == 'lot-report' ? 'active' : '' }}" ><a href="{{action('ReportController@getLotReport')}}"><i class="fa fa-hourglass-half" aria-hidden="true"></i>@lang('lang_v1.lot_report')</a></li>
-              @endcan
+              @endcan --}}
 
               @can('trending_product_report.view')
                 <li class="{{ $request->segment(2) == 'trending-products' ? 'active' : '' }}" ><a href="{{action('ReportController@getTrendingProducts')}}"><i class="fa fa-line-chart" aria-hidden="true"></i>@lang('report.trending_products')</a></li>

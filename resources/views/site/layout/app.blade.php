@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>
-         @yield('name')
+         @yield('title')
     </title>
 
     <meta name="keywords" content="Ecommerce, Shopping, Porto, Afrasiyab, Macao,MacaoBe, Belgium, Fashion, Clothes, Women, Men, Online Shopping" />
@@ -42,7 +42,10 @@
                 <div class="container">
                     <div class="header-left">
                         <a href="index.html" class="logo">
-                            <img src="{{asset('site_assets/images/logo.png')}}" alt="Porto Logo">
+                            <img src="{{asset('site_assets/images/logo.png')}}" alt="MacaoBe Logo">
+                            {{-- <h1>
+                                MacaoBe
+                            </h1> --}}
                         </a>
                     </div><!-- End .header-left -->
 
@@ -411,11 +414,12 @@
             <div class="footer-bottom">
                 <div class="container">
                     <div class="row align-items-center">
-                        <div class="col-lg-4">
-                            <p class="footer-copyright">Porto eCommerce. &copy;  2018.  All Rights Reserved</p>
+                        <div class="col-lg-9">
+                            <p class="footer-copyright"> All Rights Reserved by {{config('app.site')}}&copy; {{now()->year}}. <br> Developed by <a href="https://www.linkedin.com/in/afrasiyab-haider-8bab20135/" target="__blank" class="text-warning">Afrasiyab Haider</a>
+                            </p>
                         </div><!-- End .col-lg-4 -->
 
-                        <div class="col-lg-5">
+                        {{-- <div class="col-lg-5">
                             <div class="widget widget-newsletter">
                                 <h4 class="widget-title">newsletter</h4>
                                 <form action="#">
@@ -424,10 +428,10 @@
                                     <input type="submit" class="btn" value="Subscribe">
                                 </form>
                             </div><!-- End .widget -->
-                        </div><!-- End .col-lg-5 -->
+                        </div><!-- End .col-lg-5 --> --}}
 
                         <div class="col-lg-3">
-                            <img src="assets/images/payments.png" alt="payment methods" class="footer-payments">
+                            <img src="../site_assets/images/payments.png" alt="payment methods" class="footer-payments">
                         </div><!-- End .col-lg-3 -->
                     </div><!-- End .row -->
                 </div><!-- End .container -->
@@ -522,7 +526,7 @@
                     </li>
                     <li><a href="contact.html">Contact Us</a></li>
                     <li><a href="#">Special Offer!<span class="tip tip-hot">Hot!</span></a></li>
-                    <li><a href="https://1.envato.market/DdLk5" target="_blank">Buy Porto!</a></li>
+                    {{-- <li><a href="https://1.envato.market/DdLk5" target="_blank">Buy Porto!</a></li> --}}
                 </ul>
             </nav><!-- End .mobile-nav -->
 
@@ -534,7 +538,7 @@
         </div><!-- End .mobile-menu-wrapper -->
     </div><!-- End .mobile-menu-container -->
 
-    <div class="newsletter-popup mfp-hide" id="newsletter-popup-form" style="background-image: url(../../site_assets/images/newsletter_popup_bg.jpg)">
+    {{-- <div class="newsletter-popup mfp-hide" id="newsletter-popup-form" style="background-image: url(../../site_assets/images/newsletter_popup_bg.jpg)">
         <div class="newsletter-popup-content">
             <img src="assets/images/logo-black.png" alt="Logo" class="logo-newsletter">
             <h2>BE THE FIRST TO KNOW</h2>
@@ -554,7 +558,7 @@
                 </div>
             </div>
         </div><!-- End .newsletter-popup-content -->
-    </div><!-- End .newsletter-popup -->
+    </div><!-- End .newsletter-popup --> --}}
     <!-- Add Cart Modal -->
     <div class="modal fade" id="addCartModal" tabindex="-1" role="dialog" aria-labelledby="addCartModal" aria-hidden="true">
       <div class="modal-dialog" role="document">
@@ -580,6 +584,6 @@
     <script src="{{asset('site_assets/js/plugins.min.js')}}"></script>
 
     <!-- Main JS File -->
-    <script src="{{asset('site_assets/js/main.min.js')}}"></script>
+    <script src="{{asset('site_assets/js/main.js')}}"></script>
 </body>
 </html>

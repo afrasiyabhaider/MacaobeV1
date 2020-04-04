@@ -11,8 +11,6 @@
 |
 */
 
-use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\Auth;
 
 include_once('install_r.php');
 
@@ -37,6 +35,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
 
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
+    Route::get('portal/home', 'HomeController@index')->name('home');
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('/home/get-totals', 'HomeController@getTotals');
     Route::get('/home/product-stock-alert', 'HomeController@getProductStockAlert');

@@ -15,4 +15,9 @@ class VariationLocationDetails extends Model
     protected $fillable = [
         'product_id', 'product_variation_id', 'variation_id', 'location_id', 'qty_available' 
     ];
+
+    public function products()
+    {
+        return $this->belongsTo(Product::class,'product_id','id');
+    }
 }

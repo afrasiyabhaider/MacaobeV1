@@ -12,7 +12,8 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'ultimatePOS'),
+    'name' => env('APP_NAME', 'MacaoBe POS'),
+    'site' => env('SITE_NAME', 'MacaoBe'),
 
     /*
     |--------------------------------------------------------------------------

@@ -18,14 +18,15 @@
                 {{-- {!! Form::submit('Print Selected', array('class' => 'btn btn-md btn-warning', 'id' => 'bulkPrint-selected')) !!} --}}
         {!! Form::close() !!}
     </div>
-    {{-- <div class="pull-left">
-    {!! Form::open(['url' => action('ProductController@massTransfer'), 'method' => 'post', 'id' => 'bulkTransfer_form' ]) !!}
-                    {!! Form::hidden('selected_products_bulkTransfer', null, ['id' => 'selected_products_bulkTransfer']); !!}
-                    {!! Form::hidden('selected_products_qty_bulkTransfer', null, ['id' => 'selected_products_qty_bulkTransfer']); !!}
-                    {!! Form::hidden('bussiness_bulkTransfer', null, ['id' => 'bussiness_bulkTransfer']); !!}
-                    {!! Form::submit('Transfer Selected', array('class' => 'btn btn-md btn-warning', 'id' => 'bulkTransfer-selected')) !!}
-                    {!! Form::close() !!}
-    </div> --}}
+    
+    <div class="col-3 pull-left @if(url()->current() == url('products')) hidden @endif">
+        {!! Form::open(['url' => action('ProductController@massTransfer'), 'method' => 'post', 'id' => 'bulkTransfer_form','class' => 'ml-5' ]) !!}
+            {!! Form::hidden('selected_products_bulkTransfer', null, ['id' => 'selected_products_bulkTransfer']); !!}
+            {!! Form::hidden('selected_products_qty_bulkTransfer', null, ['id' => 'selected_products_qty_bulkTransfer']); !!}
+            {!! Form::hidden('bussiness_bulkTransfer', null, ['id' => 'bussiness_bulkTransfer']); !!}
+            {!! Form::submit('Transfer Selected', array('class' => 'btn btn-md btn-warning', 'id' => 'bulkTransfer-selected')) !!}
+        {!! Form::close() !!}
+    </div>
 </div>
     <table class="table table-bordered table-striped ajax_view table-text-center" id="product_table">
         <thead>

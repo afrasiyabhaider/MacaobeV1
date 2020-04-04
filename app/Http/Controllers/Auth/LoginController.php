@@ -16,7 +16,7 @@ class LoginController extends Controller
     |--------------------------------------------------------------------------
     |
     | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
+    | redirecting them to your  screen. The controller uses a trait
     | to conveniently provide its functionality to your applications.
     |
     */
@@ -34,7 +34,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    // protected $redirectTo = '/home';
+    // protected $redirectTo = 'portal/home';
 
     /**
      * Create a new controller instance.
@@ -98,6 +98,6 @@ class LoginController extends Controller
             return '/pos/create';
         }
         return '/pos/create';
-        return '/home';
+        return 'portal/';
     }
 }
