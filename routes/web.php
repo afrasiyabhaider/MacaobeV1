@@ -358,6 +358,11 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
 
     Route::get('bookings/get-todays-bookings', 'Restaurant\BookingController@getTodaysBookings');
     Route::resource('bookings', 'Restaurant\BookingController');
+
+    // Website Routes
+    Route::get('website/product/list','WebsiteController@index');
+    Route::get('website/product/{id}/special_category','WebsiteController@specialCategoriesForm');
+    Route::post('website/product/special_category','WebsiteController@addspecialCategories');
 });
 
 /**
@@ -365,4 +370,4 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
  * 
  */
 
-Route::get('site/home/', 'SiteController@home')->name('site.home');
+Route::get('/', 'SiteController@home')->name('site.home');

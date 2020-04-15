@@ -25,7 +25,7 @@
       border-top: 1px solid #ccc;
 
       &.product-col {
-        padding:  2rem .8rem 1.8rem 0;
+        padding: 2rem .8rem 1.8rem 0;
       }
     }
 
@@ -39,7 +39,6 @@
 
   .product-title {
     margin-bottom: 0;
-    font-size: 1.4rem;
   }
 
   tfoot {
@@ -76,11 +75,11 @@
 .btn-remove,
 .btn-edit,
 .btn-move {
-  color: $primary-color;
+  color: #3f4658;
 
   &:hover,
   &:focus {
-    color: lighten($primary-color, 5%);
+    color: $primary-color;
     text-decoration: none;
   }
 }
@@ -150,41 +149,40 @@
   border: 1px solid #ddd;
   background: #fbfbfb;
 
-    h3 {
-      margin-bottom: 1.3rem;
-    font-size: 2.4rem;
-    font-weight: 300;
-    }
+  h3 {
+    margin-bottom: 1.3rem;
+    font-size: 2rem;
+    text-transform: uppercase;
+  }
 
-    h4 {
-      font-size: 1.5rem;
-    font-weight: 600;
-    border-top: 1px solid #cccccc;
+  h4 {
     margin-bottom: 0;
+    border-top: 1px solid #ccc;
+    font-size: 1.5rem;
+    font-weight: 600;
 
-      a {
-        position: relative;
-        display: block;
-        color: inherit;
-        padding: 1rem 2rem 1rem 0;
+    a {
+      display: block;
+      position: relative;
+      padding: 1rem 2rem 1rem 0;
 
-
-        &::after {
+      &::after {
+        display: inline-block;
+        position: absolute;
+        top: 50%;
+        right: .4rem;
+        -webkit-transform: translateY(-50%);
+        transform: translateY(-50%);
         font-family: 'porto';
-          content: '\e81b';
-          position: absolute;
-          display: inline-block;
-          right: .4rem;
-          top: 50%;
-          font-size: 1.4rem;
-          transform: translateY(-50%);
-        }
+        font-size: 1.4rem;
+        content: '\e81b';
+      }
 
-        &.collapsed::after {
-          content: '\e81c';
-        }
+      &.collapsed::after {
+        content: '\e81c';
       }
     }
+  }
 }
 
 #total-estimate-section {
@@ -223,14 +221,13 @@
   tfoot {
     border-top: 1px solid #ccc;
     font-size: 1.8rem;
-    font-weight: 400;
+    font-weight: 600;
 
     tr td {
       padding-top: 1.3rem;
       padding-bottom: 1.6rem;
 
       &:last-child {
-        font-weight: 600;
         color: $headings-text;
       }
     }
@@ -239,6 +236,8 @@
 
 .checkout-methods {
   .btn {
+    letter-spacing: 0;
+
     + .btn {
       margin-top: 2.2rem;
     }

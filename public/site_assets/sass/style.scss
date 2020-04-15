@@ -1,6 +1,6 @@
 @charset 'UTF-8';
 
-/* Main Css File */
+// Main Css File
 @import 'mixins/clearfix';
 @import 'mixins/breakpoints';
 @import 'mixins/lazy';
@@ -29,14 +29,11 @@
 @import 'components/alerts';
 @import 'components/cards';
 @import 'components/modals';
-@import 'components/member';
 @import 'components/tooltips';
 @import 'components/social-icons';
-@import 'components/info-boxes';
 @import 'components/feature-boxes';
 @import 'components/tabs';
 @import 'components/counters';
-@import 'components/testimonials';
 @import 'components/pagination';
 @import 'components/popup';
 
@@ -53,13 +50,13 @@
 @import 'pages/contact';
 @import 'pages/dashboard';
 
-/* Plugins */
+// Plugins
 @import 'plugins/owl-carousel/owl.carousel';
 @import 'plugins/owl-carousel/owl.theme.default';
 @import 'plugins/magnific-popup/main';
 @import 'plugins/jquery.bootstrap-touchspin';
 @import 'plugins/nouislider';
 
-/* Spacing + Helpers */
+// Spacing + Helpers
 @import 'config/helpers';
 @import 'config/spacing';

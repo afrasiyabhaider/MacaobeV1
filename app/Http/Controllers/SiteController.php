@@ -7,22 +7,27 @@ use App\Product;
 use App\ProductVariation;
 use App\VariationLocationDetails;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SiteController extends Controller
 {
     public function home()
     {
-        $location_id = BusinessLocation::where('name','Website')->pluck('id');
-        if (isset($location_id[0])) {
-            $all_variation = VariationLocationDetails::where('location_id', $location_id[0])->where('qty_available','>',0)->get();
+        $location_id = BusinessLocation::where('name','Web Shop')->orWhere('name','webshop')->orWhere('name','web shop')->orWhere('name','Website')->orWhere('name','website')->pluck('id');
 
-            $new_variation = VariationLocationDetails::where('location_id', $location_id[0])->where('qty_available','>',0)->orderBy('created_at','desc')->get();
+        /**
+         * Product is stored as many time as its size is selected 
+         * e.g if a product have 4 sizes then it will be stored 
+         * 4 times so we have to groupBy a product by its refference
+         *  so we did
+         * 
+        */
+        $data = VariationLocationDetails::where('location_id','=',$location_id)->join('products as p','p.id','=','variation_location_details.product_id')->groupBy('p.refference')->orderBy('p.created_at','Desc')->get();
 
-            // dd($variation[0]->products()->first());
-            // $product = Product::find(320);
-            // dd($product->variation_location_details()->get());
-        }
-
-        return view('site.home',compact('all_variation','new_variation'));
+        // dd($data);
+        
+        
+        return view('site.home',compact('data'));
     }
+
 }

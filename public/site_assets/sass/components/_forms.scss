@@ -28,9 +28,9 @@ form {
 
 .form-control {
   max-width: 480px;
-  height: 4.8rem;
+  height: 5.6rem;
   margin-bottom: 1rem;
-  padding: 1.25rem 1.5rem;
+  padding: 1.65rem 2rem;
   transition: all .3s;
   border: 1px solid #e6e6e6;
   border-radius: $border-radius;
@@ -40,12 +40,6 @@ form {
   font-size: $input-font-size;
   font-weight: 400;
   line-height: 1.5;
-}
-
-.form-control-sm {
-  height: 4.5rem;
-  padding: 1.2rem 1.5rem;
-  font-size: 1.3rem;
 
   &:focus {
     border-color: $secondary-color;
@@ -55,12 +49,18 @@ form {
   }
 }
 
+.form-control-sm {
+  height: 4.6rem;
+  padding: 1.25rem 1.5rem;
+  font-size: 1.3rem;
+}
+
 select.form-control:not([size]):not([multiple]) {
-  height: 4.8rem;
+  height: 5.6rem;
 }
 
 select.form-control-sm:not([size]):not([multiple]) {
-  height: 4.5rem;
+  height: 4.6rem;
 }
 
 .main .form-control::-webkit-input-placeholder {
@@ -85,7 +85,7 @@ select.form-control-sm:not([size]):not([multiple]) {
 
 textarea.form-control {
   max-width: 680px;
-  min-height: 176px;
+  min-height: 196px;
 }
 
 .form-footer {
@@ -118,7 +118,7 @@ textarea.form-control {
 
 label {
   margin: 0 0 .6rem;
-  color: darken($body-text, 5%);
+  color: $body-text;
   font-size: 1.4rem;
   font-weight: 400;
 }
@@ -155,7 +155,6 @@ label {
     right: 1.9rem;
     -webkit-transform: translateY(-51%);
     transform: translateY(-51%);
-    color: #34373f;
     font-family: 'porto';
     font-size: 1.5rem;
     content: '\e81c';
@@ -198,14 +197,13 @@ label {
   position: static;
   margin-top: .1rem;
   margin-bottom: 0;
-  font-size: 1.4rem;
 
   &::before,
   &::after {
-    height: 2rem;
+    top: .4rem;
     left: 0;
-    top: .3rem;
     width: 2rem;
+    height: 2rem;
   }
 
   &::before {
@@ -219,8 +217,8 @@ label {
 }
 
 .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
-  border-color: $primary-color;
-  background-color: $primary-color;
+  border-color: $secondary-color;
+  background-color: $secondary-color;
   color: $secondary-color;
 }
 

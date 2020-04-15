@@ -344,7 +344,21 @@
             </ul>
           </li>
         @endif
-
+          <li class="treeview {{  in_array( $request->segment(1), ['website']) ? 'active active-sub' : '' }}" id="tour_step7">
+            <a href="#" id="tour_step7_menu"><i class="fa fa-desktop"></i> <span>@lang('lang_v1.website')</span>
+              <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+            </a>
+            <ul class="treeview-menu">
+                <li class="{{ $request->segment(1) == 'website' && $request->segment(2) == null ? 'active' : '' }}" >
+                  <a href="{{action('WebsiteController@index')}}">
+                    <i class="fa fa-list"></i>
+                    Product List
+                  </a>
+                </li>
+            </ul>
+          </li>
         @if(Module::has('Repair'))
           @includeIf('repair::layouts.partials.sidebar')
         @endif

@@ -1,93 +1,117 @@
 // About
-.owl-carousel .member {
-  margin-bottom: 0;
-}
+.history-section {
+  padding: 5rem 0;
+  background-color: #efefef;
 
-.about-section {
-  padding-top: 5.5rem;
-  padding-bottom: 4rem;
-  text-align: center;
+  .tab-content {
+    h3 {
+      margin-bottom: 2rem;
+      font: 400 2.5rem / 1.2 $second-font-family;
+      text-transform: uppercase;
+    }
 
-  p {
-    max-width: 720px;
-    margin-right: auto;
-    margin-left: auto;
-    font-size: 1.4rem;
-    line-height: 2;
-  }
-}
-
-.company-section {
-  padding-top: 5.6rem;
-  padding-bottom: 1rem;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  
-  .subtitle {
-    margin-bottom: 2rem;
-  }
-}
-
-.team-section {
-  padding-top: 4rem;
-  padding-bottom: 5rem;
-
-  .subtitle {
-    margin-top: 1.5rem;
-  }
-
-  .title-desc {
-    max-width: 235px;
-  }
-}
-
-@include mq('md') {
-  .about-section {
-    padding-top: 7.5rem;
-    padding-bottom: 7rem;
-  }
-
-  .company-section {
-    padding-top: 7.6rem;
-    padding-bottom: 3rem;
-    
-    .subtitle {
-      margin-bottom: 3rem;
+    img {
+      margin-bottom: 2rem;
     }
   }
 
-  .team-section {
-    padding-top: 5rem;
-    padding-bottom: 7rem;
+  .col-lg-2 {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+  }
+}
 
-    .subtitle {
-      margin-top: 2.5rem;
+.nav.nav-history {
+  width: 100%;
+  margin-bottom: 1rem;
+
+  .nav-item {
+    display: inline-block;
+    margin-right: 1.7rem;
+    font: 400 1.8rem / 1 $second-font-family;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .nav-link {
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    position: relative;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 1.5rem 0;
+    color: #979797;
+
+    &::before {
+      display: inline-block;
+      width: 9px;
+      height: 2px;
+      margin-right: 1rem;
+      background-color: #979797;
+      content: '';
+    }
+
+    &.active,
+    &:hover,
+    &:focus {
+      color: $headings-text;
+
+      &::before {
+        background-color: $headings-text;
+      }
     }
   }
 }
 
 @include mq('lg') {
-  .about-section {
-    padding-top: 9.5rem;
-    padding-bottom: 9rem;
-  }
+  .history-section {
+    padding-top: 6.5rem;
+    padding-bottom: 6.5rem;
 
-  .company-section {
-    padding-top: 9.6rem;
-    padding-bottom: 5rem;
-    
-    .subtitle {
-      margin-bottom: 4rem;
+    .tab-content {
+      img {
+        margin-bottom: 0;
+      }
+
+      h3 {
+        font-size: 3rem;
+      }
+
+      .col-sm-8 {
+        padding-right: 45px;
+      }
+
+      .col-sm-4 + .col-sm-8 {
+        padding-right: 15px;
+        padding-left: 45px;
+      }
     }
   }
 
-  .team-section {
-    padding-top: 9rem;
-    padding-bottom: 9rem;
+  .nav.nav-history {
+    -ms-flex-direction: column;
+    flex-direction: column;
 
-    .subtitle {
-      margin-top: 3.5rem;
+    .nav-item {
+      display: block;
+      margin-right: 0;
+    }
+
+    .nav-link {
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-pack: end;
+      justify-content: flex-end;
+
+      &::before {
+        margin-right: 2rem;
+      }
     }
   }
 }

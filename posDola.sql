@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.9
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Mar 12, 2020 at 11:09 AM
--- Server version: 5.7.21
--- PHP Version: 7.3.9
+-- Generation Time: Apr 16, 2020 at 02:53 AM
+-- Server version: 10.4.10-MariaDB
+-- PHP Version: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -35,9 +35,9 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `account_number` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `account_type` enum('saving_current','capital') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `note` text COLLATE utf8mb4_unicode_ci,
+  `note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_by` int(11) NOT NULL,
-  `is_closed` tinyint(1) NOT NULL DEFAULT '0',
+  `is_closed` tinyint(1) NOT NULL DEFAULT 0,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `account_transactions` (
   `transaction_id` int(11) DEFAULT NULL,
   `transaction_payment_id` int(11) DEFAULT NULL,
   `transfer_transaction_id` int(11) DEFAULT NULL,
-  `note` text COLLATE utf8mb4_unicode_ci,
+  `note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `activity_log` (
   `subject_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `causer_id` int(11) DEFAULT NULL,
   `causer_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `properties` text COLLATE utf8mb4_unicode_ci,
+  `properties` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -107,7 +107,7 @@ DROP TABLE IF EXISTS `barcodes`;
 CREATE TABLE IF NOT EXISTS `barcodes` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `width` double(8,2) DEFAULT NULL,
   `height` double(8,2) DEFAULT NULL,
   `paper_width` double(8,2) DEFAULT NULL,
@@ -117,8 +117,8 @@ CREATE TABLE IF NOT EXISTS `barcodes` (
   `row_distance` double(8,2) DEFAULT NULL,
   `col_distance` double(8,2) DEFAULT NULL,
   `stickers_in_one_row` int(11) DEFAULT NULL,
-  `is_default` tinyint(1) NOT NULL DEFAULT '0',
-  `is_continuous` tinyint(1) NOT NULL DEFAULT '0',
+  `is_default` tinyint(1) NOT NULL DEFAULT 0,
+  `is_continuous` tinyint(1) NOT NULL DEFAULT 0,
   `stickers_in_one_sheet` int(11) DEFAULT NULL,
   `business_id` int(10) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `bookings` (
   `booking_end` datetime NOT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
   `booking_status` enum('booked','completed','cancelled') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `booking_note` text COLLATE utf8mb4_unicode_ci,
+  `booking_note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `brands` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `business_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -219,52 +219,52 @@ CREATE TABLE IF NOT EXISTS `business` (
   `tax_number_2` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `tax_label_2` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `default_sales_tax` int(10) UNSIGNED DEFAULT NULL,
-  `default_profit_percent` double(5,2) NOT NULL DEFAULT '0.00',
-  `default_user_profit` double(5,2) NOT NULL DEFAULT '10.00',
+  `default_profit_percent` double(5,2) NOT NULL DEFAULT 0.00,
+  `default_user_profit` double(5,2) NOT NULL DEFAULT 10.00,
   `owner_id` int(10) UNSIGNED NOT NULL,
   `time_zone` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Asia/Kolkata',
-  `fy_start_month` tinyint(4) NOT NULL DEFAULT '1',
+  `fy_start_month` tinyint(4) NOT NULL DEFAULT 1,
   `accounting_method` enum('fifo','lifo','avco') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'fifo',
   `default_sales_discount` decimal(20,2) DEFAULT NULL,
   `sell_price_tax` enum('includes','excludes') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'includes',
   `logo` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `sku_prefix` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `enable_product_expiry` tinyint(1) NOT NULL DEFAULT '0',
+  `enable_product_expiry` tinyint(1) NOT NULL DEFAULT 0,
   `expiry_type` enum('add_expiry','add_manufacturing') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'add_expiry',
   `on_product_expiry` enum('keep_selling','stop_selling','auto_delete') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'keep_selling',
   `stop_selling_before` int(11) NOT NULL COMMENT 'Stop selling expied item n days before expiry',
-  `enable_tooltip` tinyint(1) NOT NULL DEFAULT '1',
-  `purchase_in_diff_currency` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Allow purchase to be in different currency then the business currency',
+  `enable_tooltip` tinyint(1) NOT NULL DEFAULT 1,
+  `purchase_in_diff_currency` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Allow purchase to be in different currency then the business currency',
   `purchase_currency_id` int(10) UNSIGNED DEFAULT NULL,
-  `p_exchange_rate` decimal(20,3) NOT NULL DEFAULT '1.000',
-  `transaction_edit_days` int(10) UNSIGNED NOT NULL DEFAULT '30',
-  `stock_expiry_alert_days` int(10) UNSIGNED NOT NULL DEFAULT '30',
-  `keyboard_shortcuts` text COLLATE utf8mb4_unicode_ci,
-  `pos_settings` text COLLATE utf8mb4_unicode_ci,
-  `enable_brand` tinyint(1) NOT NULL DEFAULT '1',
-  `enable_category` tinyint(1) NOT NULL DEFAULT '1',
-  `enable_sub_category` tinyint(1) NOT NULL DEFAULT '1',
-  `enable_price_tax` tinyint(1) NOT NULL DEFAULT '1',
-  `enable_purchase_status` tinyint(1) DEFAULT '1',
-  `enable_lot_number` tinyint(1) NOT NULL DEFAULT '0',
+  `p_exchange_rate` decimal(20,3) NOT NULL DEFAULT 1.000,
+  `transaction_edit_days` int(10) UNSIGNED NOT NULL DEFAULT 30,
+  `stock_expiry_alert_days` int(10) UNSIGNED NOT NULL DEFAULT 30,
+  `keyboard_shortcuts` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `pos_settings` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `enable_brand` tinyint(1) NOT NULL DEFAULT 1,
+  `enable_category` tinyint(1) NOT NULL DEFAULT 1,
+  `enable_sub_category` tinyint(1) NOT NULL DEFAULT 1,
+  `enable_price_tax` tinyint(1) NOT NULL DEFAULT 1,
+  `enable_purchase_status` tinyint(1) DEFAULT 1,
+  `enable_lot_number` tinyint(1) NOT NULL DEFAULT 0,
   `default_unit` int(11) DEFAULT NULL,
-  `enable_racks` tinyint(1) NOT NULL DEFAULT '0',
-  `enable_row` tinyint(1) NOT NULL DEFAULT '0',
-  `enable_position` tinyint(1) NOT NULL DEFAULT '0',
-  `enable_editing_product_from_purchase` tinyint(1) NOT NULL DEFAULT '1',
+  `enable_racks` tinyint(1) NOT NULL DEFAULT 0,
+  `enable_row` tinyint(1) NOT NULL DEFAULT 0,
+  `enable_position` tinyint(1) NOT NULL DEFAULT 0,
+  `enable_editing_product_from_purchase` tinyint(1) NOT NULL DEFAULT 1,
   `sales_cmsn_agnt` enum('logged_in_user','user','cmsn_agnt') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `item_addition_method` tinyint(1) NOT NULL DEFAULT '1',
-  `enable_inline_tax` tinyint(1) NOT NULL DEFAULT '1',
+  `item_addition_method` tinyint(1) NOT NULL DEFAULT 1,
+  `enable_inline_tax` tinyint(1) NOT NULL DEFAULT 1,
   `currency_symbol_placement` enum('before','after') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'before',
-  `enabled_modules` text COLLATE utf8mb4_unicode_ci,
+  `enabled_modules` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date_format` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'm/d/Y',
   `time_format` enum('12','24') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '24',
-  `ref_no_prefixes` text COLLATE utf8mb4_unicode_ci,
+  `ref_no_prefixes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `theme_color` char(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
-  `email_settings` text COLLATE utf8mb4_unicode_ci,
-  `sms_settings` text COLLATE utf8mb4_unicode_ci,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `email_settings` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sms_settings` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -278,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `business` (
 --
 
 INSERT INTO `business` (`id`, `name`, `product_serial`, `bulk_serial`, `prod_refference`, `currency_id`, `start_date`, `tax_number_1`, `tax_label_1`, `tax_number_2`, `tax_label_2`, `default_sales_tax`, `default_profit_percent`, `default_user_profit`, `owner_id`, `time_zone`, `fy_start_month`, `accounting_method`, `default_sales_discount`, `sell_price_tax`, `logo`, `sku_prefix`, `enable_product_expiry`, `expiry_type`, `on_product_expiry`, `stop_selling_before`, `enable_tooltip`, `purchase_in_diff_currency`, `purchase_currency_id`, `p_exchange_rate`, `transaction_edit_days`, `stock_expiry_alert_days`, `keyboard_shortcuts`, `pos_settings`, `enable_brand`, `enable_category`, `enable_sub_category`, `enable_price_tax`, `enable_purchase_status`, `enable_lot_number`, `default_unit`, `enable_racks`, `enable_row`, `enable_position`, `enable_editing_product_from_purchase`, `sales_cmsn_agnt`, `item_addition_method`, `enable_inline_tax`, `currency_symbol_placement`, `enabled_modules`, `date_format`, `time_format`, `ref_no_prefixes`, `theme_color`, `created_by`, `email_settings`, `sms_settings`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'MaCaO', '135039818', '50', '0030', 38, '2019-11-29', NULL, '21%', NULL, NULL, NULL, 2.50, 2.50, 1, 'Europe/Madrid', 1, 'fifo', NULL, 'includes', '1580490077_Macao-Logo.png', NULL, 0, 'add_expiry', 'keep_selling', 0, 1, 0, NULL, '1.000', 30, 30, '{\"pos\":{\"express_checkout\":\"shift+e\",\"pay_n_ckeckout\":\"shift+p\",\"draft\":\"shift+d\",\"cancel\":\"shift+c\",\"recent_product_quantity\":\"f2\",\"edit_discount\":\"shift+i\",\"edit_order_tax\":\"shift+t\",\"add_payment_row\":\"shift+r\",\"finalize_payment\":\"shift+f\",\"add_new_product\":\"f4\"}}', '{\"allow_overselling\":\"1\",\"disable_suspend\":\"1\",\"disable_pay_checkout\":0,\"disable_draft\":0,\"disable_express_checkout\":0,\"hide_product_suggestion\":0,\"hide_recent_trans\":0,\"disable_discount\":0,\"disable_order_tax\":0,\"is_pos_subtotal_editable\":0}', 1, 1, 1, 1, 1, 0, NULL, 0, 0, 0, 1, NULL, 1, 0, 'after', NULL, 'm/d/Y', '24', '{\"purchase\":\"PO\",\"purchase_return\":null,\"stock_transfer\":\"ST\",\"stock_adjustment\":\"SA\",\"sell_return\":\"CN\",\"expense\":\"EP\",\"contacts\":\"CO\",\"purchase_payment\":\"PP\",\"sell_payment\":\"SP\",\"expense_payment\":null,\"business_location\":\"BL\",\"username\":null,\"subscription\":null}', NULL, NULL, '{\"mail_driver\":\"smtp\",\"mail_host\":null,\"mail_port\":null,\"mail_username\":null,\"mail_password\":null,\"mail_encryption\":null,\"mail_from_address\":null,\"mail_from_name\":null}', '{\"url\":null,\"send_to_param_name\":\"to\",\"msg_param_name\":\"text\",\"request_method\":\"post\",\"param_1\":null,\"param_val_1\":null,\"param_2\":null,\"param_val_2\":null,\"param_3\":null,\"param_val_3\":null,\"param_4\":null,\"param_val_4\":null,\"param_5\":null,\"param_val_5\":null,\"param_6\":null,\"param_val_6\":null,\"param_7\":null,\"param_val_7\":null,\"param_8\":null,\"param_val_8\":null,\"param_9\":null,\"param_val_9\":null,\"param_10\":null,\"param_val_10\":null}', 1, '2019-11-30 09:24:12', '2020-03-08 13:02:51');
+(1, 'MaCaO', '135039845', '56', '0033', 38, '2019-11-29', NULL, '21%', NULL, NULL, NULL, 2.50, 2.50, 1, 'Europe/Madrid', 1, 'fifo', NULL, 'includes', '1580490077_Macao-Logo.png', NULL, 0, 'add_expiry', 'keep_selling', 0, 1, 0, NULL, '1.000', 30, 30, '{\"pos\":{\"express_checkout\":\"shift+e\",\"pay_n_ckeckout\":\"shift+p\",\"draft\":\"shift+d\",\"cancel\":\"shift+c\",\"recent_product_quantity\":\"f2\",\"edit_discount\":\"shift+i\",\"edit_order_tax\":\"shift+t\",\"add_payment_row\":\"shift+r\",\"finalize_payment\":\"shift+f\",\"add_new_product\":\"f4\"}}', '{\"allow_overselling\":\"1\",\"disable_suspend\":\"1\",\"disable_pay_checkout\":0,\"disable_draft\":0,\"disable_express_checkout\":0,\"hide_product_suggestion\":0,\"hide_recent_trans\":0,\"disable_discount\":0,\"disable_order_tax\":0,\"is_pos_subtotal_editable\":0}', 1, 1, 1, 1, 1, 0, NULL, 0, 0, 0, 1, NULL, 1, 0, 'after', NULL, 'm/d/Y', '24', '{\"purchase\":\"PO\",\"purchase_return\":null,\"stock_transfer\":\"ST\",\"stock_adjustment\":\"SA\",\"sell_return\":\"CN\",\"expense\":\"EP\",\"contacts\":\"CO\",\"purchase_payment\":\"PP\",\"sell_payment\":\"SP\",\"expense_payment\":null,\"business_location\":\"BL\",\"username\":null,\"subscription\":null}', NULL, NULL, '{\"mail_driver\":\"smtp\",\"mail_host\":null,\"mail_port\":null,\"mail_username\":null,\"mail_password\":null,\"mail_encryption\":null,\"mail_from_address\":null,\"mail_from_name\":null}', '{\"url\":null,\"send_to_param_name\":\"to\",\"msg_param_name\":\"text\",\"request_method\":\"post\",\"param_1\":null,\"param_val_1\":null,\"param_2\":null,\"param_val_2\":null,\"param_3\":null,\"param_val_3\":null,\"param_4\":null,\"param_val_4\":null,\"param_5\":null,\"param_val_5\":null,\"param_6\":null,\"param_val_6\":null,\"param_7\":null,\"param_val_7\":null,\"param_8\":null,\"param_val_8\":null,\"param_9\":null,\"param_val_9\":null,\"param_10\":null,\"param_val_10\":null}', 1, '2019-11-30 09:24:12', '2020-04-10 15:09:40');
 
 -- --------------------------------------------------------
 
@@ -292,14 +292,14 @@ CREATE TABLE IF NOT EXISTS `business_locations` (
   `business_id` int(10) UNSIGNED NOT NULL,
   `location_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(256) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `landmark` text COLLATE utf8mb4_unicode_ci,
+  `landmark` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `country` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `state` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `city` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `zip_code` char(7) COLLATE utf8mb4_unicode_ci NOT NULL,
   `invoice_scheme_id` int(10) UNSIGNED NOT NULL,
   `invoice_layout_id` int(10) UNSIGNED NOT NULL,
-  `print_receipt_on_invoice` tinyint(1) DEFAULT '1',
+  `print_receipt_on_invoice` tinyint(1) DEFAULT 1,
   `receipt_printer_type` enum('browser','printer') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'browser',
   `printer_id` int(11) DEFAULT NULL,
   `mobile` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -317,19 +317,20 @@ CREATE TABLE IF NOT EXISTS `business_locations` (
   KEY `business_locations_business_id_index` (`business_id`),
   KEY `business_locations_invoice_scheme_id_foreign` (`invoice_scheme_id`),
   KEY `business_locations_invoice_layout_id_foreign` (`invoice_layout_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `business_locations`
 --
 
 INSERT INTO `business_locations` (`id`, `business_id`, `location_id`, `name`, `landmark`, `country`, `state`, `city`, `zip_code`, `invoice_scheme_id`, `invoice_layout_id`, `print_receipt_on_invoice`, `receipt_printer_type`, `printer_id`, `mobile`, `alternate_number`, `email`, `website`, `custom_field1`, `custom_field2`, `custom_field3`, `custom_field4`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 1, 'BL0001', 'Main Shop', 'Punjab', 'Pakistan', 'Punjab', 'Test City', '57000', 1, 1, 1, 'browser', NULL, '03077003620', '', '', 'http://macaobe.com/', NULL, NULL, NULL, NULL, NULL, '2019-11-30 09:24:12', '2019-11-30 09:24:12'),
+(1, 1, 'BL0001', 'Main Shop', 'Punjab', 'Pakistan', 'Punjab', 'Test City', '57000', 1, 1, 1, 'browser', NULL, '03077003620', NULL, NULL, 'http://macaobe.com/', NULL, NULL, NULL, NULL, NULL, '2019-11-30 09:24:12', '2020-04-09 14:42:09'),
 (2, 1, 'BLShop1', 'Shop 1', 'Punjab', 'Pakistan', 'Punjab', 'Test City', '57000', 1, 1, 1, 'browser', NULL, '03077003620', '03077003620', 'test@test.com', NULL, NULL, NULL, NULL, NULL, NULL, '2019-11-30 12:29:25', '2019-11-30 12:29:25'),
 (3, 1, '0001', 'Macao Hornu', NULL, 'belgium', 'mons', 'Hornu', '7340', 1, 1, 1, 'browser', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-12-14 01:48:43', '2019-12-14 01:48:43'),
 (4, 1, '0002', 'Macao Lalouviere', NULL, 'belgium', 'lalouviere', 'lalouviere', '7100', 1, 1, 1, 'browser', NULL, NULL, NULL, NULL, 'www.macaofashion.be', NULL, NULL, NULL, NULL, NULL, '2019-12-14 01:57:59', '2019-12-14 01:57:59'),
 (5, 1, '0003', 'Macao Les Bastions', NULL, 'belgium', 'tournai', 'tournai', '7500', 1, 1, 1, 'browser', NULL, NULL, NULL, NULL, 'www.macaofashion.be', NULL, NULL, NULL, NULL, NULL, '2019-12-14 01:59:45', '2019-12-14 01:59:45'),
-(6, 1, 'testshop', 'Test Shop', 'test', 'pakistan', 'punjab', 'sahiwal', '57000', 1, 1, 1, 'browser', NULL, '0300000000', NULL, 'test@test.com', 'test.com', NULL, NULL, NULL, NULL, NULL, '2020-02-03 16:34:39', '2020-02-03 16:34:39');
+(6, 1, 'testshop', 'Test Shop', 'test', 'pakistan', 'punjab', 'sahiwal', '57000', 1, 1, 1, 'browser', NULL, '0300000000', NULL, 'test@test.com', 'test.com', NULL, NULL, NULL, NULL, NULL, '2020-02-03 16:34:39', '2020-02-03 16:34:39'),
+(7, 1, 'Web-01', 'website', 'Test', 'Testing', 'Test', 'Test', '50012', 1, 1, 1, 'browser', NULL, '1212221212', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-09 14:44:18', '2020-04-09 15:26:28');
 
 -- --------------------------------------------------------
 
@@ -344,10 +345,10 @@ CREATE TABLE IF NOT EXISTS `cash_registers` (
   `user_id` int(10) UNSIGNED DEFAULT NULL,
   `status` enum('close','open') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'open',
   `closed_at` datetime DEFAULT NULL,
-  `closing_amount` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `total_card_slips` int(11) NOT NULL DEFAULT '0',
-  `total_cheques` int(11) NOT NULL DEFAULT '0',
-  `closing_note` text COLLATE utf8mb4_unicode_ci,
+  `closing_amount` decimal(20,2) NOT NULL DEFAULT 0.00,
+  `total_card_slips` int(11) NOT NULL DEFAULT 0,
+  `total_cheques` int(11) NOT NULL DEFAULT 0,
+  `closing_note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -378,7 +379,7 @@ DROP TABLE IF EXISTS `cash_register_transactions`;
 CREATE TABLE IF NOT EXISTS `cash_register_transactions` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `cash_register_id` int(10) UNSIGNED NOT NULL,
-  `amount` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `amount` decimal(20,2) NOT NULL DEFAULT 0.00,
   `pay_method` enum('cash','card','cheque','bank_transfer','custom_pay_1','custom_pay_2','custom_pay_3','other') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `type` enum('debit','credit') COLLATE utf8mb4_unicode_ci NOT NULL,
   `transaction_type` enum('initial','sell','transfer','refund') COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -388,7 +389,7 @@ CREATE TABLE IF NOT EXISTS `cash_register_transactions` (
   PRIMARY KEY (`id`),
   KEY `cash_register_transactions_cash_register_id_foreign` (`cash_register_id`),
   KEY `cash_register_transactions_transaction_id_index` (`transaction_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `cash_register_transactions`
@@ -459,7 +460,9 @@ INSERT INTO `cash_register_transactions` (`id`, `cash_register_id`, `amount`, `p
 (74, 2, '888.00', 'cash', 'credit', 'sell', 289, '2020-02-29 20:17:58', '2020-02-29 20:17:58'),
 (75, 2, '0.00', 'cash', 'credit', 'sell', 289, '2020-02-29 20:17:58', '2020-02-29 20:17:58'),
 (76, 2, '7439.00', 'cash', 'credit', 'sell', 290, '2020-03-06 14:05:10', '2020-03-06 14:05:10'),
-(77, 2, '0.00', 'cash', 'credit', 'sell', 290, '2020-03-06 14:05:10', '2020-03-06 14:05:10');
+(77, 2, '0.00', 'cash', 'credit', 'sell', 290, '2020-03-06 14:05:10', '2020-03-06 14:05:10'),
+(78, 2, '18200.00', 'cash', 'credit', 'sell', 323, '2020-03-25 11:43:58', '2020-03-25 11:43:58'),
+(79, 2, '0.00', 'cash', 'credit', 'sell', 323, '2020-03-25 11:43:58', '2020-03-25 11:43:58');
 
 -- --------------------------------------------------------
 
@@ -481,7 +484,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   PRIMARY KEY (`id`),
   KEY `categories_business_id_foreign` (`business_id`),
   KEY `categories_created_by_foreign` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `categories`
@@ -519,7 +522,8 @@ INSERT INTO `categories` (`id`, `name`, `business_id`, `short_code`, `parent_id`
 (29, 'SACS', 1, NULL, 9, 1, NULL, '2020-02-26 18:43:24', '2020-02-26 18:43:24'),
 (30, 'FEMMES', 1, NULL, 0, 1, NULL, '2020-02-26 18:57:15', '2020-02-29 20:14:35'),
 (31, 'SACS', 1, NULL, 27, 1, NULL, '2020-02-26 18:59:49', '2020-02-26 18:59:49'),
-(32, 'Test', 1, 'TS', 27, 1, NULL, '2020-03-07 12:22:51', '2020-03-07 12:22:51');
+(32, 'Test', 1, 'TS', 27, 1, NULL, '2020-03-07 12:22:51', '2020-03-07 12:22:51'),
+(33, 'new Test', 1, '212121', 0, 1, '2020-03-24 15:52:31', '2020-03-24 15:52:17', '2020-03-24 15:52:31');
 
 -- --------------------------------------------------------
 
@@ -532,7 +536,7 @@ CREATE TABLE IF NOT EXISTS `colors` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `business_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -570,10 +574,10 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   `email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `contact_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `barcode` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `discount` double(8,2) NOT NULL DEFAULT '0.00',
-  `bonus_points` int(11) NOT NULL DEFAULT '0',
+  `discount` double(8,2) NOT NULL DEFAULT 0.00,
+  `bonus_points` int(11) NOT NULL DEFAULT 0,
   `bp_expiry` date DEFAULT NULL,
-  `used_points` int(11) NOT NULL DEFAULT '0',
+  `used_points` int(11) NOT NULL DEFAULT 0,
   `tax_number` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `city` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `state` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -586,7 +590,7 @@ CREATE TABLE IF NOT EXISTS `contacts` (
   `pay_term_type` enum('days','months') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `credit_limit` decimal(20,2) DEFAULT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
-  `is_default` tinyint(1) NOT NULL DEFAULT '0',
+  `is_default` tinyint(1) NOT NULL DEFAULT 0,
   `customer_group_id` int(11) DEFAULT NULL,
   `custom_field1` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `custom_field2` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -628,9 +632,9 @@ CREATE TABLE IF NOT EXISTS `coupons` (
   `isActive` enum('active','expired','consumed','inactive','cancell') COLLATE utf8mb4_unicode_ci NOT NULL,
   `transaction_id` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `start_date` datetime NOT NULL,
-  `details` text COLLATE utf8mb4_unicode_ci,
+  `details` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
-  `isUsed` int(11) NOT NULL DEFAULT '0',
+  `isUsed` int(11) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -854,12 +858,12 @@ CREATE TABLE IF NOT EXISTS `discounts` (
   `location_id` int(11) DEFAULT NULL,
   `priority` int(11) DEFAULT NULL,
   `discount_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `discount_amount` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `discount_amount` decimal(20,2) NOT NULL DEFAULT 0.00,
   `starts_at` datetime DEFAULT NULL,
   `ends_at` datetime DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `applicable_in_spg` tinyint(1) DEFAULT '0',
-  `applicable_in_cg` tinyint(1) DEFAULT '0',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `applicable_in_spg` tinyint(1) DEFAULT 0,
+  `applicable_in_cg` tinyint(1) DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -914,7 +918,7 @@ CREATE TABLE IF NOT EXISTS `gift_cards` (
   `product_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'If applicable on Specific Product only',
   `brand_id` int(10) UNSIGNED DEFAULT NULL,
   `value` int(11) NOT NULL,
-  `details` text COLLATE utf8mb4_unicode_ci,
+  `details` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `barcode_type` enum('C39','C128','EAN-13','EAN-8','UPC-A','UPC-E','ITF-14') COLLATE utf8mb4_unicode_ci NOT NULL,
   `transaction_id` int(11) DEFAULT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
@@ -922,7 +926,7 @@ CREATE TABLE IF NOT EXISTS `gift_cards` (
   `expiry_date` datetime NOT NULL,
   `consume_date` datetime DEFAULT NULL,
   `isActive` enum('active','expired','consumed','inactive','cancell') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `isUsed` int(11) NOT NULL DEFAULT '0',
+  `isUsed` int(11) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -971,7 +975,7 @@ DROP TABLE IF EXISTS `invoice_layouts`;
 CREATE TABLE IF NOT EXISTS `invoice_layouts` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `header_text` text COLLATE utf8mb4_unicode_ci,
+  `header_text` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `invoice_no_prefix` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `quotation_no_prefix` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `invoice_heading` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -989,59 +993,59 @@ CREATE TABLE IF NOT EXISTS `invoice_layouts` (
   `total_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `total_due_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `paid_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `show_client_id` tinyint(1) NOT NULL DEFAULT '0',
+  `show_client_id` tinyint(1) NOT NULL DEFAULT 0,
   `client_id_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `client_tax_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date_time_format` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `show_time` tinyint(1) NOT NULL DEFAULT '1',
-  `show_brand` tinyint(1) NOT NULL DEFAULT '0',
-  `show_sku` tinyint(1) NOT NULL DEFAULT '1',
-  `show_cat_code` tinyint(1) NOT NULL DEFAULT '1',
-  `show_expiry` tinyint(1) NOT NULL DEFAULT '0',
-  `show_lot` tinyint(1) NOT NULL DEFAULT '0',
-  `show_image` tinyint(1) NOT NULL DEFAULT '0',
-  `show_sale_description` tinyint(1) NOT NULL DEFAULT '0',
+  `show_time` tinyint(1) NOT NULL DEFAULT 1,
+  `show_brand` tinyint(1) NOT NULL DEFAULT 0,
+  `show_sku` tinyint(1) NOT NULL DEFAULT 1,
+  `show_cat_code` tinyint(1) NOT NULL DEFAULT 1,
+  `show_expiry` tinyint(1) NOT NULL DEFAULT 0,
+  `show_lot` tinyint(1) NOT NULL DEFAULT 0,
+  `show_image` tinyint(1) NOT NULL DEFAULT 0,
+  `show_sale_description` tinyint(1) NOT NULL DEFAULT 0,
   `sales_person_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `show_sales_person` tinyint(1) NOT NULL DEFAULT '0',
+  `show_sales_person` tinyint(1) NOT NULL DEFAULT 0,
   `table_product_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `table_qty_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `table_unit_price_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `table_subtotal_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `cat_code_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `logo` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `show_logo` tinyint(1) NOT NULL DEFAULT '0',
-  `show_business_name` tinyint(1) NOT NULL DEFAULT '0',
-  `show_location_name` tinyint(1) NOT NULL DEFAULT '1',
-  `show_landmark` tinyint(1) NOT NULL DEFAULT '1',
-  `show_city` tinyint(1) NOT NULL DEFAULT '1',
-  `show_state` tinyint(1) NOT NULL DEFAULT '1',
-  `show_zip_code` tinyint(1) NOT NULL DEFAULT '1',
-  `show_country` tinyint(1) NOT NULL DEFAULT '1',
-  `show_mobile_number` tinyint(1) NOT NULL DEFAULT '1',
-  `show_alternate_number` tinyint(1) NOT NULL DEFAULT '0',
-  `show_email` tinyint(1) NOT NULL DEFAULT '0',
-  `show_tax_1` tinyint(1) NOT NULL DEFAULT '1',
-  `show_tax_2` tinyint(1) NOT NULL DEFAULT '0',
-  `show_barcode` tinyint(1) NOT NULL DEFAULT '0',
-  `show_payments` tinyint(1) NOT NULL DEFAULT '0',
-  `show_customer` tinyint(1) NOT NULL DEFAULT '0',
+  `show_logo` tinyint(1) NOT NULL DEFAULT 0,
+  `show_business_name` tinyint(1) NOT NULL DEFAULT 0,
+  `show_location_name` tinyint(1) NOT NULL DEFAULT 1,
+  `show_landmark` tinyint(1) NOT NULL DEFAULT 1,
+  `show_city` tinyint(1) NOT NULL DEFAULT 1,
+  `show_state` tinyint(1) NOT NULL DEFAULT 1,
+  `show_zip_code` tinyint(1) NOT NULL DEFAULT 1,
+  `show_country` tinyint(1) NOT NULL DEFAULT 1,
+  `show_mobile_number` tinyint(1) NOT NULL DEFAULT 1,
+  `show_alternate_number` tinyint(1) NOT NULL DEFAULT 0,
+  `show_email` tinyint(1) NOT NULL DEFAULT 0,
+  `show_tax_1` tinyint(1) NOT NULL DEFAULT 1,
+  `show_tax_2` tinyint(1) NOT NULL DEFAULT 0,
+  `show_barcode` tinyint(1) NOT NULL DEFAULT 0,
+  `show_payments` tinyint(1) NOT NULL DEFAULT 0,
+  `show_customer` tinyint(1) NOT NULL DEFAULT 0,
   `customer_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `highlight_color` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `footer_text` text COLLATE utf8mb4_unicode_ci,
-  `module_info` text COLLATE utf8mb4_unicode_ci,
-  `is_default` tinyint(1) NOT NULL DEFAULT '0',
+  `footer_text` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `module_info` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_default` tinyint(1) NOT NULL DEFAULT 0,
   `business_id` int(10) UNSIGNED NOT NULL,
   `design` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT 'classic',
   `cn_heading` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'cn = credit note',
   `cn_no_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `cn_amount_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `table_tax_headings` text COLLATE utf8mb4_unicode_ci,
-  `show_previous_bal` tinyint(1) NOT NULL DEFAULT '0',
+  `table_tax_headings` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `show_previous_bal` tinyint(1) NOT NULL DEFAULT 0,
   `prev_bal_label` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `product_custom_fields` text COLLATE utf8mb4_unicode_ci,
-  `contact_custom_fields` text COLLATE utf8mb4_unicode_ci,
-  `location_custom_fields` text COLLATE utf8mb4_unicode_ci,
+  `product_custom_fields` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `contact_custom_fields` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `location_custom_fields` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1069,9 +1073,9 @@ CREATE TABLE IF NOT EXISTS `invoice_schemes` (
   `scheme_type` enum('blank','year') COLLATE utf8mb4_unicode_ci NOT NULL,
   `prefix` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `start_number` int(11) DEFAULT NULL,
-  `invoice_count` int(11) NOT NULL DEFAULT '0',
+  `invoice_count` int(11) NOT NULL DEFAULT 0,
   `total_digits` int(11) DEFAULT NULL,
-  `is_default` tinyint(1) NOT NULL DEFAULT '0',
+  `is_default` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1083,7 +1087,7 @@ CREATE TABLE IF NOT EXISTS `invoice_schemes` (
 --
 
 INSERT INTO `invoice_schemes` (`id`, `business_id`, `name`, `scheme_type`, `prefix`, `start_number`, `invoice_count`, `total_digits`, `is_default`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Default', 'blank', '', 1, 31, 9, 1, '2019-11-30 09:24:12', '2020-03-06 14:05:10');
+(1, 1, 'Default', 'blank', '', 1, 32, 9, 1, '2019-11-30 09:24:12', '2020-03-25 11:43:58');
 
 -- --------------------------------------------------------
 
@@ -1116,7 +1120,7 @@ CREATE TABLE IF NOT EXISTS `migrations` (
   `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=188 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=190 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `migrations`
@@ -1309,7 +1313,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (184, '2019_10_31_162230_create_suppliers_table', 1),
 (185, '2019_10_31_164951_create_colors_table', 1),
 (186, '2019_11_09_181543_create_product_name_categories_table', 1),
-(187, '2019_11_6_164931_create_sizes_table', 1);
+(187, '2019_11_6_164931_create_sizes_table', 1),
+(188, '2020_04_10_225047_create_product_images_table', 2),
+(189, '2020_04_16_010600_create_special_category_products_table', 2);
 
 -- --------------------------------------------------------
 
@@ -1384,11 +1390,11 @@ CREATE TABLE IF NOT EXISTS `notification_templates` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `business_id` int(11) NOT NULL,
   `template_for` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email_body` text COLLATE utf8mb4_unicode_ci,
-  `sms_body` text COLLATE utf8mb4_unicode_ci,
+  `email_body` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sms_body` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `subject` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `auto_send` tinyint(1) NOT NULL DEFAULT '0',
-  `auto_send_sms` tinyint(1) NOT NULL DEFAULT '0',
+  `auto_send` tinyint(1) NOT NULL DEFAULT 0,
+  `auto_send_sms` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -1436,7 +1442,7 @@ CREATE TABLE IF NOT EXISTS `permissions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=111 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `permissions`
@@ -1552,7 +1558,8 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 (107, 'location.2', 'web', '2019-11-30 12:29:25', '2019-11-30 12:29:25'),
 (108, 'location.4', 'web', '2019-12-14 01:57:59', '2019-12-14 01:57:59'),
 (109, 'location.5', 'web', '2019-12-14 01:59:45', '2019-12-14 01:59:45'),
-(110, 'location.6', 'web', '2020-02-03 16:34:39', '2020-02-03 16:34:39');
+(110, 'location.6', 'web', '2020-02-03 16:34:39', '2020-02-03 16:34:39'),
+(111, 'location.7', 'web', '2020-04-09 14:44:18', '2020-04-09 14:44:18');
 
 -- --------------------------------------------------------
 
@@ -1603,25 +1610,25 @@ CREATE TABLE IF NOT EXISTS `products` (
   `sub_category_id` int(10) UNSIGNED DEFAULT NULL,
   `tax` int(10) UNSIGNED DEFAULT NULL,
   `tax_type` enum('inclusive','exclusive') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `enable_stock` tinyint(1) NOT NULL DEFAULT '0',
+  `enable_stock` tinyint(1) NOT NULL DEFAULT 0,
   `alert_quantity` int(11) NOT NULL,
   `sku` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `barcode_type` enum('C39','C128','EAN13','EAN8','UPCA','UPCE') COLLATE utf8mb4_unicode_ci DEFAULT 'C128',
   `expiry_period` decimal(4,2) DEFAULT NULL,
   `expiry_period_type` enum('days','months') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `enable_sr_no` tinyint(1) NOT NULL DEFAULT '0',
+  `enable_sr_no` tinyint(1) NOT NULL DEFAULT 0,
   `weight` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `product_custom_field1` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `product_custom_field2` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `product_custom_field3` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `product_custom_field4` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `image` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `product_description` text COLLATE utf8mb4_unicode_ci,
+  `product_description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `p_type` enum('product','gift_card','coupon') COLLATE utf8mb4_unicode_ci NOT NULL,
   `gift_card` int(11) DEFAULT NULL,
   `coupon` int(11) DEFAULT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
-  `is_inactive` tinyint(1) NOT NULL DEFAULT '0',
+  `is_inactive` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -1634,7 +1641,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   KEY `products_business_id_index` (`business_id`),
   KEY `products_unit_id_index` (`unit_id`),
   KEY `products_created_by_index` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=314 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=341 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `products`
@@ -1874,20 +1881,64 @@ INSERT INTO `products` (`id`, `name`, `business_id`, `business_location_id`, `ty
 (297, 'Afrasiyab', 1, NULL, 'single', 1, NULL, NULL, 'BCD00045', 1, 5, 4, 5, 27, NULL, NULL, 'exclusive', 1, 50, '135039802', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-07 12:25:36', '2020-03-07 12:25:36'),
 (298, '222', 1, NULL, 'single', 1, NULL, NULL, 'BCD00047', 4, 3, 1, 11, 11, NULL, NULL, 'exclusive', 1, 50, '135039803', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (299, '222', 1, NULL, 'single', 1, NULL, NULL, 'BCD00047', 4, 3, 1, 10, 11, NULL, NULL, 'exclusive', 1, 50, '135039804', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
-(300, '222', 1, NULL, 'single', 1, NULL, NULL, 'BCD00047', 4, 3, 1, 9, 11, NULL, NULL, 'exclusive', 1, 50, '135039805', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
+(300, 'Afrasiyab test Update', 1, NULL, 'single', 1, NULL, 'IV0024', 'BCD00047', 4, 3, 6, 9, 11, NULL, NULL, 'exclusive', 1, 50, '135039805', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1584733354_87242885_2638827442909965_8071123188550991872_o.jpg', NULL, 'product', NULL, NULL, 1, 0, '2020-03-07 15:34:24', '2020-03-20 15:42:34'),
 (301, '222', 1, NULL, 'single', 1, NULL, NULL, 'BCD00047', 4, 3, 1, 8, 11, NULL, NULL, 'exclusive', 1, 50, '135039806', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (302, '222', 1, NULL, 'single', 1, NULL, NULL, 'BCD00047', 4, 1, 1, 5, 11, NULL, NULL, 'exclusive', 1, 50, '135039807', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (303, 'Aadhya', 1, NULL, 'single', 1, NULL, NULL, 'BCD00047', 7, 3, 1, 5, 14, NULL, NULL, 'exclusive', 1, 50, '135039808', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (304, 'Aadhya', 1, NULL, 'single', 1, NULL, NULL, 'BCD00047', 7, 5, 1, 5, 14, NULL, NULL, 'exclusive', 1, 50, '135039809', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
-(305, 'Aaralyn', 1, NULL, 'single', 1, NULL, NULL, 'BCD00048', 3, 2, 2, 5, 30, NULL, NULL, 'exclusive', 1, 50, '135039810', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 11:23:28', '2020-03-08 11:23:28'),
-(306, 'Aaralyn', 1, NULL, 'single', 1, NULL, NULL, 'BCD00048', 3, 1, 3, 5, 30, NULL, NULL, 'exclusive', 1, 50, '135039811', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 11:23:28', '2020-03-08 11:23:28'),
+(305, 'Aaralyn', 1, NULL, 'single', 1, NULL, 'EST0027', 'BCD00048', 3, 2, 4, 5, 30, NULL, NULL, 'exclusive', 1, 50, '135039810', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 11:23:28', '2020-04-15 18:45:37'),
+(306, 'Aaralyn', 1, NULL, 'single', 1, NULL, 'EST0027', 'BCD00048', 3, 1, 4, 5, 30, NULL, NULL, 'exclusive', 1, 50, '135039811', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 11:23:28', '2020-04-15 18:40:21'),
 (307, 'Afrasiyab', 1, NULL, 'single', 1, NULL, NULL, 'BCD00049', 1, 1, 1, 5, 27, NULL, NULL, 'exclusive', 1, 50, '135039812', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 11:53:09', '2020-03-08 11:53:09'),
 (308, 'Aashvi', 1, NULL, 'single', 1, NULL, NULL, 'BCD00050', 11, 2, 1, 11, 27, NULL, NULL, 'exclusive', 1, 50, '135039813', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
-(309, 'Aashvi', 1, NULL, 'single', 1, NULL, NULL, 'BCD00050', 11, 2, 1, 10, 27, NULL, NULL, 'exclusive', 1, 50, '135039814', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
+(309, 'Aashvi', 1, NULL, 'single', 1, NULL, 'BG0027', 'BCD00050', 11, 2, 6, 10, 27, NULL, NULL, 'exclusive', 1, 50, '135039814', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1586715101_restaurant.png', NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 12:21:28', '2020-04-12 15:11:41'),
 (310, 'Aashvi', 1, NULL, 'single', 1, NULL, NULL, 'BCD00050', 11, 2, 1, 9, 27, NULL, NULL, 'exclusive', 1, 50, '135039815', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
 (311, 'Aashvi', 1, NULL, 'single', 1, NULL, NULL, 'BCD00050', 11, 2, 1, 8, 27, NULL, NULL, 'exclusive', 1, 50, '135039816', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
 (312, 'assddddd', 1, NULL, 'single', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'exclusive', 1, 1, '135039817', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 13:02:43', '2020-03-08 13:02:43'),
-(313, 'Product', 1, NULL, 'single', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 30, NULL, NULL, 'exclusive', 1, 1, '135039818', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 13:02:57', '2020-03-08 13:02:57');
+(313, 'Product', 1, NULL, 'single', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 30, NULL, NULL, 'exclusive', 1, 1, '135039818', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-03-08 13:02:57', '2020-03-08 13:02:57'),
+(314, 'Agata', 1, NULL, 'single', 1, NULL, NULL, 'BCD00051', 1, 5, 20, 11, 27, 31, NULL, 'exclusive', 1, 50, '135039819', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1584351712_d.jpg', NULL, 'product', NULL, NULL, 1, 0, '2020-03-16 17:41:52', '2020-03-16 17:41:52'),
+(315, 'Agata', 1, NULL, 'single', 1, NULL, NULL, 'BCD00051', 1, 5, 30, 10, 27, 31, NULL, 'exclusive', 1, 50, '135039820', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1584351712_d.jpg', NULL, 'product', NULL, NULL, 1, 0, '2020-03-16 17:41:52', '2020-03-16 17:41:52'),
+(316, 'Agata', 1, NULL, 'single', 1, NULL, NULL, 'BCD00051', 1, 5, 40, 9, 27, 31, NULL, 'exclusive', 1, 50, '135039821', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1584351712_d.jpg', NULL, 'product', NULL, NULL, 1, 0, '2020-03-16 17:41:52', '2020-03-16 17:41:52'),
+(318, 'Ainhoa', 1, NULL, 'single', 1, NULL, NULL, 'BCD00052', 6, 3, NULL, 15, 27, 32, NULL, 'exclusive', 1, 50, '135039823', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1584387352_news-4.jpg', NULL, 'product', NULL, NULL, 1, 0, '2020-03-17 03:35:52', '2020-03-17 03:35:52'),
+(319, 'Ainhoa', 1, NULL, 'single', 1, NULL, NULL, 'BCD00052', 6, 3, NULL, 14, 27, 32, NULL, 'exclusive', 1, 50, '135039824', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1584387352_news-4.jpg', NULL, 'product', NULL, NULL, 1, 0, '2020-03-17 03:35:52', '2020-03-17 03:35:52'),
+(320, 'Ainhoa', 1, NULL, 'single', 1, NULL, NULL, 'BCD00052', 6, 3, NULL, 13, 27, 32, NULL, 'exclusive', 1, 50, '135039825', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1584387352_news-4.jpg', NULL, 'product', NULL, NULL, 1, 0, '2020-03-17 03:35:52', '2020-03-17 03:35:52'),
+(321, 'Adriel', 1, NULL, 'single', 1, NULL, NULL, 'BCD00053', 3, 3, 6, 11, 11, NULL, NULL, 'exclusive', 1, 50, '135039826', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1584629511_arab.png', NULL, 'product', NULL, NULL, 1, 0, '2020-03-19 10:51:52', '2020-03-19 10:51:52'),
+(322, 'Adriel', 1, NULL, 'single', 1, NULL, 'EST0024', 'BCD00053', 3, 3, 6, 10, 11, NULL, NULL, 'exclusive', 1, 50, '135039827', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1584629512_arab.png', NULL, 'product', NULL, NULL, 1, 0, '2020-03-19 10:51:52', '2020-03-20 16:22:59'),
+(323, 'Adriel', 1, NULL, 'single', 1, NULL, NULL, 'BCD00053', 3, 3, 6, 9, 11, NULL, NULL, 'exclusive', 1, 50, '135039828', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1584629512_arab.png', NULL, 'product', NULL, NULL, 1, 0, '2020-03-19 10:51:52', '2020-03-19 10:51:52'),
+(324, 'Afrasiyab test Update', 1, NULL, 'single', 1, NULL, 'EST0024', 'BCD00053', 3, 3, 6, 8, 27, 31, NULL, 'exclusive', 1, 50, '135039829', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1584733332_upload.png', NULL, 'product', NULL, NULL, 1, 0, '2020-03-19 10:51:52', '2020-03-24 16:12:29'),
+(325, 'Afrasiyab test Update', 1, NULL, 'single', 1, NULL, NULL, 'BCD00054', 4, 2, 6, 11, 11, NULL, NULL, 'exclusive', 1, 50, '135039830', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 14:29:13', '2020-04-10 14:29:13'),
+(326, 'Afrasiyab test Update', 1, NULL, 'single', 1, NULL, NULL, 'BCD00054', 4, 2, 1, 10, 11, NULL, NULL, 'exclusive', 1, 50, '135039831', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(327, 'Afrasiyab test Update', 1, NULL, 'single', 1, NULL, NULL, 'BCD00054', 4, 2, 6, 9, 11, NULL, NULL, 'exclusive', 1, 50, '135039832', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(328, 'Afrasiyab test Update', 1, NULL, 'single', 1, NULL, NULL, 'BCD00054', 4, 2, 1, 8, 11, NULL, NULL, 'exclusive', 1, 50, '135039833', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(329, 'Alaina', 1, NULL, 'single', 1, NULL, 'EST0024', 'BCD00055', 3, 2, 6, 11, 27, NULL, NULL, 'exclusive', 1, 50, '135039834', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1586541897_brooke-cagle-z1B9f48F5dc-unsplash.jpg', NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 15:04:57', '2020-04-10 15:04:57'),
+(330, 'Alaina', 1, NULL, 'single', 1, NULL, 'EST0024', 'BCD00055', 3, 2, 1, 10, 27, NULL, NULL, 'exclusive', 1, 50, '135039835', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1586541897_brooke-cagle-z1B9f48F5dc-unsplash.jpg', NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 15:04:57', '2020-04-10 15:04:57'),
+(331, 'Alaina', 1, NULL, 'single', 1, NULL, 'EST0024', 'BCD00055', 3, 2, 6, 9, 27, NULL, NULL, 'exclusive', 1, 50, '135039836', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1586541897_brooke-cagle-z1B9f48F5dc-unsplash.jpg', NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 15:04:57', '2020-04-10 15:04:57'),
+(332, 'Alaina', 1, NULL, 'single', 1, NULL, 'EST0024', 'BCD00055', 3, 2, 6, 8, 27, NULL, NULL, 'exclusive', 1, 50, '135039837', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '1586541897_brooke-cagle-z1B9f48F5dc-unsplash.jpg', NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 15:04:57', '2020-04-10 15:07:19'),
+(333, 'Abigayle', 1, NULL, 'single', 1, NULL, 'DA0026', 'BCD00056', 6, 4, 6, 11, 14, NULL, NULL, 'exclusive', 1, 50, '135039838', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(334, 'Abigayle', 1, NULL, 'single', 1, NULL, 'DA0026', 'BCD00056', 6, 4, 1, 10, 14, NULL, NULL, 'exclusive', 1, 50, '135039839', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(335, 'Abigayle', 1, NULL, 'single', 1, NULL, 'DA0026', 'BCD00056', 6, 4, 6, 9, 14, NULL, NULL, 'exclusive', 1, 50, '135039840', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(336, 'Abigayle', 1, NULL, 'single', 1, NULL, 'DA0026', 'BCD00056', 6, 4, 1, 8, 14, NULL, NULL, 'exclusive', 1, 50, '135039841', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(337, 'Abigale', 1, NULL, 'single', 1, NULL, 'DA0025', 'BCD00056', 6, 2, 6, 11, 14, NULL, NULL, 'exclusive', 1, 50, '135039842', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(338, 'Abigale', 1, NULL, 'single', 1, NULL, 'DA0025', 'BCD00056', 6, 2, 1, 10, 14, NULL, NULL, 'exclusive', 1, 50, '135039843', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(339, 'Abigale', 1, NULL, 'single', 1, NULL, 'DA0025', 'BCD00056', 6, 2, 6, 9, 14, NULL, NULL, 'exclusive', 1, 50, '135039844', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(340, 'Abigale', 1, NULL, 'single', 1, NULL, 'DA0025', 'BCD00056', 6, 2, 1, 8, 14, NULL, NULL, 'exclusive', 1, 50, '135039845', 'C128', NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'product', NULL, NULL, 1, 0, '2020-04-10 15:09:40', '2020-04-10 15:09:40');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_images`
+--
+
+DROP TABLE IF EXISTS `product_images`;
+CREATE TABLE IF NOT EXISTS `product_images` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `refference` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `product_images_product_id_foreign` (`product_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1929,8 +1980,6 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (33, 33, 'Abella', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (34, 34, 'Abelle', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (35, 35, 'Abigael', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
-(36, 36, 'Abigale', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
-(37, 37, 'Abigayle', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (38, 38, 'Abilene', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (39, 39, 'Abrial', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (40, 40, 'Abriana', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
@@ -2010,7 +2059,6 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (115, 115, 'Adriana', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (116, 116, 'Adrianna', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (117, 117, 'Adrianne', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
-(118, 118, 'Adriel', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (119, 119, 'Adrielle', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (120, 120, 'Adrienne', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (121, 121, 'Advika', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
@@ -2019,7 +2067,6 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (124, 124, 'Aeryn', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (125, 125, 'Afton', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (126, 126, 'Agapi', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
-(127, 127, 'Agata', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (128, 128, 'Agate', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (129, 129, 'Agatha', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (130, 130, 'Agathe', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
@@ -2047,7 +2094,6 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (152, 152, 'Aim', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (153, 153, 'Aimilios', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (154, 154, 'Ainara', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
-(155, 155, 'Ainhoa', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (156, 156, 'Ainslee', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (157, 157, 'Ainsley', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (158, 158, 'Aira', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
@@ -2076,7 +2122,6 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (181, 181, 'Alaa', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (182, 182, 'Alaia', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (183, 183, 'Alaiah', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
-(184, 184, 'Alaina', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (185, 185, 'Alaiya', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (186, 186, 'Alaiyah', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (187, 187, 'Alameda', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
@@ -2106,7 +2151,6 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (212, 212, 'Albertine', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (213, 213, 'Albira', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (214, 214, 'Alcie', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
-(215, 215, 'Alcina', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (216, 216, 'Alcott', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (217, 217, 'Alden', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
 (218, 218, 'Alea', 1, 1, NULL, '2020-02-23 00:40:20', '2020-02-23 00:40:20'),
@@ -2554,15 +2598,15 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (660, 660, 'Ashanti', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (661, 661, 'Ashby', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (662, 662, 'Asher', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
-(663, 663, 'Ashlee', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21');
-INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(663, 663, 'Ashlee', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (664, 664, 'Ashleigh', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (665, 665, 'Ashley', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (666, 666, 'Ashlin', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (667, 667, 'Ashly', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (668, 668, 'Ashlyn', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (669, 669, 'Ashlynn', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
-(670, 670, 'Ashton', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
+(670, 670, 'Ashton', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21');
+INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
 (671, 671, 'Ashtyn', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (672, 672, 'Asia', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (673, 673, 'Asiya', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
@@ -3183,15 +3227,15 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (1288, 1288, 'Chantal', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (1289, 1289, 'Chantel', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (1290, 1290, 'Chantelle', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
-(1291, 1291, 'Chantilly', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21');
-INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1291, 1291, 'Chantilly', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (1292, 1292, 'Chany', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (1293, 1293, 'Chapel', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (1294, 1294, 'Chara', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (1295, 1295, 'Chardonnay', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (1296, 1296, 'Charis', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (1297, 1297, 'Charisma', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
-(1298, 1298, 'Charissa', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
+(1298, 1298, 'Charissa', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21');
+INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
 (1299, 1299, 'Charita', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (1300, 1300, 'Charity', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
 (1301, 1301, 'Charlea', 1, 1, NULL, '2020-02-23 00:40:21', '2020-02-23 00:40:21'),
@@ -3805,15 +3849,15 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (1909, 1909, 'Eleana', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (1910, 1910, 'Eleanor', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (1911, 1911, 'Eleanora', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
-(1912, 1912, 'Eleanore', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22');
-INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(1912, 1912, 'Eleanore', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (1913, 1913, 'Electa', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (1914, 1914, 'Electra', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (1915, 1915, 'Eleen', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (1916, 1916, 'Eleena', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (1917, 1917, 'Eleina', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (1918, 1918, 'Elektra', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
-(1919, 1919, 'Elena', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
+(1919, 1919, 'Elena', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22');
+INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
 (1920, 1920, 'Eleni', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (1921, 1921, 'Elenor', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (1922, 1922, 'Elenora', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
@@ -4426,15 +4470,15 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (2534, 2534, 'Haddie', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (2535, 2535, 'Hadlee', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (2536, 2536, 'Hadleigh', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
-(2537, 2537, 'Hadley', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22');
-INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(2537, 2537, 'Hadley', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (2538, 2538, 'Hadlie', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (2539, 2539, 'Hafsa', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (2540, 2540, 'Haidee', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (2541, 2541, 'Haiden', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (2542, 2542, 'Haidyn', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (2543, 2543, 'Hailee', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
-(2544, 2544, 'Hailey', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
+(2544, 2544, 'Hailey', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22');
+INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
 (2545, 2545, 'Hailie', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (2546, 2546, 'Haisley', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
 (2547, 2547, 'Haizley', 1, 1, NULL, '2020-02-23 00:40:22', '2020-02-23 00:40:22'),
@@ -5049,15 +5093,15 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (3156, 3156, 'Kaleigh', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3157, 3157, 'Kaleigha', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3158, 3158, 'Kalena', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
-(3159, 3159, 'Kaley', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23');
-INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(3159, 3159, 'Kaley', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3160, 3160, 'Kali', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3161, 3161, 'Kalia', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3162, 3162, 'Kaliah', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3163, 3163, 'Kalie', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3164, 3164, 'Kalila', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3165, 3165, 'Kalina', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
-(3166, 3166, 'Kalista', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
+(3166, 3166, 'Kalista', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23');
+INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
 (3167, 3167, 'Kaliya', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3168, 3168, 'Kaliyah', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3169, 3169, 'Kalli', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
@@ -5673,14 +5717,14 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (3779, 3779, 'Luci', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3780, 3780, 'Lucia', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3781, 3781, 'Luciana', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
-(3782, 3782, 'Lucianna', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23');
-INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(3782, 3782, 'Lucianna', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3783, 3783, 'Lucie', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3784, 3784, 'Lucienne', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3785, 3785, 'Lucila', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3786, 3786, 'Lucilla', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3787, 3787, 'Lucille', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
-(3788, 3788, 'Lucina', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
+(3788, 3788, 'Lucina', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23');
+INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
 (3789, 3789, 'Lucinda', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3790, 3790, 'Lucrecia', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (3791, 3791, 'Lucy', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
@@ -6296,14 +6340,14 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (4401, 4401, 'Oliviah', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (4402, 4402, 'Oliviane', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (4403, 4403, 'Ollie', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
-(4404, 4404, 'Oluwadarasimi', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23');
-INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(4404, 4404, 'Oluwadarasimi', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (4405, 4405, 'Olympe', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (4406, 4406, 'Olympia', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (4407, 4407, 'Olympiad', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (4408, 4408, 'Olympienne', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (4409, 4409, 'Olyvia', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
-(4410, 4410, 'Omega', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
+(4410, 4410, 'Omega', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23');
+INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
 (4411, 4411, 'Onyx', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (4412, 4412, 'Oona', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
 (4413, 4413, 'Opal', 1, 1, NULL, '2020-02-23 00:40:23', '2020-02-23 00:40:23'),
@@ -6919,14 +6963,14 @@ INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `c
 (5023, 5023, 'Skai', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
 (5024, 5024, 'Skarlett', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
 (5025, 5025, 'Sky', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
-(5026, 5026, 'Skye', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24');
-INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
+(5026, 5026, 'Skye', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
 (5027, 5027, 'Skyla', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
 (5028, 5028, 'Skylah', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
 (5029, 5029, 'Skylee', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
 (5030, 5030, 'Skyleigh', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
 (5031, 5031, 'Skyler', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
-(5032, 5032, 'Skylie', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
+(5032, 5032, 'Skylie', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24');
+INSERT INTO `product_name_categories` (`id`, `row_no`, `name`, `business_id`, `created_by`, `deleted_at`, `created_at`, `updated_at`) VALUES
 (5033, 5033, 'Skylin', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
 (5034, 5034, 'Skylyn', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
 (5035, 5035, 'Skylynn', 1, 1, NULL, '2020-02-23 00:40:24', '2020-02-23 00:40:24'),
@@ -7531,13 +7575,13 @@ CREATE TABLE IF NOT EXISTS `product_variations` (
   `variation_template_id` int(11) DEFAULT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
-  `is_dummy` tinyint(1) NOT NULL DEFAULT '1',
+  `is_dummy` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `product_variations_name_index` (`name`),
   KEY `product_variations_product_id_index` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=290 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=317 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `product_variations`
@@ -7789,7 +7833,33 @@ INSERT INTO `product_variations` (`id`, `variation_template_id`, `name`, `produc
 (286, NULL, 'DUMMY', 310, 1, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
 (287, NULL, 'DUMMY', 311, 1, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
 (288, NULL, 'DUMMY', 312, 1, '2020-03-08 13:02:43', '2020-03-08 13:02:43'),
-(289, NULL, 'DUMMY', 313, 1, '2020-03-08 13:02:57', '2020-03-08 13:02:57');
+(289, NULL, 'DUMMY', 313, 1, '2020-03-08 13:02:57', '2020-03-08 13:02:57'),
+(290, NULL, 'DUMMY', 314, 1, '2020-03-16 17:41:52', '2020-03-16 17:41:52'),
+(291, NULL, 'DUMMY', 315, 1, '2020-03-16 17:41:52', '2020-03-16 17:41:52'),
+(292, NULL, 'DUMMY', 316, 1, '2020-03-16 17:41:52', '2020-03-16 17:41:52'),
+(294, NULL, 'DUMMY', 318, 1, '2020-03-17 03:35:52', '2020-03-17 03:35:52'),
+(295, NULL, 'DUMMY', 319, 1, '2020-03-17 03:35:52', '2020-03-17 03:35:52'),
+(296, NULL, 'DUMMY', 320, 1, '2020-03-17 03:35:52', '2020-03-17 03:35:52'),
+(297, NULL, 'DUMMY', 321, 1, '2020-03-19 10:51:52', '2020-03-19 10:51:52'),
+(298, NULL, 'DUMMY', 322, 1, '2020-03-19 10:51:52', '2020-03-19 10:51:52'),
+(299, NULL, 'DUMMY', 323, 1, '2020-03-19 10:51:52', '2020-03-19 10:51:52'),
+(300, NULL, 'DUMMY', 324, 1, '2020-03-19 10:51:52', '2020-03-19 10:51:52'),
+(301, NULL, 'DUMMY', 325, 1, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(302, NULL, 'DUMMY', 326, 1, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(303, NULL, 'DUMMY', 327, 1, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(304, NULL, 'DUMMY', 328, 1, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(305, NULL, 'DUMMY', 329, 1, '2020-04-10 15:04:57', '2020-04-10 15:04:57'),
+(306, NULL, 'DUMMY', 330, 1, '2020-04-10 15:04:57', '2020-04-10 15:04:57'),
+(307, NULL, 'DUMMY', 331, 1, '2020-04-10 15:04:57', '2020-04-10 15:04:57'),
+(308, NULL, 'DUMMY', 332, 1, '2020-04-10 15:04:58', '2020-04-10 15:04:58'),
+(309, NULL, 'DUMMY', 333, 1, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(310, NULL, 'DUMMY', 334, 1, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(311, NULL, 'DUMMY', 335, 1, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(312, NULL, 'DUMMY', 336, 1, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(313, NULL, 'DUMMY', 337, 1, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(314, NULL, 'DUMMY', 338, 1, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(315, NULL, 'DUMMY', 339, 1, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(316, NULL, 'DUMMY', 340, 1, '2020-04-10 15:09:40', '2020-04-10 15:09:40');
 
 -- --------------------------------------------------------
 
@@ -7804,15 +7874,15 @@ CREATE TABLE IF NOT EXISTS `purchase_lines` (
   `product_id` int(10) UNSIGNED NOT NULL,
   `variation_id` int(10) UNSIGNED NOT NULL,
   `quantity` decimal(20,4) NOT NULL,
-  `pp_without_discount` decimal(20,2) NOT NULL DEFAULT '0.00' COMMENT 'Purchase price before inline discounts',
-  `discount_percent` decimal(5,2) NOT NULL DEFAULT '0.00' COMMENT 'Inline discount percentage',
+  `pp_without_discount` decimal(20,2) NOT NULL DEFAULT 0.00 COMMENT 'Purchase price before inline discounts',
+  `discount_percent` decimal(5,2) NOT NULL DEFAULT 0.00 COMMENT 'Inline discount percentage',
   `purchase_price` decimal(20,2) DEFAULT NULL,
-  `purchase_price_inc_tax` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `purchase_price_inc_tax` decimal(20,2) NOT NULL DEFAULT 0.00,
   `item_tax` decimal(20,2) DEFAULT NULL,
   `tax_id` int(10) UNSIGNED DEFAULT NULL,
-  `quantity_sold` decimal(20,4) DEFAULT '0.0000',
-  `quantity_adjusted` decimal(20,4) DEFAULT '0.0000',
-  `quantity_returned` decimal(20,4) NOT NULL DEFAULT '0.0000',
+  `quantity_sold` decimal(20,4) DEFAULT 0.0000,
+  `quantity_adjusted` decimal(20,4) DEFAULT 0.0000,
+  `quantity_returned` decimal(20,4) NOT NULL DEFAULT 0.0000,
   `mfg_date` date DEFAULT NULL,
   `exp_date` date DEFAULT NULL,
   `lot_number` varchar(256) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -7825,7 +7895,7 @@ CREATE TABLE IF NOT EXISTS `purchase_lines` (
   KEY `purchase_lines_variation_id_foreign` (`variation_id`),
   KEY `purchase_lines_tax_id_foreign` (`tax_id`),
   KEY `purchase_lines_sub_unit_id_index` (`sub_unit_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=269 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=299 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `purchase_lines`
@@ -8063,20 +8133,49 @@ INSERT INTO `purchase_lines` (`id`, `transaction_id`, `product_id`, `variation_i
 (252, 294, 297, 273, '1.0000', '80000.00', '0.00', '80000.00', '80000.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-07 12:25:36', '2020-03-07 12:25:36'),
 (253, 295, 298, 274, '1.0000', '2200.00', '0.00', '2200.00', '2200.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (254, 296, 299, 275, '1.0000', '2200.00', '0.00', '2200.00', '2200.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
-(255, 297, 300, 276, '1.0000', '2200.00', '0.00', '2200.00', '2200.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
+(255, 297, 300, 276, '15.0000', '2200.00', '0.00', '2200.00', '2200.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-20 15:42:34'),
 (256, 298, 301, 277, '1.0000', '2200.00', '0.00', '2200.00', '2200.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (257, 299, 302, 278, '1.0000', '2200.00', '0.00', '2200.00', '2200.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (258, 300, 303, 279, '1.0000', '4295.00', '0.00', '4295.00', '4295.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (259, 301, 304, 280, '1.0000', '4295.00', '0.00', '4295.00', '4295.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
-(260, 302, 305, 281, '2.0000', '22200.00', '0.00', '22200.00', '22200.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-08 11:23:28', '2020-03-08 11:23:28'),
-(261, 303, 306, 282, '3.0000', '22200.00', '0.00', '22200.00', '22200.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-08 11:23:28', '2020-03-08 11:23:28'),
+(260, 302, 305, 281, '1.0000', '22200.00', '0.00', '22200.00', '22200.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-08 11:23:28', '2020-04-10 14:22:29'),
+(261, 303, 306, 282, '0.0000', '22200.00', '0.00', '22200.00', '22200.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-08 11:23:28', '2020-04-12 15:44:39'),
 (262, 304, 307, 283, '1.0000', '80000.00', '0.00', '80000.00', '80000.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-08 11:53:09', '2020-03-08 11:53:09'),
 (263, 305, 308, 284, '1.0000', '2995.00', '0.00', '2995.00', '2995.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
 (264, 306, 309, 285, '1.0000', '2995.00', '0.00', '2995.00', '2995.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
 (265, 307, 310, 286, '1.0000', '2995.00', '0.00', '2995.00', '2995.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
 (266, 308, 311, 287, '1.0000', '2995.00', '0.00', '2995.00', '2995.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
 (267, 309, 312, 288, '1.0000', '1.00', '0.00', '1.00', '1.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-08 13:02:43', '2020-03-08 13:02:43'),
-(268, 310, 313, 289, '1.0000', '1.00', '0.00', '1.00', '1.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-08 13:02:57', '2020-03-08 13:02:57');
+(268, 310, 313, 289, '1.0000', '1.00', '0.00', '1.00', '1.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-08 13:02:57', '2020-03-08 13:02:57'),
+(269, 311, 314, 290, '20.0000', '888.00', '0.00', '888.00', '888.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-16 17:41:52', '2020-03-16 17:41:52'),
+(270, 312, 315, 291, '30.0000', '888.00', '0.00', '888.00', '888.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-16 17:41:52', '2020-03-16 17:41:52'),
+(271, 313, 316, 292, '40.0000', '888.00', '0.00', '888.00', '888.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-16 17:41:52', '2020-03-16 17:41:52'),
+(273, 315, 318, 294, '3.0000', '999.00', '0.00', '999.00', '999.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-17 03:35:52', '2020-03-17 03:35:52'),
+(274, 316, 319, 295, '4.0000', '999.00', '0.00', '999.00', '999.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-17 03:35:52', '2020-03-17 03:35:52'),
+(275, 317, 320, 296, '5.0000', '999.00', '0.00', '999.00', '999.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-17 03:35:52', '2020-03-17 03:35:52'),
+(276, 318, 321, 297, '1.0000', '700.00', '0.00', '700.00', '700.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-19 10:51:52', '2020-03-19 10:51:52'),
+(277, 319, 322, 298, '1.0000', '700.00', '0.00', '700.00', '700.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-19 10:51:52', '2020-03-19 10:51:52'),
+(278, 320, 323, 299, '1.0000', '700.00', '0.00', '700.00', '700.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-19 10:51:52', '2020-03-19 10:51:52'),
+(279, 321, 324, 300, '10.0000', '700.00', '0.00', '700.00', '700.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-19 10:51:52', '2020-04-04 16:30:51'),
+(280, 322, 324, 300, '5.0000', '50000.00', '0.00', '50000.00', '50000.00', '0.00', NULL, '5.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-03-25 10:18:55', '2020-03-25 11:43:58'),
+(281, 324, 306, 282, '3.0000', '220000.00', '0.00', '220000.00', '220000.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 14:22:29', '2020-04-12 15:44:39'),
+(282, 325, 305, 281, '1.0000', '220000.00', '0.00', '220000.00', '220000.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 14:22:29', '2020-04-10 14:22:29'),
+(283, 326, 325, 301, '1.0000', '5000.00', '0.00', '5000.00', '5000.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(284, 327, 326, 302, '1.0000', '5000.00', '0.00', '5000.00', '5000.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(285, 328, 327, 303, '1.0000', '5000.00', '0.00', '5000.00', '5000.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(286, 329, 328, 304, '1.0000', '5000.00', '0.00', '5000.00', '5000.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(287, 330, 329, 305, '1.0000', '500.00', '0.00', '500.00', '500.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 15:04:57', '2020-04-10 15:04:57'),
+(288, 331, 330, 306, '1.0000', '500.00', '0.00', '500.00', '500.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 15:04:57', '2020-04-10 15:04:57'),
+(289, 332, 331, 307, '1.0000', '500.00', '0.00', '500.00', '500.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 15:04:57', '2020-04-10 15:04:57'),
+(290, 333, 332, 308, '1.0000', '500.00', '0.00', '500.00', '500.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 15:04:58', '2020-04-10 15:04:58'),
+(291, 334, 333, 309, '1.0000', '800.00', '0.00', '800.00', '800.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(292, 335, 334, 310, '1.0000', '800.00', '0.00', '800.00', '800.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(293, 336, 335, 311, '1.0000', '800.00', '0.00', '800.00', '800.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(294, 337, 336, 312, '1.0000', '800.00', '0.00', '800.00', '800.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(295, 338, 337, 313, '1.0000', '500.00', '0.00', '500.00', '500.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(296, 339, 338, 314, '1.0000', '500.00', '0.00', '500.00', '500.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(297, 340, 339, 315, '1.0000', '500.00', '0.00', '500.00', '500.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:09:40'),
+(298, 341, 340, 316, '1.0000', '500.00', '0.00', '500.00', '500.00', '0.00', NULL, '0.0000', '0.0000', '0.0000', NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:09:40');
 
 -- --------------------------------------------------------
 
@@ -8101,9 +8200,9 @@ CREATE TABLE IF NOT EXISTS `reference_counts` (
 
 INSERT INTO `reference_counts` (`id`, `ref_type`, `ref_count`, `business_id`, `created_at`, `updated_at`) VALUES
 (1, 'contacts', 2, 1, '2019-11-30 09:24:12', '2019-12-10 22:44:25'),
-(2, 'business_location', 6, 1, '2019-11-30 09:24:12', '2020-02-03 16:34:39'),
+(2, 'business_location', 7, 1, '2019-11-30 09:24:12', '2020-04-09 14:44:18'),
 (3, 'username', 6, 1, '2019-11-30 12:31:50', '2020-01-09 16:48:29'),
-(4, 'sell_payment', 39, 1, '2019-12-03 23:05:07', '2020-03-06 14:05:10'),
+(4, 'sell_payment', 40, 1, '2019-12-03 23:05:07', '2020-03-25 11:43:58'),
 (5, 'sell_return', 1, 1, '2019-12-27 01:14:54', '2019-12-27 01:14:54'),
 (6, 'expense', 2, 1, '2020-02-01 00:18:45', '2020-02-01 00:36:25');
 
@@ -8132,7 +8231,7 @@ CREATE TABLE IF NOT EXISTS `res_tables` (
   `business_id` int(10) UNSIGNED NOT NULL,
   `location_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -8153,8 +8252,8 @@ CREATE TABLE IF NOT EXISTS `roles` (
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `guard_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
-  `is_default` tinyint(1) NOT NULL DEFAULT '0',
-  `is_service_staff` tinyint(1) NOT NULL DEFAULT '0',
+  `is_default` tinyint(1) NOT NULL DEFAULT 0,
+  `is_service_staff` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -8190,76 +8289,22 @@ CREATE TABLE IF NOT EXISTS `role_has_permissions` (
 --
 
 INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
-(2, 5),
-(3, 5),
-(6, 5),
-(26, 5),
-(27, 5),
-(30, 5),
-(31, 5),
-(34, 5),
-(35, 5),
-(38, 5),
-(39, 5),
-(40, 5),
-(41, 5),
-(47, 5),
-(71, 5),
-(72, 5),
-(73, 5),
-(75, 5),
-(76, 5),
-(77, 5),
-(85, 5),
-(86, 5),
-(92, 5),
-(98, 5),
-(99, 5),
-(105, 5),
-(2, 6),
-(3, 6),
-(6, 6),
-(8, 6),
-(9, 6),
-(10, 6),
-(26, 6),
-(27, 6),
-(28, 6),
-(29, 6),
-(30, 6),
-(31, 6),
-(32, 6),
-(33, 6),
-(34, 6),
-(35, 6),
-(36, 6),
-(38, 6),
-(39, 6),
-(40, 6),
-(42, 6),
-(43, 6),
-(47, 6),
-(48, 6),
-(71, 6),
-(73, 6),
-(74, 6),
-(75, 6),
-(76, 6),
-(77, 6),
-(78, 6),
-(85, 6),
-(86, 6),
-(92, 6),
-(98, 6),
-(99, 6),
-(105, 6),
 (1, 7),
+(2, 5),
+(2, 6),
 (2, 7),
+(3, 5),
+(3, 6),
 (3, 7),
+(6, 5),
+(6, 6),
 (6, 7),
 (7, 7),
+(8, 6),
 (8, 7),
+(9, 6),
 (9, 7),
+(10, 6),
 (10, 7),
 (11, 7),
 (12, 7),
@@ -8276,28 +8321,57 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (23, 7),
 (24, 7),
 (25, 7),
+(26, 5),
+(26, 6),
 (26, 7),
+(27, 5),
+(27, 6),
 (27, 7),
+(28, 6),
 (28, 7),
+(29, 6),
 (29, 7),
+(30, 5),
+(30, 6),
 (30, 7),
+(31, 5),
+(31, 6),
 (31, 7),
+(32, 6),
 (32, 7),
+(33, 6),
 (33, 7),
+(34, 5),
+(34, 6),
 (34, 7),
+(35, 5),
+(35, 6),
 (35, 7),
+(36, 6),
 (36, 7),
 (37, 7),
+(38, 5),
+(38, 6),
 (38, 7),
+(39, 5),
+(39, 6),
 (39, 7),
+(40, 5),
+(40, 6),
 (40, 7),
+(41, 5),
 (41, 7),
+(42, 6),
 (42, 7),
+(43, 6),
 (43, 7),
 (44, 7),
 (45, 7),
 (46, 7),
+(47, 5),
+(47, 6),
 (47, 7),
+(48, 6),
 (48, 7),
 (49, 7),
 (50, 7),
@@ -8321,28 +8395,53 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (68, 7),
 (69, 7),
 (70, 7),
+(71, 5),
+(71, 6),
 (71, 7),
+(72, 5),
+(73, 5),
+(73, 6),
 (73, 7),
+(74, 6),
 (74, 7),
+(75, 5),
+(75, 6),
 (75, 7),
+(76, 5),
+(76, 6),
 (76, 7),
+(77, 5),
+(77, 6),
 (77, 7),
+(78, 6),
 (78, 7),
 (80, 7),
 (81, 7),
 (82, 7),
 (84, 7),
+(85, 5),
+(85, 6),
 (85, 7),
+(86, 5),
+(86, 6),
 (86, 7),
+(92, 5),
+(92, 6),
 (92, 7),
 (93, 7),
 (94, 7),
 (95, 7),
 (96, 7),
 (97, 7),
+(98, 5),
+(98, 6),
 (98, 7),
+(99, 5),
+(99, 6),
 (99, 7),
 (104, 7),
+(105, 5),
+(105, 6),
 (105, 7),
 (106, 7);
 
@@ -8356,7 +8455,7 @@ DROP TABLE IF EXISTS `selling_price_groups`;
 CREATE TABLE IF NOT EXISTS `selling_price_groups` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `business_id` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -8376,7 +8475,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   `id` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` int(10) UNSIGNED DEFAULT NULL,
   `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `user_agent` text COLLATE utf8mb4_unicode_ci,
+  `user_agent` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `payload` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `last_activity` int(11) NOT NULL,
   UNIQUE KEY `sessions_id_unique` (`id`)
@@ -8402,7 +8501,7 @@ CREATE TABLE IF NOT EXISTS `sizes` (
   PRIMARY KEY (`id`),
   KEY `sizes_business_id_foreign` (`business_id`),
   KEY `sizes_created_by_foreign` (`created_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `sizes`
@@ -8424,6 +8523,38 @@ INSERT INTO `sizes` (`id`, `name`, `business_id`, `short_code`, `parent_id`, `cr
 (13, 'S', 1, NULL, 12, 1, NULL, '2020-02-23 01:05:49', '2020-02-23 01:05:49'),
 (14, 'M', 1, NULL, 12, 1, NULL, '2020-02-23 01:05:59', '2020-02-23 01:05:59'),
 (15, 'L', 1, NULL, 12, 1, NULL, '2020-02-23 01:06:08', '2020-02-23 01:06:08');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `special_category_products`
+--
+
+DROP TABLE IF EXISTS `special_category_products`;
+CREATE TABLE IF NOT EXISTS `special_category_products` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `refference` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `featured` tinyint(1) NOT NULL DEFAULT 0,
+  `new_arrival` tinyint(1) NOT NULL DEFAULT 0,
+  `sale` tinyint(1) NOT NULL DEFAULT 0,
+  `price` decimal(20,2) NOT NULL,
+  `sale_percentage` tinyint(4) DEFAULT NULL,
+  `discounted_price` decimal(20,2) DEFAULT NULL,
+  `after_discount` decimal(20,2) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `special_category_products_product_id_foreign` (`product_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `special_category_products`
+--
+
+INSERT INTO `special_category_products` (`id`, `product_id`, `refference`, `featured`, `new_arrival`, `sale`, `price`, `sale_percentage`, `discounted_price`, `after_discount`, `created_at`, `updated_at`) VALUES
+(1, 300, 'IV0024', 1, 1, 1, '2200.00', 10, '220.00', '1980.00', '2020-04-15 17:48:26', '2020-04-15 18:52:58'),
+(2, 306, 'EST0027', 1, 1, 0, '2200.00', NULL, NULL, NULL, '2020-04-15 18:47:44', '2020-04-15 18:52:16');
 
 -- --------------------------------------------------------
 
@@ -8471,7 +8602,7 @@ CREATE TABLE IF NOT EXISTS `suppliers` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `business_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -8507,7 +8638,7 @@ DROP TABLE IF EXISTS `system`;
 CREATE TABLE IF NOT EXISTS `system` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `key` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` text COLLATE utf8mb4_unicode_ci,
+  `value` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -8531,7 +8662,7 @@ CREATE TABLE IF NOT EXISTS `tax_rates` (
   `business_id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `amount` double(8,2) NOT NULL,
-  `is_tax_group` tinyint(1) NOT NULL DEFAULT '0',
+  `is_tax_group` tinyint(1) NOT NULL DEFAULT 0,
   `created_by` int(10) UNSIGNED NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -8565,7 +8696,7 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   `type` enum('purchase','sell','expense','stock_adjustment','sell_transfer','purchase_transfer','opening_stock','sell_return','opening_balance','purchase_return') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `sub_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` enum('received','pending','ordered','draft','final','hide') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `is_quotation` tinyint(1) NOT NULL DEFAULT '0',
+  `is_quotation` tinyint(1) NOT NULL DEFAULT 0,
   `payment_status` enum('paid','due','partial') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `adjustment_type` enum('normal','abnormal') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `contact_id` int(11) UNSIGNED DEFAULT NULL,
@@ -8574,30 +8705,30 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   `ref_no` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `subscription_no` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `transaction_date` datetime NOT NULL,
-  `total_before_tax` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `total_before_tax` decimal(20,2) NOT NULL DEFAULT 0.00,
   `tax_id` int(10) UNSIGNED DEFAULT NULL,
-  `tax_amount` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `tax_amount` decimal(20,2) NOT NULL DEFAULT 0.00,
   `discount_type` enum('fixed','percentage') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `discount_amount` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `shipping_details` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `shipping_charges` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `additional_notes` text COLLATE utf8mb4_unicode_ci,
-  `staff_note` text COLLATE utf8mb4_unicode_ci,
-  `final_total` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `shipping_charges` decimal(20,2) NOT NULL DEFAULT 0.00,
+  `additional_notes` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `staff_note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `final_total` decimal(20,2) NOT NULL DEFAULT 0.00,
   `expense_category_id` int(10) UNSIGNED DEFAULT NULL,
   `expense_for` int(10) UNSIGNED DEFAULT NULL,
   `commission_agent` int(11) DEFAULT NULL,
   `document` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_direct_sale` tinyint(1) NOT NULL DEFAULT '0',
-  `is_suspend` tinyint(1) NOT NULL DEFAULT '0',
-  `exchange_rate` decimal(20,3) NOT NULL DEFAULT '1.000',
+  `is_direct_sale` tinyint(1) NOT NULL DEFAULT 0,
+  `is_suspend` tinyint(1) NOT NULL DEFAULT 0,
+  `exchange_rate` decimal(20,3) NOT NULL DEFAULT 1.000,
   `total_amount_recovered` decimal(20,2) DEFAULT NULL COMMENT 'Used for stock adjustment.',
   `transfer_parent_id` int(11) DEFAULT NULL,
   `return_parent_id` int(11) DEFAULT NULL,
   `opening_stock_product_id` int(11) DEFAULT NULL,
   `created_by` int(10) UNSIGNED NOT NULL,
-  `order_addresses` text COLLATE utf8mb4_unicode_ci,
-  `is_recurring` tinyint(1) NOT NULL DEFAULT '0',
+  `order_addresses` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_recurring` tinyint(1) NOT NULL DEFAULT 0,
   `recur_interval` double(8,2) DEFAULT NULL,
   `recur_interval_type` enum('days','months','years') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `recur_repetitions` int(11) DEFAULT NULL,
@@ -8621,7 +8752,7 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   KEY `transactions_expense_category_id_index` (`expense_category_id`),
   KEY `transactions_sub_type_index` (`sub_type`),
   KEY `transactions_return_parent_id_index` (`return_parent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=311 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=342 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `transactions`
@@ -8892,20 +9023,51 @@ INSERT INTO `transactions` (`id`, `business_id`, `location_id`, `res_table_id`, 
 INSERT INTO `transactions` (`id`, `business_id`, `location_id`, `res_table_id`, `res_waiter_id`, `res_order_status`, `type`, `sub_type`, `status`, `is_quotation`, `payment_status`, `adjustment_type`, `contact_id`, `customer_group_id`, `invoice_no`, `ref_no`, `subscription_no`, `transaction_date`, `total_before_tax`, `tax_id`, `tax_amount`, `discount_type`, `discount_amount`, `shipping_details`, `shipping_charges`, `additional_notes`, `staff_note`, `final_total`, `expense_category_id`, `expense_for`, `commission_agent`, `document`, `is_direct_sale`, `is_suspend`, `exchange_rate`, `total_amount_recovered`, `transfer_parent_id`, `return_parent_id`, `opening_stock_product_id`, `created_by`, `order_addresses`, `is_recurring`, `recur_interval`, `recur_interval_type`, `recur_repetitions`, `recur_stopped_on`, `recur_parent_id`, `invoice_token`, `pay_term_number`, `pay_term_type`, `selling_price_group_id`, `created_at`, `updated_at`) VALUES
 (295, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:34:24', '2200.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2200.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 298, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (296, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:34:24', '2200.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2200.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 299, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
-(297, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:34:24', '2200.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2200.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 300, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
+(297, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:34:24', '2200.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2200.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 300, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-04-10 15:16:48'),
 (298, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:34:24', '2200.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2200.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 301, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (299, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:34:24', '2200.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2200.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 302, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (300, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:34:24', '4295.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '4295.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 303, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (301, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:34:24', '4295.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '4295.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 304, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (302, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 16:23:28', '44400.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '44400.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 305, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 11:23:28', '2020-03-08 11:23:28'),
 (303, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 16:23:28', '66600.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '66600.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 306, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 11:23:28', '2020-03-08 11:23:28'),
-(304, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 16:53:09', '80000.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '80000.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 307, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 11:53:09', '2020-03-08 11:53:09'),
-(305, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 17:21:28', '2995.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2995.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 308, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
-(306, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 17:21:28', '2995.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2995.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 309, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
-(307, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 17:21:28', '2995.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2995.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 310, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
-(308, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 17:21:28', '2995.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2995.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 311, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
+(304, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 16:53:09', '80000.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '80000.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 307, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 11:53:09', '2020-04-10 14:22:29'),
+(305, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 17:21:28', '2995.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2995.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 308, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 12:21:28', '2020-04-10 14:22:29'),
+(306, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 17:21:28', '2995.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2995.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 309, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 12:21:28', '2020-04-10 14:22:29'),
+(307, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 17:21:28', '2995.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2995.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 310, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 12:21:28', '2020-04-10 14:22:29'),
+(308, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 17:21:28', '2995.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2995.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 311, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 12:21:28', '2020-04-10 14:22:28'),
 (309, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 18:02:43', '1.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '1.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 312, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 13:02:43', '2020-03-08 13:02:43'),
-(310, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 18:02:57', '1.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '1.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 313, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 13:02:57', '2020-03-08 13:02:57');
+(310, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 18:02:57', '1.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '1.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 313, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-08 13:02:57', '2020-03-08 13:02:57'),
+(311, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 10:41:52', '17760.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '17760.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 314, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-16 17:41:52', '2020-04-09 14:45:20'),
+(312, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 10:41:52', '26640.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '26640.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 315, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-16 17:41:52', '2020-04-09 14:45:20'),
+(313, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 10:41:52', '35520.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '35520.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 316, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-16 17:41:52', '2020-04-09 14:45:20'),
+(314, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 10:41:52', '44400.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '44400.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 317, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-16 17:41:52', '2020-03-16 17:41:52'),
+(315, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:35:52', '2997.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '2997.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 318, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-17 03:35:52', '2020-04-09 14:45:20'),
+(316, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:35:52', '3996.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '3996.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 319, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-17 03:35:52', '2020-04-09 14:45:19'),
+(317, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:35:52', '4995.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '4995.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 320, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-17 03:35:52', '2020-04-09 14:45:19'),
+(318, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 15:51:52', '700.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '700.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 321, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-19 10:51:52', '2020-04-09 14:45:19'),
+(319, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 15:51:52', '700.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '700.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 322, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-19 10:51:52', '2020-04-09 14:45:19'),
+(320, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 15:51:52', '700.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '700.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 323, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-19 10:51:52', '2020-04-09 14:45:19'),
+(321, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 15:51:52', '700.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '700.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 324, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-19 10:51:52', '2020-04-09 14:45:19'),
+(322, 1, 2, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 15:18:55', '250000.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '250000.00', NULL, NULL, NULL, 'Transfer At 2020-03-25', 0, 0, '1.000', NULL, NULL, NULL, 324, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-25 10:18:55', '2020-03-25 10:18:55'),
+(323, 1, 2, NULL, NULL, NULL, 'sell', NULL, 'final', 0, 'paid', NULL, 1, NULL, '000000032', '', NULL, '2020-03-25 16:43:58', '18200.00', NULL, '0.00', 'percentage', '0', NULL, '0.00', NULL, NULL, '18200.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, NULL, 1, NULL, 0, NULL, 'days', 0, NULL, NULL, NULL, NULL, NULL, 0, '2020-03-25 11:43:58', '2020-03-25 11:43:58'),
+(324, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 19:22:29', '220000.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '220000.00', NULL, NULL, NULL, 'Transfer At 2020-04-10', 0, 0, '1.000', NULL, NULL, NULL, 306, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 14:22:29', '2020-04-10 14:22:29'),
+(325, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 19:22:29', '220000.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '220000.00', NULL, NULL, NULL, 'Transfer At 2020-04-10', 0, 0, '1.000', NULL, NULL, NULL, 305, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 14:22:29', '2020-04-10 14:22:29'),
+(326, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 19:29:14', '5000.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '5000.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 325, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(327, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 19:29:14', '5000.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '5000.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 326, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(328, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 19:29:14', '5000.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '5000.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 327, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(329, 1, 1, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 19:29:14', '5000.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '5000.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 328, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(330, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:04:57', '500.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '500.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 329, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 15:04:57', '2020-04-10 15:11:13'),
+(331, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:04:57', '500.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '500.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 330, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 15:04:57', '2020-04-10 15:11:13'),
+(332, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:04:57', '500.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '500.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 331, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 15:04:57', '2020-04-10 15:11:13'),
+(333, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:04:58', '500.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '500.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 332, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 15:04:58', '2020-04-10 15:11:13'),
+(334, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:09:40', '800.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '800.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 333, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:11:13'),
+(335, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:09:40', '800.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '800.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 334, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:11:12'),
+(336, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:09:40', '800.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '800.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 335, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:11:12'),
+(337, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:09:40', '800.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '800.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 336, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:11:12'),
+(338, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:09:40', '500.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '500.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 337, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:11:12'),
+(339, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:09:40', '500.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '500.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 338, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:11:12'),
+(340, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:09:40', '500.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '500.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 339, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:11:12'),
+(341, 1, 7, NULL, NULL, NULL, 'opening_stock', NULL, 'received', 0, 'paid', NULL, NULL, NULL, NULL, NULL, NULL, '2020-01-01 20:09:40', '500.00', NULL, '0.00', NULL, NULL, NULL, '0.00', NULL, NULL, '500.00', NULL, NULL, NULL, NULL, 0, 0, '1.000', NULL, NULL, NULL, 340, 1, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020-04-10 15:09:40', '2020-04-10 15:11:12');
 
 -- --------------------------------------------------------
 
@@ -8918,9 +9080,9 @@ CREATE TABLE IF NOT EXISTS `transaction_payments` (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `transaction_id` int(11) UNSIGNED DEFAULT NULL,
   `business_id` int(11) DEFAULT NULL,
-  `is_return` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Used during sales to return the change',
+  `is_return` tinyint(1) NOT NULL DEFAULT 0 COMMENT 'Used during sales to return the change',
   `is_convert` enum('no','gift_card','coupon','bonus_points') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `amount` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `amount` decimal(20,2) NOT NULL DEFAULT 0.00,
   `method` enum('cash','card','cheque','bank_transfer','custom_pay_1','custom_pay_2','custom_pay_3','other','gift_card','coupon','unknown','force_price','bonus_points') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `transaction_no` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `gift_card` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -8951,7 +9113,7 @@ CREATE TABLE IF NOT EXISTS `transaction_payments` (
   KEY `transaction_payments_transaction_id_foreign` (`transaction_id`),
   KEY `transaction_payments_created_by_index` (`created_by`),
   KEY `transaction_payments_parent_id_index` (`parent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `transaction_payments`
@@ -8991,7 +9153,8 @@ INSERT INTO `transaction_payments` (`id`, `transaction_id`, `business_id`, `is_r
 (36, 287, 1, 0, 'no', '12.00', 'cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'credit', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-27 17:24:13', 1, 1, NULL, NULL, NULL, 'SP2020/0036', NULL, '2020-02-28 00:24:13', '2020-02-28 00:24:13'),
 (37, 288, 1, 0, 'no', '6.95', 'cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'credit', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-29 09:57:43', 1, 1, NULL, NULL, NULL, 'SP2020/0037', NULL, '2020-02-29 16:57:43', '2020-02-29 16:57:43'),
 (38, 289, 1, 0, 'no', '888.00', 'cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'credit', NULL, NULL, NULL, NULL, NULL, NULL, '2020-02-29 13:17:58', 1, 1, NULL, NULL, NULL, 'SP2020/0038', NULL, '2020-02-29 20:17:58', '2020-02-29 20:17:58'),
-(39, 290, 1, 0, 'no', '7439.00', 'cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'credit', NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-06 19:05:10', 1, 1, NULL, NULL, NULL, 'SP2020/0039', NULL, '2020-03-06 14:05:10', '2020-03-06 14:05:10');
+(39, 290, 1, 0, 'no', '7439.00', 'cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'credit', NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-06 19:05:10', 1, 1, NULL, NULL, NULL, 'SP2020/0039', NULL, '2020-03-06 14:05:10', '2020-03-06 14:05:10'),
+(40, 323, 1, 0, 'no', '18200.00', 'cash', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'credit', NULL, NULL, NULL, NULL, NULL, NULL, '2020-03-25 16:43:58', 1, 1, NULL, NULL, NULL, 'SP2020/0040', NULL, '2020-03-25 11:43:58', '2020-03-25 11:43:58');
 
 -- --------------------------------------------------------
 
@@ -9006,18 +9169,18 @@ CREATE TABLE IF NOT EXISTS `transaction_sell_lines` (
   `product_id` int(10) UNSIGNED NOT NULL,
   `variation_id` int(10) UNSIGNED NOT NULL,
   `quantity` decimal(20,4) NOT NULL,
-  `quantity_returned` decimal(20,4) NOT NULL DEFAULT '0.0000',
-  `unit_price_before_discount` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `un_discount` int(11) NOT NULL DEFAULT '0',
+  `quantity_returned` decimal(20,4) NOT NULL DEFAULT 0.0000,
+  `unit_price_before_discount` decimal(20,2) NOT NULL DEFAULT 0.00,
+  `un_discount` int(11) NOT NULL DEFAULT 0,
   `unit_price` decimal(20,2) DEFAULT NULL,
   `line_discount_type` enum('fixed','percentage') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `line_discount_amount` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `line_discount_amount` decimal(20,2) NOT NULL DEFAULT 0.00,
   `unit_price_inc_tax` decimal(20,2) DEFAULT NULL,
   `item_tax` decimal(20,2) DEFAULT NULL,
   `tax_id` int(10) UNSIGNED DEFAULT NULL,
   `discount_id` int(11) DEFAULT NULL,
   `lot_no_line_id` int(11) DEFAULT NULL,
-  `sell_line_note` text COLLATE utf8mb4_unicode_ci,
+  `sell_line_note` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `res_service_staff_id` int(11) DEFAULT NULL,
   `res_line_order_status` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `parent_sell_line_id` int(11) DEFAULT NULL,
@@ -9029,7 +9192,7 @@ CREATE TABLE IF NOT EXISTS `transaction_sell_lines` (
   KEY `transaction_sell_lines_product_id_foreign` (`product_id`),
   KEY `transaction_sell_lines_variation_id_foreign` (`variation_id`),
   KEY `transaction_sell_lines_tax_id_foreign` (`tax_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `transaction_sell_lines`
@@ -9073,7 +9236,8 @@ INSERT INTO `transaction_sell_lines` (`id`, `transaction_id`, `product_id`, `var
 (39, 289, 258, 235, '4.0000', '0.0000', '222.00', 0, '222.00', 'percentage', '0.00', '222.00', '0.00', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2020-02-29 20:17:58', '2020-02-29 20:17:58'),
 (40, 290, 200, 177, '1.0000', '0.0000', '2222.00', 0, '1999.80', 'percentage', '10.00', '2222.00', '0.00', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2020-03-06 14:05:10', '2020-03-06 14:05:10'),
 (41, 290, 186, 163, '1.0000', '0.0000', '222.00', 0, '199.80', 'percentage', '10.00', '222.00', '0.00', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2020-03-06 14:05:10', '2020-03-06 14:05:10'),
-(42, 290, 204, 181, '15.0000', '0.0000', '333.00', 0, '299.70', 'percentage', '10.00', '333.00', '0.00', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2020-03-06 14:05:10', '2020-03-06 14:05:10');
+(42, 290, 204, 181, '15.0000', '0.0000', '333.00', 0, '299.70', 'percentage', '10.00', '333.00', '0.00', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2020-03-06 14:05:10', '2020-03-06 14:05:10'),
+(43, 323, 324, 300, '26.0000', '0.0000', '700.00', 0, '700.00', 'percentage', '0.00', '700.00', '0.00', NULL, NULL, NULL, '', NULL, NULL, NULL, NULL, '2020-03-25 11:43:58', '2020-03-25 11:43:58');
 
 -- --------------------------------------------------------
 
@@ -9088,14 +9252,14 @@ CREATE TABLE IF NOT EXISTS `transaction_sell_lines_purchase_lines` (
   `stock_adjustment_line_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'id from stock_adjustment_lines',
   `purchase_line_id` int(10) UNSIGNED NOT NULL COMMENT 'id from purchase_lines',
   `quantity` decimal(20,4) NOT NULL,
-  `qty_returned` decimal(20,4) NOT NULL DEFAULT '0.0000',
+  `qty_returned` decimal(20,4) NOT NULL DEFAULT 0.0000,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `sell_line_id` (`sell_line_id`),
   KEY `stock_adjustment_line_id` (`stock_adjustment_line_id`),
   KEY `purchase_line_id` (`purchase_line_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `transaction_sell_lines_purchase_lines`
@@ -9136,7 +9300,9 @@ INSERT INTO `transaction_sell_lines_purchase_lines` (`id`, `sell_line_id`, `stoc
 (33, 40, NULL, 153, '1.0000', '0.0000', '2020-03-06 14:05:10', '2020-03-06 14:05:10'),
 (34, 41, NULL, 139, '1.0000', '0.0000', '2020-03-06 14:05:10', '2020-03-06 14:05:10'),
 (35, 42, NULL, 157, '1.0000', '0.0000', '2020-03-06 14:05:10', '2020-03-06 14:05:10'),
-(36, 42, NULL, 0, '14.0000', '0.0000', '2020-03-06 14:05:10', '2020-03-06 14:05:10');
+(36, 42, NULL, 0, '14.0000', '0.0000', '2020-03-06 14:05:10', '2020-03-06 14:05:10'),
+(37, 43, NULL, 280, '5.0000', '0.0000', '2020-03-25 11:43:58', '2020-03-25 11:43:58'),
+(38, 43, NULL, 0, '21.0000', '0.0000', '2020-03-25 11:43:58', '2020-03-25 11:43:58');
 
 -- --------------------------------------------------------
 
@@ -9189,12 +9355,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `language` char(4) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'en',
   `contact_no` char(15) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` text COLLATE utf8mb4_unicode_ci,
+  `address` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` enum('active','inactive','terminated') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
-  `is_cmmsn_agnt` tinyint(1) NOT NULL DEFAULT '0',
-  `cmmsn_percent` decimal(4,2) NOT NULL DEFAULT '0.00',
-  `selected_contacts` tinyint(1) NOT NULL DEFAULT '0',
+  `is_cmmsn_agnt` tinyint(1) NOT NULL DEFAULT 0,
+  `cmmsn_percent` decimal(4,2) NOT NULL DEFAULT 0.00,
+  `selected_contacts` tinyint(1) NOT NULL DEFAULT 0,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -9208,7 +9374,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `business_id`, `business_location_id`, `surname`, `first_name`, `last_name`, `username`, `email`, `password`, `language`, `contact_no`, `address`, `remember_token`, `status`, `is_cmmsn_agnt`, `cmmsn_percent`, `selected_contacts`, `deleted_at`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'Mr', 'Admin', NULL, 'superadmin', 'talhachamp7003620@gmail.com', '$2y$10$OERdyRjIhcmZG9oLNC1W7O7dh1iPz0BmTY4tqucCQ4C52r1qeTRVS', 'en', NULL, NULL, 'KYRvOzRI9tzYufeGE5o7XFDjPBIgpyYPXhDCnnLugEQloS8cneCGhjrRa87O', 'active', 0, '0.00', 0, NULL, '2019-11-30 09:24:12', '2020-02-01 00:21:06'),
+(1, 1, 1, 'Mr', 'Admin', NULL, 'superadmin', 'talhachamp7003620@gmail.com', '$2y$10$OERdyRjIhcmZG9oLNC1W7O7dh1iPz0BmTY4tqucCQ4C52r1qeTRVS', 'en', NULL, NULL, 'io4qXfvy80jYlTRJ59BuRRhgLO5X2PHMpA2joN2fKhpx73X5vuvDTVNJNIzO', 'active', 0, '0.00', 0, NULL, '2019-11-30 09:24:12', '2020-02-01 00:21:06'),
 (2, 1, 2, 'Mr', 'User', 'Pos', 'shop1', 'user1pos@gmail.com', '$2y$10$tUoPg2pY1e4P8bHzOoju0.7pnkKkSFy7rsTdMTyHEjTrZ8Ofil9.O', 'en', NULL, NULL, 'Ev52ma65vn9BvsibdJDDea898kbn3wSiXffnu0rA79jmkMUJNAoUVtUfvJzj', 'active', 0, '0.00', 0, '2019-12-25 00:14:13', '2019-11-30 12:31:50', '2019-12-25 00:14:13'),
 (3, 1, 3, 'Mr', 'Adnan', 'Nazir', 'admin', 'admin@macaofashion.be', '$2y$10$7zluDZJ8ZqW9tX5o7isAzu1S9Tp0iHA8HA47BqjraS0DokSVAaxam', 'en', NULL, NULL, 'YcMNEjG5WHTRGKHvPKIueVPizl7TpQw0Gyt229xNk62L7rkKNWEmWFsIzRqO', 'active', 0, '0.00', 0, NULL, '2019-12-14 02:01:19', '2020-01-31 23:43:47'),
 (4, 1, 2, 'Mr', 'adnan', 'shop', 'cashier', 'aliraza0333630@gmail.com', '$2y$10$gnNB3u5u8ibngsPhBrEmzO9gQJEf0ZqTbtEqZ0RtrEi/T.Xkvewxy', 'en', NULL, NULL, 'Klt8Ea8OeWxMsppiEbrxxEVjbUhkPJjP6JBtw8f6amlt6wWFwSjQqcJGu4u9', 'active', 0, '0.00', 0, '2020-01-09 16:46:02', '2019-12-25 00:15:16', '2020-01-09 16:46:02'),
@@ -9245,8 +9411,8 @@ CREATE TABLE IF NOT EXISTS `variations` (
   `product_variation_id` int(10) UNSIGNED NOT NULL,
   `variation_value_id` int(11) DEFAULT NULL,
   `default_purchase_price` decimal(20,2) DEFAULT NULL,
-  `dpp_inc_tax` decimal(20,2) NOT NULL DEFAULT '0.00',
-  `profit_percent` decimal(20,2) NOT NULL DEFAULT '0.00',
+  `dpp_inc_tax` decimal(20,2) NOT NULL DEFAULT 0.00,
+  `profit_percent` decimal(20,2) NOT NULL DEFAULT 0.00,
   `default_sell_price` decimal(20,2) DEFAULT NULL,
   `sell_price_inc_tax` decimal(20,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -9258,7 +9424,7 @@ CREATE TABLE IF NOT EXISTS `variations` (
   KEY `variations_name_index` (`name`),
   KEY `variations_sub_sku_index` (`sub_sku`),
   KEY `variations_variation_value_id_index` (`variation_value_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=290 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=317 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `variations`
@@ -9497,7 +9663,7 @@ INSERT INTO `variations` (`id`, `name`, `product_id`, `sub_sku`, `product_variat
 (273, 'DUMMY', 297, '135039802', 273, NULL, '50000.00', '50000.00', '2.50', '51250.00', '51250.00', '2020-03-07 12:25:36', '2020-03-07 12:25:36', NULL),
 (274, 'DUMMY', 298, '135039803', 274, NULL, '2200.00', '2200.00', '0.00', '2200.00', '2200.00', '2020-03-07 15:34:24', '2020-03-07 15:34:24', NULL),
 (275, 'DUMMY', 299, '135039804', 275, NULL, '2200.00', '2200.00', '0.00', '2200.00', '2200.00', '2020-03-07 15:34:24', '2020-03-07 15:34:24', NULL),
-(276, 'DUMMY', 300, '135039805', 276, NULL, '2200.00', '2200.00', '0.00', '2200.00', '2200.00', '2020-03-07 15:34:24', '2020-03-07 15:34:24', NULL),
+(276, 'DUMMY', 300, '135039805', 276, NULL, '2200.00', '2200.00', '0.00', '2200.00', '700.00', '2020-03-07 15:34:24', '2020-03-20 15:42:34', NULL),
 (277, 'DUMMY', 301, '135039806', 277, NULL, '2200.00', '2200.00', '0.00', '2200.00', '2200.00', '2020-03-07 15:34:24', '2020-03-07 15:34:24', NULL),
 (278, 'DUMMY', 302, '135039807', 278, NULL, '2200.00', '2200.00', '0.00', '2200.00', '2200.00', '2020-03-07 15:34:24', '2020-03-07 15:34:24', NULL),
 (279, 'DUMMY', 303, '135039808', 279, NULL, '1600.00', '1600.00', '0.00', '1640.00', '1640.00', '2020-03-07 15:34:24', '2020-03-07 15:34:24', NULL),
@@ -9510,7 +9676,33 @@ INSERT INTO `variations` (`id`, `name`, `product_id`, `sub_sku`, `product_variat
 (286, 'DUMMY', 310, '135039815', 286, NULL, '1100.00', '1100.00', '0.00', '1127.50', '1127.50', '2020-03-08 12:21:28', '2020-03-08 12:21:28', NULL),
 (287, 'DUMMY', 311, '135039816', 287, NULL, '1100.00', '1100.00', '0.00', '1127.50', '1127.50', '2020-03-08 12:21:28', '2020-03-08 12:21:28', NULL),
 (288, 'DUMMY', 312, '135039817', 288, NULL, '1.00', '1.00', '0.00', '56.00', '56.00', '2020-03-08 13:02:43', '2020-03-08 13:02:43', NULL),
-(289, 'DUMMY', 313, '135039818', 289, NULL, '1.00', '1.00', '0.00', '54.00', '54.00', '2020-03-08 13:02:57', '2020-03-08 13:02:57', NULL);
+(289, 'DUMMY', 313, '135039818', 289, NULL, '1.00', '1.00', '0.00', '54.00', '54.00', '2020-03-08 13:02:57', '2020-03-08 13:02:57', NULL),
+(290, 'DUMMY', 314, '135039819', 290, NULL, '777.00', '777.00', '14.29', '888.00', '888.00', '2020-03-16 17:41:52', '2020-03-16 17:41:52', NULL),
+(291, 'DUMMY', 315, '135039820', 291, NULL, '777.00', '777.00', '14.29', '888.00', '888.00', '2020-03-16 17:41:52', '2020-03-16 17:41:52', NULL),
+(292, 'DUMMY', 316, '135039821', 292, NULL, '777.00', '777.00', '14.29', '888.00', '888.00', '2020-03-16 17:41:52', '2020-03-16 17:41:52', NULL),
+(294, 'DUMMY', 318, '135039823', 294, NULL, '777.00', '777.00', '28.57', '999.00', '999.00', '2020-03-17 03:35:52', '2020-03-17 03:35:52', NULL),
+(295, 'DUMMY', 319, '135039824', 295, NULL, '777.00', '777.00', '28.57', '999.00', '999.00', '2020-03-17 03:35:52', '2020-03-17 03:35:52', NULL),
+(296, 'DUMMY', 320, '135039825', 296, NULL, '777.00', '777.00', '28.57', '999.00', '999.00', '2020-03-17 03:35:52', '2020-03-17 03:35:52', NULL),
+(297, 'DUMMY', 321, '135039826', 297, NULL, '500.00', '500.00', '40.00', '700.00', '700.00', '2020-03-19 10:51:52', '2020-03-19 10:51:52', NULL),
+(298, 'DUMMY', 322, '135039827', 298, NULL, '500.00', '500.00', '40.00', '700.00', '700.00', '2020-03-19 10:51:52', '2020-03-19 10:51:52', NULL),
+(299, 'DUMMY', 323, '135039828', 299, NULL, '500.00', '500.00', '40.00', '700.00', '700.00', '2020-03-19 10:51:52', '2020-03-19 10:51:52', NULL),
+(300, 'DUMMY', 324, '135039829', 300, NULL, '500.00', '500.00', '40.00', '700.00', '900.00', '2020-03-19 10:51:52', '2020-03-25 10:23:07', NULL),
+(301, 'DUMMY', 325, '135039830', 301, NULL, '2200.00', '2200.00', '0.00', '2200.00', '2200.00', '2020-04-10 14:29:14', '2020-04-10 14:29:14', NULL),
+(302, 'DUMMY', 326, '135039831', 302, NULL, '2200.00', '2200.00', '0.00', '2200.00', '2200.00', '2020-04-10 14:29:14', '2020-04-10 14:29:14', NULL),
+(303, 'DUMMY', 327, '135039832', 303, NULL, '2200.00', '2200.00', '0.00', '2200.00', '2200.00', '2020-04-10 14:29:14', '2020-04-10 14:29:14', NULL),
+(304, 'DUMMY', 328, '135039833', 304, NULL, '2200.00', '2200.00', '0.00', '2200.00', '2200.00', '2020-04-10 14:29:14', '2020-04-10 14:29:14', NULL),
+(305, 'DUMMY', 329, '135039834', 305, NULL, '200.00', '200.00', '2.50', '205.00', '205.00', '2020-04-10 15:04:57', '2020-04-10 15:04:57', NULL),
+(306, 'DUMMY', 330, '135039835', 306, NULL, '200.00', '200.00', '2.50', '205.00', '205.00', '2020-04-10 15:04:57', '2020-04-10 15:04:57', NULL),
+(307, 'DUMMY', 331, '135039836', 307, NULL, '200.00', '200.00', '2.50', '205.00', '205.00', '2020-04-10 15:04:57', '2020-04-10 15:04:57', NULL),
+(308, 'DUMMY', 332, '135039837', 308, NULL, '200.00', '200.00', '2.50', '205.00', '205.00', '2020-04-10 15:04:58', '2020-04-10 15:04:58', NULL),
+(309, 'DUMMY', 333, '135039838', 309, NULL, '600.00', '600.00', '33.33', '800.00', '800.00', '2020-04-10 15:09:40', '2020-04-10 15:09:40', NULL),
+(310, 'DUMMY', 334, '135039839', 310, NULL, '600.00', '600.00', '33.33', '800.00', '800.00', '2020-04-10 15:09:40', '2020-04-10 15:09:40', NULL),
+(311, 'DUMMY', 335, '135039840', 311, NULL, '600.00', '600.00', '33.33', '800.00', '800.00', '2020-04-10 15:09:40', '2020-04-10 15:09:40', NULL),
+(312, 'DUMMY', 336, '135039841', 312, NULL, '600.00', '600.00', '33.33', '800.00', '800.00', '2020-04-10 15:09:40', '2020-04-10 15:09:40', NULL),
+(313, 'DUMMY', 337, '135039842', 313, NULL, '500.00', '500.00', '0.00', '500.00', '500.00', '2020-04-10 15:09:40', '2020-04-10 15:09:40', NULL),
+(314, 'DUMMY', 338, '135039843', 314, NULL, '500.00', '500.00', '0.00', '500.00', '500.00', '2020-04-10 15:09:40', '2020-04-10 15:09:40', NULL),
+(315, 'DUMMY', 339, '135039844', 315, NULL, '500.00', '500.00', '0.00', '500.00', '500.00', '2020-04-10 15:09:40', '2020-04-10 15:09:40', NULL),
+(316, 'DUMMY', 340, '135039845', 316, NULL, '500.00', '500.00', '0.00', '500.00', '500.00', '2020-04-10 15:09:40', '2020-04-10 15:09:40', NULL);
 
 -- --------------------------------------------------------
 
@@ -9552,7 +9744,7 @@ CREATE TABLE IF NOT EXISTS `variation_location_details` (
   KEY `variation_location_details_product_id_index` (`product_id`),
   KEY `variation_location_details_product_variation_id_index` (`product_variation_id`),
   KEY `variation_location_details_variation_id_index` (`variation_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=288 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=318 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `variation_location_details`
@@ -9803,20 +9995,49 @@ INSERT INTO `variation_location_details` (`id`, `product_id`, `product_variation
 (271, 297, 273, 273, 1, '1.0000', '2020-03-07 12:25:36', '2020-03-07 12:25:36'),
 (272, 298, 274, 274, 1, '1.0000', '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (273, 299, 275, 275, 1, '1.0000', '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
-(274, 300, 276, 276, 1, '1.0000', '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
+(274, 300, 276, 276, 7, '1.0000', '2020-03-07 15:34:24', '2020-04-10 15:16:48'),
 (275, 301, 277, 277, 1, '1.0000', '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (276, 302, 278, 278, 1, '1.0000', '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (277, 303, 279, 279, 1, '1.0000', '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
 (278, 304, 280, 280, 1, '1.0000', '2020-03-07 15:34:24', '2020-03-07 15:34:24'),
-(279, 305, 281, 281, 1, '2.0000', '2020-03-08 11:23:28', '2020-03-08 11:23:28'),
-(280, 306, 282, 282, 1, '3.0000', '2020-03-08 11:23:28', '2020-03-08 11:23:28'),
-(281, 307, 283, 283, 1, '1.0000', '2020-03-08 11:53:09', '2020-03-08 11:53:09'),
-(282, 308, 284, 284, 1, '1.0000', '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
-(283, 309, 285, 285, 1, '1.0000', '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
-(284, 310, 286, 286, 1, '1.0000', '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
-(285, 311, 287, 287, 1, '1.0000', '2020-03-08 12:21:28', '2020-03-08 12:21:28'),
+(279, 305, 281, 281, 1, '1.0000', '2020-03-08 11:23:28', '2020-04-10 14:22:29'),
+(280, 306, 282, 282, 1, '1.0000', '2020-03-08 11:23:28', '2020-04-15 18:40:21'),
+(281, 307, 283, 283, 7, '1.0000', '2020-03-08 11:53:09', '2020-04-10 14:22:29'),
+(282, 308, 284, 284, 7, '1.0000', '2020-03-08 12:21:28', '2020-04-10 14:22:29'),
+(283, 309, 285, 285, 7, '1.0000', '2020-03-08 12:21:28', '2020-04-12 15:11:41'),
+(284, 310, 286, 286, 7, '1.0000', '2020-03-08 12:21:28', '2020-04-10 14:22:29'),
+(285, 311, 287, 287, 7, '1.0000', '2020-03-08 12:21:28', '2020-04-10 14:22:28'),
 (286, 312, 288, 288, 1, '1.0000', '2020-03-08 13:02:43', '2020-03-08 13:02:43'),
-(287, 313, 289, 289, 1, '1.0000', '2020-03-08 13:02:57', '2020-03-08 13:02:57');
+(287, 313, 289, 289, 1, '1.0000', '2020-03-08 13:02:57', '2020-03-08 13:02:57'),
+(288, 314, 290, 290, 7, '20.0000', '2020-03-16 17:41:52', '2020-04-09 14:45:20'),
+(289, 315, 291, 291, 7, '30.0000', '2020-03-16 17:41:52', '2020-04-09 14:45:20'),
+(290, 316, 292, 292, 7, '40.0000', '2020-03-16 17:41:52', '2020-04-09 14:45:20'),
+(292, 318, 294, 294, 7, '3.0000', '2020-03-17 03:35:52', '2020-04-09 14:45:20'),
+(293, 319, 295, 295, 7, '4.0000', '2020-03-17 03:35:52', '2020-04-09 14:45:19'),
+(294, 320, 296, 296, 7, '5.0000', '2020-03-17 03:35:52', '2020-04-09 14:45:19'),
+(295, 321, 297, 297, 7, '1.0000', '2020-03-19 10:51:52', '2020-04-09 14:45:19'),
+(296, 322, 298, 298, 7, '14.0000', '2020-03-19 10:51:52', '2020-04-09 14:45:19'),
+(297, 323, 299, 299, 7, '1.0000', '2020-03-19 10:51:52', '2020-04-09 14:45:19'),
+(298, 324, 300, 300, 7, '10.0000', '2020-03-19 10:51:52', '2020-04-09 14:45:19'),
+(299, 324, 300, 300, 2, '-21.0000', '2020-03-25 10:18:55', '2020-03-25 11:43:58'),
+(300, 306, 282, 282, 7, '3.0000', '2020-04-10 14:22:29', '2020-04-12 15:44:39'),
+(301, 305, 281, 281, 7, '1.0000', '2020-04-10 14:22:29', '2020-04-10 14:22:29'),
+(302, 325, 301, 301, 1, '1.0000', '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(303, 326, 302, 302, 1, '1.0000', '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(304, 327, 303, 303, 1, '1.0000', '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(305, 328, 304, 304, 1, '1.0000', '2020-04-10 14:29:14', '2020-04-10 14:29:14'),
+(306, 329, 305, 305, 7, '1.0000', '2020-04-10 15:04:57', '2020-04-10 15:11:13'),
+(307, 330, 306, 306, 7, '1.0000', '2020-04-10 15:04:57', '2020-04-10 15:11:13'),
+(308, 331, 307, 307, 7, '1.0000', '2020-04-10 15:04:57', '2020-04-10 15:11:13'),
+(309, 332, 308, 308, 7, '1.0000', '2020-04-10 15:04:58', '2020-04-10 15:11:13'),
+(310, 333, 309, 309, 7, '1.0000', '2020-04-10 15:09:40', '2020-04-10 15:11:13'),
+(311, 334, 310, 310, 7, '1.0000', '2020-04-10 15:09:40', '2020-04-10 15:11:12'),
+(312, 335, 311, 311, 7, '1.0000', '2020-04-10 15:09:40', '2020-04-10 15:11:12'),
+(313, 336, 312, 312, 7, '1.0000', '2020-04-10 15:09:40', '2020-04-10 15:11:12'),
+(314, 337, 313, 313, 7, '1.0000', '2020-04-10 15:09:40', '2020-04-10 15:11:12'),
+(315, 338, 314, 314, 7, '1.0000', '2020-04-10 15:09:40', '2020-04-10 15:11:12'),
+(316, 339, 315, 315, 7, '1.0000', '2020-04-10 15:09:40', '2020-04-10 15:11:12'),
+(317, 340, 316, 316, 7, '1.0000', '2020-04-10 15:09:40', '2020-04-10 15:11:12');
 
 -- --------------------------------------------------------
 

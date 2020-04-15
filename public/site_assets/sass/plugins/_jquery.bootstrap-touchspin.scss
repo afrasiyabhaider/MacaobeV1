@@ -43,7 +43,6 @@
   width: 2rem;
   text-align: center;
   font-size: 1.2rem;
-  min-width: 0;
 
   &::before {
     position: relative;
@@ -52,7 +51,7 @@
     line-height: 1;
     width: auto;
     top: -.1rem;
-    margin-right: -.1rem;
+    margin-right: -.2rem;
   }
 }
 

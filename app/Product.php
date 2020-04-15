@@ -145,4 +145,9 @@ class Product extends Model
     {
         return $query->where('products.is_inactive', 0);
     }
+
+    public function special_category()
+    {
+        return $this->hasMany(SpecialCategoryProduct::class,'id','product_id');
+    }
 }

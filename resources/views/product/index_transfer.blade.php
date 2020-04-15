@@ -197,6 +197,7 @@
                         { data: 'mass_delete'},
                         { data: 'image', name: 'products.image'  },
                         { data: 'product', name: 'products.name'  },
+                        { data: 'refference', name: 'products.refference'  },
                         { data: 'purchase_price', name: 'purchase_price', searchable: false},
                         { data: 'selling_price', name: 'selling_price', searchable: false},
                         { data: 'color', name: 'color'},

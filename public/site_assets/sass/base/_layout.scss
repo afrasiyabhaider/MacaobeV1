@@ -29,7 +29,7 @@
 }
 
 .ajax-overlay {
-  display: -ms-flexbox;
+  -ms-display: flex;
   display: flex;
   position: fixed;
   top: 0;
@@ -44,11 +44,11 @@
 
 @include mq('xl') {
   .padding-left-lg {
-    padding-left: 35px;
+    padding-left: 45px;
   }
 
   .padding-right-lg {
-    padding-right: 35px;
+    padding-right: 45px;
   }
 
   .col-xl-5col {

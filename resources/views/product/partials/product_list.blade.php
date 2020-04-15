@@ -1,10 +1,23 @@
 
-<div class="table-responsive">
-<div class="row">
-    <div class="col-md-9"></div>
-         <div class="col-md-3" style="margin-bottom: 20px;">
+<div class="row"  style="margin-bottom: 20px;">
+    <div class="col-md-3">
+        <div class="@if((url()->current() == url('products')) ||(url()->current() == url('website/product/list')) ) hidden @endif"">
+            {!! Form::open(['url' => action('ProductController@massTransfer'), 'method' => 'post', 'id' => 'bulkTransfer_form','class' => 'ml-5' ]) !!}
+            {!! Form::hidden('selected_products_bulkTransfer', null, ['id' => 'selected_products_bulkTransfer']); !!}
+            {!! Form::hidden('selected_products_qty_bulkTransfer', null, ['id' => 'selected_products_qty_bulkTransfer']); !!}
+            {!! Form::hidden('bussiness_bulkTransfer', null, ['id' => 'bussiness_bulkTransfer']); !!}
+            {{-- {!! Form::submit(' Transfer Selected', array('class' => 'btn btn-warning', 'id' => 'bulkTransfer-selected')) !!} --}}
+            <button type="submit" class="btn btn-warning" id="bulkTransfer-selected">
+                <i class="fa fa-random"></i>
+                Transfer Selected
+            </button>
+            {!! Form::close() !!}
+        </div>
+    </div>
+    <div class="col-md-6"></div>
+    <div class="col-md-3 align-right">
         @can('product.create')
-            <a class="btn btn-primary pull-left" href="{{action('ProductController@create')}}">
+            <a class="btn btn-primary pull-left" href="{{url('products/bulk_add')}}">
                 <i class="fa fa-plus"></i> 
                 @lang('messages.add')
             </a>
@@ -18,16 +31,8 @@
                 {{-- {!! Form::submit('Print Selected', array('class' => 'btn btn-md btn-warning', 'id' => 'bulkPrint-selected')) !!} --}}
         {!! Form::close() !!}
     </div>
-    
-    <div class="col-3 pull-left @if(url()->current() == url('products')) hidden @endif">
-        {!! Form::open(['url' => action('ProductController@massTransfer'), 'method' => 'post', 'id' => 'bulkTransfer_form','class' => 'ml-5' ]) !!}
-            {!! Form::hidden('selected_products_bulkTransfer', null, ['id' => 'selected_products_bulkTransfer']); !!}
-            {!! Form::hidden('selected_products_qty_bulkTransfer', null, ['id' => 'selected_products_qty_bulkTransfer']); !!}
-            {!! Form::hidden('bussiness_bulkTransfer', null, ['id' => 'bussiness_bulkTransfer']); !!}
-            {!! Form::submit('Transfer Selected', array('class' => 'btn btn-md btn-warning', 'id' => 'bulkTransfer-selected')) !!}
-        {!! Form::close() !!}
-    </div>
 </div>
+<div class="table-responsive">
     <table class="table table-bordered table-striped ajax_view table-text-center" id="product_table">
         <thead>
             <tr>
@@ -37,6 +42,7 @@
                 </th>
                 <th>Image</th>
                 <th>@lang('sale.product')</th>
+                <th>Refference</th>
                 <th>Purchase Price</th>
                 <th>@lang('lang_v1.selling_price')</th>
                 <th>@lang('product.color')</th>

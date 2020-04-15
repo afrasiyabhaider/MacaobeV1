@@ -116,6 +116,7 @@ class ProductController extends Controller
                     'products.created_at',
                     'products.bulk_add',
                     'products.image',
+                    'products.refference',
                     'products.enable_stock',
                     'products.is_inactive',
                     'sizes.name as size',
@@ -328,6 +329,7 @@ class ProductController extends Controller
                     'products.bulk_add',
                     'products.image',
                     'products.enable_stock',
+                    'products.refference',
                     'products.is_inactive',
                     'sizes.name as size',
                     'colors.name as color',
@@ -2855,7 +2857,7 @@ class ProductController extends Controller
         if (!auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
-
+        
         try {
             $business_id = $request->session()->get('user.business_id');
             $form_fields = [
@@ -2869,7 +2871,7 @@ class ProductController extends Controller
                 'size_id',
                 'sub_size_id',
                 'qty',
-                'refference',
+                'refference_id',
                 'sku',
                 'color_id',
                 'single_dpp',
@@ -2878,7 +2880,8 @@ class ProductController extends Controller
                 'single_dsp',
                 'single_dsp_inc_tax', 'file'
             ];
-
+            // dd($form_fields);
+            // dd($request->only($form_fields));
             $objInputs = $request->only($form_fields);
             $requesst = $request->file('file');
             $bulkAddCode = "BCD" . $this->productUtil->getBulkSerial();
@@ -2900,7 +2903,7 @@ class ProductController extends Controller
                 $product_details['color_id'] = $objInputs['color_id'][$i];
                 $product_details['size_id'] = $objInputs['size_id'][$i];
                 $product_details['sub_size_id'] = $objInputs['sub_size_id'][$i];
-                $product_details['refference']  = $cRef = $objInputs['refference'][$i];
+                $product_details['refference']  = $cRef = $objInputs['refference_id'][$i];
 
 
 

@@ -3,255 +3,289 @@
     Home | {{config('app.site')}}
 @endsection
 @section('content')
-    <main class="main">
-            <section class="section section-bg section-parallax section-1" style="background-image: url('../../site_assets/images/bg-1.jpg');">
+    <div class="home-slider-container">
+        <div class="home-slider owl-carousel owl-theme owl-theme-light">
+            <div class="home-slide">
+                <div class="slide-bg owl-lazy" data-src="{{asset('site_assets/images/bg-2.jpg')}}" style="background-position:32% center;"></div><!-- End .slide-bg -->
                 <div class="container">
-                    <div class="section-header text-light">
-                        <h1 class="section-title text-light">FASHION</h1>
-                        {{-- <h2 class="section-subtitle">50% Off</h2> --}}
-
-                        <a href="category.html" class="btn btn-primary">Get the Offer</a>
-                    </div><!-- End .section-header -->
+                    <div class="row">
+                        <div class="col-md-5 offset-md-7">
+                            <div class="home-slide-content slide-content-big">
+                                <h1>Dresses</h1>
+                                <h3>
+                                    <span>up to </span>
+                                    <strong>30%</strong>
+                                    <span>OFF in the<br>collection</span>
+                                </h3>
+                                <a href="category.html" class="btn btn-primary">Shop Now</a>
+                            </div><!-- End .home-slide-content -->
+                        </div><!-- End .col-lg-5 -->
+                    </div><!-- End .row -->
                 </div><!-- End .container -->
-            </section><!-- End .section -->
+            </div><!-- End .home-slide -->
 
-            <section class="section section-big section-bg section-parallax section-2" style="background-image: url('../../site_assets/images/bg-2.jpg');">
-                <div class="container text-right">
-                    <div class="title-group">
-                        <h3>New Arrivals</h3>
-                        <h2>Fresh In Store<a href="category.html" class="btn btn-primary">Get the Offer</a></h2>
-                    </div><!-- .End .title-group -->
-                </div><!-- End .container -->
-
+            <div class="home-slide">
+                <div class="slide-bg owl-lazy" data-src="{{asset('site_assets/images/bg-1.jpg')}}" style="background-position:64% center;"></div><!-- End .slide-bg -->
                 <div class="container">
-                    <div class="section-products-carousel owl-carousel owl-theme">
-                        @foreach ($new_variation as $item)
-                            @if ($loop->iteration <= 40)
-                                <div class="product-default">
-                                    <figure>
-                                        <a href="#">
-                                            @if ($item->products()->first()->image != null)
-                                                <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="width:206px;height:206px">
-                                            @else
-                                                <img src="{{asset('img/default.png')}}" style="width:206px;height:206px">	    
-                                            @endif
-                                            {{-- <img src="{{asset('assets/images/products/home/product-1.jpg')}}"> --}}
-                                        </a>
-                                    </figure>
-                                    <div class="product-details">
-                                        <div class="ratings-container">
-                                            {{-- <div class="product-ratings">
-                                                <span class="ratings" style="width:80%"></span><!-- End .ratings -->
-                                                <span class="tooltiptext tooltip-top"></span>
-                                            </div><!-- End .product-ratings --> --}}
-                                        </div><!-- End .product-container -->
-                                        <h2 class="product-title">
-                                            <a href="product.html">
-                                                {{
-                                                    $item->products()->first()->name
-                                                }}
-                                            </a>
-                                        </h2>
-                                        <div class="price-box">
-                                            <span class="product-price">
-                                                &euro;
-                                                {{
-                                                    $item->products()->first()->variations()->first()->sell_price_inc_tax
-                                                }}
-                                            </span>
-                                        </div><!-- End .price-box -->
-                                        <div class="product-action">
-                                            <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                                            <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i>ADD TO CART</button>
-                                            <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View"><i class="fas fa-external-link-alt"></i></a> 
-                                        </div>
-                                    </div><!-- End .product-details -->
-                                </div>
-                            @endif
-                        @endforeach
-                    </div><!-- End .section-products-carousel -->
+                    <div class="row">
+                        <div class="col-md-5 offset-md-1">
+                            <div class="home-slide-content slide-content-big">
+                                <h1>Fashion</h1>
+                                <h3>
+                                    <span>up to </span>
+                                    <strong>70%</strong>
+                                    <span>OFF in the<br>collection</span>
+                                </h3>
+                                <a href="category.html" class="btn btn-primary">Shop Now</a>
+                            </div><!-- End .home-slide-content -->
+                        </div><!-- End .col-lg-5 -->
+                    </div><!-- End .row -->
                 </div><!-- End .container -->
-            </section><!-- End .section -->
+            </div><!-- End .home-slide -->
 
-            <section class="section section-big section-bg section-parallax section-3" style="background-image: url('../../site_assets/images/bg-3.jpg');">
+            <div class="home-slide">
+                <div class="slide-bg owl-lazy" data-src="{{asset('site_assets/images/bg-4.jpg')}}" style="background-position:64% center;"></div><!-- End .slide-bg -->
                 <div class="container">
-                    <div class="title-group">
-                        <h3>New Arrivals</h3>
-                        <h2>Fashion Sunglasses<a href="category.html" class="btn btn-primary">Get the Offer</a></h2>
-                    </div><!-- .End .title-group -->
+                    <div class="row">
+                        <div class="col-md-5 offset-md-1">
+                            <div class="home-slide-content slide-content-big">
+                                <h1>Fashion</h1>
+                                <h3>
+                                    <span>up to </span>
+                                    <strong>70%</strong>
+                                    <span>OFF in the<br>collection</span>
+                                </h3>
+                                <a href="category.html" class="btn btn-primary">Shop Now</a>
+                            </div><!-- End .home-slide-content -->
+                        </div><!-- End .col-lg-5 -->
+                    </div><!-- End .row -->
                 </div><!-- End .container -->
+            </div><!-- End .home-slide -->
+        </div><!-- End .home-slider -->
+    </div><!-- End .home-slider-container -->
 
-                <div class="container">
-                    <div class="section-products-carousel owl-carousel owl-theme">
-                        <div class="product-default">
-                            <figure>
-                                <a href="product.html">
-                                    <img src="assets/images/products/home/product-7.jpg">
-                                </a>
-                            </figure>
-                            <div class="product-details">
-                                <div class="ratings-container">
-                                    <div class="product-ratings">
-                                        <span class="ratings" style="width:80%"></span><!-- End .ratings -->
-                                        <span class="tooltiptext tooltip-top"></span>
-                                    </div><!-- End .product-ratings -->
-                                </div><!-- End .product-container -->
-                                <h2 class="product-title">
-                                    <a href="product.html">Product Short Name</a>
-                                </h2>
-                                <div class="price-box">
-                                    <span class="product-price">$9.00</span>
-                                </div><!-- End .price-box -->
-                                <div class="product-action">
-                                    <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                                    <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i>ADD TO CART</button>
-                                    <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View"><i class="fas fa-external-link-alt"></i></a> 
-                                </div>
-                            </div><!-- End .product-details -->
-                        </div>
-                        <div class="product-default">
-                            <figure>
-                                <a href="product.html">
-                                    <img src="assets/images/products/home/product-8.jpg">
-                                </a>
-                            </figure>
-                            <div class="product-details">
-                                <div class="ratings-container">
-                                    <div class="product-ratings">
-                                        <span class="ratings" style="width:80%"></span><!-- End .ratings -->
-                                        <span class="tooltiptext tooltip-top"></span>
-                                    </div><!-- End .product-ratings -->
-                                </div><!-- End .product-container -->
-                                <h2 class="product-title">
-                                    <a href="product.html">Product Short Name</a>
-                                </h2>
-                                <div class="price-box">
-                                    <span class="product-price">$9.00</span>
-                                </div><!-- End .price-box -->
-                                <div class="product-action">
-                                    <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                                    <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i>ADD TO CART</button>
-                                    <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View"><i class="fas fa-external-link-alt"></i></a> 
-                                </div>
-                            </div><!-- End .product-details -->
-                        </div>
-                        <div class="product-default">
-                            <figure>
-                                <a href="product.html">
-                                    <img src="assets/images/products/home/product-9.jpg">
-                                </a>
-                            </figure>
-                            <div class="product-details">
-                                <div class="ratings-container">
-                                    <div class="product-ratings">
-                                        <span class="ratings" style="width:80%"></span><!-- End .ratings -->
-                                        <span class="tooltiptext tooltip-top"></span>
-                                    </div><!-- End .product-ratings -->
-                                </div><!-- End .product-container -->
-                                <h2 class="product-title">
-                                    <a href="product.html">Product Short Name</a>
-                                </h2>
-                                <div class="price-box">
-                                    <span class="product-price">$9.00</span>
-                                </div><!-- End .price-box -->
-                                <div class="product-action">
-                                    <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                                    <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i>ADD TO CART</button>
-                                    <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View"><i class="fas fa-external-link-alt"></i></a> 
-                                </div>
-                            </div><!-- End .product-details -->
-                        </div>
-                        <div class="product-default">
-                            <figure>
-                                <a href="product.html">
-                                    <img src="assets/images/products/home/product-10.jpg">
-                                </a>
-                            </figure>
-                            <div class="product-details">
-                                <div class="ratings-container">
-                                    <div class="product-ratings">
-                                        <span class="ratings" style="width:80%"></span><!-- End .ratings -->
-                                        <span class="tooltiptext tooltip-top"></span>
-                                    </div><!-- End .product-ratings -->
-                                </div><!-- End .product-container -->
-                                <h2 class="product-title">
-                                    <a href="product.html">Product Short Name</a>
-                                </h2>
-                                <div class="price-box">
-                                    <span class="product-price">$9.00</span>
-                                </div><!-- End .price-box -->
-                                <div class="product-action">
-                                    <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                                    <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i>ADD TO CART</button>
-                                    <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View"><i class="fas fa-external-link-alt"></i></a> 
-                                </div>
-                            </div><!-- End .product-details -->
-                        </div>
-                        <div class="product-default">
-                            <figure>
-                                <a href="product.html">
-                                    <img src="assets/images/products/home/product-11.jpg">
-                                </a>
-                            </figure>
-                            <div class="product-details">
-                                <div class="ratings-container">
-                                    <div class="product-ratings">
-                                        <span class="ratings" style="width:80%"></span><!-- End .ratings -->
-                                        <span class="tooltiptext tooltip-top"></span>
-                                    </div><!-- End .product-ratings -->
-                                </div><!-- End .product-container -->
-                                <h2 class="product-title">
-                                    <a href="product.html">Product Short Name</a>
-                                </h2>
-                                <div class="price-box">
-                                    <span class="product-price">$9.00</span>
-                                </div><!-- End .price-box -->
-                                <div class="product-action">
-                                    <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                                    <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i>ADD TO CART</button>
-                                    <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View"><i class="fas fa-external-link-alt"></i></a> 
-                                </div>
-                            </div><!-- End .product-details -->
-                        </div>
-                        <div class="product-default">
-                            <figure>
-                                <a href="product.html">
-                                    <img src="assets/images/products/home/product-12.jpg">
-                                </a>
-                            </figure>
-                            <div class="product-details">
-                                <div class="ratings-container">
-                                    <div class="product-ratings">
-                                        <span class="ratings" style="width:80%"></span><!-- End .ratings -->
-                                        <span class="tooltiptext tooltip-top"></span>
-                                    </div><!-- End .product-ratings -->
-                                </div><!-- End .product-container -->
-                                <h2 class="product-title">
-                                    <a href="product.html">Product Short Name</a>
-                                </h2>
-                                <div class="price-box">
-                                    <span class="product-price">$9.00</span>
-                                </div><!-- End .price-box -->
-                                <div class="product-action">
-                                    <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                                    <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i>ADD TO CART</button>
-                                    <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View"><i class="fas fa-external-link-alt"></i></a> 
-                                </div>
-                            </div><!-- End .product-details -->
-                        </div>
-                    </div><!-- End .section-products-carousel -->
-                </div><!-- End .container -->
-            </section><!-- End .section -->
+    <div class="banners-container mb-4 mb-lg-6 mb-xl-8">
+        <div class="container">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <div class="banner">
+                        <div class="banner-content">
+                            <h3 class="banner-title">Sunglasses</h3>
 
-            <section class="section section-bg section-parallax section-4" style="background-image: url('../../site_assets/images/bg-4.jpg');">
-                <div class="container text-right">
-                    <div class="section-header">
-                        <h2 class="section-title"><span>Up to 70% OFF</span>Connect with</h2>
-                        <h3 class="section-subtitle">the best tech!</h3>
+                            <a href="category.html" class="btn">Shop now</a>
+                        </div><!-- End .banner-content -->
+                        <a href="#">
+                            <img src="{{asset('site_assets/images/banners/banner-1.jpg')}}" alt="banner">
+                        </a>
+                    </div><!-- End .banner -->
+                </div><!-- End .col-md-4 -->
+                <div class="col-md-4">
+                    <div class="banner">
+                        <div class="banner-content">
+                            <h3 class="banner-title">Woman Shoes</h3>
 
-                        <a href="category.html" class="btn btn-primary">Get the Offer</a>
-                    </div><!-- End .section-header -->
-                </div><!-- End .container -->
-            </section><!-- End .section -->
-       
+                            <a href="category.html" class="btn">Shop now</a>
+                        </div><!-- End .banner-content -->
+                        <a href="#">
+                            <img src="{{asset('site_assets/images/banners/banner-2.jpg')}}" alt="banner">
+                        </a>
+                    </div><!-- End .banner -->
+                </div><!-- End .col-md-4 -->
+                <div class="col-md-4">
+                    <div class="banner">
+                        <div class="banner-content">
+                            <h3 class="banner-title">Woman Bags</h3>
+
+                            <a href="category.html" class="btn">Shop now</a>
+                        </div><!-- End .banner-content -->
+                        <a href="#">
+                            <img src="{{asset('site_assets/images/banners/banner-3.jpg')}}" alt="banner">
+                        </a>
+                    </div><!-- End .banner -->
+                </div><!-- End .col-md-4 -->
+            </div><!-- End .row -->
+        </div><!-- End .container -->
+    </div><!-- End .banners-container -->
+
+    <div class="container mb-2 mb-lg-4 mb-xl-5">
+        <h2 class="title text-center mb-3">Weekly Featured Products</h2>
+        <div class="owl-carousel owl-theme featured-products">
+            <div class="product-default inner-quickview inner-icon">
+                <figure>
+                    <a href="product.html">
+                        <img src="{{asset('site_assets/images/products/product-1.jpg')}}">
+                        <img src="{{asset('site_assets/images/products/product-1-2.jpg')}}">
+                    </a>
+                    <div class="label-group">
+                        <div class="product-label label-cut">-20%</div>
+                    </div>
+                    <div class="btn-icon-group">
+                        <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
+                    </div>
+                    <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View">Quick View</a> 
+                </figure>
+                <div class="product-details">
+                    <div class="category-wrap">
+                        <div class="category-list">
+                            <a href="category.html" class="product-category">category</a>
+                        </div>
+                        <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
+                    </div>
+                    <h2 class="product-title">
+                        <a href="product.html">Women Fashion-Black</a>
+                    </h2>
+                    <div class="ratings-container">
+                        <div class="product-ratings">
+                            <span class="ratings" style="width:100%"></span><!-- End .ratings -->
+                            <span class="tooltiptext tooltip-top"></span>
+                        </div><!-- End .product-ratings -->
+                    </div><!-- End .product-container -->
+                    <div class="price-box">
+                        <span class="old-price">$90</span>
+                        <span class="product-price">$70</span>
+                    </div><!-- End .price-box -->
+                </div><!-- End .product-details -->
+            </div>
+        </div><!-- End .featured-products -->
+    </div><!-- End .container -->
+
+    <div class="promo-section" style="background-image: url(site_assets/images/promo-bg.jpg)">
+        <div class="container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <div class="promo-slider owl-carousel owl-theme owl-theme-light">
+                            <div class="promo-content">
+                                <h3>Up to <span>40%</span> Off<br> <strong>Special Promo</strong></h3>
+                                <a href="#" class="btn btn-primary">Purchase Now</a>
+                            </div><!-- Endd .promo-content -->
+
+                            <div class="promo-content">
+                                <h3>Up to <span>58%</span> Off<br> <strong>Holiday Promo</strong></h3>
+                                <a href="#" class="btn btn-primary">Purchase Now</a>
+                            </div><!-- Endd .promo-content -->
+                        </div><!-- End .promo-slider -->
+                    </div><!-- End .col-lg-6 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .container -->
+    </div><!-- End .promo-section -->
+
+    <div class="container mb-2 mb-lg-4 mb-xl-5">
+        <h2 class="title text-center mb-3">New Arrivals</h2>
+        <div class="owl-carousel owl-theme new-products">
+            @foreach ($data as $item)
+                @if ($loop->iteration <= 50)
+                    <div class="product-default inner-quickview inner-icon">
+                        <figure>
+                            <a href="product.html">
+                                <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                {{-- <img src="{{asset('site_assets/images/products/sunglasses/product-1-2.jpg')}}"> --}}
+                            </a>
+                            {{-- <div class="label-group">
+                                <div class="product-label label-cut">-20%</div>
+                            </div> --}}
+                            <div class="btn-icon-group">
+                                <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
+                            </div>
+                            <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View">Quick View</a> 
+                        </figure>
+                        <div class="product-details">
+                            <div class="category-wrap">
+                                <div class="category-list">
+                                    <a href="category.html" class="product-category">{{$item->products()->first()->category()->first()['name']}}</a>
+                                </div>
+                                <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
+                            </div>
+                            <h2 class="product-title">
+                                <a href="product.html">{{$item->products()->first()->name}}</a>
+                            </h2>
+                            {{-- <div class="ratings-container">
+                                <div class="product-ratings">
+                                    <span class="ratings" style="width:100%"></span><!-- End .ratings -->
+                                    <span class="tooltiptext tooltip-top"></span>
+                                </div><!-- End .product-ratings -->
+                            </div><!-- End .product-container --> --}}
+                            <div class="price-box">
+                                <span class="product-price">
+                                    <i class="fa fa-euro-sign"></i>
+                                    {{
+                                        $item->products()->first()->variations()->first()['sell_price_inc_tax']
+                                    }}
+                                </span>
+                            </div><!-- End .price-box -->
+                        </div><!-- End .product-details -->
+                    </div>
+                @endif
+            @endforeach
+        </div><!-- End .featured-products -->
+    </div><!-- End .container -->
+
+    <div class="blog-section">
+        <div class="container">
+            <h2 class="title text-center mb-3">From the Blog</h2>
+
+            <div class="blog-carousel owl-carousel owl-theme">
+                <article class="entry">
+                    <div class="entry-media">
+                        <a href="single.html">
+                            <img src="{{asset('site_assets/images/blog/home/post-1.jpg')}}" alt="Post">
+                        </a>
+                    </div><!-- End .entry-media -->
+
+                    <div class="entry-body">
+                        <h2 class="entry-title">
+                            <a href="single.html">Fashion news</a>
+                        </h2>
+                        <div class="entry-date">08-May-2018</div><!-- End .entry-date -->
+                        <div class="entry-content">
+                            <p>Lorem Ipsum is simply dummy text the printing and type setting unknown... </p>
+
+                            <a href="single.html" class="read-more">Read More <i class="icon-angle-right"></i></a>
+                        </div><!-- End .entry-content -->
+                    </div><!-- End .entry-body -->
+                </article><!-- End .entry -->
+
+                <article class="entry">
+                    <div class="entry-media">
+                        <a href="single.html">
+                            <img src="{{asset('site_assets/images/blog/home/post-2.jpg')}}" alt="Post">
+                        </a>
+                    </div><!-- End .entry-media -->
+
+                    <div class="entry-body">
+                        <h2 class="entry-title">
+                            <a href="single.html">Trends of Spring</a>
+                        </h2>
+                        <div class="entry-date">04-May-2018</div><!-- End .entry-date -->
+                        <div class="entry-content">
+                            <p>Lorem Ipsum is simply dummy text the printing and type setting unknown... </p>
+
+                            <a href="single.html" class="read-more">Read More <i class="icon-angle-right"></i></a>
+                        </div><!-- End .entry-content -->
+                    </div><!-- End .entry-body -->
+                </article><!-- End .entry -->
+
+                <article class="entry">
+                    <div class="entry-media">
+                        <a href="single.html">
+                            <img src="{{asset('site_assets/images/blog/home/post-3.jpg')}}" alt="Post">
+                        </a>
+                    </div><!-- End .entry-media -->
+
+                    <div class="entry-body">
+                        <h2 class="entry-title">
+                            <a href="single.html">Women News</a>
+                        </h2>
+                        <div class="entry-date">22-Mar-2018</div><!-- End .entry-date -->
+                        <div class="entry-content">
+                            <p>Lorem Ipsum is simply dummy text the printing and type setting unknown... </p>
+
+                            <a href="single.html" class="read-more">Read More <i class="icon-angle-right"></i></a>
+                        </div><!-- End .entry-content -->
+                    </div><!-- End .entry-body -->
+                </article><!-- End .entry -->
+            </div><!-- End .blog-carousel -->
+        </div><!-- End .container -->
+    </div><!-- End .blog-section -->
 @endsection

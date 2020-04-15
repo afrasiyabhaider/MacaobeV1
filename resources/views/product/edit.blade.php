@@ -177,8 +177,8 @@
 					</select>
 				</div>
 				<div class="col-md-4">
-					<label>Quantity *</label>
-					<input name="quantity" required="true" type="number" class="req form-control col-12" min="1" value="{{$product->purchase_lines()->first()->quantity}}" id="qty_id">
+          <label>Quantity *</label>
+					<input name="quantity" required="true" type="number" class="req form-control col-12" min="1" value="{{$product->variation_location_details()->first()->qty_available}}" id="qty_id">
 				</div>
 				<div class="col-md-4">
 					<label>Size *</label>

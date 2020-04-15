@@ -17,30 +17,19 @@
   }
 
   &::before {
+    z-index: 4;
     -webkit-animation: spin 1s infinite ease;
     animation: spin 1s infinite ease;
-    z-index: 4;
   }
 
   &::after {
+    z-index: 5;
     -webkit-animation: spin .5s infinite linear;
     animation: spin .5s infinite linear;
-    z-index: 5;
   }
 
   &.loaded::after,
   &.loaded::before {
     display: none;
-  }
-}
-
-@mixin aspect-ratio($width, $height) {
-  position: relative;
-
-  &::before {
-    display: block;
-    width: 100%;
-    padding-top: ($height / $width) * 100%;
-    content: '';
   }
 }

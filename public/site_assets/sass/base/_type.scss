@@ -5,15 +5,15 @@ h3, .h3,
 h4, .h4,
 h5, .h5,
 h6, .h6 {
+  margin-bottom: 1.8rem;
   color: $headings-text;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: 0;
   line-height: 1.1;
-  margin-bottom: 1.8rem;
 }
 
 h1, .h1 {
-  font-size: 3rem;
+  font-size: 3.6rem;
 }
 
 h2, .h2 {
@@ -21,11 +21,11 @@ h2, .h2 {
 }
 
 h3, .h3 {
-  font-size: 1.7rem;
+  font-size: 1.9rem;
 }
 
 h4, .h4 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 h5, .h5 {
@@ -49,8 +49,7 @@ a:focus {
 }
 
 .heading {
-  margin-bottom: 4rem;
-  font-size: 1.4rem;
+  margin-bottom: 5rem;
 
   .title {
     margin-bottom: 1.6rem;
@@ -58,37 +57,15 @@ a:focus {
 
   p {
     letter-spacing: -.015em;
+  }
 
-    &:last-child {
-      margin-bottom: 0;
-    }
+  p:last-child {
+    margin-bottom: 0;
   }
 }
 
 .title {
-  font-weight: 400;
-}
-
-.subtitle {
-  color: $primary-color;
-  font: 300 2.6rem / 1 $second-font-family;
-  letter-spacing: .1rem;
-  margin-bottom: 3.5rem;
-  position: relative;
   text-transform: uppercase;
-
-  span {
-    display: block;
-    font-size: 4.4rem;
-    font-weight: 400;
-    margin-top: .3rem;
-  }
-}
-
-.title-desc {
-  color: #282d3b;
-  font-size: 1.4rem;
-  line-height: 2;
 }
 
 .light-title {
@@ -100,41 +77,22 @@ a:focus {
   color: $primary-color !important;
 }
 
-.lead {
-  color: inherit;
-  font-size: 2.1rem;
-  font-weight: 300;
-  line-height: 1.4;
-  margin-bottom: 1rem;
-}
-
-.fancy-text {
-  color: $primary-color;
-  font-family: $third-font-family;
-
-  p & {
-    display: inline-block;
-    font-size: 1.6em;
-    margin-bottom: -.6rem;
-    margin-top: -1.5rem;
-    position: relative;
-    top: .3rem;
-  }
-}
-
 @include mq('md') {
   h1, .h1 {
-    font-size: 3.2rem;
+    font-size: 4.5rem;
   }
 
   h2, .h2 {
-    font-size: 2.4rem;
+    font-size: 2.5rem;
   }
 
+  h3, .h3 {
+    font-size: 2.2rem;
+  }
 }
 
 @include mq('lg') {
   h1, .h1 {
-    font-size: 3.6rem;
+    font-size: 5rem;
   }
 }

@@ -474,7 +474,7 @@
           <div class="col-md-1"><b>SubCategory</b></div>
           {{-- <div class="col-md-1"><b>Unit</b></div> --}}
           <div class="col-md-1"><b>Name</b></div>
-          {{-- <div class="col-md-1"><b>Refference</b></div> --}}
+          <div class="col-md-1"><b>Refference</b></div>
           <div class="col-md-1"><b>Unit Price</b></div>
           <div class="col-md-1"><b>Sale Price</b></div>
           <div class="col-md-1"><b>Color</b></div>
@@ -897,7 +897,12 @@
            
         }else
         {
-          html += ' <div class="col-md-'+size+' hide ss '+$(this).attr("id")+'"><input  name="'+$(this).attr("id")+'[]" type="text" class="custom-form-control" value="'+$(this).val()+'"/></div>';
+		if($(this).attr("id") == "refference_id"){
+			html += ' <div class="col-md-'+size+' ss'+$(this).attr("id")+'"><input  name="'+$(this).attr("id")+'[]" type="text" class="custom-form-control" value="'+$(this).val()+'"/></div>';
+
+		}else{
+			html += ' <div class="col-md-'+size+' hide ss '+$(this).attr("id")+'"><input  name="'+$(this).attr("id")+'[]" type="text" class="custom-form-control" value="'+$(this).val()+'"/></div>';
+		}
 
         }
          size = 1; 
