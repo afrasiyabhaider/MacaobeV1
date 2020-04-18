@@ -169,7 +169,7 @@
 								<div class="input-group">
 								
 								<span class="input-group-btn">
-								<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" onclick="$('#btnClose').focus();console.log('dnoe');"><i class="fa fa-plus-circle"></i> Choose Size</button>
+								<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" onclick="$('#btnClose').focus();console.log('done');"><i class="fa fa-plus-circle"></i> Choose Size</button>
 
 								</span>
 								</div>
@@ -542,6 +542,7 @@
         </div>
       <div class="modal-footer">
         <!-- <button type="button" class="btn btn-danger text-left " style="float: left;" onclick="AddSize();" >+</button> -->
+        <button type="button" class="btn btn-danger" onclick="clearAll(1);" data-dismiss="modal">Clear</button>
         <button type="button" class="btn btn-success" onclick="addAnother();" data-dismiss="modal">Add This</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
@@ -565,13 +566,20 @@
 		var x = Math.round(Math.random()*(0-200))+200;
 		editPnc(x);
 
-    	var arrName = objPNC[pncRow].split("@");
-    	$("#name_id").val(arrName[0]);
-    	$("#name").val(arrName[1]);
-    //console.log("Arr Name : "+arrName);
-    //    $("#unit_price").focus();
-       $("#refference_id").focus();
+		var arrName = objPNC[pncRow].split("@");
+		$("#name_id").val(arrName[0]);
+		$("#name").val(arrName[1]);
+		//console.log("Arr Name : "+arrName);
+		//    $("#unit_price").focus();
+		$("#refference_id").focus();
     });
+
+    //     window.onbeforeunload = function() {
+//         return "Do you really want to leave this page?";
+//         //if we return nothing here (just calling return;) then there will be no pop-up question at all
+//         //return;
+// 	  }
+
      objPNC = <?=$pnc?>;
      rowSize = 0;
      function editPnc(x)
@@ -598,7 +606,7 @@
      });
      function changeUnitPrice(obj)
      {
-		 console.log(obj.value);
+		//  console.log(obj.value);
         if(obj.value < 1)
         {
           alert("Please Enter Positve Value");
@@ -773,15 +781,18 @@
       $("#profit_percent").val(0);
       $("#"+target).change();
     }
-
+	/**
+    * ClearAll Starts Here
+    *
+    **/
     function clearAll(IsAnother = 0)
     {
       $(".sizeQty").val("0");
       countSize = 0;
       $("#sizeArea").empty();
-      var fieldsArr = ["supplier_id", "brand_id", "category_id", "name", "sku","upload_image","unit_price"];
-      var notIncludeArr = ["single_dpp", "single_dpp_inc_tax", "single_dsp", "single_dsp_inc_tax", "profit_percent","upload_image"];
-      var ignoreArr = ["supplier_id", "brand_id", "category_id", "sku", "name", "unit_price","custom_price"];
+      var fieldsArr = ["supplier_id", "brand_id",  "name", "sku","upload_image","unit_price"];
+     //  var notIncludeArr = ["single_dpp", "single_dpp_inc_tax", "single_dsp", "single_dsp_inc_tax", "profit_percent","upload_image"];
+      var ignoreArr = ["supplier_id", "brand_id", "category_id", "sku", "name", "unit_price","custom_price","single_dpp", "single_dpp_inc_tax", "single_dsp", "single_dsp_inc_tax", "profit_percent","upload_image","refference_id"];
 
 
       $(".req").each(function() {
@@ -824,6 +835,10 @@
       
        updateRefference();
     }
+    /**
+    * ClearAll Ends Here
+    *
+    **/
     function removeThisRow(row)
     {
       $("#product_row_"+row).remove();
@@ -875,7 +890,7 @@
       size = 1; 
 
       $(".req").each(function() { 
-        console.log($(this).attr("id"));
+     //    console.log($(this).attr("id"));
         if(fieldsArr.includes($(this).attr("id")))
         {
           if($(this).attr("type") == undefined)
@@ -961,11 +976,7 @@
      window.open(link, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=200,width=1200,height=800");
     }
 
-    window.onbeforeunload = function() {
-        return "Do you really want to leave this page?";
-        //if we return nothing here (just calling return;) then there will be no pop-up question at all
-        //return;
-	  }
+
 	  
 	// Get Products on right side
 		function get_product_suggestion_list(category_id, supplier_id, location_id, url = null) {
@@ -1059,7 +1070,7 @@
 		}
 
 		if (add_via_ajax) {
-			console.log("Variation ID : "+variation_id);
+			// console.log("Variation ID : "+variation_id);
 			$.ajax({
 				method: 'GET',
 				// SellPosController @ line 2484
