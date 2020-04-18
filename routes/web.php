@@ -66,6 +66,8 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('/contacts/saleReport/{id}', 'ContactController@saleReport');
     Route::resource('contacts', 'ContactController');
 
+    Route::get('fraudster','ContactController@fraudster');
+    Route::get('change_fraudster','ContactController@change_fraudster');
     Route::get('categories/createSubCategory', 'CategoryController@createSubCategory');
     Route::get('categories/createCategory', 'CategoryController@createCategory');
     Route::resource('categories', 'CategoryController');

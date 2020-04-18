@@ -27,65 +27,18 @@ class WebsiteController extends Controller
      */
     public function index()
     {
-         $business_location_id = BusinessLocation::where('name','Web Shop')->orWhere('name','webshop')->orWhere('name','web shop')->orWhere('name','Website')->orWhere('name','website')->pluck('id');
+         $business_location_id = BusinessLocation::where('name','Web Shop')->orWhere('name','webshop')->orWhere('name','web shop')->orWhere('name','Website')->orWhere('name','website')->orWhere('name','MACAO WEBSHOP')->pluck('id');
 
-        //  $variation_location = VariationLocationDetails::where('location_id',$location_id)->latest()->get();
-
-        //  dd($variation_location[0]->products()->first());
-         
-        // return view('website_products.index');
-
-        // if (!auth()->user()->can('product.view') && !auth()->user()->can('product.create')) {
-        //     abort(403, 'Unauthorized action.');
-        // }
+        if (!auth()->user()->can('product.view') && !auth()->user()->can('product.create')) {
+            abort(403, 'Unauthorized action.');
+        }
         $business_id = request()->session()->get('user.business_id');
         //Update USER SESSION
         $user_id = request()->session()->get('user.id');
         $user = \App\User::find($user_id);
         request()->session()->put('user', $user->toArray());
-        // $business_location_id = request()->session()->get('user.business_location_id');
         //Update USER SESSION
         $selling_price_group_count = SellingPriceGroup::countSellingPriceGroups($business_id);
-
-        // $products = Product::join('variation_location_details as vlds', 'products.id', '=', 'vlds.product_id')
-        //         ->join('units', 'products.unit_id', '=', 'units.id')
-        //         ->leftJoin('categories as c1', 'products.category_id', '=', 'c1.id')
-        //         ->leftJoin('categories as c2', 'products.sub_category_id', '=', 'c2.id')
-        //         ->leftJoin('tax_rates', 'products.tax', '=', 'tax_rates.id')
-        //         ->leftJoin('sizes', 'products.sub_size_id', '=', 'sizes.id')
-        //         ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
-        //         ->leftJoin('variation_location_details as vld', 'vld.product_id', '=', 'products.id')
-        //         ->join('variations as v', 'v.product_id', '=', 'products.id')->join('suppliers','suppliers.id','=','products.supplier_id')
-        //         ->where('products.business_id', $business_id)
-        //         ->where('vld.location_id', $business_location_id)
-        //         ->where('products.type', '!=', 'modifier')
-        //         ->select(
-        //             'products.id',
-        //             'products.name as product',
-        //             'products.type',
-        //             'products.supplier_id',
-        //             'suppliers.name as supplier_name',
-        //             'c1.name as category',
-        //             'c2.name as sub_category',
-        //             'units.actual_name as unit',
-        //             'tax_rates.name as tax',
-        //             'products.sku',
-        //             'products.created_at',
-        //             'products.bulk_add',
-        //             'products.image',
-        //             'products.enable_stock',
-        //             'products.refference',
-        //             'products.is_inactive',
-        //             'sizes.name as size',
-        //             'colors.name as color',
-        //             'v.dpp_inc_tax as purchase_price',
-        //             'v.sell_price_inc_tax as selling_price',
-        //             DB::raw('SUM(vld.qty_available) as current_stock'),
-        //             DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
-        //             DB::raw('MIN(v.sell_price_inc_tax) as min_price')
-        //         )->orderBy('vld.created_at','desc')->groupBy('products.id');
-
-                // dd($products->get());
 
         if (request()->ajax()) {
             $products = Product::leftJoin('variation_location_details as vlds', 'products.id', '=', 'vlds.product_id')
@@ -337,15 +290,10 @@ class WebsiteController extends Controller
             $special->discounted_price = null;
             $special->after_discount = null;
         }
-
-        // dd($request->input());
         $special->product_id = $product->id;
         $special->refference = $product->refference;
         $special->price = $product->variations()->first()->dpp_inc_tax;
 
-        // dd($special->sale);
-        // dd($request->input());
-        // dd($special->sale);
 
         $special->save();
 
