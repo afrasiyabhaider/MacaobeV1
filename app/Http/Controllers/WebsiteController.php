@@ -7,15 +7,17 @@ use App\Business;
 use App\BusinessLocation;
 use App\Category;
 use App\Product;
+use App\ProductImages;
 use App\SellingPriceGroup;
 use App\SpecialCategoryProduct;
 use App\Supplier;
 use App\TaxRate;
 use App\Unit;
 use App\VariationLocationDetails;
+use App\Utils\ProductUtil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 
 class WebsiteController extends Controller
@@ -29,6 +31,7 @@ class WebsiteController extends Controller
     {
          $business_location_id = BusinessLocation::where('name','Web Shop')->orWhere('name','webshop')->orWhere('name','web shop')->orWhere('name','Website')->orWhere('name','website')->orWhere('name','MACAO WEBSHOP')->pluck('id');
 
+         
         if (!auth()->user()->can('product.view') && !auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
@@ -158,6 +161,10 @@ class WebsiteController extends Controller
                                 '<li>
                                     <a href="' . action('WebsiteController@specialCategoriesForm', [$row->id]) . '">
                                     <i class="fa fa-sign-in"></i> Move To Special Category </a></li>';
+                            $html .=
+                                '<li>
+                                    <a href="' . action('WebsiteController@addImagesForm', [$row->id]) . '">
+                                    <i class="fa fa-image"></i> Add Images </a></li>';
                         }
 
                         $html .= '</ul></div>';
@@ -236,7 +243,7 @@ class WebsiteController extends Controller
     public function specialCategoriesForm($id)
     {
         $product = Product::find($id);
-        $special_product = SpecialCategoryProduct::where('product_id',$product->id)->first();
+        $special_product = SpecialCategoryProduct::where('refference',$product->refference)->first();
         // dd($special_product);
         return view('website_products.special_category',compact('product','special_product'));
     }
@@ -317,9 +324,15 @@ class WebsiteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function addImagesForm($id)
     {
-        //
+        $product = Product::find($id);
+        $product_images = ProductImages::where('refference',$product->refference)->get();
+
+        $all = Product::where('refference',$product->refference)->get();
+
+        // dd($all);
+        return view('website_products.images',compact('product','product_images'));
     }
 
     /**
@@ -328,21 +341,68 @@ class WebsiteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function addImages(Request $request,$id)
     {
-        //
+        $product = Product::find($id);
+        
+        try{
+            $image_index[0] = null;
+            $i=0;
+            foreach ($request->file('image') as $key => $value) {
+                $image_index[$i] = $key;
+                $i++;
+            }
+            for($i = 0; $i< count($image_index); $i++){
+                $product_images = new ProductImages();
+                
+                $file = $request->file('image')[$image_index[$i]];
+                $name = time().'.'.$file->extension();
+                $file->move(public_path().'/uploads/img/', $name);  
+                $product_images->product_id = $product->id;
+                $product_images->refference = $product->refference;
+                $product_images->image = $name;
+
+                $product_images->save();
+            }
+            $output = [
+                    'success' => 1,
+                    'msg' => "Images Saved"
+                ];
+        }
+        catch(\Exception $ex){
+                dd($ex->getMessage());
+            $output = [
+                'success' => 0,
+                'msg' => "Image Could not be Saved"
+            ];
+        }
+        return redirect()->back()->with('status',$output);
+
     }
 
     /**
-     * Update the specified resource in storage.
+     * Delete Image
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function deleteImage( $id)
     {
-        //
+        $product_image = ProductImages::find($id);
+        try {
+            $product_image->delete();
+        $output = [
+                    'success' => 1,
+                    'msg' => "Image Deleted"
+                ];
+            // 'website/product/list'
+        }
+        catch(\Exception $ex){
+            $output = [
+                'success' => 0,
+                'msg' => "Image Could not be deleted"
+            ];
+        }
+        return redirect()->back()->with('status',$output); //throw $th;
     }
 
     /**

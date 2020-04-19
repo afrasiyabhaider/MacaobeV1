@@ -366,6 +366,9 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('website/product/list','WebsiteController@index');
     Route::get('website/product/{id}/special_category','WebsiteController@specialCategoriesForm');
     Route::post('website/product/special_category','WebsiteController@addspecialCategories');
+    Route::get('website/product/{id}/images','WebsiteController@addImagesForm');
+    Route::post('website/product/{id}/images','WebsiteController@addImages');
+    Route::delete('website/product/{id}/images','WebsiteController@deleteImage');
 });
 
 Route::get('permission-reset', function () {

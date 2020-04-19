@@ -108,44 +108,99 @@
     </div><!-- End .banners-container -->
 
     <div class="container mb-2 mb-lg-4 mb-xl-5">
-        <h2 class="title text-center mb-3">Weekly Featured Products</h2>
+        <hr>
+            <h2 class="title text-center mb-3">Featured Products</h2>
+        <hr>
         <div class="owl-carousel owl-theme featured-products">
-            <div class="product-default inner-quickview inner-icon">
-                <figure>
-                    <a href="product.html">
-                        <img src="{{asset('site_assets/images/products/product-1.jpg')}}">
-                        <img src="{{asset('site_assets/images/products/product-1-2.jpg')}}">
-                    </a>
-                    <div class="label-group">
-                        <div class="product-label label-cut">-20%</div>
+            @if ($featured->count() > 0)
+                @foreach ($featured as $item)
+                    <div class="product-default inner-quickview inner-icon">
+                        <figure>
+                            <a href="#">
+                                @if ($item->products()->first()->image)
+                                    <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                    <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                @else
+                                    <img src="{{asset('img/default.png')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
+                                @endif
+                            </a>
+                            {{-- <div class="label-group">
+                                <div class="product-label label-cut">-20%</div>
+                            </div> --}}
+                            <div class="btn-icon-group">
+                                <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
+                            </div>
+                            <a href="#" class="btn-quickview" title="Detail View">
+                                View Details
+                            </a> 
+                        </figure>
+                        <div class="product-details">
+                            <div class="category-wrap">
+                                <div class="category-list">
+                                    <a href="category.html" class="product-category">{{$item->products()->first()->category()->first()['name']}}</a>
+                                </div>
+                                <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
+                            </div>
+                            <h2 class="product-title">
+                                <a href="#">{{$item->products()->first()->name}}</a>
+                            </h2>
+                            <div class="price-box">
+                                <span class="product-price">
+                                    <i class="fa fa-euro-sign"></i>
+                                    {{
+                                        $item->products()->first()->variations()->first()['sell_price_inc_tax']
+                                    }}
+                                </span>
+                            </div><!-- End .price-box -->
+                        </div><!-- End .product-details -->
                     </div>
-                    <div class="btn-icon-group">
-                        <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
+                @endforeach
+            @else
+                @foreach ($data as $item)
+                    <div class="product-default inner-quickview inner-icon">
+                        <figure>
+                            <a href="#">
+                                @if ($item->products()->first()->image)
+                                    <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                    <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                @else
+                                    <img src="{{asset('img/default.png')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
+                                @endif
+                            </a>
+                            {{-- <div class="label-group">
+                                <div class="product-label label-cut">-20%</div>
+                            </div> --}}
+                            <div class="btn-icon-group">
+                                <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
+                            </div>
+                            <a href="#" class="btn-quickview" title="Detail View">
+                                View Details
+                            </a> 
+                        </figure>
+                        <div class="product-details">
+                            <div class="category-wrap">
+                                <div class="category-list">
+                                    <a href="category.html" class="product-category">category</a>
+                                </div>
+                                <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
+                            </div>
+                            <h2 class="product-title">
+                                <a href="#">Women Fashion-Black</a>
+                            </h2>
+                            <div class="ratings-container">
+                                <div class="product-ratings">
+                                    <span class="ratings" style="width:100%"></span><!-- End .ratings -->
+                                    <span class="tooltiptext tooltip-top"></span>
+                                </div><!-- End .product-ratings -->
+                            </div><!-- End .product-container -->
+                            <div class="price-box">
+                                <span class="old-price">$90</span>
+                                <span class="product-price">$70</span>
+                            </div><!-- End .price-box -->
+                        </div><!-- End .product-details -->
                     </div>
-                    <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View">Quick View</a> 
-                </figure>
-                <div class="product-details">
-                    <div class="category-wrap">
-                        <div class="category-list">
-                            <a href="category.html" class="product-category">category</a>
-                        </div>
-                        <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                    </div>
-                    <h2 class="product-title">
-                        <a href="product.html">Women Fashion-Black</a>
-                    </h2>
-                    <div class="ratings-container">
-                        <div class="product-ratings">
-                            <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                            <span class="tooltiptext tooltip-top"></span>
-                        </div><!-- End .product-ratings -->
-                    </div><!-- End .product-container -->
-                    <div class="price-box">
-                        <span class="old-price">$90</span>
-                        <span class="product-price">$70</span>
-                    </div><!-- End .price-box -->
-                </div><!-- End .product-details -->
-            </div>
+                @endforeach
+            @endif
         </div><!-- End .featured-products -->
     </div><!-- End .container -->
 
@@ -172,15 +227,21 @@
     </div><!-- End .promo-section -->
 
     <div class="container mb-2 mb-lg-4 mb-xl-5">
-        <h2 class="title text-center mb-3">New Arrivals</h2>
+        <hr>
+            <h2 class="title text-center mb-3">New Arrivals</h2>
+        <hr>
         <div class="owl-carousel owl-theme new-products">
-            @foreach ($data as $item)
+            @foreach ($new_arrival as $item)
                 @if ($loop->iteration <= 50)
                     <div class="product-default inner-quickview inner-icon">
                         <figure>
-                            <a href="product.html">
-                                <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
-                                {{-- <img src="{{asset('site_assets/images/products/sunglasses/product-1-2.jpg')}}"> --}}
+                            <a href="#">
+                                @if ($item->products()->first()->image)
+                                         <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                        <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                   @else
+                                        <img src="{{asset('img/default.png')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
+                                   @endif
                             </a>
                             {{-- <div class="label-group">
                                 <div class="product-label label-cut">-20%</div>
@@ -188,7 +249,7 @@
                             <div class="btn-icon-group">
                                 <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
                             </div>
-                            <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View">Quick View</a> 
+                            <a href="#" class="btn-quickview" title="Quick View">View Details</a> 
                         </figure>
                         <div class="product-details">
                             <div class="category-wrap">
@@ -198,14 +259,8 @@
                                 <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
                             </div>
                             <h2 class="product-title">
-                                <a href="product.html">{{$item->products()->first()->name}}</a>
+                                <a href="#">{{$item->products()->first()->name}}</a>
                             </h2>
-                            {{-- <div class="ratings-container">
-                                <div class="product-ratings">
-                                    <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                    <span class="tooltiptext tooltip-top"></span>
-                                </div><!-- End .product-ratings -->
-                            </div><!-- End .product-container --> --}}
                             <div class="price-box">
                                 <span class="product-price">
                                     <i class="fa fa-euro-sign"></i>
@@ -221,7 +276,58 @@
         </div><!-- End .featured-products -->
     </div><!-- End .container -->
 
-    <div class="blog-section">
+    @if ($sale->count() > 0)
+    <div class="container mb-2 mb-lg-4 mb-xl-5">
+        <hr>
+        <h2 class="title text-center mb-3">On Sale Products</h2>
+        <hr>
+        <div class="owl-carousel owl-theme featured-products">
+                @foreach ($sale as $item)
+                    <div class="product-default inner-quickview inner-icon">
+                        <figure>
+                            <a href="#">
+                                @if ($item->products()->first()->image)
+                                    <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                    <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                @else
+                                    <img src="{{asset('img/default.png')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
+                                @endif
+                            </a>
+                            {{-- <div class="label-group">
+                                <div class="product-label label-cut">-20%</div>
+                            </div> --}}
+                            <div class="btn-icon-group">
+                                <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
+                            </div>
+                            <a href="#" class="btn-quickview" title="Detail View">
+                                View Details
+                            </a> 
+                        </figure>
+                        <div class="product-details">
+                            <div class="category-wrap">
+                                <div class="category-list">
+                                    <a href="category.html" class="product-category">{{$item->products()->first()->category()->first()['name']}}</a>
+                                </div>
+                                <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
+                            </div>
+                            <h2 class="product-title">
+                                <a href="#">{{$item->products()->first()->name}}</a>
+                            </h2>
+                            <div class="price-box">
+                                <span class="product-price">
+                                    <i class="fa fa-euro-sign"></i>
+                                    {{
+                                        $item->products()->first()->variations()->first()['sell_price_inc_tax']
+                                    }}
+                                </span>
+                            </div><!-- End .price-box -->
+                        </div><!-- End .product-details -->
+                    </div>
+                @endforeach
+            </div><!-- End .featured-products -->
+        </div><!-- End .container -->
+    @endif
+    {{-- <div class="blog-section">
         <div class="container">
             <h2 class="title text-center mb-3">From the Blog</h2>
 
@@ -287,5 +393,83 @@
                 </article><!-- End .entry -->
             </div><!-- End .blog-carousel -->
         </div><!-- End .container -->
-    </div><!-- End .blog-section -->
+    </div><!-- End .blog-section --> --}}
+    {{-- All Products --}}
+    <div class="promo-section" style="background-image: url(site_assets/images/promo-bg.jpg)">
+        <div class="container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <div class="promo-slider owl-carousel owl-theme owl-theme-light">
+                            <div class="promo-content">
+                                <h3>Up to <span>40%</span> Off<br> <strong>Special Promo</strong></h3>
+                                <a href="#" class="btn btn-primary">Purchase Now</a>
+                            </div><!-- Endd .promo-content -->
+
+                            <div class="promo-content">
+                                <h3>Up to <span>58%</span> Off<br> <strong>Holiday Promo</strong></h3>
+                                <a href="#" class="btn btn-primary">Purchase Now</a>
+                            </div><!-- Endd .promo-content -->
+                        </div><!-- End .promo-slider -->
+                    </div><!-- End .col-lg-6 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .container -->
+    </div><!-- End .promo-section -->
+
+    <div class="container mb-2 mb-lg-4 mb-xl-5">
+        <hr>
+            <h2 class="title text-center mb-3">All Products</h2>
+        <hr>
+        <div class="owl-carousel owl-theme new-products">
+            @foreach ($data as $item)
+                @if ($loop->iteration <= 50)
+                    <div class="product-default inner-quickview inner-icon">
+                        <figure>
+                            <a href="#">
+                                @if ($item->products()->first()->image)
+                                         <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                        <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                   @else
+                                        <img src="{{asset('img/default.png')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
+                                   @endif
+                            </a>
+                            {{-- <div class="label-group">
+                                <div class="product-label label-cut">-20%</div>
+                            </div> --}}
+                            <div class="btn-icon-group">
+                                <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
+                            </div>
+                            <a href="#" class="btn-quickview" title="Quick View">View Details</a> 
+                        </figure>
+                        <div class="product-details">
+                            <div class="category-wrap">
+                                <div class="category-list">
+                                    <a href="category.html" class="product-category">{{$item->products()->first()->category()->first()['name']}}</a>
+                                </div>
+                                <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
+                            </div>
+                            <h2 class="product-title">
+                                <a href="#">{{$item->products()->first()->name}}</a>
+                            </h2>
+                            {{-- <div class="ratings-container">
+                                <div class="product-ratings">
+                                    <span class="ratings" style="width:100%"></span><!-- End .ratings -->
+                                    <span class="tooltiptext tooltip-top"></span>
+                                </div><!-- End .product-ratings -->
+                            </div><!-- End .product-container --> --}}
+                            <div class="price-box">
+                                <span class="product-price">
+                                    <i class="fa fa-euro-sign"></i>
+                                    {{
+                                        $item->products()->first()->variations()->first()['sell_price_inc_tax']
+                                    }}
+                                </span>
+                            </div><!-- End .price-box -->
+                        </div><!-- End .product-details -->
+                    </div>
+                @endif
+            @endforeach
+        </div><!-- End .featured-products -->
+    </div><!-- End .container -->
 @endsection

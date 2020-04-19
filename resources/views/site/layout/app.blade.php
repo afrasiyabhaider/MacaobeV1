@@ -563,6 +563,6 @@
 
     @stack('scripts')
     <!-- Main JS File -->
-    <script src="{{asset('site_assets/js/main.min.js')}}"></script>
+    <script src="{{asset('site_assets/js/main.js')}}"></script>
 </body>
 </html>

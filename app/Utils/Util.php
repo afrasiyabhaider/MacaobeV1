@@ -512,6 +512,7 @@ class Util
             return null;
         }
         
+        // dd($request->file($file_name)[$index]);
         $uploaded_file_name = null;
         if ($request->hasFile($file_name) && $request->file($file_name)[$index]->isValid()) {
             if ($request->file($file_name)[$index]->getSize() <= config('constants.document_size_limit')) {

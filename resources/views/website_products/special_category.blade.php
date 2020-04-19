@@ -50,7 +50,7 @@
 								}}
 							</td>
 							<td>
-								<i class="fa fa-euro"></i>
+								{{-- <i class="fa fa-euro"></i> --}}
 								{{$product->variations()->first()->dpp_inc_tax}}
 							</td>
 					</tr>
