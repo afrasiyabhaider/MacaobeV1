@@ -22,37 +22,37 @@
 				<table class="table table-bordered table-active text-center">
 				<thead>
 					<tr>
-							<th>Image</th>
-							<th>Name</th>
-							<th>Refference</th>
-							<th>Price</th>
+						<th>Image</th>
+						<th>Name</th>
+						<th>Refference</th>
+						<th>Price</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-							<td>
-								<div class="col-md-12">
-									@if ($product->image != null)
-										<img src="{{asset('uploads/img/'.$product->image)}}" class="img-thumbnail img-responsive" style="width:100px" id="img-previewer" name="image">
-									@else
-										<img src="{{asset('img/default.png')}}" class="img-thumbnail img-responsive" style="width:100px" id="img-previewer" name="image">	    
-									@endif
-								</div>
-							</td>
-							<td>
-								{{
-									$product->name
-								}}
-							</td>
-							<td>
-								{{
-									$product->refference
-								}}
-							</td>
-							<td>
-								{{-- <i class="fa fa-euro"></i> --}}
-								{{$product->variations()->first()->dpp_inc_tax}}
-							</td>
+						<td>
+							<div class="col-md-12">
+								@if ($product->image != null)
+									<img src="{{asset('uploads/img/'.$product->image)}}" class="img-thumbnail img-responsive" style="width:100px" id="img-previewer" name="image">
+								@else
+									<img src="{{asset('img/default.png')}}" class="img-thumbnail img-responsive" style="width:100px" id="img-previewer" name="image">	    
+								@endif
+							</div>
+						</td>
+						<td>
+							{{
+								$product->name
+							}}
+						</td>
+						<td>
+							{{
+								$product->refference
+							}}
+						</td>
+						<td>
+							{{-- <i class="fa fa-euro"></i> --}}
+							{{$product->variations()->first()->dpp_inc_tax}}
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -66,6 +66,22 @@
 				</h3>
 			</div>
 		</div>
+		@if ($errors->any())
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="alert alert-danger">
+						<h4>
+							Remove Following error
+						</h4>
+						<ul>
+							@foreach ($errors->all() as $error)
+								<li>{{ $error }}</li>
+							@endforeach
+						</ul>
+					</div>
+				</div>
+			</div>
+		@endif
 		<form action="{{action('WebsiteController@addspecialCategories')}}" method="post" class="padding-10">
 			@csrf
 			<input type="hidden" name="p_id" value="{{$product->id}}">
@@ -106,12 +122,23 @@
 					{{-- <label>
 						Sale Percentage
 					</label> --}}
-					<input type="number"  @if (!is_null($special_product) && $special_product->sale_percentage)
-					value="{{$special_product->sale_percentage}}"
-					@endif name="sale_percent" class="form-control" id="sale_percent" placeholder="Enter Sale Percentage 1-100 Number only" min="1" max="100">
+					<input type="number"  @if (!is_null($special_product) && $special_product->after_discount)
+					value="{{$special_product->after_discount}}"
+					@endif name="after_discount" class="form-control" id="sale_percent" placeholder="Enter Sale Price e.g 35.79" min="1">
 				</div>
 			</div>
 			<div class="row">
+				<div class="col-12">
+					<textarea name="description" id="product_description" cols="30" rows="10" class="col-sm-6">
+						<span disabled class="read-only">
+							@if (!is_null($special_product))
+								{{$special_product->description}}
+							@endif
+						</span>
+					</textarea>
+				</div>
+			</div>
+			<div class="row" style="margin-top:20px">
 				<div class="col-sm-6 justify-content-center">
 					<button type="submit" class="btn btn-success col-sm-3" id="submit_btn">
 						Save
@@ -194,7 +221,12 @@
   transform: rotate(45deg);
 }
 </style>
+	<script src="{{asset('AdminLTE/plugins/ckeditor/ckeditor.js')}}"></script>
 	<script type="text/javascript">
+		$(function () {
+			CKEDITOR.config.height = 120;
+			CKEDITOR.replace('product_description');
+		});
 		$("#sale_value").hide();
 		$("#submit_btn").attr("disabled",true);
 		/**

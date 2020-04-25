@@ -86,7 +86,7 @@
 
                             <a href="category.html" class="btn">Shop now</a>
                         </div><!-- End .banner-content -->
-                        <a href="#">
+                        <a href="">
                             <img src="{{asset('site_assets/images/banners/banner-2.jpg')}}" alt="banner">
                         </a>
                     </div><!-- End .banner -->
@@ -116,7 +116,7 @@
                 @foreach ($featured as $item)
                     <div class="product-default inner-quickview inner-icon">
                         <figure>
-                            <a href="#">
+                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">
                                 @if ($item->products()->first()->image)
                                     <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
                                     <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
@@ -130,20 +130,25 @@
                             <div class="btn-icon-group">
                                 <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
                             </div>
-                            <a href="#" class="btn-quickview" title="Detail View">
+                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}" class="btn-quickview" title="Detail View">
                                 View Details
                             </a> 
                         </figure>
                         <div class="product-details">
                             <div class="category-wrap">
                                 <div class="category-list">
-                                    <a href="category.html" class="product-category">{{$item->products()->first()->category()->first()['name']}}</a>
+                                    <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}" class="product-category">{{$item->products()->first()->category()->first()['name']}}</a>
                                 </div>
-                                <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
                             </div>
-                            <h2 class="product-title">
-                                <a href="#">{{$item->products()->first()->name}}</a>
+                            <h2>
+                                <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">{{$item->products()->first()->name}}</a>
                             </h2>
+                            <span>
+                                Product Code:
+                                {{
+                                    $item->products()->first()->refference
+                                }}
+                            </span>
                             <div class="price-box">
                                 <span class="product-price">
                                     <i class="fa fa-euro-sign"></i>
@@ -173,29 +178,36 @@
                             <div class="btn-icon-group">
                                 <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
                             </div>
-                            <a href="#" class="btn-quickview" title="Detail View">
+                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}" class="btn-quickview" title="Detail View">
                                 View Details
                             </a> 
                         </figure>
                         <div class="product-details">
                             <div class="category-wrap">
                                 <div class="category-list">
-                                    <a href="category.html" class="product-category">category</a>
+                                    <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}" class="product-category">category</a>
                                 </div>
                                 <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
                             </div>
-                            <h2 class="product-title">
+                            {{-- <h2 class="product-title">
                                 <a href="#">Women Fashion-Black</a>
+                            </h2> --}}
+                             <h2>
+                                <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">{{$item->products()->first()->name}}</a>
                             </h2>
-                            <div class="ratings-container">
-                                <div class="product-ratings">
-                                    <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                    <span class="tooltiptext tooltip-top"></span>
-                                </div><!-- End .product-ratings -->
-                            </div><!-- End .product-container -->
+                            <span>
+                                Product Code:
+                                {{
+                                    $item->products()->first()->refference
+                                }}
+                            </span>
                             <div class="price-box">
-                                <span class="old-price">$90</span>
-                                <span class="product-price">$70</span>
+                                <span class="product-price">
+                                    <i class="fa fa-euro-sign"></i>
+                                    {{
+                                        $item->products()->first()->variations()->first()['sell_price_inc_tax']
+                                    }}
+                                </span>
                             </div><!-- End .price-box -->
                         </div><!-- End .product-details -->
                     </div>
@@ -235,7 +247,7 @@
                 @if ($loop->iteration <= 50)
                     <div class="product-default inner-quickview inner-icon">
                         <figure>
-                            <a href="#">
+                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">
                                 @if ($item->products()->first()->image)
                                          <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
                                         <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
@@ -249,18 +261,29 @@
                             <div class="btn-icon-group">
                                 <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
                             </div>
-                            <a href="#" class="btn-quickview" title="Quick View">View Details</a> 
+                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}" class="btn-quickview" title="Quick View">View Details</a> 
                         </figure>
                         <div class="product-details">
                             <div class="category-wrap">
                                 <div class="category-list">
                                     <a href="category.html" class="product-category">{{$item->products()->first()->category()->first()['name']}}</a>
                                 </div>
-                                <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
+                                {{-- <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a> --}}
                             </div>
-                            <h2 class="product-title">
-                                <a href="#">{{$item->products()->first()->name}}</a>
+                            {{-- <h2 class="product-title">
+                                <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">
+                                    {{$item->products()->first()->name}}
+                                </a>
+                            </h2> --}}
+                             <h2>
+                                <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">{{$item->products()->first()->name}}</a>
                             </h2>
+                            <span>
+                                Product Code:
+                                {{
+                                    $item->products()->first()->refference
+                                }}
+                            </span>
                             <div class="price-box">
                                 <span class="product-price">
                                     <i class="fa fa-euro-sign"></i>
@@ -285,7 +308,7 @@
                 @foreach ($sale as $item)
                     <div class="product-default inner-quickview inner-icon">
                         <figure>
-                            <a href="#">
+                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">
                                 @if ($item->products()->first()->image)
                                     <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
                                     <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
@@ -299,7 +322,7 @@
                             <div class="btn-icon-group">
                                 <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
                             </div>
-                            <a href="#" class="btn-quickview" title="Detail View">
+                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}" class="btn-quickview" title="Detail View">
                                 View Details
                             </a> 
                         </figure>
@@ -308,11 +331,20 @@
                                 <div class="category-list">
                                     <a href="category.html" class="product-category">{{$item->products()->first()->category()->first()['name']}}</a>
                                 </div>
-                                <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
+                                {{-- <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a> --}}
                             </div>
-                            <h2 class="product-title">
-                                <a href="#">{{$item->products()->first()->name}}</a>
+                            {{-- <h2 class="product-title">
+                                <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">{{$item->products()->first()->name}}</a>
+                            </h2> --}}
+                             <h2>
+                                <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">{{$item->products()->first()->name}}</a>
                             </h2>
+                            <span>
+                                Product Code:
+                                {{
+                                    $item->products()->first()->refference
+                                }}
+                            </span>
                             <div class="price-box">
                                 <span class="product-price">
                                     <i class="fa fa-euro-sign"></i>
@@ -426,7 +458,7 @@
                 @if ($loop->iteration <= 50)
                     <div class="product-default inner-quickview inner-icon">
                         <figure>
-                            <a href="#">
+                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">
                                 @if ($item->products()->first()->image)
                                          <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
                                         <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
@@ -440,7 +472,7 @@
                             <div class="btn-icon-group">
                                 <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
                             </div>
-                            <a href="#" class="btn-quickview" title="Quick View">View Details</a> 
+                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}" class="btn-quickview" title="Quick View">View Details</a> 
                         </figure>
                         <div class="product-details">
                             <div class="category-wrap">
@@ -449,9 +481,18 @@
                                 </div>
                                 <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
                             </div>
-                            <h2 class="product-title">
-                                <a href="#">{{$item->products()->first()->name}}</a>
+                            {{-- <h2 class="product-title">
+                                <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">{{$item->products()->first()->name}}</a>
+                            </h2> --}}
+                             <h2>
+                                <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">{{$item->products()->first()->name}}</a>
                             </h2>
+                            <span>
+                                Product Code:
+                                {{
+                                    $item->products()->first()->refference
+                                }}
+                            </span>
                             {{-- <div class="ratings-container">
                                 <div class="product-ratings">
                                     <span class="ratings" style="width:100%"></span><!-- End .ratings -->

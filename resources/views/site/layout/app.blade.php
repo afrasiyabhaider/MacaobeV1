@@ -31,19 +31,25 @@
     <!-- Plugins CSS File -->
     <link rel="stylesheet" href="{{asset('site_assets/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('site_assets/fontawesome/css/all.min.css')}}">
+    <link rel="stylesheet" href="{{asset('plugins/tailselect/css/modern/tail.select-light.css')}}">
 
-    @stack('css')
+    @yield('css')
     <!-- Main CSS File -->
     <link rel="stylesheet" href="{{asset('site_assets/css/style.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/app.css')}}">
 </head>
 <body>
     <div class="page-wrapper">
-        <header class="header header-transparent bg-dark">
+         {{-- header-transparent bg-dark --}}
+        <header class="header">
             <div class="header-middle sticky-header">
                 <div class="container">
                     <div class="header-left">
-                        <a href="index.html" class="logo">
-                            <img src="{{asset('site_assets/images/logo.png')}}" alt="{{config('app.site')}} Logo">
+                        @php
+                            $logo = App\Business::first()->logo;
+                        @endphp
+                        <a href="{{url('/')}}">
+                            <img src="{{asset('uploads/business_logos/'.$logo)}}" alt="brand name">
                         </a>
                     </div><!-- End .header-left -->
 
@@ -315,7 +321,7 @@
         </header><!-- End .header -->
 
         {{-- Main Content starts Here --}}
-        <main class="main">
+        <main class="main ">
             @yield('content')
         </main>
         {{-- Main Content ends Here --}}
@@ -557,11 +563,20 @@
 
     <!-- Plugins JS File -->
     <script src="{{asset('site_assets/js/jquery.min.js')}}"></script>
+    <script src="{{ asset('js/share.js') }}"></script>
+    <script src="{{asset('js/app.js')}}"></script>
     <script src="{{asset('site_assets/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('site_assets/js/plugins.min.js')}}"></script>
     <script src="{{asset('site_assets/fontawesome/js/all.min.js')}}"></script>
-
-    @stack('scripts')
+    <script src="{{asset('plugins/tailselect/js/tail.select.min.js')}}"></script>
+    <script>
+        $(function () {
+            tail.select('.select2',{
+                search: true,
+            });
+        });
+    </script>
+    @yield('scripts')
     <!-- Main JS File -->
     <script src="{{asset('site_assets/js/main.js')}}"></script>
 </body>

@@ -21,9 +21,8 @@ class CreateSpecialCategoryProductsTable extends Migration
             $table->enum('new_arrival',[0,1])->default(0);
             $table->enum('sale',[0,1])->default(0);
             $table->decimal('price',20,2);
-            $table->tinyInteger('sale_percentage')->nullable();
-            $table->decimal('discounted_price',20,2)->nullable();
             $table->decimal('after_discount',20,2)->nullable();
+            $table->text('description');
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products');

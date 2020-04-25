@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\BusinessLocation;
+use App\Color;
 use App\Product;
+use App\ProductImages;
 use App\ProductVariation;
+use App\Size;
 use App\SpecialCategoryProduct;
 use App\VariationLocationDetails;
 use Illuminate\Http\Request;
@@ -34,4 +37,45 @@ class SiteController extends Controller
         return view('site.home',compact('data','featured','new_arrival','sale'));
     }
 
+    /**
+     *  Product Detail
+     *
+     **/
+    public function detail($id)
+    {   
+        $id = decrypt($id);
+        
+        $product = Product::find($id);
+
+        $special_category = SpecialCategoryProduct::where('refference',$product->refference)->first();
+        
+        $images = ProductImages::where('refference',$product->refference)->get();
+        
+        // dd($special_category);
+
+        $color_ids = Product::where('refference',$product->refference)->distinct()->orderBy('color_id','asc')->pluck('color_id');
+        
+        $colors = Color::whereIn('id',$color_ids)->get();
+        
+        $size_ids = Product::where('refference',$product->refference)->distinct()->orderBy('color_id','asc')->pluck('sub_size_id');
+        
+        $sizes = Size::whereIn('id',$size_ids)->get();
+        
+        $product_ids = Product::where('refference',$product->refference)->pluck('id');
+
+        // dd($product_ids);
+
+        $web_product = VariationLocationDetails::whereIn('product_id',$product_ids)->get();
+
+        // $social = Share::page('http://jorenvanhocht.be', 'Share title')
+        //                 ->facebook()
+        //                 ->twitter()
+        //                 ->linkedin('Extra linkedin summary can be passed here')
+        //                 ->whatsapp();
+        // dd($social);   
+
+        // dd($sizes);
+
+        return view('site.detail',compact('product','special_category','images','colors','sizes','web_product'));
+    }
 }

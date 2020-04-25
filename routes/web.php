@@ -398,3 +398,4 @@ Route::get('force-logout', function () {
  */
 
 Route::get('/', 'SiteController@home')->name('site.home');
+Route::get('product/{id}/detail', 'SiteController@detail')->name('product.detail');

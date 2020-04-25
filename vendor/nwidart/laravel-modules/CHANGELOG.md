@@ -4,6 +4,14 @@ All Notable changes to `laravel-modules` will be documented in this file.
 
 ## Next
 
+## 7.1.0 - 2020-04-14
+
+### Changed
+
+- `php artsian module:enable` will enable all modules
+- `php artsian module:disable` will disable
+- Updating Laravel Mix version as well as cross-env. 
+
 ## 7.0.0 - 2020-03-26
 
 ### Added

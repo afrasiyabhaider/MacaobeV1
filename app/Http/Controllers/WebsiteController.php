@@ -243,8 +243,11 @@ class WebsiteController extends Controller
     public function specialCategoriesForm($id)
     {
         $product = Product::find($id);
+
         $special_product = SpecialCategoryProduct::where('refference',$product->refference)->first();
+
         // dd($special_product);
+
         return view('website_products.special_category',compact('product','special_product'));
     }
 
@@ -256,6 +259,9 @@ class WebsiteController extends Controller
      */
     public function addspecialCategories(Request $request)
     {
+        $request->validate([
+            'description' => 'required|min:20'
+        ]);
         $product = Product::find($request->input('p_id'));
         // dd($product->variations()->first()->dpp_inc_tax);
         if (!is_null($product->refference)) {
@@ -269,36 +275,37 @@ class WebsiteController extends Controller
         
         // dd($special);
         if ($request->has('featured')) {
-            $special->featured = 1;
+            $special->featured = '1';
         }else{
-            $special->featured = 0;
+            $special->featured = '0';
         }
         
         if ($request->has('new_arrival')) {
-            $special->new_arrival = 1;
+            $special->new_arrival = '1';
         }else{
-            $special->new_arrival = 0;
+            $special->new_arrival = '0';
             
         }
         $product_price = $product->variations()->first()->dpp_inc_tax;
         if ($request->has('sale')) {
             
-            $percentage = $request->input('sale_percent')/100;
-            $discounted_price =  $product_price * $percentage;
-            $after_discount = $product_price - $discounted_price;
+            // $percentage = $request->input('sale_percent')/100;
+            // $discounted_price =  $product_price * $percentage;
+            // $after_discount = $product_price - $discounted_price;
             
-            $special->sale = 1;
-            $special->sale_percentage = $request->input('sale_percent');
-            $special->discounted_price = $discounted_price;
-            $special->after_discount = $after_discount;
+            $special->sale = '1';
+            $special->after_discount = $request->input('after_discount');
+            // $special->sale_percentage = $request->input('sale_percent');
+            // $special->discounted_price = $discounted_price;
         }else{
-            $special->sale = 0;
-            $special->sale_percentage = null;
-            $special->discounted_price = null;
+            $special->sale = '0';
+            // $special->sale_percentage = null;
+            // $special->discounted_price = null;
             $special->after_discount = null;
         }
         $special->product_id = $product->id;
         $special->refference = $product->refference;
+        $special->description = $request->input('description');
         $special->price = $product->variations()->first()->dpp_inc_tax;
 
 
