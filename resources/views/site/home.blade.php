@@ -64,64 +64,34 @@
         </div><!-- End .home-slider -->
     </div><!-- End .home-slider-container -->
 
-    <div class="banners-container mb-4 mb-lg-6 mb-xl-8">
-        <div class="container">
-            <div class="row no-gutters">
-                <div class="col-md-4">
-                    <div class="banner">
-                        <div class="banner-content">
-                            <h3 class="banner-title">Sunglasses</h3>
-
-                            <a href="category.html" class="btn">Shop now</a>
-                        </div><!-- End .banner-content -->
-                        <a href="#">
-                            <img src="{{asset('site_assets/images/banners/banner-1.jpg')}}" alt="banner">
-                        </a>
-                    </div><!-- End .banner -->
-                </div><!-- End .col-md-4 -->
-                <div class="col-md-4">
-                    <div class="banner">
-                        <div class="banner-content">
-                            <h3 class="banner-title">Woman Shoes</h3>
-
-                            <a href="category.html" class="btn">Shop now</a>
-                        </div><!-- End .banner-content -->
-                        <a href="">
-                            <img src="{{asset('site_assets/images/banners/banner-2.jpg')}}" alt="banner">
-                        </a>
-                    </div><!-- End .banner -->
-                </div><!-- End .col-md-4 -->
-                <div class="col-md-4">
-                    <div class="banner">
-                        <div class="banner-content">
-                            <h3 class="banner-title">Woman Bags</h3>
-
-                            <a href="category.html" class="btn">Shop now</a>
-                        </div><!-- End .banner-content -->
-                        <a href="#">
-                            <img src="{{asset('site_assets/images/banners/banner-3.jpg')}}" alt="banner">
-                        </a>
-                    </div><!-- End .banner -->
-                </div><!-- End .col-md-4 -->
-            </div><!-- End .row -->
-        </div><!-- End .container -->
-    </div><!-- End .banners-container -->
-
+    @include('site.partials.slider-card')
+    <div class="container mb-2 mb-lg-4 mb-xl-5">
+        <hr>
+            <h2 class="title text-center mb-3">Products</h2>
+        <hr>
+         @include('site.partials.all_products')
+    </div>
     <div class="container mb-2 mb-lg-4 mb-xl-5">
         <hr>
             <h2 class="title text-center mb-3">Featured Products</h2>
         <hr>
-        <div class="owl-carousel owl-theme featured-products">
-            @if ($featured->count() > 0)
+        @if ($featured->count() > 0)
+            <div class="owl-carousel owl-theme featured-products">
                 @foreach ($featured as $item)
                     <div class="product-default inner-quickview inner-icon">
                         <figure>
                             <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">
-                                @if ($item->products()->first()->image)
-                                    <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
-                                    <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                @php
+                                    $images = App\ProductImages::where('refference',$item->products()->first()->refference)->get();
+                                @endphp
+                                @if (!is_null($images) && $images->count() > 0)
+                                    <img src="{{asset('uploads/img/'.$images[0]->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                    @if (isset($images[1]) && $images[1])
+                                        <img src="{{asset('uploads/img/'.$images[1]->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                    @endif
                                 @else
-                                    <img src="{{asset('img/default.png')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
+                                    <img src="{{asset('img/product-placeholder-1.jpg')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
+                                    <img src="{{asset('img/product-placeholder-2.jpg')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
                                 @endif
                             </a>
                             {{-- <div class="label-group">
@@ -160,60 +130,10 @@
                         </div><!-- End .product-details -->
                     </div>
                 @endforeach
-            @else
-                @foreach ($data as $item)
-                    <div class="product-default inner-quickview inner-icon">
-                        <figure>
-                            <a href="#">
-                                @if ($item->products()->first()->image)
-                                    <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
-                                    <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
-                                @else
-                                    <img src="{{asset('img/default.png')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
-                                @endif
-                            </a>
-                            {{-- <div class="label-group">
-                                <div class="product-label label-cut">-20%</div>
-                            </div> --}}
-                            <div class="btn-icon-group">
-                                <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
-                            </div>
-                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}" class="btn-quickview" title="Detail View">
-                                View Details
-                            </a> 
-                        </figure>
-                        <div class="product-details">
-                            <div class="category-wrap">
-                                <div class="category-list">
-                                    <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}" class="product-category">category</a>
-                                </div>
-                                <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                            </div>
-                            {{-- <h2 class="product-title">
-                                <a href="#">Women Fashion-Black</a>
-                            </h2> --}}
-                             <h2>
-                                <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">{{$item->products()->first()->name}}</a>
-                            </h2>
-                            <span>
-                                Product Code:
-                                {{
-                                    $item->products()->first()->refference
-                                }}
-                            </span>
-                            <div class="price-box">
-                                <span class="product-price">
-                                    <i class="fa fa-euro-sign"></i>
-                                    {{
-                                        $item->products()->first()->variations()->first()['sell_price_inc_tax']
-                                    }}
-                                </span>
-                            </div><!-- End .price-box -->
-                        </div><!-- End .product-details -->
-                    </div>
-                @endforeach
-            @endif
-        </div><!-- End .featured-products -->
+            </div><!-- End .featured-products -->
+        @else
+            @include('site.partials.all_products')
+        @endif
     </div><!-- End .container -->
 
     <div class="promo-section" style="background-image: url(site_assets/images/promo-bg.jpg)">
@@ -239,6 +159,7 @@
     </div><!-- End .promo-section -->
 
     <div class="container mb-2 mb-lg-4 mb-xl-5">
+
         <hr>
             <h2 class="title text-center mb-3">New Arrivals</h2>
         <hr>
@@ -248,12 +169,18 @@
                     <div class="product-default inner-quickview inner-icon">
                         <figure>
                             <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">
-                                @if ($item->products()->first()->image)
-                                         <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
-                                        <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
-                                   @else
-                                        <img src="{{asset('img/default.png')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
-                                   @endif
+                                @php
+                                    $images = App\ProductImages::where('refference',$item->products()->first()->refference)->get();
+                                @endphp
+                                @if (!is_null($images) && $images->count() > 0)
+                                    <img src="{{asset('uploads/img/'.$images[0]->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                    @if (isset($images[1]) && $images[1])
+                                        <img src="{{asset('uploads/img/'.$images[1]->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                    @endif
+                                @else
+                                    <img src="{{asset('img/product-placeholder-1.jpg')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
+                                    <img src="{{asset('img/product-placeholder-2.jpg')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
+                                @endif
                             </a>
                             {{-- <div class="label-group">
                                 <div class="product-label label-cut">-20%</div>
@@ -300,20 +227,26 @@
     </div><!-- End .container -->
 
     @if ($sale->count() > 0)
-    <div class="container mb-2 mb-lg-4 mb-xl-5">
-        <hr>
-        <h2 class="title text-center mb-3">On Sale Products</h2>
-        <hr>
-        <div class="owl-carousel owl-theme featured-products">
+        <div class="container mb-2 mb-lg-4 mb-xl-5">
+            <hr>
+            <h2 class="title text-center mb-3">On Sale Products</h2>
+            <hr>
+            <div class="owl-carousel owl-theme featured-products">
                 @foreach ($sale as $item)
                     <div class="product-default inner-quickview inner-icon">
                         <figure>
                             <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">
-                                @if ($item->products()->first()->image)
-                                    <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
-                                    <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                @php
+                                    $images = App\ProductImages::where('refference',$item->products()->first()->refference)->get();
+                                @endphp
+                                @if (!is_null($images) && $images->count() > 0)
+                                    <img src="{{asset('uploads/img/'.$images[0]->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                    @if (isset($images[1]) && $images[1])
+                                        <img src="{{asset('uploads/img/'.$images[1]->image)}}" style="height:300px;width:300px" class="img-thumbnail">
+                                    @endif
                                 @else
-                                    <img src="{{asset('img/default.png')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
+                                    <img src="{{asset('img/product-placeholder-1.jpg')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
+                                    <img src="{{asset('img/product-placeholder-2.jpg')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
                                 @endif
                             </a>
                             {{-- <div class="label-group">
@@ -453,64 +386,6 @@
         <hr>
             <h2 class="title text-center mb-3">All Products</h2>
         <hr>
-        <div class="owl-carousel owl-theme new-products">
-            @foreach ($data as $item)
-                @if ($loop->iteration <= 50)
-                    <div class="product-default inner-quickview inner-icon">
-                        <figure>
-                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">
-                                @if ($item->products()->first()->image)
-                                         <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
-                                        <img src="{{asset('uploads/img/'.$item->products()->first()->image)}}" style="height:300px;width:300px" class="img-thumbnail">
-                                   @else
-                                        <img src="{{asset('img/default.png')}}" id="preview1" alt="Image 1 Preview Here" style="height:300px;width:300px" class="img-thumbnail">
-                                   @endif
-                            </a>
-                            {{-- <div class="label-group">
-                                <div class="product-label label-cut">-20%</div>
-                            </div> --}}
-                            <div class="btn-icon-group">
-                                <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
-                            </div>
-                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}" class="btn-quickview" title="Quick View">View Details</a> 
-                        </figure>
-                        <div class="product-details">
-                            <div class="category-wrap">
-                                <div class="category-list">
-                                    <a href="category.html" class="product-category">{{$item->products()->first()->category()->first()['name']}}</a>
-                                </div>
-                                <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                            </div>
-                            {{-- <h2 class="product-title">
-                                <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">{{$item->products()->first()->name}}</a>
-                            </h2> --}}
-                             <h2>
-                                <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">{{$item->products()->first()->name}}</a>
-                            </h2>
-                            <span>
-                                Product Code:
-                                {{
-                                    $item->products()->first()->refference
-                                }}
-                            </span>
-                            {{-- <div class="ratings-container">
-                                <div class="product-ratings">
-                                    <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                    <span class="tooltiptext tooltip-top"></span>
-                                </div><!-- End .product-ratings -->
-                            </div><!-- End .product-container --> --}}
-                            <div class="price-box">
-                                <span class="product-price">
-                                    <i class="fa fa-euro-sign"></i>
-                                    {{
-                                        $item->products()->first()->variations()->first()['sell_price_inc_tax']
-                                    }}
-                                </span>
-                            </div><!-- End .price-box -->
-                        </div><!-- End .product-details -->
-                    </div>
-                @endif
-            @endforeach
-        </div><!-- End .featured-products -->
+        @include('site.partials.all_products')
     </div><!-- End .container -->
 @endsection

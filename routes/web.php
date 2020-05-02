@@ -74,6 +74,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
 
     Route::resource('variation-templates', 'VariationTemplateController');
 
+    Route::get('/products', 'ProductController@index');
     Route::post('/products/bulkUpdate', 'ProductController@bulkUpdate');
     Route::post('/products/mass-deactivate', 'ProductController@massDeactivate');
     Route::get('/products/transfer', 'ProductController@transfer');
@@ -399,3 +400,9 @@ Route::get('force-logout', function () {
 
 Route::get('/', 'SiteController@home')->name('site.home');
 Route::get('product/{id}/detail', 'SiteController@detail')->name('product.detail');
+
+Route::get('product/{ref}/color/{id}', 'SiteController@get_color_sizes');
+Route::get('product/{ref}/color/{color}/size/{size}', 'SiteController@get_color_size_qty');
+Route::get('product/{ref}/size/{size}', 'SiteController@get_size_qty');
+Route::get('product/list', 'SiteController@all_products');
+Route::get('products/category/{id}', 'SiteController@products_by_category');

@@ -108,28 +108,11 @@
                                    {{-- <div class="product-desc">
                                         <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non.</p>
                                    </div><!-- End .product-desc --> --}}
-
-                                   <div class="product-filters-container">
-                                        <div class="product-single-filter">
-                                             <label>Sizes:</label>
-                                             <select name="color" class="form-control col-6 select2">
-                                                  <optgroup>
-                                                       <option value="0">
-                                                            Choose Size
-                                                       </option>
-                                                       @foreach ($sizes as $item)
-                                                  <option value="{{$item->id}}">
-                                                       {{$item->name}}
-                                                  </option>
-                                                       @endforeach
-                                                  </optgroup>
-                                             </select>
-                                        </div><!-- End .product-single-filter -->
-                                   </div>
+                              <input type="hidden" name="refference" value="{{$product->refference}}" id="refference">
                                    <div class="product-filters-container">
                                         <div class="product-single-filter">
                                              <label>Colors:</label>
-                                             <select name="color" class="form-control col-6 select2">
+                                             <select name="color" class="form-control col-6 select2 change-filter">
                                                   <optgroup>
                                                        <option value="0">
                                                             Choose Color
@@ -141,24 +124,26 @@
                                                        @endforeach
                                                   </optgroup>
                                              </select>
-                                             {{-- <ul class="config-swatch-list">
-                                                  <li class="active">
-                                                       <a href="#" style="background-color: #6085a5;"></a>
-                                                  </li>
-                                                  <li>
-                                                       <a href="#" style="background-color: #ab6e6e;"></a>
-                                                  </li>
-                                                  <li>
-                                                       <a href="#" style="background-color: #b19970;"></a>
-                                                  </li>
-                                                  <li>
-                                                       <a href="#" style="background-color: #11426b;"></a>
-                                                  </li>
-                                             </ul> --}}
+                                        </div><!-- End .product-single-filter -->
+                                   </div>
+
+                                   <div class="product-filters-container">
+                                        <div class="product-single-filter">
+                                             <label>Sizes:</label>
+                                             <select id="size" name="size" class="form-control col-6 select2 change-filter">
+                                                  <option value="0">
+                                                       Choose Size
+                                                  </option>
+                                                       @foreach ($sizes as $item)
+                                                  <option value="{{$item->id}}">
+                                                       {{$item->name}}
+                                                  </option>
+                                                       @endforeach
+                                             </select>
                                         </div><!-- End .product-single-filter -->
                                    </div>
                                    <!-- End .product-filters-container -->
-                                   <strong class="@if ($web_product->sum('qty_available') < 3)
+                                   <strong id="old_qty" class="@if ($web_product->sum('qty_available') < 3)
                                        text-danger 
                                    @endif">
                                         In Stock:
@@ -166,23 +151,26 @@
                                              $web_product->sum('qty_available')
                                         }} Items
                                    </strong>
+                                   <strong id="new_qty">
+                                        
+                                   </strong>
                                    <div class="product-action product-all-icons pt-5">
-                                        <div class="product-single-qty">
+                                        {{-- <div class="product-single-qty">
                                              <input class="horizontal-quantity form-control" type="text">
                                         </div><!-- End .product-single-qty -->
 
                                         <a href="#" class="paction add-cart" title="Add to Cart">
                                              <span>Add to Cart</span>
-                                        </a>
+                                        </a> --}}
                                    </div><!-- End .product-action -->
                                    {{-- @dd(Share::currentPage()->facebook()) --}}
                                    <div class="product-single-share">
-                                        <label>Share:</label>
+                                        {{-- <label>Share:</label> --}}
+                                        {{-- {!! Share::currentPage()->twitter()->facebook() !!} --}}
                                         <!-- www.addthis.com share plugin-->
                                         {{-- @dd(Share::currentPage()->twitter()->facebook()->pinterest()) --}}
                                         {{-- <p>
                                              Here
-                                             {!! Share::page( url('/'), 'Message Content')->twitter()->facebook()->pinterest() !!}
                                         </p> --}}
                                         {{-- <div class="addthis_inline_share_toolbox">
                                              <i class="fab fa-facebook"></i>
@@ -244,152 +232,67 @@
                               </ul>
                          </div><!-- End .widget -->
 
-                         <div class="widget widget-banner">
-                              <div class="banner banner-image">
-                                   <a href="#">
-                                   <img src="assets/images/banners/banner-sidebar.jpg" alt="Banner Desc">
-                                   </a>
-                              </div><!-- End .banner -->
-                         </div><!-- End .widget -->
-
                          <div class="widget widget-featured">
                               <h3 class="widget-title">Featured Products</h3>
                               
                               <div class="widget-body">
                                    <div class="owl-carousel widget-featured-products">
-                                   <div class="featured-col">
-                                        <div class="product-default left-details product-widget">
-                                             <figure>
-                                                  <a href="product.html">
-                                                       <img src="assets/images/products/product-10.jpg">
-                                                  </a>
-                                             </figure>
-                                             <div class="product-details">
-                                                  <h2 class="product-title">
-                                                       <a href="product.html">Product Short Name</a>
-                                                  </h2>
-                                                  <div class="ratings-container">
-                                                       <div class="product-ratings">
-                                                       <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                                       <span class="tooltiptext tooltip-top"></span>
-                                                       </div><!-- End .product-ratings -->
-                                                  </div><!-- End .product-container -->
-                                                  <div class="price-box">
-                                                       <span class="product-price">$49.00</span>
-                                                  </div><!-- End .price-box -->
-                                             </div><!-- End .product-details -->
-                                        </div>
-                                        <div class="product-default left-details product-widget">
-                                             <figure>
-                                                  <a href="product.html">
-                                                       <img src="assets/images/products/product-11.jpg">
-                                                  </a>
-                                             </figure>
-                                             <div class="product-details">
-                                                  <h2 class="product-title">
-                                                       <a href="product.html">Product Short Name</a>
-                                                  </h2>
-                                                  <div class="ratings-container">
-                                                       <div class="product-ratings">
-                                                       <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                                       <span class="tooltiptext tooltip-top"></span>
-                                                       </div><!-- End .product-ratings -->
-                                                  </div><!-- End .product-container -->
-                                                  <div class="price-box">
-                                                       <span class="product-price">$49.00</span>
-                                                  </div><!-- End .price-box -->
-                                             </div><!-- End .product-details -->
-                                        </div>
-                                        <div class="product-default left-details product-widget">
-                                             <figure>
-                                                  <a href="product.html">
-                                                       <img src="assets/images/products/product-12.jpg">
-                                                  </a>
-                                             </figure>
-                                             <div class="product-details">
-                                                  <h2 class="product-title">
-                                                       <a href="product.html">Product Short Name</a>
-                                                  </h2>
-                                                  <div class="ratings-container">
-                                                       <div class="product-ratings">
-                                                       <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                                       <span class="tooltiptext tooltip-top"></span>
-                                                       </div><!-- End .product-ratings -->
-                                                  </div><!-- End .product-container -->
-                                                  <div class="price-box">
-                                                       <span class="product-price">$49.00</span>
-                                                  </div><!-- End .price-box -->
-                                             </div><!-- End .product-details -->
-                                        </div>
-                                   </div><!-- End .featured-col -->
+                                        @if (!is_null($featured) && $featured->count() > 0)
+                                             @foreach ($featured as $item)
+                                             
+                                             {{-- @dd(asset('uploads/img/'.$item->products()->first()->image)) --}}
 
-                                   <div class="featured-col">
-                                        <div class="product-default left-details product-widget">
-                                             <figure>
-                                                  <a href="product.html">
-                                                       <img src="assets/images/products/product-13.jpg">
-                                                  </a>
-                                             </figure>
-                                             <div class="product-details">
-                                                  <h2 class="product-title">
-                                                       <a href="product.html">Product Short Name</a>
-                                                  </h2>
-                                                  <div class="ratings-container">
-                                                       <div class="product-ratings">
-                                                       <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                                       <span class="tooltiptext tooltip-top"></span>
-                                                       </div><!-- End .product-ratings -->
-                                                  </div><!-- End .product-container -->
-                                                  <div class="price-box">
-                                                       <span class="product-price">$49.00</span>
-                                                  </div><!-- End .price-box -->
-                                             </div><!-- End .product-details -->
-                                        </div>
-                                        <div class="product-default left-details product-widget">
-                                             <figure>
-                                                  <a href="product.html">
-                                                       <img src="assets/images/products/product-14.jpg">
-                                                  </a>
-                                             </figure>
-                                             <div class="product-details">
-                                                  <h2 class="product-title">
-                                                       <a href="product.html">Product Short Name</a>
-                                                  </h2>
-                                                  <div class="ratings-container">
-                                                       <div class="product-ratings">
-                                                       <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                                       <span class="tooltiptext tooltip-top"></span>
-                                                       </div><!-- End .product-ratings -->
-                                                  </div><!-- End .product-container -->
-                                                  <div class="price-box">
-                                                       <span class="product-price">$49.00</span>
-                                                  </div><!-- End .price-box -->
-                                             </div><!-- End .product-details -->
-                                        </div>
-                                        <div class="product-default left-details product-widget">
-                                             <figure>
-                                                  <a href="product.html">
-                                                       <img src="assets/images/products/product-8.jpg">
-                                                  </a>
-                                             </figure>
-                                             <div class="product-details">
-                                                  <h2 class="product-title">
-                                                       <a href="product.html">Product Short Name</a>
-                                                  </h2>
-                                                  <div class="ratings-container">
-                                                       <div class="product-ratings">
-                                                       <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                                       <span class="tooltiptext tooltip-top"></span>
-                                                       </div><!-- End .product-ratings -->
-                                                  </div><!-- End .product-container -->
-                                                  <div class="price-box">
-                                                       <span class="product-price">$49.00</span>
-                                                  </div><!-- End .price-box -->
-                                             </div><!-- End .product-details -->
-                                        </div>
-                                   </div><!-- End .featured-col -->
+                                                 <div class="featured-col">
+                                                  <div class="product-default left-details product-widget">
+                                                       <figure>
+                                                            <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">
+                                                  @php
+                                                       $images = App\ProductImages::where('refference',$item->products()->first()->refference)->get();
+                                                  @endphp
+                                                  @if(!is_null($images) && $images->count() > 0)
+                                                       <img src="{{asset('uploads/img/'.$images[0]->image)}}" style="height:80px;width:80px">
+                                                  @else
+                                                       <img src="{{asset('img/product-placeholder-1.jpg')}}" id="preview1" alt="Image 1 Preview Here" style="height:85px;width:85px">
+                                                  @endif
+                                                            </a>
+                                                       </figure>
+                                                       <div class="product-details">
+                                                            <h2 class="product-title">
+                                                                 <a href="product.html">
+                                                                      {{$item->products()->first()->name}}
+                                                                 </a>
+                                                            </h2>
+                                                            <div class="price-box">
+                                                                 {{-- <span class="product-price">$49.00</span> --}}
+                                                       <small>
+                                                            Code:
+                                                            {{
+                                                                 $item->products()->first()->refference
+                                                            }}
+                                                       </small>
+                                                                 <span class="product-price">
+                                                            <br>
+                                                  <i class="fa fa-euro-sign"></i>
+                                                  {{
+                                                       $item->products()->first()->variations()->first()['sell_price_inc_tax']
+                                                  }}
+                                                                 </span>
+                                                                 
+                                                            </div><!-- End .price-box -->
+                                                       </div><!-- End .product-details -->
+                                                  </div>
+                                             </div><!-- End .featured-col -->
+                                             @endforeach
+                                        @endif
                                    </div><!-- End .widget-featured-slider -->
                               </div><!-- End .widget-body -->
+                         </div><!-- End .widget -->
+                         <div class="widget widget-banner">
+                              <div class="banner banner-image">
+                                   <a href="#">
+                                   <img src="{{asset('site_assets/images/banners/banner-sidebar.jpg')}}" alt="Banner Desc">
+                                   </a>
+                              </div><!-- End .banner -->
                          </div><!-- End .widget -->
                     </div>
                </aside><!-- End .col-md-3 -->
@@ -397,219 +300,115 @@
      </div><!-- End .container -->
      <div class="featured-section">
           <div class="container">
-          <h2 class="carousel-title">Featured Products</h2>
-
+               <h2 class="carousel-title text-center">
+                    Products
+               </h2>
+               <hr>
+               @include('site.partials.all_products')
                <div class="owl-carousel owl-theme new-products">
-                    <div class="product-default inner-quickview inner-icon">
-                         <figure>
-                              <a href="product.html">
-                              <img src="assets/images/products/sunglasses/product-1.jpg">
-                              <img src="assets/images/products/sunglasses/product-1-2.jpg">
-                              </a>
-                              <div class="label-group">
-                              <div class="product-label label-cut">-20%</div>
-                              </div>
-                              <div class="btn-icon-group">
-                              <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
-                              </div>
-                              <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View">Quick View</a> 
-                         </figure>
-                         <div class="product-details">
-                              <div class="category-wrap">
-                              <div class="category-list">
-                                   <a href="category.html" class="product-category">category</a>
-                              </div>
-                              <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                              </div>
-                              <h2 class="product-title">
-                              <a href="product.html">Mens sunglass-yellow</a>
-                              </h2>
-                              <div class="ratings-container">
-                              <div class="product-ratings">
-                                   <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                   <span class="tooltiptext tooltip-top"></span>
-                              </div><!-- End .product-ratings -->
-                              </div><!-- End .product-container -->
-                              <div class="price-box">
-                              <span class="old-price">$90</span>
-                              <span class="product-price">$70</span>
-                              </div><!-- End .price-box -->
-                         </div><!-- End .product-details -->
-                    </div>
-                    <div class="product-default inner-quickview inner-icon">
-                         <figure>
-                              <a href="product.html">
-                              <img src="assets/images/products/sunglasses/product-2.jpg">
-                              <img src="assets/images/products/sunglasses/product-2-2.jpg">
-                              </a>
-                              <div class="btn-icon-group">
-                              <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
-                              </div>
-                              <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View">Quick View</a> 
-                         </figure>
-                         <div class="product-details">
-                              <div class="category-wrap">
-                              <div class="category-list">
-                                   <a href="category.html" class="product-category">category</a>
-                              </div>
-                              <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                              </div>
-                              <h2 class="product-title">
-                              <a href="product.html">Mens sunglass-black</a>
-                              </h2>
-                              <div class="ratings-container">
-                              <div class="product-ratings">
-                                   <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                   <span class="tooltiptext tooltip-top"></span>
-                              </div><!-- End .product-ratings -->
-                              </div><!-- End .product-container -->
-                              <div class="price-box">
-                              <span class="product-price">$60.00</span>
-                              </div><!-- End .price-box -->
-                         </div><!-- End .product-details -->
-                    </div>
-                    <div class="product-default inner-quickview inner-icon">
-                         <figure>
-                              <a href="product.html">
-                              <img src="assets/images/products/sunglasses/product-3.jpg">
-                              <img src="assets/images/products/sunglasses/product-3-2.jpg">
-                              </a>
-                              <div class="label-group">
-                              <div class="product-label label-cut">-20%</div>
-                              </div>
-                              <div class="btn-icon-group">
-                              <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
-                              </div>
-                              <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View">Quick View</a> 
-                         </figure>
-                         <div class="product-details">
-                              <div class="category-wrap">
-                              <div class="category-list">
-                                   <a href="category.html" class="product-category">category</a>
-                              </div>
-                              <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                              </div>
-                              <h2 class="product-title">
-                              <a href="product.html">Mens sunglass-silver</a>
-                              </h2>
-                              <div class="ratings-container">
-                              <div class="product-ratings">
-                                   <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                   <span class="tooltiptext tooltip-top"></span>
-                              </div><!-- End .product-ratings -->
-                              </div><!-- End .product-container -->
-                              <div class="price-box">
-                              <span class="old-price">$75</span>
-                              <span class="product-price">$55</span>
-                              </div><!-- End .price-box -->
-                         </div><!-- End .product-details -->
-                    </div>
-                    <div class="product-default inner-quickview inner-icon">
-                         <figure>
-                              <a href="product.html">
-                              <img src="assets/images/products/sunglasses/product-4.jpg">
-                              <img src="assets/images/products/sunglasses/product-4-2.jpg">
-                              </a>
-                              <div class="label-group">
-                              <div class="product-label label-cut">-20%</div>
-                              </div>
-                              <div class="btn-icon-group">
-                              <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
-                              </div>
-                              <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View">Quick View</a> 
-                         </figure>
-                         <div class="product-details">
-                              <div class="category-wrap">
-                              <div class="category-list">
-                                   <a href="category.html" class="product-category">category</a>
-                              </div>
-                              <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                              </div>
-                              <h2 class="product-title">
-                              <a href="product.html">Mens sunglass-brown</a>
-                              </h2>
-                              <div class="ratings-container">
-                              <div class="product-ratings">
-                                   <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                   <span class="tooltiptext tooltip-top"></span>
-                              </div><!-- End .product-ratings -->
-                              </div><!-- End .product-container -->
-                              <div class="price-box">
-                              <span class="old-price">$60</span>
-                              <span class="product-price">$50</span>
-                              </div><!-- End .price-box -->
-                         </div><!-- End .product-details -->
-                    </div>
-                    <div class="product-default inner-quickview inner-icon">
-                         <figure>
-                              <a href="product.html">
-                              <img src="assets/images/products/sunglasses/product-5.jpg">
-                              <img src="assets/images/products/sunglasses/product-5-2.jpg">
-                              </a>
-                              <div class="btn-icon-group">
-                              <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
-                              </div>
-                              <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View">Quick View</a> 
-                         </figure>
-                         <div class="product-details">
-                              <div class="category-wrap">
-                              <div class="category-list">
-                                   <a href="category.html" class="product-category">category</a>
-                              </div>
-                              <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                              </div>
-                              <h2 class="product-title">
-                              <a href="product.html">Mens glass</a>
-                              </h2>
-                              <div class="ratings-container">
-                              <div class="product-ratings">
-                                   <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                   <span class="tooltiptext tooltip-top"></span>
-                              </div><!-- End .product-ratings -->
-                              </div><!-- End .product-container -->
-                              <div class="price-box">
-                              <span class="product-price">$80</span>
-                              </div><!-- End .price-box -->
-                         </div><!-- End .product-details -->
-                    </div>
-                    <div class="product-default inner-quickview inner-icon">
-                         <figure>
-                              <a href="product.html">
-                              <img src="assets/images/products/sunglasses/product-6.jpg">
-                              <img src="assets/images/products/sunglasses/product-6-2.jpg">
-                              </a>
-                              <div class="label-group">
-                              <div class="product-label label-cut">-20%</div>
-                              </div>
-                              <div class="btn-icon-group">
-                              <button class="btn-icon btn-add-cart" data-toggle="modal" data-target="#addCartModal"><i class="icon-bag"></i></button>
-                              </div>
-                              <a href="ajax/product-quick-view.html" class="btn-quickview" title="Quick View">Quick View</a> 
-                         </figure>
-                         <div class="product-details">
-                              <div class="category-wrap">
-                              <div class="category-list">
-                                   <a href="category.html" class="product-category">category</a>
-                              </div>
-                              <a href="#" class="btn-icon-wish"><i class="icon-heart"></i></a>
-                              </div>
-                              <h2 class="product-title">
-                              <a href="product.html">Mens sunglass-black</a>
-                              </h2>
-                              <div class="ratings-container">
-                              <div class="product-ratings">
-                                   <span class="ratings" style="width:100%"></span><!-- End .ratings -->
-                                   <span class="tooltiptext tooltip-top"></span>
-                              </div><!-- End .product-ratings -->
-                              </div><!-- End .product-container -->
-                              <div class="price-box">
-                              <span class="old-price">$100</span>
-                              <span class="product-price">$80</span>
-                              </div><!-- End .price-box -->
-                         </div><!-- End .product-details -->
-                    </div>
                </div><!-- End .featured-products -->
           </div><!-- End .container -->
      </div><!-- End .featured-section -->
 </div><!-- End .main -->
+@endsection
+@section('scripts')
+    <script>
+         $(function () {
+               /**
+               * This function will remove previously populated Data in Options 
+               * of Select.Tail through Json data
+               *
+               **/
+               function removeOptions(select) {
+                    $.each(select, function(i, d) {
+                         select.config("disabled", false);
+                         select.query();
+                    });
+               }
+               var base_url = "{{url('/')}}";
+
+              $(".change-filter").change(function () {
+                   var color = $("select[name=color]").val();
+                   var size = $("select[name=size]").val();
+                   var ref = $("#refference").val();
+               //     console.log(size);
+               //     console.log(color);
+               //     console.log(ref);
+
+                    $("#old_qty").show();
+                    $("#new_qty").hide();
+                    if (color != 0 && size != 0) {
+                         $.ajax({
+                              url: base_url+"/product/"+ref+"/color/"+color+"/size/"+size,
+                              type: "GET",
+                              dataType: "json",
+                              success: function (res) {
+                                   // console.log(res);
+                                   $("#old_qty").hide();
+                                   $("#new_qty").show();
+                                   if (res.qty > 2) {
+                                        var span = "<span> In Stock: "+parseInt(res.qty)+" Pc(s)</span>";
+                                   }else if(res.qty<=2 && res.qty != 0){
+                                        var span = '<span class="text-danger"> In Stock: '+parseInt(res.qty)+' Pc(s) </span>';
+                                   }else{
+                                        var span = '<span class="text-danger"> Out of Stock: '+parseInt(res.qty)+' Pc(s)</span>';
+                                   }
+                                   $("#new_qty").html(span);
+                              }
+                         });
+                    }else if (color == 0 && size != 0) {
+                         $.ajax({
+                              url: base_url+"/product/"+ref+"/size/"+size,
+                              type: "GET",
+                              dataType: "json",
+                              success: function (res) {
+                                   // console.log(res);
+                                   $("#old_qty").hide();
+                                   $("#new_qty").show();
+                                   if (res.qty > 2) {
+                                        var span = "<span> In Stock: "+parseInt(res.qty)+" Pc(s)</span>";
+                                   }else if(res.qty<=2 && res.qty != 0){
+                                        var span = '<span class="text-danger"> In Stock: '+parseInt(res.qty)+' Pc(s) </span>';
+                                   }else{
+                                        var span = '<span class="text-danger"> Out of Stock: '+parseInt(res.qty)+' Pc(s)</span>';
+                                   }
+                                   $("#new_qty").html(span);
+
+                                   var select = tail.select("select[name=color]");
+                                   removeOptions(select);
+                                   $.each(res.color, function(i, d) {
+                                        select.options.add(d.id, d.name);
+                                        select.query();
+                                   });
+                              }
+                         });
+                    }else if(color !=0 && size==0){
+                         $.ajax({
+                              url: base_url+"/product/"+ref+"/color/"+color,
+                              type: "GET",
+                              dataType: "json",
+                              success: function (res) {
+                                   // console.log(res);
+                                   $("#old_qty").hide();
+                                   $("#new_qty").show();
+                                   if (res.qty > 2) {
+                                        var span = "<span> In Stock: "+parseInt(res.qty)+" Pc(s)</span>";
+                                   }else if(res.qty<=2 && res.qty != 0){
+                                        var span = '<span class="text-danger"> In Stock: '+parseInt(res.qty)+' Pc(s)</span>';
+                                   }else{
+                                        var span = '<span class="text-danger"> Out of Stock: '+parseInt(res.qty)+' Pc(s)</span>';
+                                   }
+                                   $("#new_qty").html(span);
+                                   var select = tail.select("#size");
+                                   removeOptions(select);
+                                   $.each(res.sizes, function(i, d) {
+                                        select.options.add(d.id, d.name);
+                                        select.query();
+                                   });
+                              }
+                         });
+                    }
+              });
+          }); // $.ready()
+    </script>
 @endsection

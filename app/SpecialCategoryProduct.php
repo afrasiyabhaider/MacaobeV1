@@ -11,4 +11,9 @@ class SpecialCategoryProduct extends Model
     {
         return $this->belongsTo(Product::class,'product_id','id');
     }
+    
+    public function spec_prod()
+    {
+        return $this->belongsTo(VariationLocationDetails::class,'refference','id');
+    }
 }
