@@ -14,7 +14,7 @@
 	function openPopupWindow(url)
 	{
 		// var link = 'http://macaobe.com/'+url;
-		var link = {{url('/')}}+url;
+		var link = '{{url('/')}}'+url;
 		window.open(link, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=150,width=1200,height=800");
 	}
 </script>

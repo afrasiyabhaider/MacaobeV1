@@ -27,7 +27,7 @@
 			<span class="text-info">Color: {{$color['name']}} </span>
 			<br>
 			<span class="text-success">
-				Barcode: [{{$product->sub_sku}}]
+				Barcode: [{{$product->sku}}]
 			</span>
 		</div>
 	</div>

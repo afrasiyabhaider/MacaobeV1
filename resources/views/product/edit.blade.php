@@ -58,13 +58,13 @@
     'id' => 'product_update_form','class' => 'product_update_form', 'files' => true ]) !!}
     <input type="hidden" name="product_id" value="{{$product->id}}" id="product_id">
    <div class="row">
-	   <div class="col-md-8">
+	   <div class="col-sm-8">
 		   <h3 class="text-muted">
 			   Update Product
 		   </h3>
           @component('components.widget', ['class' => 'box-primary'])
                <div class="row mb-5">
-                    <div class="col-md-4">
+                    <div class="col-sm-4">
                          <label>Supplier</label>
                          <select name="supplier" id="supplier_id" onchange="getSupplierDetails();" class="select2 form-control">
                               <optgroup>
@@ -83,7 +83,7 @@
                               </optgroup>
                          </select>
 				</div>
-				<div class="col-md-4">
+				<div class="col-sm-4">
 					<label>Category</label>
 					<select name="category" id="category_id"  class="select2 form-control">
                               <optgroup>
@@ -102,7 +102,7 @@
                               </optgroup>
                          </select>
 				</div>
-				<div class="col-md-4">
+				<div class="col-sm-4">
 					<label>Sub-Category</label>
 					<select name="sub_category" id="sub_category_id"  class="select2 form-control">
                               <optgroup>
@@ -140,25 +140,40 @@
 						</small>
 					</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col-sm-4">
 					<label>Product Name *</label>
 					<input type="text" name="product_name" value="{{$product->name}}" class="req form-control" id="product_name" required>
 				</div>
-				<div class="col-md-4">
+				<div class="col-sm-4">
 					<label>Refference * @show_tooltip(__('tooltip.sku'))</label>
 					<input type="text" name="refference" value="{{$product->refference}}" id="refference_id" class="req form-control @error('refference') is-invalid @enderror" required>
 				</div>
-				<div class="col-md-4" style="margin-top: 30px">
+          @php
+              $ut = new \App\Utils\ProductUtil();
+              // dd();
+          @endphp
+				<div class="col-sm-4" style="margin-top: 30px">
 					<label>Unit Price * </label>
-					<input name="unit_price" required="true" type="text" class="req form-control col-12" value="{{$product->variations()->first()->dpp_inc_tax}}" id="unit_price" onchange="changeUnitPrice(this);">
+					<input name="unit_price" required="true" type="text" class="req form-control col-12" value="{{$ut->num_f($product->variations()->first()->dpp_inc_tax)}}" id="unit_price" onchange="changeUnitPrice(this);">
 				</div>
-				<div class="col-md-4" style="margin-top: 30px">
-					<label>Sale Price * </label>
-					<input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$product->variations()->first()->sell_price_inc_tax}}" id="sale_price" onchange="DittoThis(this,'profit_percent')">
+				<div class="col-sm-4" style="margin-top: 30px">
+          <label>Sale Price * </label>
+					<input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$ut->num_f($product->variations()->first()->sell_price_inc_tax)}}" id="sale_price" onchange="DittoThis(this,'profit_percent')">
 				</div>
-			</div>
-			<div class="row" style="margin-top: 10px">
-				<div class="col-md-4">
+      </div>
+      <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <label>Barcode</label>
+					<input required="true" type="text" class=" form-control col-12" value="{{$product->sku}}" id="sku" name="sku">
+        </div>
+        <div class="col-sm-4">
+          <label>Description</label>
+					<input  type="text" class=" form-control col-12" value="{{$product->description}}" id="description" name="description">
+        </div>
+      </div>
+			<div class="row" style="margin-top: 30px">
+				<div class="col-sm-4">
 					<label>Color *</label>
 					{{-- <input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$product->color()->first()->name}}" id="unit_price" onchange="DittoThis(this,'single_dsp')"> --}}
 					<select name="color" id="color_id" class="select2 form-control">
@@ -176,11 +191,11 @@
 						</optgroup>
 					</select>
 				</div>
-				<div class="col-md-4">
+				<div class="col-sm-4">
           <label>Quantity *</label>
 					<input name="quantity" required="true" type="number" class="req form-control col-12" min="1" value="{{$product->variation_location_details()->first()->qty_available}}" id="qty_id">
 				</div>
-				<div class="col-md-4">
+				<div class="col-sm-4">
 					<label>Size *</label>
 					{{-- <input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$product->sub_size()->first()->name}}" id="unit_price"> --}}
 					<select name="size" id="sizes_id" class="select2 form-control">
@@ -219,7 +234,7 @@
 			</div>
           @endcomponent
 	   </div>
-		<div class="col-md-4">
+		<div class="col-sm-4">
 			{{-- <h1>Hello There</h1> --}}
 			{{-- box-widget --}}
 			<h3 class="text-muted">Choose Product</h3>
@@ -270,10 +285,10 @@
 				<input type="hidden" id="suggestion_page" value="1">
 				<div class="box-body">
 					<div class="row">
-						<div class="col-md-12">
+						<div class="col-sm-12">
 							<div class="eq-height-row" id="product_list_body"></div>
 						</div>
-						<div class="col-md-12 text-center" id="suggestion_page_loader" style="display: none;">
+						<div class="col-sm-12 text-center" id="suggestion_page_loader" style="display: none;">
 							<i class="fa fa-spinner fa-spin fa-2x"></i>
 						</div>
 					</div>
@@ -304,21 +319,21 @@
 {{-- 
 	<hr/>
 	<div class="row box box-primary" id="c"> 
-      <div class="col-md-12">
-          <div class="col-md-1"><b>No</b></div>
-          <div class="col-md-1"><b>Supplier</b></div>
-          <div class="col-md-1"><b>Category</b></div>
-          <div class="col-md-1"><b>SubCategory</b></div>
-          <div class="col-md-1"><b>Unit</b></div>
-          <div class="col-md-1"><b>Name</b></div>
-          <div class="col-md-1"><b>Refference</b></div>
-          <div class="col-md-1"><b>Unit Price</b></div>
-          <div class="col-md-1"><b>Sale Price</b></div>
-          <div class="col-md-1"><b>Color</b></div>
-          <div class="col-md-1"><b>Qty</b></div>
-          <div class="col-md-1"><b>Size</b></div>
-          <div class="col-md-1"><b>Image</b></div>
-          <div class="col-md-1"><b>Action</b></div>
+      <div class="col-sm-12">
+          <div class="col-sm-1"><b>No</b></div>
+          <div class="col-sm-1"><b>Supplier</b></div>
+          <div class="col-sm-1"><b>Category</b></div>
+          <div class="col-sm-1"><b>SubCategory</b></div>
+          <div class="col-sm-1"><b>Unit</b></div>
+          <div class="col-sm-1"><b>Name</b></div>
+          <div class="col-sm-1"><b>Refference</b></div>
+          <div class="col-sm-1"><b>Unit Price</b></div>
+          <div class="col-sm-1"><b>Sale Price</b></div>
+          <div class="col-sm-1"><b>Color</b></div>
+          <div class="col-sm-1"><b>Qty</b></div>
+          <div class="col-sm-1"><b>Size</b></div>
+          <div class="col-sm-1"><b>Image</b></div>
+          <div class="col-sm-1"><b>Action</b></div>
       </div>
     </div>
     <div class="row box box-primary" id="bulk_product_home"> 
@@ -341,7 +356,7 @@
         <h4 class="modal-title">Choose Size</h4>
 	  </div>
 	  <div class="row" style="margin: 10px;">
-			<div class="col-md-12">
+			<div class="col-sm-12">
 				@foreach($sizes as $id => $objSize)
 					<div class="col-sm-4">
 						<input type="radio" id="btnSize_{{$objSize->id}}" name="chooseSize" class="" value="{{$objSize->id}}">
@@ -363,18 +378,18 @@
           </div>
         </div>
         {{-- <div class="row" style="margin: 10px;">
-			<div class="col-md-12">
+			<div class="col-sm-12">
 				@foreach($sizes as $id => $objSize)
-					<button type="button" class="col-md-4 btn btn-md btn-danger" id="btnSize_{{$objSize->id}}" onclick="getSizes({{$objSize->id}})">{{$objSize->name}}</button>
+					<button type="button" class="col-sm-4 btn btn-md btn-danger" id="btnSize_{{$objSize->id}}" onclick="getSizes({{$objSize->id}})">{{$objSize->name}}</button>
 				@endforeach
 			</div> 
         </div> --}}
         <div class="row" id="sizeArea">
-          <div class="col-md-12">
-            <div class="col-md-4"><b>Size</b></div>
-            <div class="col-md-4"><b>Sub-Size</b></div>
-            <div class="col-md-3"><b>Qty</b></div>
-            <div class="col-md-1"><b>X</b></div>
+          <div class="col-sm-12">
+            <div class="col-sm-4"><b>Size</b></div>
+            <div class="col-sm-4"><b>Sub-Size</b></div>
+            <div class="col-sm-3"><b>Qty</b></div>
+            <div class="col-sm-1"><b>X</b></div>
           </div>
         </div>
       <div class="modal-footer">
@@ -481,14 +496,14 @@
 					
 					for (i = 0  ; i < obj.length; i++) {
 					rowSize++ ;
-					html += "<div class=' col-md-12' id='sizeRow_"+rowSize+"'> ";
-					html += "<div class=' col-md-2'><select class='form-control' readonly><option value='"+sizeId+"'>"+size_idtext+"</option></select></div>";
-					html += "<div class=' col-md-2'><select class='form-control'  readonly><option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option></select></div>";
-					html += "<div class=' col-md-2'><select onchange='setColorWithSize("+i+");' class='form-control' form='product_add_form'  readonly required id='color_id_"+i+"'> <option selected='selected' value='"+$("#color_idc option:selected").val()+"'>"+$("#color_idc option:selected").text()+"</option></select></div>";
+					html += "<div class=' col-sm-12' id='sizeRow_"+rowSize+"'> ";
+					html += "<div class=' col-sm-2'><select class='form-control' readonly><option value='"+sizeId+"'>"+size_idtext+"</option></select></div>";
+					html += "<div class=' col-sm-2'><select class='form-control'  readonly><option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option></select></div>";
+					html += "<div class=' col-sm-2'><select onchange='setColorWithSize("+i+");' class='form-control' form='product_add_form'  readonly required id='color_id_"+i+"'> <option selected='selected' value='"+$("#color_idc option:selected").val()+"'>"+$("#color_idc option:selected").text()+"</option></select></div>";
 
-					html += "<div class=' col-md-3'><input tab-index='"+i+"' onChange='setValue(this);' type='number' data-size='"+sizeId+"' data-size-name='"+size_idtext+"' data-size-sub='"+obj[i]['id']+"' data-size-sub-name='"+obj[i]['name']+"' data-color='"+$("#color_idc option:selected").val()+"' data-color-name='"+$("#color_idc option:selected").text()+"' class='form-control sizeQty'  value='1'  id='datasize_"+i+"'/></div>";
+					html += "<div class=' col-sm-3'><input tab-index='"+i+"' onChange='setValue(this);' type='number' data-size='"+sizeId+"' data-size-name='"+size_idtext+"' data-size-sub='"+obj[i]['id']+"' data-size-sub-name='"+obj[i]['name']+"' data-color='"+$("#color_idc option:selected").val()+"' data-color-name='"+$("#color_idc option:selected").text()+"' class='form-control sizeQty'  value='1'  id='datasize_"+i+"'/></div>";
 
-					html += "<div class=' col-md-1'><button onclick='removeSize("+rowSize+")' class='btn btn-sm btn-danger'>X</button></div>";
+					html += "<div class=' col-sm-1'><button onclick='removeSize("+rowSize+")' class='btn btn-sm btn-danger'>X</button></div>";
 					html += "</div>";
 					}
 					$("#sizeArea").html(html);
@@ -523,14 +538,14 @@
                    
                 for (i = 0  ; i < obj.length; i++) {
                   rowSize++ ;
-                   html += "<div class=' col-md-12' id='sizeRow_"+rowSize+"'> ";
-                   html += "<div class=' col-md-2'><select class='form-control' readonly><option value='"+sizeId+"'>"+size_idtext+"</option></select></div>";
-                   html += "<div class=' col-md-2'><select class='form-control'  readonly><option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option></select></div>";
-                   html += "<div class=' col-md-2'><select onchange='setColorWithSize("+i+");' class='form-control' form='product_add_form'  readonly required id='color_id_"+i+"'> <option selected='selected' value='"+$("#color_idc option:selected").val()+"'>"+$("#color_idc option:selected").text()+"</option></select></div>";
+                   html += "<div class=' col-sm-12' id='sizeRow_"+rowSize+"'> ";
+                   html += "<div class=' col-sm-2'><select class='form-control' readonly><option value='"+sizeId+"'>"+size_idtext+"</option></select></div>";
+                   html += "<div class=' col-sm-2'><select class='form-control'  readonly><option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option></select></div>";
+                   html += "<div class=' col-sm-2'><select onchange='setColorWithSize("+i+");' class='form-control' form='product_add_form'  readonly required id='color_id_"+i+"'> <option selected='selected' value='"+$("#color_idc option:selected").val()+"'>"+$("#color_idc option:selected").text()+"</option></select></div>";
 
-                   html += "<div class=' col-md-3'><input tab-index='"+i+"' onChange='setValue(this);' type='number' data-size='"+sizeId+"' data-size-name='"+size_idtext+"' data-size-sub='"+obj[i]['id']+"' data-size-sub-name='"+obj[i]['name']+"' data-color='"+$("#color_idc option:selected").val()+"' data-color-name='"+$("#color_idc option:selected").text()+"' class='form-control sizeQty'  value='1'  id='datasize_"+i+"'/></div>";
+                   html += "<div class=' col-sm-3'><input tab-index='"+i+"' onChange='setValue(this);' type='number' data-size='"+sizeId+"' data-size-name='"+size_idtext+"' data-size-sub='"+obj[i]['id']+"' data-size-sub-name='"+obj[i]['name']+"' data-color='"+$("#color_idc option:selected").val()+"' data-color-name='"+$("#color_idc option:selected").text()+"' class='form-control sizeQty'  value='1'  id='datasize_"+i+"'/></div>";
 
-                   html += "<div class=' col-md-1'><button onclick='removeSize("+rowSize+")' class='btn btn-sm btn-danger'>X</button></div>";
+                   html += "<div class=' col-sm-1'><button onclick='removeSize("+rowSize+")' class='btn btn-sm btn-danger'>X</button></div>";
                    html += "</div>";
                 }
                   $("#sizeArea").html(html);
@@ -733,8 +748,8 @@
       if(row%2 == 0 ) Style = "style='background-color:#45b9d6;padding: 10px;color:white'";
       if(IsAnother) Style = lastBG;
       lastBG = Style;
-      var html = '<div class="col-md-12 " '+Style+' id="product_row_'+row+'"> ';
-      html += '<div class="col-md-1">'+row+'</div>';
+      var html = '<div class="col-sm-12 " '+Style+' id="product_row_'+row+'"> ';
+      html += '<div class="col-sm-1">'+row+'</div>';
       var fieldsArr = ["supplier_id", "unit_id", "unit_price", "category_id" , "name" , "refference", "sku", "custom_qty", "custom_price", "color_id", "size_id","upload_image"];
       size = 1; 
 
@@ -746,23 +761,23 @@
           {
             if($(this).attr("id") == "category_id")
             {
-              html += ' <div class="col-md-'+size+'"><select class="custom-form-control" name="'+$(this).attr("id")+'[]" title="'+$(this).attr("id")+'"><option value="'+$(this).val()+'">'+$( "#"+$(this).attr("id")+" option:selected" ).text()+'</option></select></div>';
-              html += ' <div class="col-md-'+size+'"><select class="custom-form-control" name="sub_category_id[]" title="sub_category_id"><option value="'+$("#sub_category_id").val()+'">'+$( "#sub_category_id option:selected" ).text()+'</option></select></div>';
+              html += ' <div class="col-sm-'+size+'"><select class="custom-form-control" name="'+$(this).attr("id")+'[]" title="'+$(this).attr("id")+'"><option value="'+$(this).val()+'">'+$( "#"+$(this).attr("id")+" option:selected" ).text()+'</option></select></div>';
+              html += ' <div class="col-sm-'+size+'"><select class="custom-form-control" name="sub_category_id[]" title="sub_category_id"><option value="'+$("#sub_category_id").val()+'">'+$( "#sub_category_id option:selected" ).text()+'</option></select></div>';
             }else
             {
-              html += ' <div class="col-md-'+size+'"><select class="custom-form-control" name="'+$(this).attr("id")+'[]" title="'+$(this).attr("id")+'"><option value="'+$(this).val()+'">'+$( "#"+$(this).attr("id")+" option:selected" ).text()+'</option></select></div>';
+              html += ' <div class="col-sm-'+size+'"><select class="custom-form-control" name="'+$(this).attr("id")+'[]" title="'+$(this).attr("id")+'"><option value="'+$(this).val()+'">'+$( "#"+$(this).attr("id")+" option:selected" ).text()+'</option></select></div>';
 
             }
 
           }else
           {
 			// Custom_price
-             html += ' <div class="col-md-'+size+'"><input title="'+$(this).attr("id")+'" name="'+$(this).attr("id")+'[]" type="'+$(this).attr("type")+'" class="custom-form-control" value="'+$(this).val()+'"/></div>';
+             html += ' <div class="col-sm-'+size+'"><input title="'+$(this).attr("id")+'" name="'+$(this).attr("id")+'[]" type="'+$(this).attr("type")+'" class="custom-form-control" value="'+$(this).val()+'"/></div>';
           }
            
         }else
         {
-          html += ' <div class="col-md-'+size+' hide ss '+$(this).attr("id")+'"><input  name="'+$(this).attr("id")+'[]" type="text" class="custom-form-control" value="'+$(this).val()+'"/></div>';
+          html += ' <div class="col-sm-'+size+' hide ss '+$(this).attr("id")+'"><input  name="'+$(this).attr("id")+'[]" type="text" class="custom-form-control" value="'+$(this).val()+'"/></div>';
 
         }
          size = 1; 
@@ -773,30 +788,30 @@
       $(".sizeQty").each(function() {
           if ($.trim($(this).val()) > "0"){ 
             html = tempHTML;
-            html += ' <div class="col-md-'+size+'"><select title="Color" class="custom-form-control" name="color_id[]"><option value="'+$(this).attr("data-color")+'">'+$(this).attr("data-color-name")+'</option></select> </div>'; 
+            html += ' <div class="col-sm-'+size+'"><select title="Color" class="custom-form-control" name="color_id[]"><option value="'+$(this).attr("data-color")+'">'+$(this).attr("data-color-name")+'</option></select> </div>'; 
 
-            html += ' <div class="col-md-'+size+'"><input class="custom-form-control bulkProducts" title="QTY" name="qty[]" type="number" value="'+$(this).val()+'" /> </div>';
+            html += ' <div class="col-sm-'+size+'"><input class="custom-form-control bulkProducts" title="QTY" name="qty[]" type="number" value="'+$(this).val()+'" /> </div>';
 		//  <select title="SIZE" class="custom-form-control" name="size_id[]"><option value="'+$(this).attr("data-size")+'">'+$(this).attr("data-size-name")+'</option></select>
-            html += '<div class="col-md-'+size+'"><input type="hidden" name="size_id[]" value="'+$(this).val()+'"><select title="Sub Size" class="custom-form-control" name="sub_size_id[]"><option value="'+$(this).attr("data-size-sub")+'">'+$(this).attr("data-size-sub-name")+'</option></select></div>'; 
+            html += '<div class="col-sm-'+size+'"><input type="hidden" name="size_id[]" value="'+$(this).val()+'"><select title="Sub Size" class="custom-form-control" name="sub_size_id[]"><option value="'+$(this).attr("data-size-sub")+'">'+$(this).attr("data-size-sub-name")+'</option></select></div>'; 
 		if ($(".file-preview-image").attr("src")==undefined) {
 			if($("#product_image").attr("src")==undefined )
 			{
 			var file = ""; 
-			html += ' <div class="col-md-1"><img src="{{asset("img/default.png")}}" width="86px" height="28px" /> <span class="hide" id="file_'+picRow+'"></span></div>';
+			html += ' <div class="col-sm-1"><img src="{{asset("img/default.png")}}" width="86px" height="28px" /> <span class="hide" id="file_'+picRow+'"></span></div>';
 			}else
 			{
 			var file = $("#upload_image").clone();
 			//     .file-preview-image
 			file.attr("name","file[]");
-			html += ' <div class="col-md-1"><img src="'+$("#product_image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
+			html += ' <div class="col-sm-1"><img src="'+$("#product_image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
 			}	
 		}else{
 			var file = $("#upload_image").clone();
 			//     .file-preview-image
 			file.attr("name","file[]");
-			html += ' <div class="col-md-1"><img src="'+$(".file-preview-image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
+			html += ' <div class="col-sm-1"><img src="'+$(".file-preview-image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
 		}
-             html += '<div class="col-md-1""><button class="btn btn-danger" onclick="removeThisRow('+row+');"><i class="fa fa-trash"></i></button></div>';
+             html += '<div class="col-sm-1""><button class="btn btn-danger" onclick="removeThisRow('+row+');"><i class="fa fa-trash"></i></button></div>';
                
               html += ' <div class="clearfix"></div></div>';
               PreviousHTML = $("#bulk_product_home").html();
@@ -864,8 +879,8 @@
       if(row%2 == 0 ) Style = "style='background-color:#45b9d6;padding: 10px;color:white'";
       if(IsAnother) Style = lastBG;
       lastBG = Style;
-      var html = '<div class="col-md-12 " '+Style+' id="product_row_'+row+'"> ';
-      html += '<div class="col-md-1">'+row+'</div>';
+      var html = '<div class="col-sm-12 " '+Style+' id="product_row_'+row+'"> ';
+      html += '<div class="col-sm-1">'+row+'</div>';
       var fieldsArr = ["supplier_id", "unit_id", "unit_price", "category_id" , "name" , "refference", "sku", "custom_qty", "custom_price", "color_id", "size_id","upload_image"];
       size = 1; 
 
@@ -877,23 +892,23 @@
           {
             if($(this).attr("id") == "category_id")
             {
-              html += ' <div class="col-md-'+size+'"><select class="custom-form-control" name="'+$(this).attr("id")+'[]" title="'+$(this).attr("id")+'"><option value="'+$(this).val()+'">'+$( "#"+$(this).attr("id")+" option:selected" ).text()+'</option></select></div>';
-              html += ' <div class="col-md-'+size+'"><select class="custom-form-control" name="sub_category_id[]" title="sub_category_id"><option value="'+$("#sub_category_id").val()+'">'+$( "#sub_category_id option:selected" ).text()+'</option></select></div>';
+              html += ' <div class="col-sm-'+size+'"><select class="custom-form-control" name="'+$(this).attr("id")+'[]" title="'+$(this).attr("id")+'"><option value="'+$(this).val()+'">'+$( "#"+$(this).attr("id")+" option:selected" ).text()+'</option></select></div>';
+              html += ' <div class="col-sm-'+size+'"><select class="custom-form-control" name="sub_category_id[]" title="sub_category_id"><option value="'+$("#sub_category_id").val()+'">'+$( "#sub_category_id option:selected" ).text()+'</option></select></div>';
             }else
             {
-              html += ' <div class="col-md-'+size+'"><select class="custom-form-control" name="'+$(this).attr("id")+'[]" title="'+$(this).attr("id")+'"><option value="'+$(this).val()+'">'+$( "#"+$(this).attr("id")+" option:selected" ).text()+'</option></select></div>';
+              html += ' <div class="col-sm-'+size+'"><select class="custom-form-control" name="'+$(this).attr("id")+'[]" title="'+$(this).attr("id")+'"><option value="'+$(this).val()+'">'+$( "#"+$(this).attr("id")+" option:selected" ).text()+'</option></select></div>';
 
             }
 
           }else
           {
 			// custom_price
-             html += ' <div class="col-md-'+size+'"><input title="'+$(this).attr("id")+'" name="'+$(this).attr("id")+'[]" type="'+$(this).attr("type")+'" class="custom-form-control" value="'+$(this).val()+'"/></div>';
+             html += ' <div class="col-sm-'+size+'"><input title="'+$(this).attr("id")+'" name="'+$(this).attr("id")+'[]" type="'+$(this).attr("type")+'" class="custom-form-control" value="'+$(this).val()+'"/></div>';
           }
            
         }else
         {
-          html += ' <div class="col-md-'+size+' hide ss '+$(this).attr("id")+'"><input  name="'+$(this).attr("id")+'[]" type="text" class="custom-form-control" value="'+$(this).val()+'"/></div>';
+          html += ' <div class="col-sm-'+size+' hide ss '+$(this).attr("id")+'"><input  name="'+$(this).attr("id")+'[]" type="text" class="custom-form-control" value="'+$(this).val()+'"/></div>';
 
         }
          size = 1; 
@@ -904,30 +919,30 @@
       $(".sizeQty").each(function() {
           if ($.trim($(this).val()) > "0"){ 
             html = tempHTML;
-            html += ' <div class="col-md-'+size+'"><select title="Color" class="custom-form-control" name="color_id[]"><option value="'+$(this).attr("data-color")+'">'+$(this).attr("data-color-name")+'</option></select> </div>'; 
+            html += ' <div class="col-sm-'+size+'"><select title="Color" class="custom-form-control" name="color_id[]"><option value="'+$(this).attr("data-color")+'">'+$(this).attr("data-color-name")+'</option></select> </div>'; 
 
-            html += ' <div class="col-md-'+size+'"><input class="custom-form-control bulkProducts" title="QTY" name="qty[]" type="number" value="'+$(this).val()+'" /> </div>';
+            html += ' <div class="col-sm-'+size+'"><input class="custom-form-control bulkProducts" title="QTY" name="qty[]" type="number" value="'+$(this).val()+'" /> </div>';
 	//  <select title="SIZE" class="custom-form-control" name="size_id[]"><option value="'+$(this).attr("data-size")+'">'+$(this).attr("data-size-name")+'</option></select>
-            html += '<div class="col-md-'+size+'"><input type="hidden" name="size_id[]" value="'+$(this).val()+'"><select title="Sub Size" class="custom-form-control" name="sub_size_id[]"><option value="'+$(this).attr("data-size-sub")+'">'+$(this).attr("data-size-sub-name")+'</option></select></div>'; 
+            html += '<div class="col-sm-'+size+'"><input type="hidden" name="size_id[]" value="'+$(this).val()+'"><select title="Sub Size" class="custom-form-control" name="sub_size_id[]"><option value="'+$(this).attr("data-size-sub")+'">'+$(this).attr("data-size-sub-name")+'</option></select></div>'; 
 		if ($(".file-preview-image").attr("src")==undefined) {
 			if($("#product_image").attr("src")==undefined )
 			{
 			var file = ""; 
-			html += ' <div class="col-md-1"><img src="{{asset("img/default.png")}}" width="86px" height="28px" /> <span class="hide" id="file_'+picRow+'"></span></div>';
+			html += ' <div class="col-sm-1"><img src="{{asset("img/default.png")}}" width="86px" height="28px" /> <span class="hide" id="file_'+picRow+'"></span></div>';
 			}else
 			{
 			var file = $("#upload_image").clone();
 			//     .file-preview-image
 			file.attr("name","file[]");
-			html += ' <div class="col-md-1"><img src="'+$("#product_image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
+			html += ' <div class="col-sm-1"><img src="'+$("#product_image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
 			}	
 		}else{
 			var file = $("#upload_image").clone();
 			//     .file-preview-image
 			file.attr("name","file[]");
-			html += ' <div class="col-md-1"><img src="'+$(".file-preview-image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
+			html += ' <div class="col-sm-1"><img src="'+$(".file-preview-image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
 		}
-             html += '<div class="col-md-1""><button class="btn btn-danger" onclick="removeThisRow('+row+');"><i class="fa fa-trash"></i></button></div>';
+             html += '<div class="col-sm-1""><button class="btn btn-danger" onclick="removeThisRow('+row+');"><i class="fa fa-trash"></i></button></div>';
                
               html += ' <div class="clearfix"></div></div>';
               PreviousHTML = $("#bulk_product_home").html();
@@ -1102,6 +1117,7 @@
 						}
 						$("#product_name").val(result.product.name);
 						$("#sku").val(result.product.sku);
+						$("#description").val(result.product.description);
 						$("#product_id").val(result.product.id);
 						$("#img-previewer").attr("src",img);
 						// $("#img-input").val(img);
@@ -1164,4 +1180,5 @@
 	}
 
 	</script>
+  
 @endsection

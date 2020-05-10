@@ -107,27 +107,41 @@
 							Form::label('refference', __('product.refference') . ':') 
 							!!} 
 							@show_tooltip(__('tooltip.sku'))
-							{!! Form::text('refference', null, ['id'=>'refference_id','class' => 'req form-control','placeholder' => "Refference", 'required' => 'true','autofocus']); !!}
+							{!! Form::text('refference', null, ['id'=>'refference_id','class' => 'req form-control disabled','placeholder' => "Refference",'disabled' => 'true', 'required' => 'true','autofocus']); !!}
 							<input type="hidden" value="noValue" id="temp_reff">
 						</div>
 					</div>
 
 					<div class="col-sm-4  ">
-					<div class="form-group">
-						{!! 
-						Form::label('unit_price', __('product.unit') . ' Price:*') 
-						!!}
-						<input name="unit_price" required="true" type="text" class="req  form-control col-12" placeholder="Unit Price" id="unit_price" onchange="changeUnitPrice(this);">
-					</div>
+						<div class="form-group">
+							{!! 
+							Form::label('unit_price', __('product.unit') . ' Price:*') 
+							!!}
+							<input name="unit_price" required="true" type="text" class="req  form-control col-12" placeholder="Unit Price" id="unit_price" onchange="changeUnitPrice(this);">
+						</div>
 					</div>
 					
 					<div class="col-sm-4">
-					<div class="form-group">
-						{!! Form::label('custom_price', __('product.sale_price') . ':') !!} 
-						{!! Form::text('custom_price', null, ['class' => 'req form-control',
-						'placeholder' => __('product.sale_price'), 'required' => 'true', 'onChange' => "DittoThis(this,'single_dsp');", 'required' => 'true']); !!}
+						<div class="form-group">
+							{!! Form::label('custom_price', __('product.sale_price') . ':') !!} 
+							{!! Form::text('custom_price', null, ['class' => 'req form-control',
+							'placeholder' => __('product.sale_price'), 'required' => 'true', 'onChange' => "DittoThis(this,'single_dsp');", 'required' => 'true']); !!}
+						</div>
 					</div>
-					</div>
+						{{-- <div class="col-sm-4">
+						</div> --}}
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label>Barcode</label>
+								<input type="text" id="sku" name="sku" class="form-control opt" placeholder="Enter custom barcode minimum 9 Numbers" min="9">
+							</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group">
+								<label>Description</label>
+								<input type="text" id="ref_description" name="ref_description" class="form-control opt" placeholder="Enter description" min="9">
+							</div>
+						</div>
 
 					
 					<div class="hide col-sm-3 @if(!session('business.enable_brand')) hide @endif">
@@ -154,7 +168,7 @@
 					<div class="col-sm-3 hide">
 					<div class="form-group">
 						{!! Form::label('sku', __('product.sku') . ':') !!} @show_tooltip(__('tooltip.sku'))
-						{!! Form::text('sku', null, ['class' => 'form-control',
+						{!! Form::text('auto_sku', null, ['class' => 'form-control',
 						'placeholder' => "Auto Generated", 'readonly' => 'true']); !!}
 					</div>
 					</div>
@@ -469,13 +483,16 @@
   <div class="row box box-primary" id="c"> 
       <div class="col-md-12">
           <div class="col-md-1"><b>No</b></div>
+          {{-- <div class="col-md-1"><b>Supplier</b></div> --}}
+          <div class="col-md-1 hide"><b>Barcode</b></div>
+          <div class="col-md-1 hide"><b>Description</b></div>
           <div class="col-md-1"><b>Supplier</b></div>
           <div class="col-md-1"><b>Category</b></div>
           <div class="col-md-1"><b>SubCategory</b></div>
           {{-- <div class="col-md-1"><b>Unit</b></div> --}}
           <div class="col-md-1"><b>Name</b></div>
           <div class="col-md-1"><b>Refference</b></div>
-          <div class="col-md-1"><b>Unit Price</b></div>
+          <div class="col-md-1 hide"><b>Unit Price</b></div>
           <div class="col-md-1"><b>Sale Price</b></div>
           <div class="col-md-1"><b>Color</b></div>
           <div class="col-md-1"><b>Qty</b></div>
@@ -653,6 +670,7 @@
 					html += "<div class=' col-md-12' id='sizeRow_"+rowSize+"'> ";
 					html += "<div class=' col-md-2'><select class='form-control' readonly><option value='"+sizeId+"'>"+size_idtext+"</option></select></div>";
 					html += "<div class=' col-md-2'><select class='form-control'  readonly><option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option></select></div>";
+
 					html += "<div class=' col-md-2'><select onchange='setColorWithSize("+i+");' class='form-control' form='product_add_form'  readonly required id='color_id_"+i+"'> <option selected='selected' value='"+$("#color_idc option:selected").val()+"'>"+$("#color_idc option:selected").text()+"</option></select></div>";
 
 					html += "<div class=' col-md-3'><input tab-index='"+i+"' onChange='setValue(this);' type='number' data-size='"+sizeId+"' data-size-name='"+size_idtext+"' data-size-sub='"+obj[i]['id']+"' data-size-sub-name='"+obj[i]['name']+"' data-color='"+$("#color_idc option:selected").val()+"' data-color-name='"+$("#color_idc option:selected").text()+"' class='form-control sizeQty'  value='1'  id='datasize_"+i+"'/></div>";
@@ -790,9 +808,9 @@
       $(".sizeQty").val("0");
       countSize = 0;
       $("#sizeArea").empty();
-      var fieldsArr = ["supplier_id", "brand_id",  "name", "sku","upload_image","unit_price"];
+      var fieldsArr = ["supplier_id", "brand_id",  "name", "sku","upload_image","unit_price","ref_description"];
      //  var notIncludeArr = ["single_dpp", "single_dpp_inc_tax", "single_dsp", "single_dsp_inc_tax", "profit_percent","upload_image"];
-      var ignoreArr = ["supplier_id", "brand_id", "category_id", "sku", "name", "unit_price","custom_price","single_dpp", "single_dpp_inc_tax", "single_dsp", "single_dsp_inc_tax", "profit_percent","upload_image","refference_id"];
+      var ignoreArr = ["supplier_id", "brand_id", "category_id", "ref_description","sku", "name", "unit_price","custom_price","single_dpp", "single_dpp_inc_tax", "single_dsp", "single_dsp_inc_tax", "profit_percent","upload_image","refference_id"];
 
 
       $(".req").each(function() {
@@ -889,6 +907,20 @@
       var fieldsArr = ["supplier_id", "unit_id", "unit_price", "category_id" , "name" , "refference", "sku", "custom_qty", "custom_price", "color_id", "size_id","upload_image"];
       size = 1; 
 
+
+      $(".opt").each(function() { 
+     //    console.log($(this).attr("id"));
+		// if(fieldsArr.includes($(this).attr("id")))
+		// {
+			if (($(this).attr('id') == "sku") && $(this).val()) {
+				html += ' <div class="col-md-'+size+' hide"><input class="custom-form-control" name="sku[]" type="text" value="'+$(this).val()+'"> </div>';
+			}
+			if (($(this).attr('id') == "ref_description") && $(this).val()) {
+				html += ' <div class="col-md-'+size+' hide"><input class="custom-form-control" name="ref_description[]" type="text" value="'+$(this).val()+'"> </div>';
+			}
+			console.log($(this).attr('id'));
+		// }
+	 });
       $(".req").each(function() { 
      //    console.log($(this).attr("id"));
         if(fieldsArr.includes($(this).attr("id")))
@@ -907,7 +939,14 @@
 
           }else
           {
-             html += ' <div class="col-md-'+size+'"><input title="'+$(this).attr("id")+'" name="'+$(this).attr("id")+'[]" type="'+$(this).attr("type")+'" class="custom-form-control" value="'+$(this).val()+'"/></div>';
+			if($(this).attr("id") == "unit_price"){
+				html += ' <div class="col-md-'+size+' hide"><input title="'+$(this).attr("id")+'" name="'+$(this).attr("id")+'[]" type="'+$(this).attr("type")+'" class="custom-form-control" value="'+$(this).val()+'"/></div>';
+
+			}else{
+				html += ' <div class="col-md-'+size+'"><input title="'+$(this).attr("id")+'" name="'+$(this).attr("id")+'[]" type="'+$(this).attr("type")+'" class="custom-form-control" value="'+$(this).val()+'"/></div>';
+
+			}
+		//    console.log($(this).attr("id"));
           }
            
         }else
@@ -919,6 +958,7 @@
 			html += ' <div class="col-md-'+size+' hide ss '+$(this).attr("id")+'"><input  name="'+$(this).attr("id")+'[]" type="text" class="custom-form-control" value="'+$(this).val()+'"/></div>';
 		}
 
+
         }
          size = 1; 
       });
@@ -928,10 +968,13 @@
       $(".sizeQty").each(function() {
           if ($.trim($(this).val()) > "0"){ 
             html = tempHTML;
+
             html += ' <div class="col-md-'+size+'"><select title="Color" class="custom-form-control" name="color_id[]"><option value="'+$(this).attr("data-color")+'">'+$(this).attr("data-color-name")+'</option></select> </div>'; 
 
             html += ' <div class="col-md-'+size+'"><input class="custom-form-control bulkProducts" title="QTY" name="qty[]" type="number" value="'+$(this).val()+'" /> </div>';
+
 		html+='<select title="SIZE" class="custom-form-control hide" name="size_id[]"><option value="'+$(this).attr("data-size")+'">'+$(this).attr("data-size-name")+'</option></select>';
+		
             html += '<div class="col-md-'+size+'"><input type="hidden" name="size_id[]" value="'+$(this).val()+'"><select title="Sub Size" class="custom-form-control" name="sub_size_id[]"><option value="'+$(this).attr("data-size-sub")+'">'+$(this).attr("data-size-sub-name")+'</option></select></div>'; 
 
             if($(".file-preview-image").attr("src")==undefined)

@@ -105,6 +105,7 @@ class ProductController extends Controller
                     'products.id',
                     'products.name as product',
                     'products.type',
+                    'products.description',
                     'products.supplier_id',
                     'suppliers.name as supplier_name',
                     'c1.name as category',
@@ -174,7 +175,7 @@ class ProductController extends Controller
                     function ($row) use ($selling_price_group_count) {
                         $html =
                             '<div class="btn-group">
-                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . ' <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="' . action('LabelsController@show') . '?product_id=' . $row->id . '" data-toggle="tooltip" title="Print Barcode/Label"><i class="fa fa-barcode"></i> ' . __('barcode.labels') . '</a></li>';
@@ -225,6 +226,13 @@ class ProductController extends Controller
                     $product = $row->is_inactive == 1 ? $row->product . ' <span class="label bg-gray">Inactive
                         </span>' : $row->product;
                     return $product;
+                })
+                ->editColumn('description', function ($row) {
+                    $description = '-';
+                    if ($row->description) {
+                        $description = $row->description;
+                    }
+                    return $description;
                 })
                 ->editColumn('image', function ($row) {
                     return '<div style="display: flex;"><img src="' . $row->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
@@ -318,6 +326,7 @@ class ProductController extends Controller
                     'products.id',
                     'products.name as product',
                     'products.type',
+                    'products.description',
                     'suppliers.name as supplier_name',
                     'c1.name as category',
                     'c2.name as sub_category',
@@ -436,6 +445,13 @@ class ProductController extends Controller
                     $product = $row->is_inactive == 1 ? $row->product . ' <span class="label bg-gray">Inactive
                         </span>' : $row->product;
                     return $product;
+                })
+                ->editColumn('description', function ($row) {
+                    $description = '-';
+                    if ($row->description) {
+                        $description = $row->description;
+                    }
+                    return $description;
                 })
                 ->editColumn('image', function ($row) {
                     return '<div style="display: flex;"><img src="' . $row->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
@@ -1034,6 +1050,7 @@ class ProductController extends Controller
             'refference' => 'required',
             'unit_price' => 'required',
             'custom_price' => 'required',
+            'sku' => 'required',
             'color' => ['required', Rule::notIn(0)],
             'quantity' => 'required',
             'size' => ['required', Rule::notIn(0)],
@@ -1062,13 +1079,18 @@ class ProductController extends Controller
             $product->color_id = $request->input('color');
             $product->size_id = $size->parent_id;
             $product->sub_size_id = $request->input('size');
+            $product->sku = $request->input('sku');
+            $product->description = $request->input('description');
 
             $product->save();
 
             $variation = Variation::where('product_id', '=', $request->input('product_id'))->first();
-
-            $variation->dpp_inc_tax = $request->input('unit_price');
-            $variation->sell_price_inc_tax = $request->input('custom_price');
+            // $unit = str_replace($request->input('unit_price'),'.',',');
+            // dd($this->productUtil->num_uf($request->input('unit_price')));
+            // dd($unit);
+            $variation->sub_sku =$product->sku;
+            $variation->dpp_inc_tax =$this->productUtil->num_uf($request->input('unit_price'));
+            $variation->sell_price_inc_tax = $this->productUtil->num_uf($request->input('custom_price'));
             $variation->save();
 
             $purchase_line = VariationLocationDetails::where('product_id', '=', $request->input('product_id'))->first();
@@ -2873,12 +2895,15 @@ class ProductController extends Controller
                 'qty',
                 'refference_id',
                 'sku',
+                'auto_sku',
                 'color_id',
                 'single_dpp',
                 'single_dpp_inc_tax',
                 'profit_percent',
                 'single_dsp',
-                'single_dsp_inc_tax', 'file'
+                'single_dsp_inc_tax', 
+                'file',
+                'ref_description'
             ];
             // dd($form_fields);
             // dd($request->only($form_fields));
@@ -2945,8 +2970,18 @@ class ProductController extends Controller
                     ProductNameCategory::where('id', $deleteNameSeriesId)->delete();
                 }
 
-                $sku = $this->productUtil->generateProductSku($product->id);
-                $product->sku = $sku;
+                $sku = $request->input('sku');
+
+                if($sku){
+                    $product->custom_barcode = 1;
+                    $product->sku = $request->input('sku')[$i];
+                }else{
+                    $sku = $this->productUtil->generateProductSku($product->id);
+                    $product->sku = $sku;
+                }
+
+                $product->description = $request->input('ref_description')[$i];
+
                 $product->save();
 
                 if ($product->type == 'single') {
@@ -3010,7 +3045,6 @@ class ProductController extends Controller
                 'msg' => __("messages.something_went_wrong") .  "Line:" . $e->getLine() . "Message:" . $e->getMessage()
             ];
             dd($e);
-            die();
             return redirect('products/bulk_add')->with('status', $output);
         }
 

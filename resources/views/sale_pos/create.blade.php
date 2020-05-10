@@ -34,7 +34,7 @@
 									<span class="input-group-addon">
 										<i class="fa fa-map-marker"></i>
 									</span>
-								{!! Form::select('select_location_id', $business_locations, null, ['class' => 'form-control input-sm mousetrap', 
+								{!! Form::select('select_location_id', $business_locations, null, ['class' => 'form-control input-sm mousetrap ', 
 								'placeholder' => __('lang_v1.select_location'),
 								'id' => 'select_location_id', 
 								'required', 'autofocus'], $bl_attributes); !!}

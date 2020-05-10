@@ -13,7 +13,7 @@
 				</small>
 			</div>
 			<small class="text-success">
-				({{$product->sub_sku}})
+				({{$product->sku}})
 			</small>
 		</div>
 	</div>

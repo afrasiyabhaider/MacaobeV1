@@ -1,5 +1,6 @@
  @php
      $categories = \App\Category::catAndSubCategories(1);
+     $ut = new \App\Utils\ProductUtil();
  @endphp
 
  {{-- {{$categories[2]['name']}} --}}

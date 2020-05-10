@@ -15,6 +15,7 @@ use App\TaxRate;
 use App\Unit;
 use App\VariationLocationDetails;
 use App\Utils\ProductUtil;
+use App\Utils\Util;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -61,6 +62,7 @@ class WebsiteController extends Controller
                     'products.name as product',
                     'products.type',
                     'products.supplier_id',
+                    'products.description',
                     'suppliers.name as supplier_name',
                     'c1.name as category',
                     'c2.name as sub_category',
@@ -128,7 +130,7 @@ class WebsiteController extends Controller
                     function ($row) use ($selling_price_group_count) {
                         $html =
                             '<div class="btn-group">
-                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . '<span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . ' <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="' . action('LabelsController@show') . '?product_id=' . $row->id . '" data-toggle="tooltip" title="Print Barcode/Label"><i class="fa fa-barcode"></i> ' . __('barcode.labels') . '</a></li>';
@@ -176,6 +178,13 @@ class WebsiteController extends Controller
                     $product = $row->is_inactive == 1 ? $row->product . ' <span class="label bg-gray">Inactive
                         </span>' : $row->product;
                     return $product;
+                })
+                ->editColumn('description', function ($row) {
+                    $description = '-';
+                    if ($row->description) {
+                        $description = $row->description;
+                    }
+                    return $description;
                 })
                 ->editColumn('image', function ($row) {
                     return '<div style="display: flex;"><img src="' . $row->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
@@ -292,9 +301,9 @@ class WebsiteController extends Controller
             // $percentage = $request->input('sale_percent')/100;
             // $discounted_price =  $product_price * $percentage;
             // $after_discount = $product_price - $discounted_price;
-            
+            $ut = new Util();
             $special->sale = '1';
-            $special->after_discount = $request->input('after_discount');
+            $special->after_discount = $ut->num_uf($request->input('after_discount'));
             // $special->sale_percentage = $request->input('sale_percent');
             // $special->discounted_price = $discounted_price;
         }else{

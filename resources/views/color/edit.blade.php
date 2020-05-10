@@ -18,6 +18,12 @@
         {!! Form::label('description', __( 'color.short_description' ) . ':') !!}
           {!! Form::text('description', $color->description, ['class' => 'form-control','placeholder' => __( 'color.short_description' )]); !!}
       </div>
+      <div class="form-group">
+          <label>
+              Select Color <span class="text-danger">*</span>
+          </label>
+          <input type="color" name="color_code" value="{{$color->color_code}}" required>
+        </div>
     </div>
 
     <div class="modal-footer">

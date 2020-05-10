@@ -118,13 +118,17 @@
 						@endif></span>
 					</label>
 				</div>
+				@php
+					$ut = new \App\Utils\ProductUtil();
+				// dd();
+				@endphp
 				<div class="col-sm-4" id="sale_value">
 					{{-- <label>
 						Sale Percentage
 					</label> --}}
-					<input type="number"  @if (!is_null($special_product) && $special_product->after_discount)
-					value="{{$special_product->after_discount}}"
-					@endif name="after_discount" class="form-control" id="sale_percent" placeholder="Enter Sale Price e.g 35.79" min="1">
+					<input type="text"  @if (!is_null($special_product) && $special_product->after_discount)
+					value="{{$ut->num_f($special_product->after_discount)}}"
+					@endif name="after_discount" class="form-control" id="sale_percent" placeholder="Enter Sale Price e.g 35,79" min="1">
 				</div>
 			</div>
 			<div class="row">

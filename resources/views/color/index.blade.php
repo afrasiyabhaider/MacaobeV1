@@ -33,6 +33,7 @@
                     <thead>
                         <tr>
                             <th>@lang( 'color.brands' )</th>
+                            <th>Color Code</th>
                             <th>@lang( 'color.note' )</th>
                             <th>@lang( 'messages.action' )</th>
                         </tr>

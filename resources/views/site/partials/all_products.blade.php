@@ -67,7 +67,7 @@
                               <span class="product-price">
                                    <i class="fa fa-euro-sign"></i>
                                    {{
-                                   $item->products()->first()->variations()->first()['sell_price_inc_tax']
+                                        $ut->num_f($item->products()->first()->variations()->first()['sell_price_inc_tax'])
                                    }}
                               </span>
                          </div><!-- End .price-box -->

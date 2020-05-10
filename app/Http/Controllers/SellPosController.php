@@ -2084,7 +2084,6 @@ class SellPosController extends Controller
     public function getProductRow($variation_id, $location_id)
     {
         $output = [];
-
         try {
             $row_count = request()->get('product_row');
             $row_count = $row_count + 1;
@@ -2096,8 +2095,11 @@ class SellPosController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $product = $this->productUtil->getDetailsFromVariation($variation_id, $business_id, $location_id);
-            $product->formatted_qty_available = $this->productUtil->num_f($product->qty_available, false, null, true);
 
+            // return json_encode($product);
+
+            $product->formatted_qty_available = $this->productUtil->num_f($product->qty_available, false, null, true);
+            
             $sub_units = $this->productUtil->getSubUnits($business_id, $product->unit_id);
 
             //Get customer group and change the price accordingly
@@ -2172,7 +2174,7 @@ class SellPosController extends Controller
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
             $output['success'] = false;
-            $output['msg'] = __('lang_v1.item_out_of_stock');
+            $output['msg'] = __('Product Does not exist in Selected Location');
         }
 
         return $output;
@@ -2379,6 +2381,7 @@ class SellPosController extends Controller
                 'VLD.qty_available',
                 'variations.default_sell_price as selling_price',
                 'variations.sub_sku',
+                'products.sku',
                 'products.image'
             )
                 ->where("p_type", "product")
@@ -2434,6 +2437,8 @@ class SellPosController extends Controller
 
             if (isset($location_id)) {
                 $products->where('VLD.location_id', "=", $location_id);
+            }else{
+                $products->where('VLD.location_id', "!=", 2);
             }
             //Include search
             if (!empty($term)) {
@@ -2486,6 +2491,7 @@ class SellPosController extends Controller
                 'products.id as product_id',
                 'products.name',
                 'products.type',
+                'products.sku',
                 'products.color_id',
                 'products.enable_stock',
                 'variations.id as variation_id',

@@ -22,8 +22,8 @@ class ColorController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $colors = Color::where('business_id', $business_id)
-                        ->select(['name', 'description', 'id']);
-        print_r($colors);die();
+                        ->select(['name','color_code', 'description', 'id']);
+        // print_r($colors);die();
 
             return Datatables::of($colors)
                 ->addColumn(
@@ -75,9 +75,8 @@ class ColorController extends Controller
         if (!auth()->user()->can('color.create')) {
             abort(403, 'Unauthorized action.');
         }
-
         try {
-            $input = $request->only(['name', 'description']);
+            $input = $request->only(['name', 'description','color_code']);
             $business_id = $request->session()->get('user.business_id');
             $input['business_id'] = $business_id;
             $input['created_by'] = $request->session()->get('user.id');
@@ -95,7 +94,7 @@ class ColorController extends Controller
                         ];
         }
 
-        return $output;
+        return redirect()->back()->with(['success'=>$output]);
     }
 
     /**
@@ -145,7 +144,7 @@ class ColorController extends Controller
 
         if (request()->ajax()) {
             try {
-                $input = $request->only(['name', 'description']);
+                $input = $request->only(['name', 'description','color_code']);
                 $business_id = $request->session()->get('user.business_id');
 
                 $color = Color::where('business_id', $business_id)->findOrFail($id);

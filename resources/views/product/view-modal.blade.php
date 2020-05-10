@@ -10,8 +10,8 @@
 	      			<div class="col-sm-4 invoice-col">
 	      				<b>@lang('product.sku'):</b>
 						{{$product->sku }}<br>
-						<b>@lang('product.brand'): </b>
-						{{$product->brand->name or '--' }}<br>
+						{{-- <b>@lang('product.brand'): </b>
+						{{$product->brand->name or '--' }}<br> --}}
 						<b>@lang('product.unit'): </b>
 						{{$product->unit->short_name or '--' }}<br>
 						<b>@lang('product.barcode_type'): </b>
@@ -47,10 +47,13 @@
 						{{$product->supplier->name or '---'  }}<br>
 						<b>Color: </b>
 						{{$product->color->name or '---' }}<br>
-						<b>Size : </b>
-						{{$product->size->name or '---' }}<br>
+						@if ($product->size)
+							<b>Size : </b>
+							{{$product->size->name or '---' }}<br>
+						    
+						@endif
 						<b>Sub Size : </b>
-						{{$product->sub_size->name or '---' }}<br>
+						{{$product->sub_size()->first()->name or '---' }}<br>
 						
 	      			</div>
 
@@ -88,8 +91,8 @@
 							<b>@lang('lang_v1.weight'): </b>
 							{{$product->weight }}<br>
 						@endif
-						<b>@lang('product.applicable_tax'): </b>
-						{{$product->product_tax->name or __('lang_v1.none') }}<br>
+						{{-- <b>@lang('product.applicable_tax'): </b>
+						{{$product->product_tax->name or __('lang_v1.none') }}<br> --}}
 						@php
 							$tax_type = ['inclusive' => __('product.inclusive'), 'exclusive' => __('product.exclusive')];
 						@endphp

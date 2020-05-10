@@ -42,6 +42,7 @@
                 </th>
                 <th>Image</th>
                 <th>@lang('sale.product')</th>
+                <th>@lang('messages.action')</th>
                 <th>Refference</th>
                 <th>Purchase Price</th>
                 <th>@lang('lang_v1.selling_price')</th>
@@ -55,7 +56,7 @@
                 <th>Date</th>
                 <th>BulkCode</th>
                 <th>@lang('product.sku')</th>
-                <th>@lang('messages.action')</th>
+                <th>Description</th>
             </tr>
         </thead>
         <tfoot>

@@ -20,10 +20,11 @@ class ContactUtil
         $contact = Contact::where('type', 'customer')
                     ->where('business_id', $business_id)
                     ->where('is_default', 1)
-                    ->first()
-                    ->toArray();
+                    ->first();
+                    // ->toArray();
 
         if (!empty($contact)) {
+            $contact = $contact->toArray();
             return $contact;
         } else {
             return false;

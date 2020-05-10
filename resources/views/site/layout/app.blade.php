@@ -35,14 +35,14 @@
     </script>
     
     <!-- Plugins CSS File -->
-    <link rel="stylesheet" href="{{asset('site_assets/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('site_assets/fontawesome/css/all.min.css')}}">
     <link rel="stylesheet" href="{{asset('plugins/tailselect/css/modern/tail.select-light.css')}}">
-
+    
     @yield('css')
     <!-- Main CSS File -->
-    <link rel="stylesheet" href="{{asset('site_assets/css/style.min.css')}}">
+    <link rel="stylesheet" href="{{asset('site_assets/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/app.css')}}">
+    <link rel="stylesheet" href="{{asset('site_assets/css/style.min.css')}}">
 </head>
 <body>
     <div class="page-wrapper">
@@ -105,11 +105,11 @@
 
     <!-- Plugins JS File -->
     <script src="{{asset('site_assets/js/jquery.min.js')}}"></script>
-    <script src="{{asset('js/app.js')}}"></script>
     <script src="{{asset('site_assets/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('site_assets/js/plugins.min.js')}}"></script>
     <script src="{{asset('site_assets/fontawesome/js/all.min.js')}}"></script>
     <script src="{{asset('plugins/tailselect/js/tail.select.min.js')}}"></script>
+    <script src="{{asset('js/app.js')}}"></script>
     {{-- <script src="{{ asset('js/share.js') }}"></script> --}}
     <script>
         $(function () {

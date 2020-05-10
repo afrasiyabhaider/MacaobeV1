@@ -1,3 +1,6 @@
+@php
+    $ut = new \App\Utils\ProductUtil();
+@endphp
 @extends('site.layout.app')
 @section('title')
     Product Detail
@@ -79,20 +82,20 @@
                                              <span class="old-price">
                                                   <i class="fa fa-euro-sign"></i>
                                                   {{
-                                                       $product->variations()->first()['sell_price_inc_tax']
+                                                       $ut->num_f($product->variations()->first()['sell_price_inc_tax'])
                                                   }}
                                              </span>
                                              <span class="product-price">
                                                   <i class="fa fa-euro-sign"></i>
                                                   {{
-                                                       $special_category->after_discount
+                                                       $ut->num_f($special_category->after_discount)
                                                   }}
                                              </span>
                                         @else
                                              <span class="product-price">
                                                   <i class="fa fa-euro-sign"></i>
                                                   {{
-                                                       $product->variations()->first()['sell_price_inc_tax']
+                                                       $ut->num_f($product->variations()->first()['sell_price_inc_tax'])
                                                   }}
                                              </span>
                                         @endif
@@ -103,16 +106,37 @@
                                              }}
                                         </p>
                                    </div><!-- End .price-box -->
-                                   
 
-                                   {{-- <div class="product-desc">
-                                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non.</p>
-                                   </div><!-- End .product-desc --> --}}
-                              <input type="hidden" name="refference" value="{{$product->refference}}" id="refference">
+                                   <input type="hidden" name="refference" value="{{$product->refference}}" id="refference">
+
                                    <div class="product-filters-container">
-                                        <div class="product-single-filter">
+                                        <div class="">
                                              <label>Colors:</label>
-                                             <select name="color" class="form-control col-6 select2 change-filter">
+                                   @if ($colors->count())
+                                             @foreach ($colors as $item)
+                                   <div class="row ml-5 mt-1">
+                                        <div class="col-12">
+                                             {{-- <div style="width:50px; border:1px solid black; background-color: {{$item->color_code}}" class="float-left">&nbsp;</div> --}}
+                                                  {{-- <input type="radio" name="color" value="{{$item->id}}" class="mt-1"> --}}
+                                                  <div class="custom-control custom-radio">
+                                                       <div style="width:50px; border:1px solid black; background-color: {{$item->color_code}}" class="float-left">&nbsp;</div>
+                                                       <input type="radio" id="customRadio{{$item->id}}" name="color" class="custom-control-input">
+                                                       <label class="custom-control-label" for="customRadio{{$item->id}}">
+                                                            {{$item->name}}
+                                                       </label>
+                                                       </div>
+                                                  {{-- <span class="pt-1">
+                                                       {{$item->name}}
+                                                  </span> --}}
+                                        </div>
+                                   </div>
+                                        @endforeach
+                                   @else
+                                        <span>
+                                             No Color Available for this Product
+                                        </span>
+                                   @endif
+                                             {{-- <select name="color" class="form-control col-6 select2 change-filter">
                                                   <optgroup>
                                                        <option value="0">
                                                             Choose Color
@@ -123,11 +147,11 @@
                                                   </option>
                                                        @endforeach
                                                   </optgroup>
-                                             </select>
+                                             </select> --}}
                                         </div><!-- End .product-single-filter -->
                                    </div>
 
-                                   <div class="product-filters-container">
+                                   <div class="product-filters-container mt-2">
                                         <div class="product-single-filter">
                                              <label>Sizes:</label>
                                              <select id="size" name="size" class="form-control col-6 select2 change-filter">
@@ -274,7 +298,7 @@
                                                             <br>
                                                   <i class="fa fa-euro-sign"></i>
                                                   {{
-                                                       $item->products()->first()->variations()->first()['sell_price_inc_tax']
+                                                       $ut->num_f($item->products()->first()->variations()->first()['sell_price_inc_tax'])
                                                   }}
                                                                  </span>
                                                                  
@@ -328,35 +352,11 @@
                var base_url = "{{url('/')}}";
 
               $(".change-filter").change(function () {
-                   var color = $("select[name=color]").val();
                    var size = $("select[name=size]").val();
                    var ref = $("#refference").val();
-               //     console.log(size);
-               //     console.log(color);
-               //     console.log(ref);
-
                     $("#old_qty").show();
                     $("#new_qty").hide();
-                    if (color != 0 && size != 0) {
-                         $.ajax({
-                              url: base_url+"/product/"+ref+"/color/"+color+"/size/"+size,
-                              type: "GET",
-                              dataType: "json",
-                              success: function (res) {
-                                   // console.log(res);
-                                   $("#old_qty").hide();
-                                   $("#new_qty").show();
-                                   if (res.qty > 2) {
-                                        var span = "<span> In Stock: "+parseInt(res.qty)+" Pc(s)</span>";
-                                   }else if(res.qty<=2 && res.qty != 0){
-                                        var span = '<span class="text-danger"> In Stock: '+parseInt(res.qty)+' Pc(s) </span>';
-                                   }else{
-                                        var span = '<span class="text-danger"> Out of Stock: '+parseInt(res.qty)+' Pc(s)</span>';
-                                   }
-                                   $("#new_qty").html(span);
-                              }
-                         });
-                    }else if (color == 0 && size != 0) {
+                    if (size != 0) {
                          $.ajax({
                               url: base_url+"/product/"+ref+"/size/"+size,
                               type: "GET",
@@ -382,33 +382,98 @@
                                    });
                               }
                          });
-                    }else if(color !=0 && size==0){
-                         $.ajax({
-                              url: base_url+"/product/"+ref+"/color/"+color,
-                              type: "GET",
-                              dataType: "json",
-                              success: function (res) {
-                                   // console.log(res);
-                                   $("#old_qty").hide();
-                                   $("#new_qty").show();
-                                   if (res.qty > 2) {
-                                        var span = "<span> In Stock: "+parseInt(res.qty)+" Pc(s)</span>";
-                                   }else if(res.qty<=2 && res.qty != 0){
-                                        var span = '<span class="text-danger"> In Stock: '+parseInt(res.qty)+' Pc(s)</span>';
-                                   }else{
-                                        var span = '<span class="text-danger"> Out of Stock: '+parseInt(res.qty)+' Pc(s)</span>';
-                                   }
-                                   $("#new_qty").html(span);
-                                   var select = tail.select("#size");
-                                   removeOptions(select);
-                                   $.each(res.sizes, function(i, d) {
-                                        select.options.add(d.id, d.name);
-                                        select.query();
-                                   });
-                              }
-                         });
                     }
+                         
               });
+
+              /**
+              * Below is old Filter which gets quantity of products on the basis of
+              * Size and color
+              *
+              **/
+          //     $(".change-filter_old").change(function () {
+          //          var color = $("input[name=color]").val();
+          //      //     var color = $("select[name=color]").val();
+          //          var size = $("select[name=size]").val();
+          //          var ref = $("#refference").val();
+          //      //     console.log(size);
+          //      //     console.log(color);
+          //      //     console.log(ref);
+
+          //           $("#old_qty").show();
+          //           $("#new_qty").hide();
+          //           if (color != 0 && size != 0) {
+          //                $.ajax({
+          //                     url: base_url+"/product/"+ref+"/color/"+color+"/size/"+size,
+          //                     type: "GET",
+          //                     dataType: "json",
+          //                     success: function (res) {
+          //                          // console.log(res);
+          //                          $("#old_qty").hide();
+          //                          $("#new_qty").show();
+          //                          if (res.qty > 2) {
+          //                               var span = "<span> In Stock: "+parseInt(res.qty)+" Pc(s)</span>";
+          //                          }else if(res.qty<=2 && res.qty != 0){
+          //                               var span = '<span class="text-danger"> In Stock: '+parseInt(res.qty)+' Pc(s) </span>';
+          //                          }else{
+          //                               var span = '<span class="text-danger"> Out of Stock: '+parseInt(res.qty)+' Pc(s)</span>';
+          //                          }
+          //                          $("#new_qty").html(span);
+          //                     }
+          //                });
+          //           }else if (color == 0 && size != 0) {
+          //                $.ajax({
+          //                     url: base_url+"/product/"+ref+"/size/"+size,
+          //                     type: "GET",
+          //                     dataType: "json",
+          //                     success: function (res) {
+          //                          // console.log(res);
+          //                          $("#old_qty").hide();
+          //                          $("#new_qty").show();
+          //                          if (res.qty > 2) {
+          //                               var span = "<span> In Stock: "+parseInt(res.qty)+" Pc(s)</span>";
+          //                          }else if(res.qty<=2 && res.qty != 0){
+          //                               var span = '<span class="text-danger"> In Stock: '+parseInt(res.qty)+' Pc(s) </span>';
+          //                          }else{
+          //                               var span = '<span class="text-danger"> Out of Stock: '+parseInt(res.qty)+' Pc(s)</span>';
+          //                          }
+          //                          $("#new_qty").html(span);
+
+          //                          var select = tail.select("select[name=color]");
+          //                          removeOptions(select);
+          //                          $.each(res.color, function(i, d) {
+          //                               select.options.add(d.id, d.name);
+          //                               select.query();
+          //                          });
+          //                     }
+          //                });
+          //           }else if(color !=0 && size==0){
+          //                $.ajax({
+          //                     url: base_url+"/product/"+ref+"/color/"+color,
+          //                     type: "GET",
+          //                     dataType: "json",
+          //                     success: function (res) {
+          //                          // console.log(res);
+          //                          $("#old_qty").hide();
+          //                          $("#new_qty").show();
+          //                          if (res.qty > 2) {
+          //                               var span = "<span> In Stock: "+parseInt(res.qty)+" Pc(s)</span>";
+          //                          }else if(res.qty<=2 && res.qty != 0){
+          //                               var span = '<span class="text-danger"> In Stock: '+parseInt(res.qty)+' Pc(s)</span>';
+          //                          }else{
+          //                               var span = '<span class="text-danger"> Out of Stock: '+parseInt(res.qty)+' Pc(s)</span>';
+          //                          }
+          //                          $("#new_qty").html(span);
+          //                          var select = tail.select("#size");
+          //                          removeOptions(select);
+          //                          $.each(res.sizes, function(i, d) {
+          //                               select.options.add(d.id, d.name);
+          //                               select.query();
+          //                          });
+          //                     }
+          //                });
+          //           }
+          //     });
           }); // $.ready()
     </script>
 @endsection

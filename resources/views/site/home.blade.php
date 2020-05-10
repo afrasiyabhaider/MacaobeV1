@@ -1,3 +1,7 @@
+@php
+    $ut = new \App\Utils\ProductUtil();
+@endphp
+
 @extends('site.layout.app')
 @section('title')
     Home | {{config('app.site')}}
@@ -123,7 +127,7 @@
                                 <span class="product-price">
                                     <i class="fa fa-euro-sign"></i>
                                     {{
-                                        $item->products()->first()->variations()->first()['sell_price_inc_tax']
+                                        $ut->num_f($item->products()->first()->variations()->first()['sell_price_inc_tax'])
                                     }}
                                 </span>
                             </div><!-- End .price-box -->
@@ -215,7 +219,7 @@
                                 <span class="product-price">
                                     <i class="fa fa-euro-sign"></i>
                                     {{
-                                        $item->products()->first()->variations()->first()['sell_price_inc_tax']
+                                        $ut->num_f($item->products()->first()->variations()->first()['sell_price_inc_tax'])
                                     }}
                                 </span>
                             </div><!-- End .price-box -->
@@ -282,7 +286,7 @@
                                 <span class="product-price">
                                     <i class="fa fa-euro-sign"></i>
                                     {{
-                                        $item->products()->first()->variations()->first()['sell_price_inc_tax']
+                                        $ut->num_f($item->products()->first()->variations()->first()['sell_price_inc_tax'])
                                     }}
                                 </span>
                             </div><!-- End .price-box -->

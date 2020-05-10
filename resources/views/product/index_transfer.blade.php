@@ -197,6 +197,7 @@
                         { data: 'mass_delete'},
                         { data: 'image', name: 'products.image'  },
                         { data: 'product', name: 'products.name'  },
+                        { data: 'action', name: 'action'},
                         { data: 'refference', name: 'products.refference'  },
                         { data: 'purchase_price', name: 'purchase_price', searchable: false},
                         { data: 'selling_price', name: 'selling_price', searchable: false},
@@ -210,7 +211,7 @@
                         { data: 'date', name: 'products.created_at'},
                         { data: 'bulk_add', name: 'products.bulk_add', searchable: true},
                         { data: 'sku', name: 'products.sku'},
-                        { data: 'action', name: 'action'}
+                        { data: 'description', name: 'products.description'},
                     ],
                     createdRow: function( row, data, dataIndex ) {
                         if($('input#is_rack_enabled').val() == 1){
@@ -377,18 +378,19 @@
                 }); 
                 
                 if(selected_rows.length > 0){
+                    $('#unknownDiscountModal').modal('show'); 
                     $('input#selected_products_bulkTransfer').val(selected_rows);
-                    swal({
-                        title: LANG.sure,
-                        icon: "warning",
-                        buttons: true,
-                        dangerMode: true,
-                    }).then((willDelete) => {
-                        if (willDelete) {
-                            $('#unknownDiscountModal').modal('show'); 
-                            // $('form#bulkTransfer_form').submit();
-                        }
-                    });
+                    // swal({
+                    //     title: LANG.sure,
+                    //     icon: "warning",
+                    //     buttons: true,
+                    //     dangerMode: true,
+                    // }).then((willDelete) => {
+                    //     if (willDelete) {
+                    //         $('#unknownDiscountModal').modal('show'); 
+                    //         // $('form#bulkTransfer_form').submit();
+                    //     }
+                    // });
                 } else{
                     $('input#selected_products_bulkTransfer').val('');
                     swal('@lang("lang_v1.no_row_selected")');
