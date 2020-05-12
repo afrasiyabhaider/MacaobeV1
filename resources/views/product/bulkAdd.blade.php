@@ -29,6 +29,10 @@
 	 <!-- ---- Row Series  | 
 		<input type="number" onchange="editPnc(this);" value="0"> 
 	 -->
+	 <a href="{{url('/products/50/edit')}}" class="btn btn-info" target="__blank">
+		  Go to Update
+		  <i class="fa fa-arrow-right"></i>
+	  </a>
    </h1>
     <!-- <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
@@ -560,7 +564,7 @@
       <div class="modal-footer">
         <!-- <button type="button" class="btn btn-danger text-left " style="float: left;" onclick="AddSize();" >+</button> -->
         <button type="button" class="btn btn-danger" onclick="clearAll(1);" data-dismiss="modal">Clear</button>
-        <button type="button" class="btn btn-success" onclick="addAnother();" data-dismiss="modal">Add This</button>
+        <button type="button" class="btn btn-success" onclick="addAnother(); getSupplierDetails();" data-dismiss="modal">Add This</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
     </div>
@@ -668,14 +672,14 @@
 					for (i = 0  ; i < obj.length; i++) {
 					rowSize++ ;
 					html += "<div class=' col-md-12' id='sizeRow_"+rowSize+"'> ";
-					html += "<div class=' col-md-2'><select class='form-control' readonly><option value='"+sizeId+"'>"+size_idtext+"</option></select></div>";
-					html += "<div class=' col-md-2'><select class='form-control'  readonly><option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option></select></div>";
+					html += "<div class=' col-md-2'><select tab-index='-1' class='form-control' readonly><option value='"+sizeId+"'>"+size_idtext+"</option></select></div>";
+					html += "<div class=' col-md-2'><select tab-index='-1'class='form-control'  readonly><option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option></select></div>";
 
-					html += "<div class=' col-md-2'><select onchange='setColorWithSize("+i+");' class='form-control' form='product_add_form'  readonly required id='color_id_"+i+"'> <option selected='selected' value='"+$("#color_idc option:selected").val()+"'>"+$("#color_idc option:selected").text()+"</option></select></div>";
+					html += "<div class=' col-md-2'><select tab-index='-1' onchange='setColorWithSize("+i+");' class='form-control' form='product_add_form'  readonly required id='color_id_"+i+"'> <option selected='selected' value='"+$("#color_idc option:selected").val()+"'>"+$("#color_idc option:selected").text()+"</option></select></div>";
 
-					html += "<div class=' col-md-3'><input tab-index='"+i+"' onChange='setValue(this);' type='number' data-size='"+sizeId+"' data-size-name='"+size_idtext+"' data-size-sub='"+obj[i]['id']+"' data-size-sub-name='"+obj[i]['name']+"' data-color='"+$("#color_idc option:selected").val()+"' data-color-name='"+$("#color_idc option:selected").text()+"' class='form-control sizeQty'  value='1'  id='datasize_"+i+"'/></div>";
+					html += "<div class=' col-md-3'><input tab-index='"+(0)+"' onChange='setValue(this);' type='number' data-size='"+sizeId+"' data-size-name='"+size_idtext+"' data-size-sub='"+obj[i]['id']+"' data-size-sub-name='"+obj[i]['name']+"' data-color='"+$("#color_idc option:selected").val()+"' data-color-name='"+$("#color_idc option:selected").text()+"' class='form-control sizeQty'  value='1'  id='datasize_"+i+"'/></div>";
 
-					html += "<div class=' col-md-1'><button onclick='removeSize("+rowSize+")' class='btn btn-sm btn-danger'>X</button></div>";
+					html += "<div class=' col-md-1'><button tab-index=-1 onclick='removeSize("+rowSize+")' class='btn btn-sm btn-danger'>X</button></div>";
 					html += "</div>";
 					}
 					$("#sizeArea").html(html);
@@ -744,7 +748,7 @@
             $("#temp_reff").val(data); 
             var n = reffCount;
             var result = (pad+n).slice(-pad.length);
-            // console.log('Refference : '+result);
+          //   console.log('Refference : '+result);
             $("#refference_id").val(data+result );
             //
                 
