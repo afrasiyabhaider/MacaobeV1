@@ -57,6 +57,27 @@
 				</div>
 			</div>
 			<div class="row">
+				<div class="col-sm-4">
+					<div class="form-group">
+						{!! Form::label('name', __('product.product_name') . ': *') !!}
+						{!! Form::text('name', !empty($duplicate_product->name) ? $duplicate_product->name : null, ['class' => 'req form-control', 'disabled' ,'required',
+						'placeholder' => __('product.product_name')]); !!}
+					</div>
+				</div>
+				{{-- <div class="clearfix"></div> --}}
+				
+				<div class="col-sm-4">
+					<div class="form-group">
+						{!! 
+						Form::label('refference', __('product.refference') . ':') 
+						!!} 
+						@show_tooltip(__('tooltip.sku'))
+						{!! Form::text('refference', null, ['id'=>'refference_id','class' => 'req form-control disabled','placeholder' => "Refference",'disabled' => 'true', 'required' => 'true','autofocus']); !!}
+						<input type="hidden" value="noValue" id="temp_reff">
+					</div>
+				</div>
+			</div>
+			<div class="row">
 				<div class="col-sm-4 @if(!session('business.enable_brand')) hide @endif">
 					<div class="form-group">
 						{!! Form::label('supplier_id', __('product.supplier') . ':') !!}
@@ -93,65 +114,47 @@
 						</div>
 					</div>
 					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-							{!! Form::label('image', __('lang_v1.product_image') . ':') !!}
-							{!! Form::file('image', ['id' => 'upload_image', 'accept' => 'image/*']); !!}
-							<small><span class="help-block">@lang('purchase.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)]) <br> @lang('lang_v1.aspect_ratio_should_be_1_1')</span></small>
-						</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label>Barcode</label>
+						<input type="text" id="sku" name="sku" class="form-control opt" placeholder="Enter custom barcode minimum 9 Numbers" min="9">
 					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-							{!! Form::label('name', __('product.product_name') . ': *') !!}
-							{!! Form::text('name', !empty($duplicate_product->name) ? $duplicate_product->name : null, ['class' => 'req form-control', 'required',
-							'placeholder' => __('product.product_name')]); !!}
-						</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label>Description</label>
+						<input type="text" id="ref_description" name="ref_description" class="form-control opt" placeholder="Enter description" min="9">
 					</div>
-					{{-- <div class="clearfix"></div> --}}
-					
-					<div class="col-sm-4">
-						<div class="form-group">
-							{!! 
-							Form::label('refference', __('product.refference') . ':') 
-							!!} 
-							@show_tooltip(__('tooltip.sku'))
-							{!! Form::text('refference', null, ['id'=>'refference_id','class' => 'req form-control disabled','placeholder' => "Refference",'disabled' => 'true', 'required' => 'true','autofocus']); !!}
-							<input type="hidden" value="noValue" id="temp_reff">
-						</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4  ">
+					<div class="form-group">
+						{!! 
+						Form::label('unit_price', __('product.unit') . ' Price:*') 
+						!!}
+						<input name="unit_price" required="true" type="text" class="req  form-control col-12" placeholder="Unit Price" id="unit_price" autofocus="true" onchange="changeUnitPrice(this);">
 					</div>
-
-					<div class="col-sm-4  ">
-						<div class="form-group">
-							{!! 
-							Form::label('unit_price', __('product.unit') . ' Price:*') 
-							!!}
-							<input name="unit_price" required="true" type="text" class="req  form-control col-12" placeholder="Unit Price" id="unit_price" autofocus="true" onchange="changeUnitPrice(this);">
-						</div>
+				</div>
+				
+				<div class="col-sm-4">
+					<div class="form-group">
+						{!! Form::label('custom_price', __('product.sale_price') . ':') !!} 
+						{!! Form::text('custom_price', null, ['class' => 'req form-control',
+						'placeholder' => __('product.sale_price'), 'required' => 'true', 'onChange' => "DittoThis(this,'single_dsp');", 'required' => 'true']); !!}
 					</div>
-					
-					<div class="col-sm-4">
-						<div class="form-group">
-							{!! Form::label('custom_price', __('product.sale_price') . ':') !!} 
-							{!! Form::text('custom_price', null, ['class' => 'req form-control',
-							'placeholder' => __('product.sale_price'), 'required' => 'true', 'onChange' => "DittoThis(this,'single_dsp');", 'required' => 'true']); !!}
-						</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						{!! Form::label('image', __('lang_v1.product_image') . ':') !!}
+						{!! Form::file('image', ['id' => 'upload_image', 'accept' => 'image/*']); !!}
+						<small><span class="help-block">@lang('purchase.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)]) <br> @lang('lang_v1.aspect_ratio_should_be_1_1')</span></small>
 					</div>
-						{{-- <div class="col-sm-4">
-						</div> --}}
-						<div class="col-sm-4">
-							<div class="form-group">
-								<label>Barcode</label>
-								<input type="text" id="sku" name="sku" class="form-control opt" placeholder="Enter custom barcode minimum 9 Numbers" min="9">
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="form-group">
-								<label>Description</label>
-								<input type="text" id="ref_description" name="ref_description" class="form-control opt" placeholder="Enter description" min="9">
-							</div>
-						</div>
-
-					
+				</div>
+			</div>
+			<div class="row">
 					<div class="hide col-sm-3 @if(!session('business.enable_brand')) hide @endif">
 					<div class="form-group">
 						{!! Form::label('brand_id', __('product.brand') . ':') !!}
@@ -182,10 +185,10 @@
 					</div>
 					<div class="clearfix"></div>
 					<div style="margin-top:50px">
-						<div class="col-sm-4">
+						<div class="col-sm-2">
 							{{-- This is only for alternative of offset --}}
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-2">
 							<div class="form-group">
 								{{-- {!! Form::label('size_id', __('product.size') . ':') !!} --}}
 								<div class="input-group">
@@ -197,7 +200,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-5">
+						<div class="col-sm-2">
 							<div class="form-group">
 								
 								<div class="input-group">
@@ -595,8 +598,8 @@
 		$("#name_id").val(arrName[0]);
 		$("#name").val(arrName[1]);
 		//console.log("Arr Name : "+arrName);
-		//    $("#unit_price").focus();
-		$("#refference_id").focus();
+		   $("#unit_price").focus();
+		// $("#refference_id").focus();
     });
 
     //     window.onbeforeunload = function() {
@@ -627,7 +630,7 @@
 		}
      }
      $("#sub_category_id").change(function () {
-    	$("#refference_id").focus();
+    	// $("#refference_id").focus();
      });
      function changeUnitPrice(obj)
      {
@@ -740,6 +743,10 @@
            }
         });
      }
+	/**
+	* Refference Number Generator
+	*
+	**/
      var reffCount  = <?=$refferenceCount;?>;
      var pad = "0000"
      function getSupplierDetails()
@@ -759,12 +766,17 @@
            }
         });
      }
+	/**
+	* Refference Number Updator
+	*
+	**/
      function updateRefference()
      { 
-      var n = reffCount;
+		var n = reffCount;
             var result = (pad+n).slice(-pad.length);
-      $("#refference").val($("#temp_reff").val()+result);
+		$("#refference").val($("#temp_reff").val()+result);
      }
+
      function AddSize()
      {
       var size_id = $("#add_size_id option:selected").val();
@@ -785,10 +797,17 @@
       $("#sizeArea").append(html);
       $("#add_qty").val("0").focus();
      }
+
      function removeSize(row)
      {
       $("#sizeRow_"+row).remove();
      }
+
+
+	/**
+	* AddThis button
+	*
+	**/
     function addThis()
     {
       if($(".bulkProducts").length <= 0)
@@ -800,6 +819,8 @@
       });
       
       $("#btnSubmit").click();
+
+	 $("#unit_price").focus();
     }
     function DittoThis(obj,target)
     {
@@ -854,7 +875,7 @@
 
       $(".fileinput-remove").click();
 	 
-      $("#name").focus(); 
+     //  $("#name").focus(); 
       if(objPNC[pncRow] == undefined)
       { 
          $("#name").val("");

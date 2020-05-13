@@ -1522,6 +1522,7 @@ class ProductController extends Controller
             $sub_categories = Category::where('business_id', $business_id)
                 ->where('parent_id', $category_id)
                 ->select(['name', 'id'])
+                ->orderBy('name','ASC')
                 ->get();
             $html = '<option value="">None</option>';
             if (!empty($sub_categories)) {
@@ -2790,11 +2791,13 @@ class ProductController extends Controller
         //If brands, category are enabled then send else false.
         $noRefferenceProducts = (request()->session()->get('business.enable_category') == 1) ? Category::catAndSubCategories($business_id) : false;
         $suppliers = (request()->session()->get('business.enable_brand') == 1) ? Supplier::where('business_id', $business_id)
-            ->pluck('name', 'id')
-            ->prepend(__('lang_v1.all_suppliers'), 'all') : false;
+                    ->pluck('name', 'id')
+                    ->prepend(__('lang_v1.all_suppliers'), 'all') : false;
         $categories = Category::where('business_id', $business_id)
             ->where('parent_id', 0)
+            ->orderBy('name','Asc')
             ->pluck('name', 'id');
+
         $sizes = Size::where('business_id', $business_id)
             ->where('parent_id', 0)
             ->select('name', 'id')->get();
@@ -2810,8 +2813,10 @@ class ProductController extends Controller
         $objBuss = \App\Business::find(request()->session()->get('user.business_id'));
         $refferenceCount = str_pad($objBuss->prod_refference, 4, '0', STR_PAD_LEFT);
 
-        $suppliers = Supplier::where('business_id', $business_id)->pluck('name', 'id');
-        $colors = Color::where('business_id', $business_id)->pluck('name', 'id');
+        $suppliers = Supplier::where('business_id', $business_id)
+                    ->orderBy('name','Asc')->pluck('name', 'id');
+        $colors = Color::where('business_id', $business_id)
+                    ->orderBy('name','Asc')->pluck('name', 'id');
         $units = Unit::forDropdown($business_id, true);
 
         $tax_dropdown = TaxRate::forBusinessDropdown($business_id, true, true);
@@ -2838,6 +2843,7 @@ class ProductController extends Controller
             if (!empty($duplicate_product->category_id)) {
                 $sub_categories = Category::where('business_id', $business_id)
                     ->where('parent_id', $duplicate_product->category_id)
+                    ->orderBy('name','DESC')
                     ->pluck('name', 'id')
                     ->toArray();
             }
