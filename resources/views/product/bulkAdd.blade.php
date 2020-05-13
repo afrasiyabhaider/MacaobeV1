@@ -125,7 +125,7 @@
 							{!! 
 							Form::label('unit_price', __('product.unit') . ' Price:*') 
 							!!}
-							<input name="unit_price" required="true" type="text" class="req  form-control col-12" placeholder="Unit Price" id="unit_price" onchange="changeUnitPrice(this);">
+							<input name="unit_price" required="true" type="text" class="req  form-control col-12" placeholder="Unit Price" id="unit_price" autofocus="true" onchange="changeUnitPrice(this);">
 						</div>
 					</div>
 					
