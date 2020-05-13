@@ -25,15 +25,19 @@
 </style>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>@lang('product.add_new_product') 
-	 <!-- ---- Row Series  | 
-		<input type="number" onchange="editPnc(this);" value="0"> 
-	 -->
-	 <a href="{{url('/products/50/edit')}}" class="btn btn-info" target="__blank">
-		  Go to Update
-		  <i class="fa fa-arrow-right"></i>
-	  </a>
-   </h1>
+    <div class="row">
+	    <div class="col-sm-6">
+		    <h3>
+			    @lang('product.add_new_product') 
+		    </h3>
+	    </div>
+		<div class="col-sm-6">
+			<a href="{{url('/products/50/edit')}}" class="btn btn-info ml-5" target="__blank">
+				Update Product
+				<i class="fa fa-edit"></i>
+			</a>
+		</div>
+   </div>
     <!-- <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
         <li class="active">Here</li>
@@ -812,11 +816,16 @@
       $(".sizeQty").val("0");
       countSize = 0;
       $("#sizeArea").empty();
-      var fieldsArr = ["supplier_id", "brand_id",  "name", "sku","upload_image","unit_price","ref_description"];
+      var fieldsArr = ["supplier_id", "brand_id",  "name","upload_image","unit_price","ref_description","sku"];
      //  var notIncludeArr = ["single_dpp", "single_dpp_inc_tax", "single_dsp", "single_dsp_inc_tax", "profit_percent","upload_image"];
-      var ignoreArr = ["supplier_id", "brand_id", "category_id", "ref_description","sku", "name", "unit_price","custom_price","single_dpp", "single_dpp_inc_tax", "single_dsp", "single_dsp_inc_tax", "profit_percent","upload_image","refference_id"];
+      var ignoreArr = ["supplier_id", "brand_id", "category_id", "name", "unit_price","custom_price","single_dpp", "single_dpp_inc_tax", "single_dsp", "single_dsp_inc_tax", "profit_percent","upload_image","refference_id"];
 
-
+	$("#ref_description").val("");
+	$("#sku").val("");
+	/**
+	* Below will work only on those elements onwhich .req class is applied
+	*
+	**/
       $(".req").each(function() {
         if(fieldsArr.includes($(this).attr("id")) && IsAnother)
         {
@@ -842,7 +851,9 @@
         }
 
       });
+
       $(".fileinput-remove").click();
+	 
       $("#name").focus(); 
       if(objPNC[pncRow] == undefined)
       { 
