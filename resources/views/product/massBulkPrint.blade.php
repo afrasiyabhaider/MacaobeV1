@@ -77,13 +77,13 @@
 			@for($j=0;$j<$objProduct->current_stock;$j++)
 				<div class="col-md-4 col-xs-4 heh mt-sm-3">
 					<div class="">
-						<div class="col-xs-4 printList text-left" data-id="name" > 
+						<div class="col-xs-4 printList text-left" data-id="name"  style="font-size: 12px" > 
 							<strong>{{$objProduct->product}} </strong>
 						</div>
-						<div class="col-xs-4 printList text-center" data-id="color"> 
+						<div class="col-xs-4 printList text-center" data-id="color"  style="font-size: 12px"> 
 							{{$objProduct->ColorName}} 
 						</div>
-						<div  class="col-xs-4 printList text-right" data-id="size"> 
+						<div  class="col-xs-4 printList text-right" data-id="size"  style="font-size: 12px"> 
 							{{$objProduct->SubSizeName }} 
 						</div>
 
@@ -101,7 +101,7 @@
 					</div>
 					
 					<div class="col-xs-12">
-						<div class="col printList pull-left" data-id="price" style="font-weight: bolder">
+						<div class="col printList pull-left" data-id="price" style="font-weight: bolder; font-size: 10px">
 							<span>
 								€ 
 								</span>
@@ -117,11 +117,11 @@
 								</span> 
 							@endif
 						</div>
-						<div class="col-xs-5 text-center printList" data-id="refference">
+						<div class="col-xs-4 text-center printList" data-id="refference" style="font-size: 10px">
 							{{$objProduct->refference }}
 						</div>
 						
-						<div  class="col printList text-right" data-id="subcat">
+						<div  class="col printList text-right" data-id="subcat" style="font-size: 10px">
 							{{$objProduct->sub_category}}
 						</div>
 						{{-- <div  class="col-md-3 col-xs-6 pull-left printList text-right" data-id="cat">
