@@ -117,6 +117,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
 
     Route::resource('products', 'ProductController');
     Route::resource('suppliers', 'SupplierController');
+    // Route::get('suppliers', 'SupplierController@index');
     Route::get('/sizes/getSubSize/{id}', 'SizeController@getSubSize');
     Route::resource('sizes', 'SizeController');
     Route::resource('colors', 'ColorController');

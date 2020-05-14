@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Color;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class ColorController extends Controller
 {
@@ -25,18 +26,18 @@ class ColorController extends Controller
                         ->select(['name','color_code', 'description', 'id']);
         // print_r($colors);die();
 
-            return Datatables::of($colors)
+            return DataTables::of($colors)
                 ->addColumn(
                     'action',
                     '@can("color.update")
-                    <button data-href="{{action(\'ColorController@edit\', [$id])}}" class="btn btn-xs btn-primary edit_brand_button"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</button>
+                    <button data-href="{{action(\'ColorController@edit\', [$id])}}" class="btn btn-xs btn-primary edit_color_button"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</button>
                         &nbsp;
                     @endcan
                     @can("color.delete")
-                        <button data-href="{{action(\'ColorController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_brand_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
+                        <button data-href="{{action(\'ColorController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_color_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
                     @endcan'
                 )
-                ->removeColumn('id')
+                ->removeColumn('id','description')
                 ->rawColumns([2])
                 ->make(false);
         }

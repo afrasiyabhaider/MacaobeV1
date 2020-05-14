@@ -75,15 +75,15 @@
 		@foreach($product as $objProduct)
 			@php $i++; @endphp
 			@for($j=0;$j<$objProduct->current_stock;$j++)
-				<div class="col-md-4 col-xs-4 heh">
-					<div class="col-md-12 col-xs-12">
-						<div  class="col-md-6 col-xs-6 printList text-left" data-id="name" > 
+				<div class="col-md-4 col-xs-4 heh mt-sm-3">
+					<div class="">
+						<div class="col-xs-4 printList text-left" data-id="name" > 
 							<strong>{{$objProduct->product}} </strong>
 						</div>
-						<div class="col-md-3 col-xs-4 pull-left printList text-center" data-id="color"> 
+						<div class="col-xs-4 printList text-center" data-id="color"> 
 							{{$objProduct->ColorName}} 
 						</div>
-						<div  class="col-md-3 col-xs-4 pull-right printList text-right" data-id="size"> 
+						<div  class="col-xs-4 printList text-right" data-id="size"> 
 							{{$objProduct->SubSizeName }} 
 						</div>
 
@@ -93,31 +93,35 @@
 						@php
 							$barcodeArr = str_split($objProduct->sku, 1);
 						@endphp
-						<center class='barcodetc' style='word-spacing: 15px;font-size: 20px;font-weight: bold;'>
+						<center class='barcodetc' style='word-spacing: 5px;font-size: 15px;font-weight: bold;'>
 						@foreach($barcodeArr As $b)
 							<span >{{$b}}</span>
 						@endforeach
 					</center>
 					</div>
 					
-					<div class="col-12">
-						<div class="col-md-5 col-xs-6 pull-left printList" data-id="price">
-							€ 
+					<div class="col-xs-12">
+						<div class="col printList pull-left" data-id="price" style="font-weight: bolder">
+							<span>
+								€ 
+								</span>
+							{{-- i.fa.fa-euro-sign --}}
 							@if($objProduct->max_price != $objProduct->min_price && $objProduct->type == "variable") 
-								-  <span class="display_currency" data-currency_symbol="true">
-									{{$objProduct->max_price}}
-								</span> 
+							-  <span class="display_currency" data-currency_symbol="true">
+								{{$objProduct->max_price}}
+							</span> 
 							@else 
+							{{-- €  --}}
 								<span class="display_currency" data-currency_symbol="true">
 									{{$objProduct->max_price}}
 								</span> 
 							@endif
 						</div>
-						<div class="col-md-4 col-xs-5 pull-left printList" data-id="refference">
+						<div class="col-xs-5 text-center printList" data-id="refference">
 							{{$objProduct->refference }}
 						</div>
 						
-						<div  class="col-md-3 col-xs-5 pull-left printList text-right" data-id="subcat">
+						<div  class="col printList text-right" data-id="subcat">
 							{{$objProduct->sub_category}}
 						</div>
 						{{-- <div  class="col-md-3 col-xs-6 pull-left printList text-right" data-id="cat">

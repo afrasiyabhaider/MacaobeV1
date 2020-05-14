@@ -41,18 +41,14 @@ $(document).ready(function() {
             url: $(this).data('href'),
             dataType: 'html',
             success: function(result) {
-                $(container)
-                    .html(result)
-                    .modal('show');
+                $(container).html(result).modal('show');
             },
         });
     });
 
     $(document).on('submit', 'form#brand_add_form', function(e) {
         e.preventDefault();
-        $(this)
-            .find('button[type="submit"]')
-            .attr('disabled', true);
+        $(this).find('button[type="submit"]').attr('disabled', true);
         var data = $(this).serialize();
 
         $.ajax({
@@ -77,28 +73,101 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: '/brands',
-        columnDefs: [
-            {
-                targets: 2,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: 2,
+            orderable: false,
+            searchable: false,
+        }, ],
+    });
+    //Suppliers table
+    var supplier_table = $('#supplier_table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '/suppliers',
+        columnDefs: [{
+            targets: 2,
+            orderable: false,
+            searchable: false,
+        }, ],
+    });
+    //Color table
+    var color_table = $('#color_table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '/colors',
+        columnDefs: [{
+            targets: 2,
+            orderable: false,
+            searchable: false,
+        }, ],
     });
 
-    $(document).on('click', 'button.edit_brand_button', function() {
-        $('div.brands_modal').load($(this).data('href'), function() {
+    $(document).on('click', 'button.edit_color_button', function() {
+        $('div.color_modal').load($(this).data('href'), function() {
             $(this).modal('show');
 
-            $('form#brand_edit_form').submit(function(e) {
+            $('form#color_edit_form').submit(function(e) {
                 e.preventDefault();
-                $(this)
-                    .find('button[type="submit"]')
-                    .attr('disabled', true);
+                $(this).find('button[type="submit"]').attr('disabled', true);
                 var data = $(this).serialize();
 
                 $.ajax({
                     method: 'POST',
+                    url: $(this).attr('action'),
+                    dataType: 'json',
+                    data: data,
+                    success: function(result) {
+                        if (result.success == true) {
+                            $('div.brand_modal').modal('hide');
+                            toastr.success(result.msg);
+                            supplier_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                    },
+                });
+            });
+        });
+    });
+    $(document).on('click', 'button.edit_supplier_button', function() {
+        $('div.brands_modal').load($(this).data('href'), function() {
+            $(this).modal('show');
+
+            $('form#supplier_edit_form').submit(function(e) {
+                alert('Hello');
+                e.preventDefault();
+                $(this).find('button[type="submit"]').attr('disabled', true);
+                var data = $(this).serialize();
+
+                $.ajax({
+                    method: 'POST',
+                    url: $(this).attr('action'),
+                    dataType: 'json',
+                    data: data,
+                    success: function(result) {
+                        if (result.success == true) {
+                            $('div.brand_modal').modal('hide');
+                            toastr.success(result.msg);
+                            supplier_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                    },
+                });
+            });
+        });
+    });
+    $(document).on('click', 'button.edit_brand_button', function() {
+        $('div.brands_modal').load($(this).data('href'), function() {
+            $(this).modal('show');
+            $('form#brand_edit_form').submit(function(e) {
+                // alert('Hello');
+                e.preventDefault();
+                $(this).find('button[type="submit"]').attr('disabled', true);
+                var data = $(this).serialize();
+
+                $.ajax({
+                    method: 'PUT',
                     url: $(this).attr('action'),
                     dataType: 'json',
                     data: data,
@@ -116,6 +185,64 @@ $(document).ready(function() {
         });
     });
 
+    $(document).on('click', 'button.delete_color_button', function() {
+        swal({
+            title: LANG.sure,
+            text: LANG.confirm_delete_color,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                var href = $(this).data('href');
+                var data = $(this).serialize();
+
+                $.ajax({
+                    method: 'DELETE',
+                    url: href,
+                    dataType: 'json',
+                    data: data,
+                    success: function(result) {
+                        if (result.success == true) {
+                            toastr.success(result.msg);
+                            color_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                    },
+                });
+            }
+        });
+    });
+    $(document).on('click', 'button.delete_supplier_button', function() {
+        swal({
+            title: LANG.sure,
+            text: LANG.confirm_delete_supplier,
+            icon: 'warning',
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                var href = $(this).data('href');
+                var data = $(this).serialize();
+
+                $.ajax({
+                    method: 'DELETE',
+                    url: href,
+                    dataType: 'json',
+                    data: data,
+                    success: function(result) {
+                        if (result.success == true) {
+                            toastr.success(result.msg);
+                            supplier_table.ajax.reload();
+                        } else {
+                            toastr.error(result.msg);
+                        }
+                    },
+                });
+            }
+        });
+    });
     $(document).on('click', 'button.delete_brand_button', function() {
         swal({
             title: LANG.sure,
@@ -123,7 +250,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -153,20 +280,16 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: '/tax-rates',
-        columnDefs: [
-            {
-                targets: 2,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: 2,
+            orderable: false,
+            searchable: false,
+        }, ],
     });
 
     $(document).on('submit', 'form#tax_rate_add_form', function(e) {
         e.preventDefault();
-        $(this)
-            .find('button[type="submit"]')
-            .attr('disabled', true);
+        $(this).find('button[type="submit"]').attr('disabled', true);
         var data = $(this).serialize();
 
         $.ajax({
@@ -192,9 +315,7 @@ $(document).ready(function() {
 
             $('form#tax_rate_edit_form').submit(function(e) {
                 e.preventDefault();
-                $(this)
-                    .find('button[type="submit"]')
-                    .attr('disabled', true);
+                $(this).find('button[type="submit"]').attr('disabled', true);
                 var data = $(this).serialize();
 
                 $.ajax({
@@ -224,7 +345,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -256,13 +377,11 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: '/units',
-        columnDefs: [
-            {
-                targets: 3,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: 3,
+            orderable: false,
+            searchable: false,
+        }, ],
         columns: [
             { data: 'actual_name', name: 'actual_name' },
             { data: 'short_name', name: 'short_name' },
@@ -273,9 +392,7 @@ $(document).ready(function() {
 
     $(document).on('submit', 'form#unit_add_form', function(e) {
         e.preventDefault();
-        $(this)
-            .find('button[type="submit"]')
-            .attr('disabled', true);
+        $(this).find('button[type="submit"]').attr('disabled', true);
         var data = $(this).serialize();
 
         $.ajax({
@@ -301,9 +418,7 @@ $(document).ready(function() {
 
             $('form#unit_edit_form').submit(function(e) {
                 e.preventDefault();
-                $(this)
-                    .find('button[type="submit"]')
-                    .attr('disabled', true);
+                $(this).find('button[type="submit"]').attr('disabled', true);
                 var data = $(this).serialize();
 
                 $.ajax({
@@ -332,7 +447,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -366,13 +481,11 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: '/contacts?type=' + $('#contact_type').val(),
-        columnDefs: [
-            {
-                targets: targets,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: targets,
+            orderable: false,
+            searchable: false,
+        }, ],
         fnDrawCallback: function(oSettings) {
             var total_due = sum_table_col($('#contact_table'), 'contact_due');
             $('#footer_contact_due').text(total_due);
@@ -441,9 +554,7 @@ $(document).ready(function() {
                 submitHandler: function(form) {
                     e.preventDefault();
                     var data = $(form).serialize();
-                    $(form)
-                        .find('button[type="submit"]')
-                        .attr('disabled', true);
+                    $(form).find('button[type="submit"]').attr('disabled', true);
                     $.ajax({
                         method: 'POST',
                         url: $(form).attr('action'),
@@ -478,7 +589,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).attr('href');
                 var data = $(this).serialize();
@@ -507,19 +618,15 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: '/categories',
-        columnDefs: [
-            {
-                targets: 2,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: 2,
+            orderable: false,
+            searchable: false,
+        }, ],
     });
     $(document).on('submit', 'form#category_add_form', function(e) {
         e.preventDefault();
-        $(this)
-            .find('button[type="submit"]')
-            .attr('disabled', true);
+        $(this).find('button[type="submit"]').attr('disabled', true);
         var data = $(this).serialize();
 
         $.ajax({
@@ -544,9 +651,7 @@ $(document).ready(function() {
 
             $('form#category_edit_form').submit(function(e) {
                 e.preventDefault();
-                $(this)
-                    .find('button[type="submit"]')
-                    .attr('disabled', true);
+                $(this).find('button[type="submit"]').attr('disabled', true);
                 var data = $(this).serialize();
 
                 $.ajax({
@@ -575,7 +680,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -598,24 +703,20 @@ $(document).ready(function() {
         });
     });
     //End: CRUD for category
-// PRoduct Name Category
-     var category_table = $('#ProductNameCategory_table').DataTable({
+    // PRoduct Name Category
+    var category_table = $('#ProductNameCategory_table').DataTable({
         processing: true,
         serverSide: true,
         ajax: '/product_name_category',
-        columnDefs: [
-            {
-                targets: 2,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: 2,
+            orderable: false,
+            searchable: false,
+        }, ],
     });
     $(document).on('submit', 'form#ProductNameCategory_add_form', function(e) {
         e.preventDefault();
-        $(this)
-            .find('button[type="submit"]')
-            .attr('disabled', true);
+        $(this).find('button[type="submit"]').attr('disabled', true);
         var data = $(this).serialize();
 
         $.ajax({
@@ -640,9 +741,7 @@ $(document).ready(function() {
 
             $('form#ProductNameCategory_edit_form').submit(function(e) {
                 e.preventDefault();
-                $(this)
-                    .find('button[type="submit"]')
-                    .attr('disabled', true);
+                $(this).find('button[type="submit"]').attr('disabled', true);
                 var data = $(this).serialize();
 
                 $.ajax({
@@ -671,7 +770,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -701,19 +800,15 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: '/sizes',
-        columnDefs: [
-            {
-                targets: 2,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: 2,
+            orderable: false,
+            searchable: false,
+        }, ],
     });
     $(document).on('submit', 'form#size_add_form', function(e) {
         e.preventDefault();
-        $(this)
-            .find('button[type="submit"]')
-            .attr('disabled', true);
+        $(this).find('button[type="submit"]').attr('disabled', true);
         var data = $(this).serialize();
 
         $.ajax({
@@ -738,9 +833,7 @@ $(document).ready(function() {
 
             $('form#size_edit_form').submit(function(e) {
                 e.preventDefault();
-                $(this)
-                    .find('button[type="submit"]')
-                    .attr('disabled', true);
+                $(this).find('button[type="submit"]').attr('disabled', true);
                 var data = $(this).serialize();
 
                 $.ajax({
@@ -769,7 +862,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -799,13 +892,11 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: '/variation-templates',
-        columnDefs: [
-            {
-                targets: 2,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: 2,
+            orderable: false,
+            searchable: false,
+        }, ],
     });
     $(document).on('click', '#add_variation_values', function() {
         var html =
@@ -813,15 +904,11 @@ $(document).ready(function() {
         $('#variation_values').append(html);
     });
     $(document).on('click', '.delete_variation_value', function() {
-        $(this)
-            .closest('.form-group')
-            .remove();
+        $(this).closest('.form-group').remove();
     });
     $(document).on('submit', 'form#variation_add_form', function(e) {
         e.preventDefault();
-        $(this)
-            .find('button[type="submit"]')
-            .attr('disabled', true);
+        $(this).find('button[type="submit"]').attr('disabled', true);
         var data = $(this).serialize();
 
         $.ajax({
@@ -846,9 +933,7 @@ $(document).ready(function() {
             $(this).modal('show');
 
             $('form#variation_edit_form').submit(function(e) {
-                $(this)
-                    .find('button[type="submit"]')
-                    .attr('disabled', true);
+                $(this).find('button[type="submit"]').attr('disabled', true);
                 e.preventDefault();
                 var data = $(this).serialize();
 
@@ -878,7 +963,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -907,23 +992,18 @@ $(document).ready(function() {
         $('.active-cell').removeClass('active-cell'); // clear previous selection
 
         $(this).addClass('active-cell');
-        cell_value = $(this)
-            .find('input')
-            .val();
+        cell_value = $(this).find('input').val();
     });
     $(document).on('mousemove', '.drag-select', function(ev) {
         if (active) {
             $(this).addClass('active-cell');
-            $(this)
-                .find('input')
-                .val(cell_value);
+            $(this).find('input').val(cell_value);
         }
     });
 
     $(document).mouseup(function(ev) {
         active = false;
-        if (
-            !$(ev.target).hasClass('drag-select') &&
+        if (!$(ev.target).hasClass('drag-select') &&
             !$(ev.target).hasClass('dpp') &&
             !$(ev.target).hasClass('dsp')
         ) {
@@ -1013,9 +1093,7 @@ $(document).ready(function() {
         $('select#on_product_expiry').change(function() {
             if ($(this).val() == 'stop_selling') {
                 $('input#stop_selling_before').attr('disabled', false);
-                $('input#stop_selling_before')
-                    .focus()
-                    .select();
+                $('input#stop_selling_before').focus().select();
             } else {
                 $('input#stop_selling_before').attr('disabled', true);
             }
@@ -1056,13 +1134,11 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: '/group-taxes',
-        columnDefs: [
-            {
-                targets: [2, 3],
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: [2, 3],
+            orderable: false,
+            searchable: false,
+        }, ],
         columns: [
             { data: 'name', name: 'name' },
             { data: 'amount', name: 'amount' },
@@ -1080,9 +1156,7 @@ $(document).ready(function() {
 
     $(document).on('submit', 'form#tax_group_add_form', function(e) {
         e.preventDefault();
-        $(this)
-            .find('button[type="submit"]')
-            .attr('disabled', true);
+        $(this).find('button[type="submit"]').attr('disabled', true);
         var data = $(this).serialize();
 
         $.ajax({
@@ -1104,9 +1178,7 @@ $(document).ready(function() {
 
     $(document).on('submit', 'form#tax_group_edit_form', function(e) {
         e.preventDefault();
-        $(this)
-            .find('button[type="submit"]')
-            .attr('disabled', true);
+        $(this).find('button[type="submit"]').attr('disabled', true);
         var data = $(this).serialize();
 
         $.ajax({
@@ -1133,7 +1205,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -1165,20 +1237,14 @@ $(document).ready(function() {
                 $(this).removeClass('active');
             });
         $(this).addClass('active');
-        $(this)
-            .find('input:radio')
-            .prop('checked', true)
-            .change();
+        $(this).find('input:radio').prop('checked', true).change();
     });
 
     $(document).on('change', 'input[type=radio][name=scheme_type]', function() {
         $('#invoice_format_settings').removeClass('hide');
         var scheme_type = $(this).val();
         if (scheme_type == 'blank') {
-            $('#prefix')
-                .val('')
-                .attr('placeholder', 'XXXX')
-                .prop('disabled', false);
+            $('#prefix').val('').attr('placeholder', 'XXXX').prop('disabled', false);
         } else if (scheme_type == 'year') {
             var d = new Date();
             var this_year = d.getFullYear();
@@ -1207,19 +1273,15 @@ $(document).ready(function() {
         bPaginate: false,
         buttons: [],
         ajax: '/invoice-schemes',
-        columnDefs: [
-            {
-                targets: 4,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: 4,
+            orderable: false,
+            searchable: false,
+        }, ],
     });
     $(document).on('submit', 'form#invoice_scheme_add_form', function(e) {
         e.preventDefault();
-        $(this)
-            .find('button[type="submit"]')
-            .attr('disabled', true);
+        $(this).find('button[type="submit"]').attr('disabled', true);
         var data = $(this).serialize();
 
         $.ajax({
@@ -1268,7 +1330,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -1348,13 +1410,11 @@ $(document).ready(function() {
         bPaginate: false,
         buttons: [],
         ajax: '/business-location',
-        columnDefs: [
-            {
-                targets: 8,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: 8,
+            orderable: false,
+            searchable: false,
+        }, ],
     });
     $('.location_add_modal, .location_edit_modal').on('shown.bs.modal', function(e) {
         $('form#business_location_add_form')
@@ -1389,9 +1449,7 @@ $(document).ready(function() {
                 },
                 submitHandler: function(form) {
                     e.preventDefault();
-                    $(form)
-                        .find('button[type="submit"]')
-                        .attr('disabled', true);
+                    $(form).find('button[type="submit"]').attr('disabled', true);
                     var data = $(form).serialize();
 
                     $.ajax({
@@ -1427,13 +1485,11 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: '/expense-categories',
-        columnDefs: [
-            {
-                targets: 2,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: 2,
+            orderable: false,
+            searchable: false,
+        }, ],
     });
     $(document).on('submit', 'form#expense_category_add_form', function(e) {
         e.preventDefault();
@@ -1462,7 +1518,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -1497,19 +1553,17 @@ $(document).ready(function() {
             $('#product_sr_date_filter').val('');
             expense_table.ajax.reload();
         });
-        $('#expense_date_range')
-            .data('daterangepicker')
-            .setStartDate(moment().startOf('month'));
-        $('#expense_date_range')
-            .data('daterangepicker')
-            .setEndDate(moment().endOf('month'));
+        $('#expense_date_range').data('daterangepicker').setStartDate(moment().startOf('month'));
+        $('#expense_date_range').data('daterangepicker').setEndDate(moment().endOf('month'));
     }
 
     //Expense table
     expense_table = $('#expense_table').DataTable({
         processing: true,
         serverSide: true,
-        aaSorting: [[0, 'desc']],
+        aaSorting: [
+            [0, 'desc']
+        ],
         ajax: {
             url: '/expenses',
             data: function(d) {
@@ -1525,13 +1579,11 @@ $(document).ready(function() {
                     .endDate.format('YYYY-MM-DD');
             },
         },
-        columnDefs: [
-            {
-                targets: [6, 7],
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: [6, 7],
+            orderable: false,
+            searchable: false,
+        }, ],
         columns: [
             { data: 'transaction_date', name: 'transaction_date' },
             { data: 'ref_no', name: 'ref_no' },
@@ -1557,18 +1609,15 @@ $(document).ready(function() {
             __currency_convert_recursively($('#expense_table'));
         },
         createdRow: function(row, data, dataIndex) {
-            $(row)
-                .find('td:eq(4)')
-                .attr('class', 'clickable_td');
+            $(row).find('td:eq(4)').attr('class', 'clickable_td');
         },
     });
 
-    $('select#location_id, select#expense_for, select#expense_category_id, select#expense_payment_status').on(
-        'change',
-        function() {
-            expense_table.ajax.reload();
-        }
-    );
+    $(
+        'select#location_id, select#expense_for, select#expense_category_id, select#expense_payment_status'
+    ).on('change', function() {
+        expense_table.ajax.reload();
+    });
 
     //Date picker
     $('#expense_transaction_date').datetimepicker({
@@ -1584,7 +1633,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -1626,10 +1675,7 @@ $(document).ready(function() {
 
         if (to_show && to_show.hasClass('hide')) {
             to_show.removeClass('hide');
-            to_show
-                .find('input')
-                .filter(':visible:first')
-                .focus();
+            to_show.find('input').filter(':visible:first').focus();
         }
     });
 
@@ -1672,16 +1718,12 @@ $(document).ready(function() {
             url: $(this).attr('href'),
             dataType: 'html',
             success: function(result) {
-                $('.pay_contact_due_modal')
-                    .html(result)
-                    .modal('show');
+                $('.pay_contact_due_modal').html(result).modal('show');
                 __currency_convert_recursively($('.pay_contact_due_modal'));
                 $('#paid_on').datepicker({
                     autoclose: true,
                 });
-                $('.pay_contact_due_modal')
-                    .find('form#pay_contact_due_form')
-                    .validate();
+                $('.pay_contact_due_modal').find('form#pay_contact_due_form').validate();
             },
         });
     });
@@ -1750,13 +1792,13 @@ $(document).ready(function() {
 
                     var imgs = document.images;
                     img_len = imgs.length;
-                    
+
                     if (img_len) {
                         img_counter = 0;
 
-                        [].forEach.call( imgs, function( img ) {
-                            img.addEventListener( 'load', incrementImageCounter, false );
-                        } );
+                        [].forEach.call(imgs, function(img) {
+                            img.addEventListener('load', incrementImageCounter, false);
+                        });
                     } else {
                         setTimeout(function() {
                             window.print();
@@ -1774,13 +1816,11 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: '/sales-commission-agents',
-        columnDefs: [
-            {
-                targets: 2,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: 2,
+            orderable: false,
+            searchable: false,
+        }, ],
         columns: [
             { data: 'full_name' },
             { data: 'email' },
@@ -1824,7 +1864,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -1879,13 +1919,11 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: '/customer-group',
-        columnDefs: [
-            {
-                targets: 2,
-                orderable: false,
-                searchable: false,
-            },
-        ],
+        columnDefs: [{
+            targets: 2,
+            orderable: false,
+            searchable: false,
+        }, ],
     });
 
     $(document).on('click', 'button.edit_customer_group_button', function() {
@@ -1922,7 +1960,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).data('href');
                 var data = $(this).serialize();
@@ -1953,7 +1991,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 var href = $(this).attr('href');
                 $.ajax({
@@ -1979,21 +2017,15 @@ $(document).ready(function() {
             }
         });
     });
-    
-    
 
     if ($('form#add_invoice_layout_form').length > 0) {
         $('select#design').change(function() {
             if ($(this).val() == 'columnize-taxes') {
                 $('div#columnize-taxes').removeClass('hide');
-                $('div#columnize-taxes')
-                    .find('input')
-                    .removeAttr('disabled', 'false');
+                $('div#columnize-taxes').find('input').removeAttr('disabled', 'false');
             } else {
                 $('div#columnize-taxes').addClass('hide');
-                $('div#columnize-taxes')
-                    .find('input')
-                    .attr('disabled', 'true');
+                $('div#columnize-taxes').find('input').attr('disabled', 'true');
             }
         });
     }
@@ -2027,16 +2059,14 @@ discounts_table = $('#discounts_table').DataTable({
     processing: true,
     serverSide: true,
     ajax: '/discount',
-    columnDefs: [
-        {
-            targets: [0, 8],
-            orderable: false,
-            searchable: false,
-        },
-    ],
+    columnDefs: [{
+        targets: [0, 8],
+        orderable: false,
+        searchable: false,
+    }, ],
     aaSorting: [1, 'asc'],
     columns: [
-        { data: 'row_select'},
+        { data: 'row_select' },
         { data: 'name', name: 'discounts.name' },
         { data: 'starts_at', name: 'starts_at' },
         { data: 'ends_at', name: 'ends_at' },
@@ -2098,7 +2128,7 @@ $(document).on('click', 'button.delete_discount_button', function() {
         icon: 'warning',
         buttons: true,
         dangerMode: true,
-    }).then(willDelete => {
+    }).then((willDelete) => {
         if (willDelete) {
             var href = $(this).data('href');
             var data = $(this).serialize();
@@ -2138,10 +2168,12 @@ function show_invoice_preview() {
     var preview = prefix + pad_zero(start_number, total_digits);
     $('#preview_format').text('#' + preview);
 }
+
 function pad_zero(str, max) {
     str = str.toString();
     return str.length < max ? pad_zero('0' + str, max) : str;
 }
+
 function get_sub_categories() {
     var cat = $('#category_id').val();
     $.ajax({
@@ -2157,6 +2189,7 @@ function get_sub_categories() {
         },
     });
 }
+
 function get_sub_sizes() {
     var cat = $('#add_size_id').val();
     $.ajax({
@@ -2171,6 +2204,7 @@ function get_sub_sizes() {
         },
     });
 }
+
 function show_product_type_form() {
     var product_type = 'single';
     if ($('#type').val() === 'variable') {
@@ -2193,8 +2227,7 @@ function show_product_type_form() {
 }
 
 $(document).on('click', 'table.ajax_view tbody tr', function(e) {
-    if (
-        !$(e.target).is('td.selectable_td input[type=checkbox]') &&
+    if (!$(e.target).is('td.selectable_td input[type=checkbox]') &&
         !$(e.target).is('td.selectable_td') &&
         !$(e.target).is('td.clickable_td') &&
         !$(e.target).is('a') &&
@@ -2208,9 +2241,7 @@ $(document).on('click', 'table.ajax_view tbody tr', function(e) {
             url: $(this).data('href'),
             dataType: 'html',
             success: function(result) {
-                $('.view_modal')
-                    .html(result)
-                    .modal('show');
+                $('.view_modal').html(result).modal('show');
             },
         });
     }
@@ -2231,9 +2262,7 @@ $(document).on('click', 'td.clickable_td', function(e) {
                 url: href,
                 dataType: 'html',
                 success: function(result) {
-                    $(container)
-                        .html(result)
-                        .modal('show');
+                    $(container).html(result).modal('show');
                     __currency_convert_recursively(container);
                 },
             });
@@ -2242,18 +2271,14 @@ $(document).on('click', 'td.clickable_td', function(e) {
 });
 
 $(document).on('click', 'button.select-all', function() {
-    var this_select = $(this)
-        .closest('.form-group')
-        .find('select');
+    var this_select = $(this).closest('.form-group').find('select');
     this_select.find('option').each(function() {
         $(this).prop('selected', 'selected');
     });
     this_select.trigger('change');
 });
 $(document).on('click', 'button.deselect-all', function() {
-    var this_select = $(this)
-        .closest('.form-group')
-        .find('select');
+    var this_select = $(this).closest('.form-group').find('select');
     this_select.find('option').each(function() {
         $(this).prop('selected', '');
     });
@@ -2262,13 +2287,9 @@ $(document).on('click', 'button.deselect-all', function() {
 
 $(document).on('change', 'input.row-select', function() {
     if (this.checked) {
-        $(this)
-            .closest('tr')
-            .addClass('selected');
+        $(this).closest('tr').addClass('selected');
     } else {
-        $(this)
-            .closest('tr')
-            .removeClass('selected');
+        $(this).closest('tr').removeClass('selected');
     }
 });
 
@@ -2280,9 +2301,7 @@ $(document).on('click', '#select-all-row', function(e) {
             .find('input.row-select')
             .each(function() {
                 if (!this.checked) {
-                    $(this)
-                        .prop('checked', true)
-                        .change();
+                    $(this).prop('checked', true).change();
                 }
             });
     } else {
@@ -2292,9 +2311,7 @@ $(document).on('click', '#select-all-row', function(e) {
             .find('input.row-select')
             .each(function() {
                 if (this.checked) {
-                    $(this)
-                        .prop('checked', false)
-                        .change();
+                    $(this).prop('checked', false).change();
                 }
             });
     }
@@ -2310,9 +2327,7 @@ $(document).on('click', 'a.view_purchase_return_payment_modal', function(e) {
         url: href,
         dataType: 'html',
         success: function(result) {
-            $(container)
-                .html(result)
-                .modal('show');
+            $(container).html(result).modal('show');
             __currency_convert_recursively(container);
         },
     });
@@ -2375,7 +2390,7 @@ $(document).on('click', 'a.delete_purchase_return', function(e) {
         icon: 'warning',
         buttons: true,
         dangerMode: true,
-    }).then(willDelete => {
+    }).then((willDelete) => {
         if (willDelete) {
             var href = $(this).attr('href');
             var data = $(this).serialize();
@@ -2400,7 +2415,7 @@ $(document).on('click', 'a.delete_purchase_return', function(e) {
 
 function incrementImageCounter() {
     img_counter++;
-    if ( img_counter === img_len ) {
+    if (img_counter === img_len) {
         window.print();
     }
 }

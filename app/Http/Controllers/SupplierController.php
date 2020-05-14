@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Supplier;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class SupplierController extends Controller
 {
@@ -23,8 +24,7 @@ class SupplierController extends Controller
 
             $suppliers = Supplier::where('business_id', $business_id)
                         ->select(['name', 'description', 'id']);
-
-            return Datatables::of($suppliers)
+            return DataTables::of($suppliers)
                 ->addColumn(
                     'action',
                     '@can("supplier.update")
@@ -75,26 +75,30 @@ class SupplierController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        try {
-            $input = $request->only(['name', 'description']);
-            $business_id = $request->session()->get('user.business_id');
-            $input['business_id'] = $business_id;
-            $input['created_by'] = $request->session()->get('user.id');
-
-            $supplier = Supplier::create($input);
-            $output = ['success' => true,
-                            'data' => $supplier,
-                            'msg' => __("supplier.added_success")
-                        ];
-        } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+        // if (request()->ajax()) {
+            try {
+                $input = $request->only(['name', 'description']);
+                $business_id = $request->session()->get('user.business_id');
+                $input['business_id'] = $business_id;
+                $input['created_by'] = $request->session()->get('user.id');
+    
+                $supplier = Supplier::create($input);
+                $output = ['success' => true,
+                                // 'data' => $supplier,
+                                'msg' => __("supplier.added_success")
+                            ];
+            } catch (\Exception $e) {
+                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+                
+                $output = ['success' => false,
+                                'msg' =>  "Supplier Already Exists please close the popup and try again "
+                            ];
+            }
+    
+            // return $output;
             
-            $output = ['success' => false,
-                            'msg' =>  "Supplier Already Exists please close the popup and try again "
-                        ];
-        }
-
-        return $output;
+        // }
+        return redirect()->back();
     }
 
     /**
@@ -142,7 +146,7 @@ class SupplierController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        if (request()->ajax()) {
+        // if (request()->ajax()) {
             try {
                 $input = $request->only(['name', 'description']);
                 $business_id = $request->session()->get('user.business_id');
@@ -163,8 +167,10 @@ class SupplierController extends Controller
                         ];
             }
 
-            return $output;
-        }
+            // return $output;
+        // }
+
+        return redirect()->back();
     }
 
     /**

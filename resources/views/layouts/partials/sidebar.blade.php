@@ -273,6 +273,16 @@
                   <a href="{{action('SizeController@index')}}"><i class="fa fa-columns"></i> <span>@lang('size.category') </span></a>
                 </li>
               @endif
+              @if(auth()->user()->can('category.view') || auth()->user()->can('category.create'))
+                <li class="{{ $request->segment(1) == 'suppliers' ? 'active' : '' }}">
+                  <a href="{{action('SupplierController@index')}}"><i class="fa fa-users"></i> <span>Suppliers </span></a>
+                </li>
+              @endif
+              @if(auth()->user()->can('category.view') || auth()->user()->can('category.create'))
+                <li class="{{ $request->segment(1) == 'colors' ? 'active' : '' }}">
+                  <a href="{{action('ColorController@index')}}"><i class="fa fa-paint-brush"></i> <span>Colors </span></a>
+                </li>
+              @endif
                 {{-- Seasons --}}
               {{-- @if(auth()->user()->can('brand.view') || auth()->user()->can('brand.create'))
                 <li class="{{ $request->segment(1) == 'brands' ? 'active' : '' }}">

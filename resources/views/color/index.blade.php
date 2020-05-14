@@ -29,12 +29,12 @@
         @endcan
         @can('color.view')
             <div class="table-responsive">
-                <table class="table table-bordered table-striped" id="brands_table">
+                <table class="table table-bordered table-striped" id="color_table">
                     <thead>
                         <tr>
                             <th>@lang( 'color.brands' )</th>
                             <th>Color Code</th>
-                            <th>@lang( 'color.note' )</th>
+                            {{-- <th>@lang( 'color.note' )</th> --}}
                             <th>@lang( 'messages.action' )</th>
                         </tr>
                     </thead>
