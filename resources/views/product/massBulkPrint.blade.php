@@ -4,7 +4,7 @@
 	.heh{
 		height: 118px;
 		width: 31% !important;
-		margin : 5px 8px 0 8px;
+		margin : 10px 8px 0 8px;
 	}
 	.showV{
 		visibility: visible;
