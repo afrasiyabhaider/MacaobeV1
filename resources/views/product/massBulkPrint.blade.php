@@ -3,8 +3,8 @@
 <style type="text/css">
 	.heh{
 		height: 128px;
-    width: 31% !important;
-    margin : 5px 8px 0 8px;
+		width: 31% !important;
+		/* margin : 5px 8px 0 8px; */
 	}
 	.showV{
 		visibility: visible;
@@ -75,7 +75,7 @@
 		@foreach($product as $objProduct)
 			@php $i++; @endphp
 			@for($j=0;$j<$objProduct->current_stock;$j++)
-				<div class="col-md-4 col-xs-4 heh mt-sm-3">
+				<div class="col-md-4 col-xs-4 heh">
 					<div class="">
 						<div class="col-xs-4 printList text-left" data-id="name"  style="font-size: 12px" > 
 							<strong>{{$objProduct->product}} </strong>
