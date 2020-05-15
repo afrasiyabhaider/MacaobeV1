@@ -2,7 +2,7 @@
 @section('title', __('sale.products'))
 <style type="text/css">
 	.heh{
-		height: 128px;
+		height: 118px;
 		width: 31% !important;
 		margin : 5px 8px 0 8px;
 	}
