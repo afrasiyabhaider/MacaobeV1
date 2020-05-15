@@ -240,6 +240,9 @@
               @can('product.create')
                 <li class="{{ $request->segment(1) == 'products' && $request->segment(2) == 'product_name_category' ? 'active' : '' }}"><a href="{{action('ProductNameCategoryController@index')}}"><i class="fa fa-plus-circle"></i>Product Name Series</a></li>
               @endcan
+              @can('stock_report.view')
+                <li class="{{ $request->segment(2) == 'stock-report' ? 'active' : '' }}" ><a href="{{action('ReportController@getStockReport')}}"><i class="fa fa-hourglass-half" aria-hidden="true"></i>@lang('report.stock_report')</a></li>
+              @endcan
               {{-- @can('product.view')
                 <li class="{{ $request->segment(1) == 'labels' && $request->segment(2) == 'show' ? 'active' : '' }}"><a href="{{action('LabelsController@show')}}"><i class="fa fa-barcode"></i>@lang('barcode.print_labels')</a></li>
               @endcan --}}
