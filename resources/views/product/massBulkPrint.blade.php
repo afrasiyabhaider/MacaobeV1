@@ -77,13 +77,11 @@
 			@for($j=0;$j<$objProduct->current_stock;$j++)
 				<div class="col-md-4 col-xs-4 heh mt-sm-3">
 					<div class="">
-						<div class="col-xs-4 printList text-left" data-id="name"  style="font-size: 12px" > 
-							<strong>{{$objProduct->product}} </strong>
+						<div class="col-xs-8 text-left"   style="font-size: 12px" >
+							<strong class="printList" data-id="subcat">{{$objProduct->sub_category}}</strong>-
+							<strong class="printList" data-id="name">{{$objProduct->product}} </strong>
 						</div>
-						<div class="col-xs-4 printList text-center" data-id="color"  style="font-size: 12px"> 
-							{{$objProduct->ColorName}} 
-						</div>
-						<div  class="col-xs-4 printList text-right" data-id="size"  style="font-size: 12px"> 
+						<div  class="col-xs-4 printList text-right" data-id="size"  style="font-size: 14px"> 
 							{{$objProduct->SubSizeName }} 
 						</div>
 
@@ -101,13 +99,13 @@
 					</div>
 					
 					<div class="col-xs-12">
-						<div class="col printList pull-left" data-id="price" style="font-weight: bolder; font-size: 10px">
+						<div class="col-xs-5 printList" data-id="price" style="font-weight: bolder; font-size: 13px">
 							<span>
 								€ 
 								</span>
 							{{-- i.fa.fa-euro-sign --}}
 							@if($objProduct->max_price != $objProduct->min_price && $objProduct->type == "variable") 
-							-  <span class="display_currency" data-currency_symbol="true">
+							-  <span class="display_currency" data-currency_symbol="true" >
 								{{$objProduct->max_price}}
 							</span> 
 							@else 
@@ -117,13 +115,15 @@
 								</span> 
 							@endif
 						</div>
-						<div class="col-xs-4 text-center printList" data-id="refference" style="font-size: 10px">
+						<div class="col-xs-3 printList text-center" data-id="color"  style="font-size: 12px"> 
+							{{$objProduct->ColorName}} 
+						</div>
+						<div class="col-xs-4 text-center printList" data-id="refference" style="font-size: 13px">
 							{{$objProduct->refference }}
 						</div>
-						
-						<div  class="col printList text-right" data-id="subcat" style="font-size: 10px">
+						{{-- <div  class="col printList text-right" data-id="subcat" style="font-size: 14px">
 							{{$objProduct->sub_category}}
-						</div>
+						</div> --}}
 						{{-- <div  class="col-md-3 col-xs-6 pull-left printList text-right" data-id="cat">
 							{{$objProduct->category  or ' '}}
 						</div> --}}
