@@ -2542,6 +2542,12 @@ class SellPosController extends Controller
                 $sub_category = 'null';
                 $category = 'null';
             }
+            $ut = new ProductUtil();
+            //  $ut = new \App\Utils\ProductUtil();
+            $unit_price = $ut->num_f($product_prices->dpp_inc_tax);
+            $single_dpp = $ut->num_f($product_prices->single_dpp);
+            $custom_price = $ut->num_f($product_prices->sell_price_inc_tax);
+
             $data = [
                 'product' => $product,
                 'product_name' => $product_name,
@@ -2555,6 +2561,9 @@ class SellPosController extends Controller
                 'size' => $size,
                 'sub_size' => $sub_size,
                 'color' => $color,
+                'unit_price' => $unit_price,
+                'single_dpp' => $single_dpp,
+                'custom_price' => $custom_price,
             ];
         }
         // dd($data);

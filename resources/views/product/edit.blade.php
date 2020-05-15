@@ -142,11 +142,11 @@
 				</div>
 				<div class="col-sm-4">
 					<label>Product Name *</label>
-					<input type="text" name="product_name" value="{{$product->name}}" class="req form-control" id="product_name" required>
+					<input type="text" name="product_name" value="{{$product->name}}" class="req form-control" id="product_name" required readonly>
 				</div>
 				<div class="col-sm-4">
 					<label>Refference * @show_tooltip(__('tooltip.sku'))</label>
-					<input type="text" name="refference" value="{{$product->refference}}" id="refference_id" class="req form-control @error('refference') is-invalid @enderror" required>
+					<input type="text" name="refference" value="{{$product->refference}}" id="refference_id" class="req form-control @error('refference') is-invalid @enderror" required readonly>
 				</div>
           @php
               $ut = new \App\Utils\ProductUtil();
@@ -154,7 +154,7 @@
           @endphp
 				<div class="col-sm-4" style="margin-top: 30px">
 					<label>Unit Price * </label>
-					<input name="unit_price" required="true" type="text" class="req form-control col-12" value="{{$ut->num_f($product->variations()->first()->dpp_inc_tax)}}" id="unit_price" onchange="changeUnitPrice(this);">
+					<input name="unit_price" autofocus required="true" type="text" class="req form-control col-12" value="{{$ut->num_f($product->variations()->first()->dpp_inc_tax)}}" id="unit_price" onchange="changeUnitPrice(this);">
 				</div>
 				<div class="col-sm-4" style="margin-top: 30px">
           <label>Sale Price * </label>
@@ -1124,10 +1124,15 @@
 						$("#name_id").val(0); //important
 						$("#refference_id").val(result.product.refference);
 						// console.log("Ref : "+result.product.refference);
-						$("#unit_price").val(result.product_price.dpp_inc_tax);
+						$("#unit_price").val(result.unit_price);
+						// $("#unit_price").val(result.product_price.dpp_inc_tax);
 						// console.log(result);
-						$("#single_dpp").val(result.product_price.dpp_inc_tax).trigger("change");
-						$("#custom_price").val(result.product_price.sell_price_inc_tax);
+            $("#single_dpp").val(result.single_dpp).trigger("change");
+            // $("#single_dpp").val(result.product_price.dpp_inc_tax).trigger("change");
+            // {{$ut->num_f($product->variations()->first()->dpp_inc_tax)}}
+            // result.product_price.sell_price_inc_tax
+            
+						$("#custom_price").val(result.custom_price);
 						$("#color_id").val(result.color.id).change();
 						$("#qty_id").val(result.variation_location_details.qty_available);
 						$("#sizes_id").val(result.sub_size.id).change();
