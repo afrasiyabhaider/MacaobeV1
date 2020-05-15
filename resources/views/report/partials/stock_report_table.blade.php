@@ -1,7 +1,13 @@
+
+    
 <div class="table-responsive">
     <table class="table table-bordered table-striped" id="stock_report_table">
         <thead>
             <tr>
+                <th>
+                    <input type="checkbox" id="select-all-row">
+                    Select All
+                </th>
                 <th>SKU</th>
                 <th>@lang('business.product')</th>
                 <th>@lang('sale.unit_price')</th>

@@ -29,6 +29,7 @@ use Charts;
 use Datatables;
 use DB;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
 class ReportController extends Controller
 {
@@ -410,7 +411,10 @@ class ReportController extends Controller
                 'variations.name as variation_name'
             )->groupBy('variations.id');
 
-            return Datatables::of($products)
+            return DataTables::of($products)
+                ->addColumn('mass_delete', function ($row) {
+                    return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '">';
+                })
                 ->editColumn('stock', function ($row) {
                     if ($row->enable_stock) {
                         $stock = $row->stock ? $row->stock : 0 ;
@@ -463,11 +467,11 @@ class ReportController extends Controller
 
                     return $html;
                 })
+                
                 ->removeColumn('enable_stock')
                 ->removeColumn('unit')
-                ->removeColumn('id')
-                ->rawColumns(['unit_price', 'total_transfered', 'total_sold',
-                    'total_adjusted', 'stock'])
+                // ->removeColumn('id')
+                ->rawColumns(['mass_delete','unit_price', 'total_transfered', 'total_sold','total_adjusted', 'stock'])
                 ->make(true);
         }
 

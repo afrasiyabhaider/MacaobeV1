@@ -77,7 +77,14 @@ $(document).ready(function() {
                 d.unit_id = $('#unit').val();
             },
         },
+        columnDefs: [{
+            targets: [0],
+            orderable: false,
+            searchable: false,
+        }, ],
+        // aaSorting: [2, 'asc'],
         columns: [
+            { data: 'mass_delete', orderable: false, searchable: false },
             { data: 'sku', name: 'variations.sub_sku' },
             { data: 'product', name: 'p.name' },
             { data: 'unit_price', name: 'variations.sell_price_inc_tax' },
@@ -129,8 +136,8 @@ $(document).ready(function() {
         $('#trending_product_date_range').on('apply.daterangepicker', function(ev, picker) {
             $(this).val(
                 picker.startDate.format(moment_date_format) +
-                    ' ~ ' +
-                    picker.endDate.format(moment_date_format)
+                ' ~ ' +
+                picker.endDate.format(moment_date_format)
             );
         });
 
@@ -155,7 +162,10 @@ $(document).ready(function() {
 
     //Stock Adjustment Report
     if ($('#stock_adjustment_date_filter').length == 1) {
-        $('#stock_adjustment_date_filter').daterangepicker(dateRangeSettings, function(start, end) {
+        $('#stock_adjustment_date_filter').daterangepicker(dateRangeSettings, function(
+            start,
+            end
+        ) {
             $('#stock_adjustment_date_filter span').html(
                 start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format)
             );
@@ -216,8 +226,8 @@ $(document).ready(function() {
         $('input#sr_date_filter').on('apply.daterangepicker', function(ev, picker) {
             $(this).val(
                 picker.startDate.format(moment_date_format) +
-                    ' ~ ' +
-                    picker.endDate.format(moment_date_format)
+                ' ~ ' +
+                picker.endDate.format(moment_date_format)
             );
         });
 
@@ -238,7 +248,9 @@ $(document).ready(function() {
         sr_sales_report = $('table#sr_sales_report').DataTable({
             processing: true,
             serverSide: true,
-            aaSorting: [[0, 'desc']],
+            aaSorting: [
+                [0, 'desc']
+            ],
             ajax: {
                 url: '/sells',
                 data: function(d) {
@@ -250,9 +262,9 @@ $(document).ready(function() {
                         .endDate.format('YYYY-MM-DD');
 
                     (d.created_by = $('select#sr_id').val()),
-                        (d.location_id = $('select#sr_business_id').val()),
-                        (d.start_date = start),
-                        (d.end_date = end);
+                    (d.location_id = $('select#sr_business_id').val()),
+                    (d.start_date = start),
+                    (d.end_date = end);
                 },
             },
             columns: [
@@ -265,12 +277,10 @@ $(document).ready(function() {
                 { data: 'total_paid', name: 'total_paid' },
                 { data: 'total_remaining', name: 'total_remaining' },
             ],
-            columnDefs: [
-                {
-                    searchable: false,
-                    targets: [6],
-                },
-            ],
+            columnDefs: [{
+                searchable: false,
+                targets: [6],
+            }, ],
             fnDrawCallback: function(oSettings) {
                 $('#sr_footer_sale_total').text(
                     sum_table_col($('#sr_sales_report'), 'final-total')
@@ -296,7 +306,9 @@ $(document).ready(function() {
         sr_expenses_report = $('table#sr_expenses_report').DataTable({
             processing: true,
             serverSide: true,
-            aaSorting: [[0, 'desc']],
+            aaSorting: [
+                [0, 'desc']
+            ],
             ajax: {
                 url: '/expenses',
                 data: function(d) {
@@ -308,18 +320,16 @@ $(document).ready(function() {
                         .endDate.format('YYYY-MM-DD');
 
                     (d.expense_for = $('select#sr_id').val()),
-                        (d.location_id = $('select#sr_business_id').val()),
-                        (d.start_date = start),
-                        (d.end_date = end);
+                    (d.location_id = $('select#sr_business_id').val()),
+                    (d.start_date = start),
+                    (d.end_date = end);
                 },
             },
-            columnDefs: [
-                {
-                    targets: 7,
-                    orderable: false,
-                    searchable: false,
-                },
-            ],
+            columnDefs: [{
+                targets: 7,
+                orderable: false,
+                searchable: false,
+            }, ],
             columns: [
                 { data: 'transaction_date', name: 'transaction_date' },
                 { data: 'ref_no', name: 'ref_no' },
@@ -344,7 +354,9 @@ $(document).ready(function() {
         sr_sales_commission_report = $('table#sr_sales_with_commission_table').DataTable({
             processing: true,
             serverSide: true,
-            aaSorting: [[0, 'desc']],
+            aaSorting: [
+                [0, 'desc']
+            ],
             ajax: {
                 url: '/sells',
                 data: function(d) {
@@ -356,9 +368,9 @@ $(document).ready(function() {
                         .endDate.format('YYYY-MM-DD');
 
                     (d.commission_agent = $('select#sr_id').val()),
-                        (d.location_id = $('select#sr_business_id').val()),
-                        (d.start_date = start),
-                        (d.end_date = end);
+                    (d.location_id = $('select#sr_business_id').val()),
+                    (d.start_date = start),
+                    (d.end_date = end);
                 },
             },
             columns: [
@@ -371,12 +383,10 @@ $(document).ready(function() {
                 { data: 'total_paid', name: 'total_paid' },
                 { data: 'total_remaining', name: 'total_remaining' },
             ],
-            columnDefs: [
-                {
-                    searchable: false,
-                    targets: [6],
-                },
-            ],
+            columnDefs: [{
+                searchable: false,
+                targets: [6],
+            }, ],
             fnDrawCallback: function(oSettings) {
                 $('#footer_sale_total').text(
                     sum_table_col($('#sr_sales_with_commission_table'), 'final-total')
@@ -422,7 +432,9 @@ $(document).ready(function() {
                 d.exp_date_filter = $('#view_stock_filter').val();
             },
         },
-        order: [[4, 'asc']],
+        order: [
+            [4, 'asc']
+        ],
         columns: [
             { data: 'product', name: 'p.name' },
             { data: 'sku', name: 'p.sku' },
@@ -444,9 +456,7 @@ $(document).ready(function() {
                     url: '/reports/stock-expiry-edit-modal/' + purchase_line_id,
                     dataType: 'html',
                     success: function(data) {
-                        $('div.exp_update_modal')
-                            .html(data)
-                            .modal('show');
+                        $('div.exp_update_modal').html(data).modal('show');
                         $('input#exp_date_expiry_modal').datepicker({
                             autoclose: true,
                             format: datepicker_date_format,
@@ -512,12 +522,8 @@ $(document).ready(function() {
             $('#product_pr_date_filter').val('');
             product_purchase_report.ajax.reload();
         });
-        $('#product_pr_date_filter')
-            .data('daterangepicker')
-            .setStartDate(moment());
-        $('#product_pr_date_filter')
-            .data('daterangepicker')
-            .setEndDate(moment());
+        $('#product_pr_date_filter').data('daterangepicker').setStartDate(moment());
+        $('#product_pr_date_filter').data('daterangepicker').setEndDate(moment());
     }
     $(
         '#product_purchase_report_form #variation_id, #product_purchase_report_form #location_id, #product_purchase_report_form #supplier_id, #product_purchase_report_form #product_pr_date_filter'
@@ -527,7 +533,9 @@ $(document).ready(function() {
     product_purchase_report = $('table#product_purchase_report_table').DataTable({
         processing: true,
         serverSide: true,
-        aaSorting: [[3, 'desc']],
+        aaSorting: [
+            [3, 'desc']
+        ],
         ajax: {
             url: '/reports/product-purchase-report',
             data: function(d) {
@@ -595,9 +603,7 @@ $(document).ready(function() {
             },
             minLength: 2,
             select: function(event, ui) {
-                $('#variation_id')
-                    .val(ui.item.value)
-                    .change();
+                $('#variation_id').val(ui.item.value).change();
                 event.preventDefault();
                 $(this).val(ui.item.label);
             },
@@ -622,17 +628,15 @@ $(document).ready(function() {
             product_sell_report.ajax.reload();
             product_sell_grouped_report.ajax.reload();
         });
-        $('#product_sr_date_filter')
-            .data('daterangepicker')
-            .setStartDate(moment());
-        $('#product_sr_date_filter')
-            .data('daterangepicker')
-            .setEndDate(moment());
+        $('#product_sr_date_filter').data('daterangepicker').setStartDate(moment());
+        $('#product_sr_date_filter').data('daterangepicker').setEndDate(moment());
     }
     product_sell_report = $('table#product_sell_report_table').DataTable({
         processing: true,
         serverSide: true,
-        aaSorting: [[3, 'desc']],
+        aaSorting: [
+            [3, 'desc']
+        ],
         ajax: {
             url: '/reports/product-sell-report',
             data: function(d) {
@@ -679,7 +683,9 @@ $(document).ready(function() {
     product_sell_grouped_report = $('table#product_sell_grouped_report_table').DataTable({
         processing: true,
         serverSide: true,
-        aaSorting: [[1, 'desc']],
+        aaSorting: [
+            [1, 'desc']
+        ],
         ajax: {
             url: '/reports/product-sell-grouped-report',
             data: function(d) {
@@ -727,14 +733,8 @@ $(document).ready(function() {
     });
 
     $('#product_sell_report_form #search_product').keyup(function() {
-        if (
-            $(this)
-                .val()
-                .trim() == ''
-        ) {
-            $('#product_sell_report_form #variation_id')
-                .val('')
-                .change();
+        if ($(this).val().trim() == '') {
+            $('#product_sell_report_form #variation_id').val('').change();
         }
     });
 
@@ -744,7 +744,7 @@ $(document).ready(function() {
             icon: 'warning',
             buttons: true,
             dangerMode: true,
-        }).then(willDelete => {
+        }).then((willDelete) => {
             if (willDelete) {
                 $.ajax({
                     method: 'GET',
@@ -809,7 +809,9 @@ $(document).ready(function() {
     purchase_payment_report = $('table#purchase_payment_report_table').DataTable({
         processing: true,
         serverSide: true,
-        aaSorting: [[2, 'desc']],
+        aaSorting: [
+            [2, 'desc']
+        ],
         ajax: {
             url: '/reports/purchase-payment-report',
             data: function(d) {
@@ -829,8 +831,7 @@ $(document).ready(function() {
                 d.end_date = end;
             },
         },
-        columns: [
-            {
+        columns: [{
                 orderable: false,
                 searchable: false,
                 data: null,
@@ -851,9 +852,7 @@ $(document).ready(function() {
         },
         createdRow: function(row, data, dataIndex) {
             if (!data.transaction_id) {
-                $(row)
-                    .find('td:eq(0)')
-                    .addClass('details-control');
+                $(row).find('td:eq(0)').addClass('details-control');
             }
         },
     });
@@ -914,7 +913,9 @@ $(document).ready(function() {
     sell_payment_report = $('table#sell_payment_report_table').DataTable({
         processing: true,
         serverSide: true,
-        aaSorting: [[2, 'desc']],
+        aaSorting: [
+            [2, 'desc']
+        ],
         ajax: {
             url: '/reports/sell-payment-report',
             data: function(d) {
@@ -935,8 +936,7 @@ $(document).ready(function() {
                 d.end_date = end;
             },
         },
-        columns: [
-            {
+        columns: [{
                 orderable: false,
                 searchable: false,
                 data: null,
@@ -957,9 +957,7 @@ $(document).ready(function() {
         },
         createdRow: function(row, data, dataIndex) {
             if (!data.transaction_id) {
-                $(row)
-                    .find('td:eq(0)')
-                    .addClass('details-control');
+                $(row).find('td:eq(0)').addClass('details-control');
             }
         },
     });
@@ -1020,9 +1018,7 @@ function updatePurchaseSell() {
     var start = $('#purchase_sell_date_filter')
         .data('daterangepicker')
         .startDate.format('YYYY-MM-DD');
-    var end = $('#purchase_sell_date_filter')
-        .data('daterangepicker')
-        .endDate.format('YYYY-MM-DD');
+    var end = $('#purchase_sell_date_filter').data('daterangepicker').endDate.format('YYYY-MM-DD');
     var location_id = $('#purchase_sell_location_filter').val();
 
     var data = { start_date: start, end_date: end, location_id: location_id };
@@ -1069,9 +1065,7 @@ function updatePurchaseSell() {
 }
 
 function get_stock_details(rowData) {
-    var div = $('<div/>')
-        .addClass('loading')
-        .text('Loading...');
+    var div = $('<div/>').addClass('loading').text('Loading...');
     var location_id = $('#location_id').val();
     $.ajax({
         url: '/reports/stock-details?location_id=' + location_id,
@@ -1089,12 +1083,8 @@ function get_stock_details(rowData) {
 }
 
 function updateTaxReport() {
-    var start = $('#tax_report_date_filter')
-        .data('daterangepicker')
-        .startDate.format('YYYY-MM-DD');
-    var end = $('#tax_report_date_filter')
-        .data('daterangepicker')
-        .endDate.format('YYYY-MM-DD');
+    var start = $('#tax_report_date_filter').data('daterangepicker').startDate.format('YYYY-MM-DD');
+    var end = $('#tax_report_date_filter').data('daterangepicker').endDate.format('YYYY-MM-DD');
     var location_id = $('#tax_report_location_filter').val();
     var data = { start_date: start, end_date: end, location_id: location_id };
 
@@ -1151,11 +1141,11 @@ function updateStockAdjustmentReport() {
     stock_adjustment_table.ajax
         .url(
             '/stock-adjustments?location_id=' +
-                location_id +
-                '&start_date=' +
-                start +
-                '&end_date=' +
-                end
+            location_id +
+            '&start_date=' +
+            start +
+            '&end_date=' +
+            end
         )
         .load();
 }
@@ -1187,12 +1177,8 @@ function updateSalesRepresentativeReport() {
 }
 
 function salesRepresentativeTotalExpense() {
-    var start = $('input#sr_date_filter')
-        .data('daterangepicker')
-        .startDate.format('YYYY-MM-DD');
-    var end = $('input#sr_date_filter')
-        .data('daterangepicker')
-        .endDate.format('YYYY-MM-DD');
+    var start = $('input#sr_date_filter').data('daterangepicker').startDate.format('YYYY-MM-DD');
+    var end = $('input#sr_date_filter').data('daterangepicker').endDate.format('YYYY-MM-DD');
 
     var data_expense = {
         expense_for: $('select#sr_id').val(),
@@ -1215,12 +1201,8 @@ function salesRepresentativeTotalExpense() {
 }
 
 function salesRepresentativeTotalSales() {
-    var start = $('input#sr_date_filter')
-        .data('daterangepicker')
-        .startDate.format('YYYY-MM-DD');
-    var end = $('input#sr_date_filter')
-        .data('daterangepicker')
-        .endDate.format('YYYY-MM-DD');
+    var start = $('input#sr_date_filter').data('daterangepicker').startDate.format('YYYY-MM-DD');
+    var end = $('input#sr_date_filter').data('daterangepicker').endDate.format('YYYY-MM-DD');
 
     var data_expense = {
         created_by: $('select#sr_id').val(),
@@ -1249,12 +1231,8 @@ function salesRepresentativeTotalSales() {
 }
 
 function salesRepresentativeTotalCommission() {
-    var start = $('input#sr_date_filter')
-        .data('daterangepicker')
-        .startDate.format('YYYY-MM-DD');
-    var end = $('input#sr_date_filter')
-        .data('daterangepicker')
-        .endDate.format('YYYY-MM-DD');
+    var start = $('input#sr_date_filter').data('daterangepicker').startDate.format('YYYY-MM-DD');
+    var end = $('input#sr_date_filter').data('daterangepicker').endDate.format('YYYY-MM-DD');
 
     var data_sell = {
         commission_agent: $('select#sr_id').val(),
@@ -1297,9 +1275,7 @@ function updateProfitLoss() {
     var start = $('#profit_loss_date_filter')
         .data('daterangepicker')
         .startDate.format('YYYY-MM-DD');
-    var end = $('#profit_loss_date_filter')
-        .data('daterangepicker')
-        .endDate.format('YYYY-MM-DD');
+    var end = $('#profit_loss_date_filter').data('daterangepicker').endDate.format('YYYY-MM-DD');
     var location_id = $('#profit_loss_location_filter').val();
 
     var data = { start_date: start, end_date: end, location_id: location_id };
@@ -1346,9 +1322,7 @@ function updateProfitLoss() {
 }
 
 function show_child_payments(rowData) {
-    var div = $('<div/>')
-        .addClass('loading')
-        .text('Loading...');
+    var div = $('<div/>').addClass('loading').text('Loading...');
     $.ajax({
         url: '/payments/show-child-payments/' + rowData.DT_RowId,
         dataType: 'html',

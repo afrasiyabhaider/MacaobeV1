@@ -30,6 +30,10 @@
                 </button>
                 {{-- {!! Form::submit('Print Selected', array('class' => 'btn btn-md btn-warning', 'id' => 'bulkPrint-selected')) !!} --}}
         {!! Form::close() !!}
+        {{-- <th>
+            <input type="checkbox" id="select-all-row">
+            Select All
+        </th> --}}
     </div>
 </div>
 <div class="table-responsive">

@@ -2494,7 +2494,7 @@ class ProductController extends Controller
 
             $output = [
                 'success' => 1,
-                'msg' => __('lang_v1.products_deactivated_success')
+                'msg' => __('lang_v1.success')
             ];
         } catch (\Exception $e) {
             DB::rollBack();

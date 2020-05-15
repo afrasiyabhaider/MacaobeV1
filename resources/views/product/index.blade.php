@@ -180,7 +180,7 @@
                     }
                 },
                 columnDefs: [ {
-                    "targets": [0, 1, 11],
+                    "targets": [0, 1, 3],
                     "orderable": false,
                     "searchable": false
                 } ],
@@ -189,7 +189,7 @@
                         { data: 'mass_delete'  },
                         { data: 'image', name: 'products.image'  },
                         { data: 'product', name: 'products.name'  },
-                        { data: 'action', name: 'action'},
+                        { data: 'action', name: 'action',searchable:false,orderable:false},
                         { data: 'refference', name: 'products.refference'  },
                         { data: 'purchase_price', name: 'purchase_price', searchable: false},
                         { data: 'selling_price', name: 'selling_price', searchable: false},
@@ -338,21 +338,21 @@
                 
                 if(selected_rows.length > 0){
                     $('input#selected_products_bulkPrint').val(selected_rows);
-                    swal({
-                        title: LANG.sure,
-                        icon: "warning",
-                        buttons: true,
-                        dangerMode: true,
-                    }).then((willDelete) => {
-                        if (willDelete) {
+                    // swal({
+                    //     title: LANG.sure,
+                    //     icon: "warning",
+                    //     buttons: true,
+                    //     dangerMode: true,
+                    // }).then((willDelete) => {
+                    //     if (willDelete) {
                             $('form#bulkPrint_form').submit();
-                        }
-                    });
-                } else{
-                    $('input#selected_products_bulkPrint').val('');
-                    swal('@lang("lang_v1.no_row_selected")');
+                //         }
+                //     });
+                // } else{
+                //     $('input#selected_products_bulkPrint').val('');
+                //     swal('@lang("lang_v1.no_row_selected")');
                 }    
-            })
+            });
 
 
             $(document).on('click', '#bulkTransfer-selected', function(e){
@@ -478,9 +478,6 @@
                 product_table.ajax.reload();
             }
         });
-    </script>
-    <script type="text/javascript">
-  
     $(document).ready(function(){
       $("#searchDate").change(function(){
          alert($(this).val());
