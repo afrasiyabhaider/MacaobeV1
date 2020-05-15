@@ -2546,7 +2546,7 @@ class SellPosController extends Controller
             //  $ut = new \App\Utils\ProductUtil();
             $unit_price = $ut->num_f($product_prices->dpp_inc_tax);
             $single_dpp = $ut->num_f($product_prices->single_dpp);
-            $custom_price = $ut->num_f($product_prices->sell_price_inc_tax);
+            $sale_price = $ut->num_f($product_prices->sell_price_inc_tax);
 
             $data = [
                 'product' => $product,
@@ -2563,7 +2563,7 @@ class SellPosController extends Controller
                 'color' => $color,
                 'unit_price' => $unit_price,
                 'single_dpp' => $single_dpp,
-                'custom_price' => $custom_price,
+                'sale_price' => $sale_price,
             ];
         }
         // dd($data);

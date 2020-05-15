@@ -1132,7 +1132,7 @@
             // {{$ut->num_f($product->variations()->first()->dpp_inc_tax)}}
             // result.product_price.sell_price_inc_tax
             
-						$("#custom_price").val(result.custom_price);
+						$("#sale_price").val(result.sale_price);
 						$("#color_id").val(result.color.id).change();
 						$("#qty_id").val(result.variation_location_details.qty_available);
 						$("#sizes_id").val(result.sub_size.id).change();
