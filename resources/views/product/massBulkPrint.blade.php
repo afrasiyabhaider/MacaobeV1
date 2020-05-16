@@ -99,7 +99,7 @@
 					</div>
 					
 					<div class="col-xs-12">
-						<div class="col-xs-5 printList" data-id="price" style="font-weight: bolder; font-size: 13px">
+						<div class="col-xs-5 printList" data-id="price" style="font-weight: bolder; font-size: 12px">
 							<span>
 								€ 
 								</span>
