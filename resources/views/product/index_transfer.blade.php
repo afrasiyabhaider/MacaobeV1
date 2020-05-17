@@ -25,7 +25,27 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             {!! Form::label('category_id', 'Business :') !!}
-                            {!! Form::select('category_id', $business_locations, null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'transferBussiness', 'placeholder' => __('lang_v1.all')]); !!}
+                            @foreach ($business_locations as $key=>$value)
+                                @if ($key != 1 && $value != "Main Shop")
+                                    @php
+                                        $newBusiness_locations[$key] = $value;
+                                    @endphp
+                                @endif
+                            @endforeach
+                            {{-- {{dd(collect($newBusiness_locations))}} --}}
+                            {{-- <select name="category_id" id="transferBusiness" class="form-control select2" style="width:100%">
+                                <optgroup>
+                                    <option value="all">{{__('lang_v1.all')}}</option>
+                                    @foreach ($business_locations as $key=>$item)
+                                        @if ($key != 1 && $item != "Main Shop")
+                                            <option value="{{$key}}">
+                                                {{$item}}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </optgroup>
+                            </select> --}}
+                            {!! Form::select('category_id', collect($newBusiness_locations), null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'transferBussiness', 'placeholder' => __('lang_v1.all')]); !!}
                         </div>
                     </div>
                 </div>

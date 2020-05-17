@@ -2712,7 +2712,8 @@ class ProductController extends Controller
                     'success' => 1,
                     'msg' => "TRANSFER SUCCESSFULY !"
                 ];
-                return redirect('products')->with('status', $output);
+                
+                // return redirect('products')->with('status', $output);
 
                 // return view('product.massBulkTransfer')->with(compact( 'product' ));
 
@@ -2731,8 +2732,9 @@ class ProductController extends Controller
                 'msg' => __("messages.something_went_wrong") . "Message:" . $e->getMessage()
             ];
         }
-        dd($output);
-        die();
+        // dd($output);
+        // die();
+        return redirect()->back()->with('status', $output);
         // return redirect()->back()->with(['status' => $output]);
     }
 
