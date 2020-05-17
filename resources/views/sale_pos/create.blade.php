@@ -22,10 +22,26 @@
 					<div class="col-sm-6">
 						<h3 class="box-title">POS Terminal <i class="fa fa-keyboard-o hover-q text-muted" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="bottom" data-content="@include('sale_pos.partials.keyboard_shortcuts_details')" data-html="true" data-trigger="hover" data-original-title="" title=""></i></h3>
 					</div>
-					<button type="button"  title="Return Sale"   class="btn btn-info btn-md pull-right" onclick="openReturnWindow();">
-				        <strong><i class="fa fa-asl-interpreting"></i></strong>
-				        RETURN
-			        </button>
+					<div>
+						<button type="button"  title="Return Sale" data-toggle="tooltip" data-placement="bottom"   class="btn btn-danger btn-md pull-right" onclick="openReturnWindow();">
+							<strong><i class="fa fa-undo"></i></strong>
+							Return
+						   {{-- <strong><i class="fa fa-asl-interpreting"></i></strong> --}}
+						   {{-- RETURN --}}
+					   </button>
+						<button type="button" onclick="openPopupWindow('/products/transfer');" title="Transfer Products" data-toggle="tooltip" data-placement="bottom" class="btn btn-warning pull-right" style="margin-right: 5px">
+							<strong><i class="fa fa-random fa-lg"></i></strong>
+							Transfer
+						</button>
+						<button type="button" title="Gift Card" data-toggle="tooltip" data-placement="bottom" class="btn btn-success pos_add_quick_product pull-right" data-href="{{action('GiftCardController@quickAdd')}}" data-container=".quick_add_product_modal" style="margin-right: 5px">
+							<i class="fa fa-archive fa-lg"></i>
+							Gift Card
+						</button>
+						<button type="button" title="Add Cupons" data-toggle="tooltip" data-placement="bottom" class=" btn btn-success pos_add_quick_product pull-right" data-href="{{action('CouponController@quickAdd')}}" data-container=".quick_add_product_modal" style="margin-right: 5px">
+							<i class="fa fa-calendar-check-o fa-lg"></i>
+							Cupon
+						</button>
+					</div>
 					<input type="hidden" id="item_addition_method" value="{{$business_details->item_addition_method}}">
 					@if(is_null($default_location))
 						<div class="col-sm-6">
@@ -173,7 +189,7 @@
 									<input class="form-control" type="number" id="cust_points"  value="0" >
 								</div>
 							</div>
-							<div class="form-group col-md-2"  >
+							{{-- <div class="form-group col-md-2"  >
 								<div class="input-group">
 									 <label> Gift Card </label>
 									<button type="button" title="Quick Gift Card" class="col-md-12 btn btn-default bg-white btn-flat pos_add_quick_product" data-href="{{action('GiftCardController@quickAdd')}}" data-container=".quick_add_product_modal"><i class="fa fa-archive text-primary fa-lg"></i></button>
@@ -184,7 +200,7 @@
 									 <label> Coupons </label>
 									<button type="button" class="col-md-12 btn btn-default bg-white btn-flat pos_add_quick_product" data-href="{{action('CouponController@quickAdd')}}" data-container=".quick_add_product_modal"><i class="fa fa-calendar-check-o text-primary fa-lg"></i></button>
 								</div>
-							</div> 
+							</div>  --}}
 					<div class="row">
 					<div class="col-sm-12 pos_product_div">
 						<input class="form-control" type="hidden" id="cust_expiry"  value="0" >

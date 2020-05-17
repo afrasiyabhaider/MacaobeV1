@@ -575,7 +575,7 @@
               var result = (pad+n).slice(-pad.length);
               // console.log('Refference : '+data+result);
               $("#refference_id").val("");
-              $("#refference_id").val(data+result );
+              $("#refference_id").val(data+result);
             //
                 
            }
@@ -1080,76 +1080,81 @@
 		if (add_via_ajax) {
 			// console.log("Variation ID : "+variation_id);
 			$.ajax({
-				method: 'GET',
-				// SellPosController @ line 2484
+          method: 'GET',
+          // SellPosController @ line 2484
 
-				url:url+ '/sells/pos/get_bulk_product_detail/' + variation_id,
-				async: false,
-				// data: {
-				// 	// product_row: product_row,
-				// 	customer_id: customer_id,
-				// 	is_direct_sell: is_direct_sell,
-				// 	price_group: price_group,
-				// },
-				dataType: 'json',
-				success: function(result) {
-					if (result != 'null') {
-						// console.log(result.category);
-						if (result.product.supplier_id) {
-							$("#supplier_id").val(result.product.supplier_id).change();
-						}else{
-							$("#supplier_id").val(0).change();
-							toastr.error('Supplier not found. Please select manually.');
+          url:url+ '/sells/pos/get_bulk_product_detail/' + variation_id,
+          async: false,
+          // data: {
+          // 	// product_row: product_row,
+          // 	customer_id: customer_id,
+          // 	is_direct_sell: is_direct_sell,
+          // 	price_group: price_group,
+          // },
+          dataType: 'json',
+          success: function(result) {
+            if (result != 'null') {
+              // console.log(result.category);
+              if (result.product.supplier_id) {
+                $("#supplier_id").val(result.product.supplier_id).change();
+              }else{
+                $("#supplier_id").val(0).change();
+                toastr.error('Supplier not found. Please select manually.');
 
-						}
-						$("#category_id").val(result.product.category_id).change();
-						toastr.success('Please select Sub-Category manually.');
-						if (result.product.category_id == null) {
-							toastr.error('Category and Sub-Category not found. Please select manually.');
-						}
-						
-						// .attr('selected',true);
-						var img = result.product.image;
-						if (img == null) {
-							img = url+'/img/default.png';
-						}else{
-							img = url+'/uploads/img/'+img;
-						}
-						$("#product_name").val(result.product.name);
-						$("#sku").val(result.product.sku);
-						$("#description").val(result.product.description);
-						$("#product_id").val(result.product.id);
-						$("#img-previewer").attr("src",img);
-						// $("#img-input").val(img);
-						$("#name_id").val(0); //important
-						$("#refference_id").val(result.product.refference);
-						// console.log("Ref : "+result.product.refference);
-						$("#unit_price").val(result.unit_price);
-						// $("#unit_price").val(result.product_price.dpp_inc_tax);
-						// console.log(result);
-            $("#single_dpp").val(result.single_dpp).trigger("change");
-            // $("#single_dpp").val(result.product_price.dpp_inc_tax).trigger("change");
-            // {{$ut->num_f($product->variations()->first()->dpp_inc_tax)}}
-            // result.product_price.sell_price_inc_tax
+              }
+              $("#category_id").val(result.product.category_id).change();
+              $("#sub_category_id").val(result.product.sub_category_id).change();
+              // toastr.success('Please select Sub-Category manually.');
+              if (result.product.category_id == null) {
+                toastr.error('Category and Sub-Category not found. Please select manually.');
+              }
+              
+              // .attr('selected',true);
+              var img = result.product.image;
+              if (img == null) {
+                img = url+'/img/default.png';
+              }else{
+                img = url+'/uploads/img/'+img;
+              }
+              $("#product_name").val(result.product.name);
+              $("#sku").val(result.product.sku);
+              $("#description").val(result.product.description);
+              $("#product_id").val(result.product.id);
+              $("#img-previewer").attr("src",img);
+              // $("#img-input").val(img);
+              $("#name_id").val(0); //important
+              // console.log("Getting Ref : "+result.product.refference);
+              // console.log("Before Ref: "+$("#refference_id").val());
+              $("#refference_id").val(result.product.refference);
+              // console.log("After Ref: "+$("#refference_id").val());
+              // console.log("Ref : "+result.product.refference);
+              $("#unit_price").val(result.unit_price);
+              // $("#unit_price").val(result.product_price.dpp_inc_tax);
+              // console.log(result);
+              $("#single_dpp").val(result.single_dpp).trigger("change");
+              // $("#single_dpp").val(result.product_price.dpp_inc_tax).trigger("change");
+              // {{$ut->num_f($product->variations()->first()->dpp_inc_tax)}}
+              // result.product_price.sell_price_inc_tax
+              
+              $("#sale_price").val(result.sale_price);
+              $("#color_id").val(result.color.id).change();
+              $("#qty_id").val(result.variation_location_details.qty_available);
+              $("#sizes_id").val(result.sub_size.id).change();
+              // var product = result.product;
+              // var supplier = result.supplier;
+              // var price = result.product_price;
+              // var purchase_line = result.purchase_lines;
+              // Add Data into 
+              // addDataOnLoad(supplier.id,product.unit_id,price.dpp_inc_tax,result.category.id,product.name,product.refference,product.sku,purchase_line.quantity,price.sell_price_inc_tax,product.color_id,product.size_id,product.image);
+
+              // DittoThis(result.product_price.sell_price_inc_tax,result.product_price.dpp_inc_tax);
+              
+              
+            } else {
+              toastr.error('No record found. Please try another product or insert record manually.');
+            }
             
-						$("#sale_price").val(result.sale_price);
-						$("#color_id").val(result.color.id).change();
-						$("#qty_id").val(result.variation_location_details.qty_available);
-						$("#sizes_id").val(result.sub_size.id).change();
-						// var product = result.product;
-						// var supplier = result.supplier;
-						// var price = result.product_price;
-						// var purchase_line = result.purchase_lines;
-						// Add Data into 
-						// addDataOnLoad(supplier.id,product.unit_id,price.dpp_inc_tax,result.category.id,product.name,product.refference,product.sku,purchase_line.quantity,price.sell_price_inc_tax,product.color_id,product.size_id,product.image);
-
-						// DittoThis(result.product_price.sell_price_inc_tax,result.product_price.dpp_inc_tax);
-						
-						
-					} else {
-						toastr.error('No record found. Please try another product or insert record manually.');
-					}
-				},
+          },
 			});
 		}
 	}
@@ -1175,6 +1180,7 @@
 					if (result != "null") {
 						var product = result.product;
 						var supplier = result.supplier;
+            // cosnole.log("Below Supplier = "+supplier);
 						var price = result.product_price;
 						var purchase_line = result.purchase_lines;
 						// Add Data into 

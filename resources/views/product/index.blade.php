@@ -179,6 +179,7 @@
                         d.to_date = $('#product_list_to_date').val();
                     }
                 },
+                "lengthMenu": [[100, 300, 500,1000, -1], [100, 300, 500,1000, "All"]],
                 columnDefs: [ {
                     "targets": [0, 1, 3],
                     "orderable": false,

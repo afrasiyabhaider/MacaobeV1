@@ -294,6 +294,8 @@ class SellPosController extends Controller
 
         $walk_in_customer = $this->contactUtil->getWalkInCustomer($business_id);
 
+        // dd($walk_in_customer);
+
         $business_details = $this->businessUtil->getDetails($business_id);
         $taxes = TaxRate::forBusinessDropdown($business_id, true, true);
         $payment_types = $this->productUtil->payment_types();
