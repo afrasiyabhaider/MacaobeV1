@@ -66,6 +66,7 @@
                <div class="row mb-5">
                     <div class="col-sm-4">
                          <label>Supplier</label>
+                         <input type="hidden" name="hidden_supplier_id" id="hidden_supplier_id" value="0">
                          <select name="supplier" id="supplier_id" onchange="getSupplierDetails();" class="select2 form-control">
                               <optgroup>
                                    <option value="0">
@@ -1096,7 +1097,13 @@
             if (result != 'null') {
               // console.log(result.category);
               if (result.product.supplier_id) {
-                $("#supplier_id").val(result.product.supplier_id).change();
+
+                // var test = $("#supplier_id").find('option[value="'+result.product.supplier_id+'"]').attr("selected");
+
+                // console.log(test);
+                // $("#supplier_id").val(result.product.supplier_id).change();
+                $("#hidden_supplier_id").val(result.product.supplier_id);
+                
               }else{
                 $("#supplier_id").val(0).change();
                 toastr.error('Supplier not found. Please select manually.');

@@ -887,6 +887,7 @@ class ProductController extends Controller
         if (!auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
         }
+        
 
         try {
             $business_id = $request->session()->get('user.business_id');
@@ -1070,7 +1071,11 @@ class ProductController extends Controller
             $size = Size::find($request->input('size'));
             $product->name = $request->input('product_name');
             $product->image = $product_image;
-            $product->supplier_id = $request->input('supplier');
+            if($request->input('hidden_supplier_id') == 0){
+                $product->supplier_id = $request->input('supplier');
+            }else{
+                $product->supplier_id = $request->input('hidden_supplier_id');
+            }
             $product->category_id = $request->input('category');
             if ($request->input('sub_category') != 0) {
                 $product->sub_category_id = $request->input('sub_category');
