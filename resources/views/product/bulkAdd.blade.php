@@ -585,6 +585,7 @@
 @section('javascript')
   @php $asset_v = env('APP_VERSION'); @endphp
   <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+  {{-- Prevent Reload --}}
   <script type="text/javascript">
      $(document).ready(function (){
 		 /**
@@ -600,6 +601,7 @@
 		//console.log("Arr Name : "+arrName);
 		   $("#unit_price").focus();
 		// $("#refference_id").focus();
+
     });
 
     //     window.onbeforeunload = function() {

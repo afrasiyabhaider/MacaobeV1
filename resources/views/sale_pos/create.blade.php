@@ -161,9 +161,9 @@
 									'disabled' => is_null($default_location)? true : false,
 									'autofocus' => is_null($default_location)? false : true,
 									]); !!}
-									<span class="input-group-btn">
+									{{-- <span class="input-group-btn">
 										<button type="button" class="btn btn-default bg-white btn-flat pos_add_quick_product" data-href="{{action('ProductController@quickAdd')}}" data-container=".quick_add_product_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
-									</span>
+									</span> --}}
 								</div>
 							</div>
 						</div>
@@ -322,7 +322,13 @@
 
 @section('javascript')
 <script type="text/javascript">
-
+	$(function () {
+		window.onbeforeunload = function() {
+			return "Do you really want to leave this page?";
+			//if we return nothing here (just calling return;) then there will be no pop-up question at all
+			//return;
+		};
+	});
 	function ResetFields(index)
 	{
 		$("#amount_"+index).removeAttr("max");
