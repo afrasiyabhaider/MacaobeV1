@@ -2386,8 +2386,7 @@ class SellPosController extends Controller
                 'products.sku',
                 'products.image',
                 'products.color_id',
-                'products.sub_size_id',
-            )
+                'products.sub_size_id')
                 ->where("p_type", "product")
                 ->orderBy('products.name', 'asc')
                 ->groupBy('variations.id')
