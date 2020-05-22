@@ -418,8 +418,7 @@ class ReportController extends Controller
                 'variations.sell_price_inc_tax as unit_price',
                 'pv.name as product_variation',
                 'variations.name as variation_name',
-                'vld.updated_at',
-            )->groupBy('variations.id');
+                'vld.updated_at')->groupBy('variations.id');
 
             return DataTables::of($products)
                 ->addColumn('mass_delete', function ($row) {
