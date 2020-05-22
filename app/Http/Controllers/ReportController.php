@@ -382,7 +382,10 @@ class ReportController extends Controller
             }
 
             //TODO::Check if result is correct after changing LEFT JOIN to INNER JOIN
+
             
+            $selling_price_group_count = SellingPriceGroup::countSellingPriceGroups($business_id);
+
             $products = $query->select(
                 // DB::raw("(SELECT SUM(quantity) FROM transaction_sell_lines LEFT JOIN transactions ON transaction_sell_lines.transaction_id=transactions.id WHERE transactions.status='final' $location_filter AND
                 //     transaction_sell_lines.product_id=products.id) as total_sold"),
@@ -401,19 +404,41 @@ class ReportController extends Controller
                         AND (SAL.variation_id=variations.id)) as total_adjusted"),
                 DB::raw("SUM(vld.qty_available) as stock"),
                 'variations.sub_sku as sku',
+                'p.id as product_id',
                 'p.name as product',
                 'p.type',
-                'p.id as product_id',
+                'p.refference',
+                'p.color_id',
+                'p.supplier_id',
+                'p.category_id',
+                'p.sub_category_id',
+                'p.sub_size_id',
                 'units.short_name as unit',
                 'p.enable_stock as enable_stock',
                 'variations.sell_price_inc_tax as unit_price',
                 'pv.name as product_variation',
-                'variations.name as variation_name'
+                'variations.name as variation_name',
+                'vld.updated_at',
             )->groupBy('variations.id');
 
             return DataTables::of($products)
                 ->addColumn('mass_delete', function ($row) {
                     return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '">';
+                })
+                ->addColumn('color_id', function ($row) {
+                    return  $row->product()->first()->color()->first()->name;
+                })
+                ->addColumn('supplier_id', function ($row) {
+                    return  $row->product()->first()->supplier()->first()->name;
+                })
+                ->addColumn('category_id', function ($row) {
+                    return  $row->product()->first()->category()->first()->name;
+                })
+                ->addColumn('sub_category_id', function ($row) {
+                    return  $row->product()->first()->sub_category()->first()->name;
+                })
+                ->addColumn('sub_size_id', function ($row) {
+                    return  $row->product()->first()->sub_size()->first()->name;
                 })
                 ->editColumn('stock', function ($row) {
                     if ($row->enable_stock) {
@@ -467,11 +492,62 @@ class ReportController extends Controller
 
                     return $html;
                 })
-                
+                ->addColumn(
+                    'actions',
+                    function ($row) use ($selling_price_group_count) {
+                        $html =
+                            '<div class="btn-group">
+                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false"> <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                <li><a href="' . action('LabelsController@show') . '?product_id=' . $row->product()->first()->id . '" data-toggle="tooltip" title="Print Barcode/Label"><i class="fa fa-barcode"></i> ' . __('barcode.labels') . '</a></li>';
+
+                        if (auth()->user()->can('product.view')) {
+                            $html .=
+                                '<li><a href="' . action('ProductController@view', [$row->product()->first()->id]) . '" class="view-product"><i class="fa fa-eye"></i> ' . __("messages.view") . '</a></li>';
+                        }
+
+                        if (auth()->user()->can('product.update')) {
+                            $html .=
+                                '<li><a href="' . action('ProductController@edit', [$row->product()->first()->id]) . '"><i class="glyphicon glyphicon-edit"></i> ' . __("messages.edit") . '</a></li>';
+                        }
+
+                        if (auth()->user()->can('product.delete')) {
+                            $html .=
+                                '<li><a href="' . action('ProductController@destroy', [$row->product()->first()->id]) . '" class="delete-product"><i class="fa fa-trash"></i> ' . __("messages.delete") . '</a></li>';
+                        }
+
+                        if ($row->is_inactive == 1) {
+                            $html .=
+                                '<li><a href="' . action('ProductController@activate', [$row->product()->first()->id]) . '" class="activate-product"><i class="fa fa-circle-o"></i> ' . __("lang_v1.reactivate") . '</a></li>';
+                        }
+
+                        $html .= '<li class="divider"></li>';
+
+                        if (auth()->user()->can('product.create')) {
+                            if ($row->enable_stock == 1) {
+                                $html .=
+                                    '<li><a href="#" data-href="' . action('OpeningStockController@add', ['product_id' => $row->product()->first()->id]) . '" class="add-opening-stock"><i class="fa fa-database"></i> ' . __("lang_v1.add_edit_opening_stock") . '</a></li>';
+                            }
+
+                            if ($selling_price_group_count > 0) {
+                                $html .=
+                                    '<li><a href="' . action('ProductController@addSellingPrices', [$row->product()->first()->id]) . '"><i class="fa fa-money"></i> ' . __("lang_v1.add_selling_price_group_prices") . '</a></li>';
+                            }
+
+                            $html .=
+                                '<li><a href="' . action('ProductController@create', ["d" => $row->product()->first()->id]) . '"><i class="fa fa-copy"></i> ' . __("lang_v1.duplicate_product") . '</a></li>';
+                        }
+
+                        $html .= '</ul></div>';
+
+                        return $html;
+                    }
+                )
                 ->removeColumn('enable_stock')
                 ->removeColumn('unit')
                 // ->removeColumn('id')
-                ->rawColumns(['mass_delete','unit_price', 'total_transfered', 'total_sold','total_adjusted', 'stock'])
+                ->rawColumns(['mass_delete','unit_price', 'total_transfered', 'total_sold','total_adjusted', 'stock','actions'])
                 ->make(true);
         }
 

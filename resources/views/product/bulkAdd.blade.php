@@ -757,9 +757,12 @@
            url:'/sizes/getSupplierDetails/'+name, 
            success:function(data){
             $("#temp_reff").val(data); 
+		  console.log("Supp-Reff-Count : "+reffCount);
+		  console.log("Supp-Data : "+data);
             var n = reffCount;
             var result = (pad+n).slice(-pad.length);
-          //   console.log('Refference : '+result);
+            console.log('Refference-N : '+n);
+            console.log('Refference-Result : '+result);
             $("#refference_id").val(data+result );
             //
                 
@@ -773,7 +776,8 @@
      function updateRefference()
      { 
 		var n = reffCount;
-            var result = (pad+n).slice(-pad.length);
+          var result = (pad+n).slice(-pad.length);
+		// console.log("Refference Upadte: "+result);
 		$("#refference").val($("#temp_reff").val()+result);
      }
 

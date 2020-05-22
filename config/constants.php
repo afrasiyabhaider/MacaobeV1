@@ -26,8 +26,8 @@ return [
     'langs_rtl' => ['ar'],
     'non_utf8_languages' => ['ar', 'hi', 'ps'],
     
-    'document_size_limit' => '1000000', //in Bytes,
-    'image_size_limit' => '500000', //in Bytes
+    'document_size_limit' => '100000000', //in Bytes,
+    'image_size_limit' => '50000000', //in Bytes
 
     'asset_version' => 36,
 

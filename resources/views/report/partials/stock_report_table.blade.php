@@ -6,15 +6,23 @@
             <tr>
                 <th>
                     <input type="checkbox" id="select-all-row">
-                    Select All
+                    All
                 </th>
                 <th>SKU</th>
                 <th>@lang('business.product')</th>
+                <th>Refference</th>
+                <th>Actions</th>
                 <th>@lang('sale.unit_price')</th>
+                <th>Color</th>
                 <th>@lang('report.current_stock')</th>
-                <th>@lang('report.total_unit_sold')</th>
-                <th>@lang('lang_v1.total_unit_transfered')</th>
-                <th>@lang('lang_v1.total_unit_adjusted')</th>
+                <th>Total Sold</th>
+                <th>Total Transfered</th>
+                <th>Supplier</th>
+                <th>Category</th>
+                <th>Sub-Category</th>
+                <th>Size</th>
+                <th>Transfered On</th>
+                {{-- <th>@lang('lang_v1.total_unit_adjusted')</th> --}}
             </tr>
         </thead>
         <tfoot>

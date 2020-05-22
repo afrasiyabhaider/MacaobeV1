@@ -175,7 +175,7 @@ class ProductController extends Controller
                     function ($row) use ($selling_price_group_count) {
                         $html =
                             '<div class="btn-group">
-                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false">' . __("messages.actions") . ' <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                            <button type="button" class="btn btn-info dropdown-toggle btn-xs" data-toggle="dropdown" aria-expanded="false"> <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="' . action('LabelsController@show') . '?product_id=' . $row->id . '" data-toggle="tooltip" title="Print Barcode/Label"><i class="fa fa-barcode"></i> ' . __('barcode.labels') . '</a></li>';
@@ -2810,15 +2810,25 @@ class ProductController extends Controller
             ->select('name', 'id')->get();
 
         $brands = Brands::where('business_id', $business_id)->pluck('name', 'id');
+        /**
+         *Getting Names of products
+         *  
+         **/
         $ProductNameCategory = ProductNameCategory::where('business_id', $business_id)->pluck('name', 'id', 'row_no');
         $pnc = array();
+
+        $temp = [];
         foreach ($ProductNameCategory as $key => $objPNC) {
-            # code...
-            $pnc[] = $key . "@" . $objPNC;
+            $temp[] = $key . "@" . $objPNC;
         }
+        // Shuffling names of Products
+        $pnc = collect($temp)->shuffle()->toArray();
         $pnc = json_encode($pnc);
+        // dd($pnc);
         $objBuss = \App\Business::find(request()->session()->get('user.business_id'));
         $refferenceCount = str_pad($objBuss->prod_refference, 4, '0', STR_PAD_LEFT);
+
+        // dd($refferenceCount);
 
         $suppliers = Supplier::where('business_id', $business_id)
                     ->orderBy('name','Asc')->pluck('name', 'id');

@@ -2384,7 +2384,9 @@ class SellPosController extends Controller
                 'variations.default_sell_price as selling_price',
                 'variations.sub_sku',
                 'products.sku',
-                'products.image'
+                'products.image',
+                'products.color_id',
+                'products.sub_size_id',
             )
                 ->where("p_type", "product")
                 ->orderBy('products.name', 'asc')
