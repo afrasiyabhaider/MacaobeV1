@@ -441,7 +441,13 @@ class ReportController extends Controller
                     return  $row->first()->product()->first()->sub_size()->first()->name;
                 })
                 ->editColumn('image', function ($row) {
-                    return '<div style="display: flex;"><img src="' . $row->first()->product()->first()->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
+                    if(!empty($row->image) && !is_null($row->image)){
+                        return '<div style="display: flex;"><img src="' . asset('/uploads/img/'.$row->image) . '" alt="Product image" class="product-thumbnail-small"></div>';
+                        
+                    }else{
+                        return '<div style="display: flex;"><img src="' . $row->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
+                    }
+                    // return asset('/uploads/img/'.$row->image);
                 })
                 ->editColumn('stock', function ($row) {
                     if ($row->enable_stock) {

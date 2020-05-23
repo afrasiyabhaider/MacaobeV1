@@ -2986,9 +2986,8 @@ class ProductController extends Controller
                     $product_details['image'] =  $this->productUtil->uploadFileArr($request, 'file', config('constants.product_img_path'), $i);
                 }
 
-
-
                 $product = Product::create($product_details);
+
                 if ($deleteNameSeriesId != '0') {
                     ProductNameCategory::where('id', $deleteNameSeriesId)->delete();
                 }
