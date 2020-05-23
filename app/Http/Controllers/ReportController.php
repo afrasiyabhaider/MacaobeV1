@@ -406,6 +406,7 @@ class ReportController extends Controller
                 'variations.sub_sku as sku',
                 'p.id as product_id',
                 'p.name as product',
+                'p.image as image',
                 'p.type',
                 'p.refference',
                 'p.color_id',
@@ -419,7 +420,7 @@ class ReportController extends Controller
                 'pv.name as product_variation',
                 'variations.name as variation_name',
                 'vld.updated_at')->groupBy('variations.id');
-            // dd($products->first()->product()->first()->color()->first()->name);
+            // dd($products->first()->product()->first()->image_url);
             return DataTables::of($products)
                 ->addColumn('mass_delete', function ($row) {
                     return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '">';
@@ -438,6 +439,9 @@ class ReportController extends Controller
                 })
                 ->addColumn('sub_size_id', function ($row) {
                     return  $row->first()->product()->first()->sub_size()->first()->name;
+                })
+                ->editColumn('image', function ($row) {
+                    return '<div style="display: flex;"><img src="' . $row->first()->product()->first()->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
                 })
                 ->editColumn('stock', function ($row) {
                     if ($row->enable_stock) {
@@ -546,7 +550,7 @@ class ReportController extends Controller
                 ->removeColumn('enable_stock')
                 ->removeColumn('unit')
                 // ->removeColumn('id')
-                ->rawColumns(['mass_delete','unit_price', 'total_transfered', 'total_sold','total_adjusted', 'stock','actions'])
+                ->rawColumns(['mass_delete','unit_price', 'total_transfered', 'total_sold','total_adjusted', 'stock','actions','image'])
                 ->make(true);
         }
 

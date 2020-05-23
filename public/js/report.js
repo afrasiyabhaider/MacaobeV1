@@ -84,6 +84,7 @@ $(document).ready(function() {
         aaSorting: [2, 'asc'],
         columns: [
             { data: 'mass_delete', orderable: false, searchable: false },
+            { data: 'image', orderable: false, searchable: false },
             { data: 'sku', name: 'variations.sub_sku' },
             { data: 'product', name: 'p.name' },
             { data: 'refference', name: 'p.refference' },

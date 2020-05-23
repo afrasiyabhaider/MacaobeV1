@@ -8,6 +8,7 @@
                     <input type="checkbox" id="select-all-row">
                     All
                 </th>
+                <th>Image</th>
                 <th>SKU</th>
                 <th>@lang('business.product')</th>
                 <th>Refference</th>
