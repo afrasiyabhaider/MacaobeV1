@@ -419,25 +419,25 @@ class ReportController extends Controller
                 'pv.name as product_variation',
                 'variations.name as variation_name',
                 'vld.updated_at')->groupBy('variations.id');
-
+            // dd($products->first()->product()->first()->color()->first()->name);
             return DataTables::of($products)
                 ->addColumn('mass_delete', function ($row) {
                     return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '">';
                 })
                 ->addColumn('color_id', function ($row) {
-                    return  $row->product()->first()->color()->first()->name;
+                    return  $row->first()->product()->first()->color()->first()->name;
                 })
                 ->addColumn('supplier_id', function ($row) {
-                    return  $row->product()->first()->supplier()->first()->name;
+                    return  $row->first()->product()->first()->supplier()->first()->name;
                 })
                 ->addColumn('category_id', function ($row) {
-                    return  $row->product()->first()->category()->first()->name;
+                    return  $row->first()->product()->first()->category()->first()->name;
                 })
                 ->addColumn('sub_category_id', function ($row) {
-                    return  $row->product()->first()->sub_category()->first()->name;
+                    return  $row->first()->product()->first()->sub_category()->first()->name;
                 })
                 ->addColumn('sub_size_id', function ($row) {
-                    return  $row->product()->first()->sub_size()->first()->name;
+                    return  $row->first()->product()->first()->sub_size()->first()->name;
                 })
                 ->editColumn('stock', function ($row) {
                     if ($row->enable_stock) {
