@@ -143,11 +143,11 @@
 				</div>
 				<div class="col-sm-4">
 					<label>Product Name *</label>
-					<input type="text" name="product_name" value="{{$product->name}}" class="req form-control" id="product_name" required readonly>
+					<input type="text" name="product_name" value="{{$product->name}}" class="req form-control" id="product_name" required>
 				</div>
 				<div class="col-sm-4">
 					<label>Refference * @show_tooltip(__('tooltip.sku'))</label>
-					<input type="text" name="refference" value="{{$product->refference}}" id="refference_id" class="req form-control @error('refference') is-invalid @enderror" required readonly>
+					<input type="text" name="refference" value="{{$product->refference}}" id="refference_id" class="req form-control @error('refference') is-invalid @enderror" required>
 				</div>
           @php
               $ut = new \App\Utils\ProductUtil();
@@ -267,7 +267,9 @@
 					 <select class="select2" id="supplier" style="width:45% !important">
 						<option value="all">All Suppliers</option>
 						@foreach($suppliers as $key=>$noRefference)
-							<option value="{{$key}}">
+							<option value="{{$key}}" @if ($key == $product->supplier_id)
+                  selected
+              @endif>
 								{{$noRefference}}
 							</option>
 						@endforeach
