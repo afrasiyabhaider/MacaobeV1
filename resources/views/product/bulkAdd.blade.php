@@ -31,8 +31,11 @@
 			    @lang('product.add_new_product') 
 		    </h3>
 	    </div>
+	    @php
+		   $id = App\Product::first()->id;
+	    @endphp
 		<div class="col-sm-6">
-			<a href="{{url('/products/50/edit')}}" class="btn btn-info ml-5" target="__blank">
+			<a href="{{url('/products/'.$id.'/edit')}}" class="btn btn-info ml-5" target="__blank">
 				Update Product
 				<i class="fa fa-edit"></i>
 			</a>
@@ -497,12 +500,12 @@
           {{-- <div class="col-md-1"><b>Supplier</b></div> --}}
           <div class="col-md-1 hide"><b>Barcode</b></div>
           <div class="col-md-1 hide"><b>Description</b></div>
+          <div class="col-md-1"><b>Name</b></div>
+          <div class="col-md-1"><b>Refference</b></div>
           <div class="col-md-1"><b>Supplier</b></div>
           <div class="col-md-1"><b>Category</b></div>
           <div class="col-md-1"><b>SubCategory</b></div>
           {{-- <div class="col-md-1"><b>Unit</b></div> --}}
-          <div class="col-md-1"><b>Name</b></div>
-          <div class="col-md-1"><b>Refference</b></div>
           <div class="col-md-1 hide"><b>Unit Price</b></div>
           <div class="col-md-1"><b>Sale Price</b></div>
           <div class="col-md-1"><b>Color</b></div>

@@ -127,7 +127,7 @@ class ProductController extends Controller
                     DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                     DB::raw('MIN(v.sell_price_inc_tax) as min_price')
-                )->groupBy('products.id');
+                )->orderBy('products.updated_at','DESC')->groupBy('products.id');
 
             // $type = request()->get('type', null);
             // if (!empty($type)) {
@@ -2994,15 +2994,16 @@ class ProductController extends Controller
 
                 $sku = $request->input('sku');
 
-                if($sku){
+                if(isset($request->input('sku')[$i]) && !empty($request->input('sku')[$i])){
                     $product->custom_barcode = 1;
                     $product->sku = $request->input('sku')[$i];
                 }else{
                     $sku = $this->productUtil->generateProductSku($product->id);
                     $product->sku = $sku;
                 }
-
-                $product->description = $request->input('ref_description')[$i];
+                if(isset($request->input('ref_description')[$i]) && !empty($request->input('ref_description')[$i])){
+                    $product->description = $request->input('ref_description')[$i];
+                }
 
                 $product->save();
 
