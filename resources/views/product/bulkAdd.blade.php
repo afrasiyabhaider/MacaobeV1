@@ -188,7 +188,7 @@
 					</div>
 					<div class="clearfix"></div>
 					<div style="margin-top:50px">
-						<div class="col-sm-2">
+						<div class="col-xs-4">
 							{{-- This is only for alternative of offset --}}
 						</div>
 						<div class="col-sm-2">
@@ -209,9 +209,9 @@
 								<div class="input-group">
 								
 								<span class="input-group-btn">
-								<button type="button" onclick="openPrintProducts();" class="btn btn-success btn-lg" ><i class="fa fa-print"></i> Print Products</button>
+									{{-- <button type="button" onclick="openPrintProducts();" class="btn btn-success btn-lg" ><i class="fa fa-print"></i> Print Products</button>
 
-								</span>
+									</span> --}}
 								</div>
 							</div>
 						</div>

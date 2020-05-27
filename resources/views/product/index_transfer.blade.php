@@ -213,6 +213,11 @@
                     "searchable": false
                 } ],
                 aaSorting: [2, 'asc'],
+                pageLength: 100,
+                lengthMenu: [
+                    [20, 50, 70, 100, 300, 500, 1000, -1],
+                    [20, 50, 70, 100, 300, 500, 1000, 'All'],
+                ],
                 columns: [
                         { data: 'mass_delete'},
                         { data: 'image', name: 'products.image'  },

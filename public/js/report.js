@@ -25,6 +25,11 @@ $(document).ready(function() {
             { targets: [5], orderable: false, searchable: false },
             { targets: [1, 2, 3, 4], searchable: false },
         ],
+        pageLength: 100,
+        lengthMenu: [
+            [20, 50, 70, 100, 300, 500, 1000, -1],
+            [20, 50, 70, 100, 300, 500, 1000, 'All'],
+        ],
         columns: [
             { data: 'name', name: 'name' },
             { data: 'total_purchase', name: 'total_purchase' },
@@ -77,9 +82,10 @@ $(document).ready(function() {
                 d.unit_id = $('#unit').val();
             },
         },
+        pageLength: 100,
         lengthMenu: [
-            [100, 300, 500, 1000, -1],
-            [100, 300, 500, 1000, 'All'],
+            [20, 50, 70, 100, 300, 500, 1000, -1],
+            [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
         aaSorting: [2, 'asc'],
         columns: [
@@ -90,14 +96,14 @@ $(document).ready(function() {
             { data: 'refference', name: 'p.refference' },
             { data: 'actions', name: 'actions', searchable: false, orderable: false },
             { data: 'unit_price', name: 'variations.sell_price_inc_tax' },
-            { data: 'color_id', name: 'p.color_id' },
-            { data: 'category_id', name: 'p.category_id' },
-            { data: 'sub_category_id', name: 'p.sub_category_id' },
-            { data: 'sub_size_id', name: 'p.sub_size_id' },
+            { data: 'color_name', name: 'color_name' },
+            { data: 'category_name', name: 'category_name' },
+            { data: 'sub_category_name', name: 'sub_category_name' },
+            { data: 'size_name', name: 'size_name' },
             { data: 'stock', name: 'stock', searchable: false },
             { data: 'total_sold', name: 'total_sold', searchable: false },
             { data: 'total_transfered', name: 'total_transfered', searchable: false },
-            { data: 'supplier_id', name: 'p.supplier_id' },
+            { data: 'supplier_name', name: 'supplier_name' },
             { data: 'updated_at', name: 'updated_at' },
             // { data: 'total_adjusted', name: 'total_adjusted', searchable: false },
         ],
@@ -197,6 +203,11 @@ $(document).ready(function() {
         serverSide: true,
         ajax: '/reports/register-report',
         columnDefs: [{ targets: [6], orderable: false, searchable: false }],
+        pageLength: 100,
+        lengthMenu: [
+            [20, 50, 70, 100, 300, 500, 1000, -1],
+            [20, 50, 70, 100, 300, 500, 1000, 'All'],
+        ],
         columns: [
             { data: 'created_at', name: 'created_at' },
             { data: 'closed_at', name: 'closed_at' },
@@ -259,6 +270,11 @@ $(document).ready(function() {
             aaSorting: [
                 [0, 'desc']
             ],
+            pageLength: 100,
+            lengthMenu: [
+                [20, 50, 70, 100, 300, 500, 1000, -1],
+                [20, 50, 70, 100, 300, 500, 1000, 'All'],
+            ],
             ajax: {
                 url: '/sells',
                 data: function(d) {
@@ -316,6 +332,11 @@ $(document).ready(function() {
             serverSide: true,
             aaSorting: [
                 [0, 'desc']
+            ],
+            pageLength: 100,
+            lengthMenu: [
+                [20, 50, 70, 100, 300, 500, 1000, -1],
+                [20, 50, 70, 100, 300, 500, 1000, 'All'],
             ],
             ajax: {
                 url: '/expenses',
@@ -381,6 +402,11 @@ $(document).ready(function() {
                     (d.end_date = end);
                 },
             },
+            pageLength: 100,
+            lengthMenu: [
+                [20, 50, 70, 100, 300, 500, 1000, -1],
+                [20, 50, 70, 100, 300, 500, 1000, 'All'],
+            ],
             columns: [
                 { data: 'transaction_date', name: 'transaction_date' },
                 { data: 'invoice_no', name: 'invoice_no' },
@@ -442,6 +468,11 @@ $(document).ready(function() {
         },
         order: [
             [4, 'asc']
+        ],
+        pageLength: 100,
+        lengthMenu: [
+            [20, 50, 70, 100, 300, 500, 1000, -1],
+            [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
         columns: [
             { data: 'product', name: 'p.name' },
@@ -564,6 +595,11 @@ $(document).ready(function() {
                 d.location_id = $('select#location_id').val();
             },
         },
+        pageLength: 100,
+        lengthMenu: [
+            [20, 50, 70, 100, 300, 500, 1000, -1],
+            [20, 50, 70, 100, 300, 500, 1000, 'All'],
+        ],
         columns: [
             { data: 'product_name', name: 'p.name' },
             { data: 'supplier', name: 'c.name' },
@@ -666,6 +702,11 @@ $(document).ready(function() {
                 d.location_id = $('select#location_id').val();
             },
         },
+        pageLength: 100,
+        lengthMenu: [
+            [20, 50, 70, 100, 300, 500, 1000, -1],
+            [20, 50, 70, 100, 300, 500, 1000, 'All'],
+        ],
         columns: [
             { data: 'product_name', name: 'p.name' },
             { data: 'customer', name: 'c.name' },
@@ -715,6 +756,11 @@ $(document).ready(function() {
                 d.location_id = $('select#location_id').val();
             },
         },
+        pageLength: 100,
+        lengthMenu: [
+            [20, 50, 70, 100, 300, 500, 1000, -1],
+            [20, 50, 70, 100, 300, 500, 1000, 'All'],
+        ],
         columns: [
             { data: 'product_name', name: 'p.name' },
             { data: 'transaction_date', name: 't.transaction_date' },
@@ -787,6 +833,11 @@ $(document).ready(function() {
                 d.unit_id = $('#unit').val();
             },
         },
+        pageLength: 100,
+        lengthMenu: [
+            [20, 50, 70, 100, 300, 500, 1000, -1],
+            [20, 50, 70, 100, 300, 500, 1000, 'All'],
+        ],
         columns: [
             { data: 'sub_sku', name: 'v.sub_sku' },
             { data: 'product', name: 'products.name' },
@@ -839,6 +890,11 @@ $(document).ready(function() {
                 d.end_date = end;
             },
         },
+        pageLength: 100,
+        lengthMenu: [
+            [20, 50, 70, 100, 300, 500, 1000, -1],
+            [20, 50, 70, 100, 300, 500, 1000, 'All'],
+        ],
         columns: [{
                 orderable: false,
                 searchable: false,
@@ -944,6 +1000,11 @@ $(document).ready(function() {
                 d.end_date = end;
             },
         },
+        pageLength: 100,
+        lengthMenu: [
+            [20, 50, 70, 100, 300, 500, 1000, -1],
+            [20, 50, 70, 100, 300, 500, 1000, 'All'],
+        ],
         columns: [{
                 orderable: false,
                 searchable: false,

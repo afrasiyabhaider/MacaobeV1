@@ -335,6 +335,11 @@ class ReportController extends Controller
         if ($request->ajax()) {
             $query = Variation::join('products as p', 'p.id', '=', 'variations.product_id')
                     ->join('units', 'p.unit_id', '=', 'units.id')
+                    ->join('colors', 'p.color_id', '=', 'colors.id')
+                    ->join('sizes', 'p.sub_size_id', '=', 'sizes.id')
+                    ->join('suppliers', 'p.supplier_id', '=', 'suppliers.id')
+                    ->join('categories', 'p.category_id', '=', 'categories.id')
+                    ->join('categories as sub_cat', 'p.sub_category_id', '=', 'sub_cat.id')
                     ->leftjoin('variation_location_details as vld', 'variations.id', '=', 'vld.variation_id')
                     ->join('product_variations as pv', 'variations.product_variation_id', '=', 'pv.id')
                     ->where('p.business_id', $business_id)
@@ -385,7 +390,7 @@ class ReportController extends Controller
 
             
             $selling_price_group_count = SellingPriceGroup::countSellingPriceGroups($business_id);
-
+            // $query->join('product.color_id','=','color.id');
             $products = $query->select(
                 // DB::raw("(SELECT SUM(quantity) FROM transaction_sell_lines LEFT JOIN transactions ON transaction_sell_lines.transaction_id=transactions.id WHERE transactions.status='final' $location_filter AND
                 //     transaction_sell_lines.product_id=products.id) as total_sold"),
@@ -409,43 +414,52 @@ class ReportController extends Controller
                 'p.image as image',
                 'p.type',
                 'p.refference',
-                'p.color_id',
-                'p.supplier_id',
-                'p.category_id',
-                'p.sub_category_id',
-                'p.sub_size_id',
+                'colors.name as color_name',
+                'suppliers.name as supplier_name',
+                'categories.name as category_name',
+                'sub_cat.name as sub_category_name',
+                'sizes.name as size_name',
                 'units.short_name as unit',
                 'p.enable_stock as enable_stock',
                 'variations.sell_price_inc_tax as unit_price',
                 'pv.name as product_variation',
                 'variations.name as variation_name',
                 'vld.updated_at')->groupBy('variations.id');
+            // dd($products->first());
             // dd($products->first()->product()->first()->image_url);
             return DataTables::of($products)
                 ->addColumn('mass_delete', function ($row) {
                     return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '">';
                 })
-                ->addColumn('color_id', function ($row) {
-                    return  $row->first()->product()->first()->color()->first()->name;
-                })
-                ->addColumn('supplier_id', function ($row) {
-                    return  $row->first()->product()->first()->supplier()->first()->name;
-                })
-                ->addColumn('category_id', function ($row) {
-                    return  $row->first()->product()->first()->category()->first()->name;
-                })
-                ->addColumn('sub_category_id', function ($row) {
-                    return  $row->first()->product()->first()->sub_category()->first()->name;
-                })
-                ->addColumn('sub_size_id', function ($row) {
-                    return  $row->first()->product()->first()->sub_size()->first()->name;
-                })
+                // ->addColumn('color_id', function ($row) {
+                //     // return  $row->first()->product()->first()->color()->first()->name;
+                //     $product = Product::find($row->product_id);
+                //     return  $product->color()->first()->id;
+                // })
+                // ->addColumn('supplier_id', function ($row) {
+                //     $product = Product::find($row->product_id);
+                //     return  $product->supplier()->first()->name;
+                // })
+                // ->addColumn('category_id', function ($row) {
+                //     $product = Product::find($row->product_id);
+
+                //     return  $product->category()->first()->name;
+                // })
+                // ->addColumn('sub_category_id', function ($row) {
+                //     $product = Product::find($row->product_id);
+                //     return  $product->sub_category()->first()->name;
+                // })
+                // ->addColumn('sub_size_id', function ($row) {
+                //     $product = Product::find($row->product_id);
+                //     return  $product->sub_size()->first()->name;
+                // })
                 ->editColumn('image', function ($row) {
-                    if(!empty($row->image) && !is_null($row->image)){
-                        return '<div style="display: flex;"><img src="' . asset('/uploads/img/'.$row->image) . '" alt="Product image" class="product-thumbnail-small"></div>';
+                    $product = Product::find($row->product_id);
+                    if(!empty($product->image) && !is_null($product->image)){
+                        return '<div style="display: flex;"><img src="' . asset('/uploads/img/'.$product->image) . '" alt="Product image" class="product-thumbnail-small"></div>';
                         
                     }else{
-                        return '<div style="display: flex;"><img src="' . $row->first()->product()->first()->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
+                        return '<div style="display: flex;"><img src="' . $product->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
                     }
                 })
                 ->editColumn('stock', function ($row) {
