@@ -424,12 +424,12 @@ class ReportController extends Controller
                 'variations.sell_price_inc_tax as unit_price',
                 'pv.name as product_variation',
                 'variations.name as variation_name',
-                'vld.updated_at')->groupBy('variations.id');
+                'vld.updated_at',DB::raw('SUM(vld.qty_available) as current_stock'))->groupBy('variations.id');
             // dd($products->first());
             // dd($products->first()->product()->first()->image_url);
             return DataTables::of($products)
                 ->addColumn('mass_delete', function ($row) {
-                    return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '">';
+                    return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '"><input type="number" class="row-qty form-control" value="' . number_format($row->current_stock) . '" max="' . number_format($row->current_stock) . '" style="width:70px;" id="qty_' . $row->product_id . '">';
                 })
                 // ->addColumn('color_id', function ($row) {
                 //     // return  $row->first()->product()->first()->color()->first()->name;

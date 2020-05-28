@@ -2441,6 +2441,67 @@ class ProductController extends Controller
     }
 
 
+    public function selectedBulkPrint(Request $request)
+    {
+        if (!auth()->user()->can('product.update')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
+        try {
+            if (!empty($request->input('selected_products_bulkPrint'))) {
+                $business_id = $request->session()->get('user.business_id');
+
+                $selected_products = explode(',', $request->input('selected_products_bulkPrint'));
+                // dd($selected_products);
+                $product = [];
+                foreach ($selected_products as $key => $objProduct) {
+                    
+                    $arr = explode("@", $objProduct);
+                    $productId = $arr[0];
+                    $productQty = $arr[1];
+
+                    $pro = Product::find($productId);
+                    
+                    // for($i=0; $i<$productQty; $i++){
+                        $product[] = [
+                            'name' => $pro->name,
+                            'size' => $pro->sub_size()->first()->name,
+                            'refference' => $pro->refference,
+                            'color' => $pro->color()->first()->name,
+                            'barcode' => $pro->sku,
+                            'price' => $pro->variations()->first()->sell_price_inc_tax,
+                            'supplier' => $pro->supplier()->first()->name,
+                            'category' => $pro->sub_category()->first()->name,
+                            'count' => $productQty,
+                        ];
+                    // }
+                    // dd($productQty);
+                }
+                
+                // dd($product);
+
+
+                return view('product.selectedBulkPrint')
+                    ->with(compact('product'));
+            }
+
+            $output = [
+                'success' => 1,
+                'msg' => __('lang_v1.success')
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong") . "Message:" . $e->getMessage()
+            ];
+        }
+        dd($output);
+        die();
+        // return redirect()->back()->with(['status' => $output]);
+    }
     public function massBulkPrint(Request $request)
     {
         if (!auth()->user()->can('product.update')) {
@@ -2529,6 +2590,7 @@ class ProductController extends Controller
                 $selected_products = explode(',', $request->input('selected_products_bulkTransfer'));
                 $business_location_id = $request->input('bussiness_bulkTransfer');
                 $location_id = $business_location_id;
+                // dd($selected_products);
                 foreach ($selected_products as $key => $objProduct) {
                     # code...
                     $purchase_total = 0;

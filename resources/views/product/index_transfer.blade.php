@@ -183,6 +183,7 @@
         function TransferSelected()
         {
             var transferBussiness = $("#transferBussiness option:selected").val();
+
             if(transferBussiness == "" || transferBussiness == undefined)
             {
                 alert("Please Choose Bussiness First to Transfer ");return(false);
@@ -387,7 +388,6 @@
                 }    
             })
 
-
             $(document).on('click', '#bulkTransfer-selected', function(e){
                 e.preventDefault();
                 var selected_rows = [];
@@ -412,8 +412,8 @@
                     //     dangerMode: true,
                     // }).then((willDelete) => {
                     //     if (willDelete) {
-                    //         $('#unknownDiscountModal').modal('show'); 
-                    //         // $('form#bulkTransfer_form').submit();
+                            $('#unknownDiscountModal').modal('show'); 
+                            $('form#bulkTransfer_form').submit();
                     //     }
                     // });
                 } else{
@@ -530,8 +530,8 @@
     });
     function checkRow()
     {
-        alert("sdsd");
-                e.preventDefault();
+        alert("Row Check");
+        e.preventDefault();
         
     }
  </script> 

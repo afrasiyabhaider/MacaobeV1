@@ -79,6 +79,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::post('/products/mass-deactivate', 'ProductController@massDeactivate');
     Route::get('/products/transfer', 'ProductController@transfer');
     Route::post('/products/mass-print', 'ProductController@massBulkPrint');
+    Route::post('/products/selected-mass-print', 'ProductController@selectedBulkPrint');
     Route::post('/products/mass-transfer', 'ProductController@massTransfer');
     Route::get('/products/activate/{id}', 'ProductController@activate');
     Route::get('/products/view-product-group-price/{id}', 'ProductController@viewGroupPrice');
