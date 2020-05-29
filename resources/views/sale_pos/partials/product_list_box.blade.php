@@ -2,6 +2,7 @@
 	<div class="box-header with-border">
 
 	@if(!empty($categories))
+	{{-- @dd($categories) --}}
 		<select class="select2" id="product_category" style="width:45% !important">
 
 			<option value="all">@lang('lang_v1.all_category')</option>
@@ -21,12 +22,21 @@
 			@endforeach
 		</select>
 	@endif
-
+	
 	@if(!empty($brands))
 		&nbsp;
-		{!! Form::select('size', $brands, null, ['id' => 'product_brand', 'class' => 'select2', 'name' => null, 'style' => 'width:45% !important']) !!}
-		
+		<select class="select2" id="product_brand" style="width:45% !important">
+
+			<option value="all">All Suppliers</option>
+
+			@foreach($brands as $key=>$value)
+				<option value="{{$key}}">{{$value}}</option>
+			@endforeach
+		</select>
+		{{-- {!! Form::select('size', $brands, 'All', ['id' => 'product_brand', 'class' => 'select2', 'name' => null, 'style' => 'width:45% !important']) !!} --}}
+	
 	@endif
+	<input type="text" name="search" id="search_box" class="form-control" placeholder="Search...." style="width: 75%;margin-top: 10px;">
 
 	
 

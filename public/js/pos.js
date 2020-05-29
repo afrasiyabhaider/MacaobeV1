@@ -812,6 +812,7 @@ $(document).ready(function() {
         $('select#product_category').val(),
         $('select#product_brand').val(),
         $('input#location_id').val(),
+        null,
         null
     );
     $('select#product_category, select#product_brand').on('change', function(e) {
@@ -822,6 +823,24 @@ $(document).ready(function() {
                 $('select#product_category').val(),
                 $('select#product_brand').val(),
                 $('input#location_id').val(),
+                null
+            );
+        }
+    });
+
+    /**
+     * Search box
+     *
+     **/
+    $('#search_box').keyup(function() {
+        var search_txt = $('input#search_box').val();
+        if (search_txt != '' || search_txt != undefined) {
+            console.log(search_txt);
+            get_product_suggestion_list(
+                $('select#product_category').val(),
+                $('select#product_brand').val(),
+                $('input#location_id').val(),
+                search_txt,
                 null
             );
         }
@@ -1000,7 +1019,13 @@ $(document).ready(function() {
     });
 });
 
-function get_product_suggestion_list(category_id, brand_id, location_id, url = null) {
+function get_product_suggestion_list(
+    category_id,
+    brand_id,
+    location_id,
+    search_txt = null,
+    url = null
+) {
     if ($('div#product_list_body').length == 0) {
         return false;
     }
@@ -1024,6 +1049,7 @@ function get_product_suggestion_list(category_id, brand_id, location_id, url = n
             category_id: category_id,
             brand_id: brand_id,
             location_id: location_id,
+            search: search_txt,
             page: page,
         },
         dataType: 'html',

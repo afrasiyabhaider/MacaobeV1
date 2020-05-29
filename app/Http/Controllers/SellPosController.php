@@ -327,9 +327,10 @@ class SellPosController extends Controller
 
         //If brands, category are enabled then send else false.
         $categories = (request()->session()->get('business.enable_category') == 1) ? Category::catAndSubCategories($business_id) : false;
-        $brands = (request()->session()->get('business.enable_brand') == 1) ? Brands::where('business_id', $business_id)
-            ->pluck('name', 'id')
-            ->prepend(__('lang_v1.all_brands'), 'all') : false;
+        $brands = Supplier::pluck('name','id');
+        // $brands = (request()->session()->get('business.enable_brand') == 1) ? Brands::where('business_id', $business_id)
+        //     ->pluck('name', 'id')
+        //     ->prepend(__('lang_v1.all_brands'), 'all') : false;
 
         $change_return = $this->dummyPaymentLine;
 
@@ -2316,19 +2317,30 @@ class SellPosController extends Controller
     {
         if ($request->ajax()) {
             $category_id = $request->get('category_id');
-            $brand_id = $request->get('brand_id');
+            $supplier_id = $request->get('brand_id');
             $location_id = $request->get('location_id');
+            if($request->get('search')){
+                $search_txt = $request->get('search');
+                $products = Product::where('products.name', 'LIKE', "%{$search_txt}%")
+                    ->orWhere('products.sku','LIKE', "%{$search_txt}%")
+                    ->join('sizes','products.sub_size_id','=','sizes.id')
+                    ->orWhere('sizes.name','LIKE', "%{$search_txt}%")
+                    ->join('variations','products.id','=','variations.product_id')
+                    ->orWhere('variations.sell_price_inc_tax','LIKE', "%{$search_txt}%");
+            }else{
+                $products = Product::join(
+                        'variations',
+                        'products.id',
+                        '=',
+                        'variations.product_id'
+                );
+            }
             $term = $request->get('term');
             $check_qty = false;
             $business_id = $request->session()->get('user.business_id');
 
-            $products = Product::join(
-                'variations',
-                'products.id',
-                '=',
-                'variations.product_id'
-            )
-                ->leftjoin(
+            
+               $products->leftjoin(
                     'variation_location_details AS VLD',
                     function ($join) use ($location_id) {
                         $join->on('variations.id', '=', 'VLD.variation_id');
@@ -2369,8 +2381,8 @@ class SellPosController extends Controller
                     $query->orWhere('products.sub_category_id', $category_id);
                 });
             }
-            if ($brand_id != 'all') {
-                $products->where('products.brand_id', $brand_id);
+            if ($supplier_id != 'all') {
+                $products->where('products.supplier_id', $supplier_id);
             }
 
             $products = $products->select(
@@ -2407,20 +2419,31 @@ class SellPosController extends Controller
     public function getProductRefferenceSuggestion(Request $request)
     {
         // $request->ajax()
-        if (true) {
+        if ($request->ajax()) {
             $category_id = $request->get('category_id');
             $supplier_id = $request->get('supplier_id');
             $location_id = $request->get('location_id');
             $term = $request->get('term');
             $check_qty = false;
             $business_id = $request->session()->get('user.business_id');
-
-            $products = Product::join(
-                'variations',
-                'products.id',
-                '=',
-                'variations.product_id'
-            )->leftjoin(
+            if(!empty($request->get('search'))){
+                // dd($request->get('search'));
+                $search_txt = $request->get('search');
+                $products = Product::where('products.name', 'LIKE', "%{$search_txt}%")
+                    ->orWhere('products.sku','LIKE', "%{$search_txt}%")
+                    ->join('sizes','products.sub_size_id','=','sizes.id')
+                    ->orWhere('sizes.name','LIKE', "%{$search_txt}%")
+                    ->join('variations','products.id','=','variations.product_id')
+                    ->orWhere('variations.sell_price_inc_tax','LIKE', "%{$search_txt}%");
+            }else{
+                $products = Product::join(
+                        'variations',
+                        'products.id',
+                        '=',
+                        'variations.product_id'
+                );
+            }
+            $products->leftjoin(
                 'variation_location_details AS VLD',
                 function ($join) use ($location_id) {
                     $join->on('variations.id', '=', 'VLD.variation_id');

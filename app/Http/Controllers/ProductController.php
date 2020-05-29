@@ -738,8 +738,7 @@ class ProductController extends Controller
         $suppliers = (request()->session()->get('business.enable_brand') == 1) ? Supplier::where('business_id', $business_id)
             ->pluck('name', 'id')
             ->prepend(__('lang_v1.all_suppliers'), 'all') : false;
-        $categories = Category::where('parent_id', 0)
-            ->pluck('name', 'id');
+        $categories = Category::where('parent_id', 0)->pluck('name', 'id');
         $sizes = Size::where('business_id', $business_id)->where('parent_id', '!=', 0)
             ->select('name', 'id')->get();
         // where('parent_id', 0)

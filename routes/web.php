@@ -346,6 +346,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
 
         //Map modifier to products
         Route::get('/product-modifiers/{id}/edit', 'Restaurant\ProductModifierSetController@edit');
+        
         Route::post('/product-modifiers/{id}/update', 'Restaurant\ProductModifierSetController@update');
         Route::get('/product-modifiers/product-row/{product_id}', 'Restaurant\ProductModifierSetController@product_row');
 
