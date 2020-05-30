@@ -347,7 +347,7 @@ class ProductController extends Controller
                     DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                     DB::raw('MIN(v.sell_price_inc_tax) as min_price')
-                )->groupBy('products.id');
+                )->orderBy('products.updated_at','DESC')->groupBy('products.id');
 
             $type = request()->get('type', null);
             if (!empty($type)) {
@@ -362,7 +362,13 @@ class ProductController extends Controller
 
             $category_id = request()->get('category_id', null);
             if (!empty($category_id)) {
-                $products->where('products.sub_category_id', $category_id);
+                $products->where('products.category_id', $category_id);
+                // dd($products->get());
+            }
+
+            $sub_category_id = request()->get('sub_category_id', null);
+            if (!empty($sub_category_id)) {
+                $products->where('products.sub_category_id', $sub_category_id);
             }
 
             $brand_id = request()->get('brand_id', null);
@@ -382,9 +388,15 @@ class ProductController extends Controller
             $products->orderBy('products.id', 'DESC');
 
             $from_date = request()->get('from_date', null);
+
             $to_date = request()->get('to_date', null);
             if (!empty($to_date)) {
-                $products->whereBetween('products.created_at', [$from_date, $to_date]);
+                // dd($products->first());
+                $products->whereDate('products.created_at','<=' ,$from_date)->whereDate('products.created_at','>=' , $to_date);
+                // $products->whereBetween('products.created_at', [$from_date, $to_date]);
+
+                // dd($to_date);
+                // dd($products->get());
             }
 
 

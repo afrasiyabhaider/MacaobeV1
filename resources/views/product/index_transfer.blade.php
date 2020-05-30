@@ -200,7 +200,8 @@
                     "data": function ( d ) {
                         // d.type = $('#product_list_filter_type').val();
                         d.supplier_id = $('#product_list_filter_type').val();
-                        d.category_id = $('#product_list_filter_category_id').val();
+                        d.category_id = $('#category_id').val();
+                        d.sub_category_id = $('#product_list_filter_category_id').val();
                         d.brand_id = $('#product_list_filter_brand_id').val();
                         d.unit_id = $('#product_list_filter_unit_id').val();
                         d.tax_id = $('#product_list_filter_tax_id').val();
@@ -227,8 +228,8 @@
                         { data: 'refference', name: 'products.refference'  },
                         { data: 'purchase_price', name: 'purchase_price', searchable: false},
                         { data: 'selling_price', name: 'selling_price', searchable: false},
-                        { data: 'color', name: 'color'},
-                        { data: 'size', name: 'size'},
+                        { data: 'color', name: 'colors.name'},
+                        { data: 'size', name: 'sizes.name'},
                         { data: 'current_stock', searchable: false},
                         { data: 'type', name: 'products.type'},
                          { data: 'supplier_name', name: 'products.supplier_name'},
@@ -441,7 +442,7 @@
                 });
             });
 
-            $(document).on('change', '#product_list_filter_type, #product_list_filter_category_id, #product_list_filter_brand_id, #product_list_filter_unit_id, #product_list_filter_tax_id, #location_id', 
+            $(document).on('change', '#product_list_filter_type, #product_list_filter_category_id,#category_id, #product_list_filter_brand_id, #product_list_filter_unit_id, #product_list_filter_tax_id, #location_id', 
                 function() {
                     // console.log($(this).val());
                     if ($("#product_list_tab").hasClass('active')) {
