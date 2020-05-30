@@ -393,10 +393,6 @@ class ProductController extends Controller
             if (!empty($to_date)) {
                 // dd($products->first());
                 $products->whereDate('products.created_at','<=' ,$from_date)->whereDate('products.created_at','>=' , $to_date);
-                // $products->whereBetween('products.created_at', [$from_date, $to_date]);
-
-                // dd($to_date);
-                // dd($products->get());
             }
 
 

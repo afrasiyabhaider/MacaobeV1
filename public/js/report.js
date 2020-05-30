@@ -1,14 +1,14 @@
-$(document).ready(function() {
+$(document).ready(function () {
     //Purchase & Sell report
     //Date range as a button
     if ($('#purchase_sell_date_filter').length == 1) {
-        $('#purchase_sell_date_filter').daterangepicker(dateRangeSettings, function(start, end) {
+        $('#purchase_sell_date_filter').daterangepicker(dateRangeSettings, function (start, end) {
             $('#purchase_sell_date_filter span').html(
                 start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format)
             );
             updatePurchaseSell();
         });
-        $('#purchase_sell_date_filter').on('cancel.daterangepicker', function(ev, picker) {
+        $('#purchase_sell_date_filter').on('cancel.daterangepicker', function (ev, picker) {
             $('#purchase_sell_date_filter').html(
                 '<i class="fa fa-calendar"></i> ' + LANG.filter_by_date
             );
@@ -39,7 +39,7 @@ $(document).ready(function() {
             { data: 'opening_balance_due', name: 'opening_balance_due' },
             { data: 'due', name: 'due' },
         ],
-        fnDrawCallback: function(oSettings) {
+        fnDrawCallback: function (oSettings) {
             var total_purchase = sum_table_col($('#supplier_report_tbl'), 'total_purchase');
             $('#footer_total_purchase').text(total_purchase);
 
@@ -74,11 +74,13 @@ $(document).ready(function() {
         serverSide: true,
         ajax: {
             url: '/reports/stock-report',
-            data: function(d) {
+            data: function (d) {
                 d.location_id = $('#location_id').val();
                 d.category_id = $('#category_id').val();
                 d.sub_category_id = $('#sub_category_id').val();
-                d.brand_id = $('#brand').val();
+                d.supplier_id = $('#suppliers').val();
+                d.from_date = $('#product_list_from_date').val();
+                d.to_date = $('#product_list_to_date').val();
                 d.unit_id = $('#unit').val();
             },
         },
@@ -107,7 +109,7 @@ $(document).ready(function() {
             { data: 'updated_at', name: 'updated_at' },
             // { data: 'total_adjusted', name: 'total_adjusted', searchable: false },
         ],
-        fnDrawCallback: function(oSettings) {
+        fnDrawCallback: function (oSettings) {
             $('#footer_total_stock').html(__sum_stock($('#stock_report_table'), 'current_stock'));
             $('#footer_total_sold').html(__sum_stock($('#stock_report_table'), 'total_sold'));
             $('#footer_total_transfered').html(
@@ -121,13 +123,13 @@ $(document).ready(function() {
     });
 
     if ($('#tax_report_date_filter').length == 1) {
-        $('#tax_report_date_filter').daterangepicker(dateRangeSettings, function(start, end) {
+        $('#tax_report_date_filter').daterangepicker(dateRangeSettings, function (start, end) {
             $('#tax_report_date_filter span').html(
                 start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format)
             );
             updateTaxReport();
         });
-        $('#tax_report_date_filter').on('cancel.daterangepicker', function(ev, picker) {
+        $('#tax_report_date_filter').on('cancel.daterangepicker', function (ev, picker) {
             $('#tax_report_date_filter').html(
                 '<i class="fa fa-calendar"></i> ' + LANG.filter_by_date
             );
@@ -147,36 +149,36 @@ $(document).ready(function() {
                 customRangeLabel: LANG.custom_range,
             },
         });
-        $('#trending_product_date_range').on('apply.daterangepicker', function(ev, picker) {
+        $('#trending_product_date_range').on('apply.daterangepicker', function (ev, picker) {
             $(this).val(
                 picker.startDate.format(moment_date_format) +
-                ' ~ ' +
-                picker.endDate.format(moment_date_format)
+                    ' ~ ' +
+                    picker.endDate.format(moment_date_format)
             );
         });
 
-        $('#trending_product_date_range').on('cancel.daterangepicker', function(ev, picker) {
+        $('#trending_product_date_range').on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
         });
     }
 
     $(
-        '#stock_report_filter_form #location_id, #stock_report_filter_form #category_id, #stock_report_filter_form #sub_category_id, #stock_report_filter_form #brand, #stock_report_filter_form #unit,#stock_report_filter_form #view_stock_filter'
-    ).change(function() {
+        '#stock_report_filter_form #location_id, #stock_report_filter_form #category_id, #stock_report_filter_form #sub_category_id, #stock_report_filter_form #brand,#stock_report_filter_form #suppliers, #stock_report_filter_form #unit,#stock_report_filter_form #view_stock_filter,#product_list_to_date'
+    ).change(function () {
         stock_report_table.ajax.reload();
         stock_expiry_report_table.ajax.reload();
     });
 
-    $('#purchase_sell_location_filter').change(function() {
+    $('#purchase_sell_location_filter').change(function () {
         updatePurchaseSell();
     });
-    $('#tax_report_location_filter').change(function() {
+    $('#tax_report_location_filter').change(function () {
         updateTaxReport();
     });
 
     //Stock Adjustment Report
     if ($('#stock_adjustment_date_filter').length == 1) {
-        $('#stock_adjustment_date_filter').daterangepicker(dateRangeSettings, function(
+        $('#stock_adjustment_date_filter').daterangepicker(dateRangeSettings, function (
             start,
             end
         ) {
@@ -185,7 +187,7 @@ $(document).ready(function() {
             );
             updateStockAdjustmentReport();
         });
-        $('#purchase_sell_date_filter').on('cancel.daterangepicker', function(ev, picker) {
+        $('#purchase_sell_date_filter').on('cancel.daterangepicker', function (ev, picker) {
             $('#purchase_sell_date_filter').html(
                 '<i class="fa fa-calendar"></i> ' + LANG.filter_by_date
             );
@@ -193,7 +195,7 @@ $(document).ready(function() {
         updateStockAdjustmentReport();
     }
 
-    $('#stock_adjustment_location_filter').change(function() {
+    $('#stock_adjustment_location_filter').change(function () {
         updateStockAdjustmentReport();
     });
 
@@ -217,40 +219,40 @@ $(document).ready(function() {
             { data: 'closing_amount', name: 'closing_amount' },
             { data: 'action', name: 'action' },
         ],
-        fnDrawCallback: function(oSettings) {
+        fnDrawCallback: function (oSettings) {
             __currency_convert_recursively($('#register_report_table'));
         },
     });
-    $('.view_register').on('shown.bs.modal', function() {
+    $('.view_register').on('shown.bs.modal', function () {
         __currency_convert_recursively($(this));
     });
-    $(document).on('submit', '#register_report_filter_form', function(e) {
+    $(document).on('submit', '#register_report_filter_form', function (e) {
         e.preventDefault();
         updateRegisterReport();
     });
 
-    $('#register_user_id, #register_status').change(function() {
+    $('#register_user_id, #register_status').change(function () {
         updateRegisterReport();
     });
 
     //Sales representative report
     if ($('#sr_date_filter').length == 1) {
         //date range setting
-        $('input#sr_date_filter').daterangepicker(dateRangeSettings, function(start, end) {
+        $('input#sr_date_filter').daterangepicker(dateRangeSettings, function (start, end) {
             $('input#sr_date_filter').val(
                 start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format)
             );
             updateSalesRepresentativeReport();
         });
-        $('input#sr_date_filter').on('apply.daterangepicker', function(ev, picker) {
+        $('input#sr_date_filter').on('apply.daterangepicker', function (ev, picker) {
             $(this).val(
                 picker.startDate.format(moment_date_format) +
-                ' ~ ' +
-                picker.endDate.format(moment_date_format)
+                    ' ~ ' +
+                    picker.endDate.format(moment_date_format)
             );
         });
 
-        $('input#sr_date_filter').on('cancel.daterangepicker', function(ev, picker) {
+        $('input#sr_date_filter').on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
         });
 
@@ -267,9 +269,7 @@ $(document).ready(function() {
         sr_sales_report = $('table#sr_sales_report').DataTable({
             processing: true,
             serverSide: true,
-            aaSorting: [
-                [0, 'desc']
-            ],
+            aaSorting: [[0, 'desc']],
             pageLength: 100,
             lengthMenu: [
                 [20, 50, 70, 100, 300, 500, 1000, -1],
@@ -277,7 +277,7 @@ $(document).ready(function() {
             ],
             ajax: {
                 url: '/sells',
-                data: function(d) {
+                data: function (d) {
                     var start = $('input#sr_date_filter')
                         .data('daterangepicker')
                         .startDate.format('YYYY-MM-DD');
@@ -286,9 +286,9 @@ $(document).ready(function() {
                         .endDate.format('YYYY-MM-DD');
 
                     (d.created_by = $('select#sr_id').val()),
-                    (d.location_id = $('select#sr_business_id').val()),
-                    (d.start_date = start),
-                    (d.end_date = end);
+                        (d.location_id = $('select#sr_business_id').val()),
+                        (d.start_date = start),
+                        (d.end_date = end);
                 },
             },
             columns: [
@@ -301,11 +301,13 @@ $(document).ready(function() {
                 { data: 'total_paid', name: 'total_paid' },
                 { data: 'total_remaining', name: 'total_remaining' },
             ],
-            columnDefs: [{
-                searchable: false,
-                targets: [6],
-            }, ],
-            fnDrawCallback: function(oSettings) {
+            columnDefs: [
+                {
+                    searchable: false,
+                    targets: [6],
+                },
+            ],
+            fnDrawCallback: function (oSettings) {
                 $('#sr_footer_sale_total').text(
                     sum_table_col($('#sr_sales_report'), 'final-total')
                 );
@@ -330,9 +332,7 @@ $(document).ready(function() {
         sr_expenses_report = $('table#sr_expenses_report').DataTable({
             processing: true,
             serverSide: true,
-            aaSorting: [
-                [0, 'desc']
-            ],
+            aaSorting: [[0, 'desc']],
             pageLength: 100,
             lengthMenu: [
                 [20, 50, 70, 100, 300, 500, 1000, -1],
@@ -340,7 +340,7 @@ $(document).ready(function() {
             ],
             ajax: {
                 url: '/expenses',
-                data: function(d) {
+                data: function (d) {
                     var start = $('input#sr_date_filter')
                         .data('daterangepicker')
                         .startDate.format('YYYY-MM-DD');
@@ -349,16 +349,18 @@ $(document).ready(function() {
                         .endDate.format('YYYY-MM-DD');
 
                     (d.expense_for = $('select#sr_id').val()),
-                    (d.location_id = $('select#sr_business_id').val()),
-                    (d.start_date = start),
-                    (d.end_date = end);
+                        (d.location_id = $('select#sr_business_id').val()),
+                        (d.start_date = start),
+                        (d.end_date = end);
                 },
             },
-            columnDefs: [{
-                targets: 7,
-                orderable: false,
-                searchable: false,
-            }, ],
+            columnDefs: [
+                {
+                    targets: 7,
+                    orderable: false,
+                    searchable: false,
+                },
+            ],
             columns: [
                 { data: 'transaction_date', name: 'transaction_date' },
                 { data: 'ref_no', name: 'ref_no' },
@@ -369,7 +371,7 @@ $(document).ready(function() {
                 { data: 'expense_for', name: 'expense_for' },
                 { data: 'additional_notes', name: 'additional_notes' },
             ],
-            fnDrawCallback: function(oSettings) {
+            fnDrawCallback: function (oSettings) {
                 var expense_total = sum_table_col($('#sr_expenses_report'), 'final-total');
                 $('#footer_expense_total').text(expense_total);
                 $('#er_footer_payment_status_count').html(
@@ -383,12 +385,10 @@ $(document).ready(function() {
         sr_sales_commission_report = $('table#sr_sales_with_commission_table').DataTable({
             processing: true,
             serverSide: true,
-            aaSorting: [
-                [0, 'desc']
-            ],
+            aaSorting: [[0, 'desc']],
             ajax: {
                 url: '/sells',
-                data: function(d) {
+                data: function (d) {
                     var start = $('input#sr_date_filter')
                         .data('daterangepicker')
                         .startDate.format('YYYY-MM-DD');
@@ -397,9 +397,9 @@ $(document).ready(function() {
                         .endDate.format('YYYY-MM-DD');
 
                     (d.commission_agent = $('select#sr_id').val()),
-                    (d.location_id = $('select#sr_business_id').val()),
-                    (d.start_date = start),
-                    (d.end_date = end);
+                        (d.location_id = $('select#sr_business_id').val()),
+                        (d.start_date = start),
+                        (d.end_date = end);
                 },
             },
             pageLength: 100,
@@ -417,11 +417,13 @@ $(document).ready(function() {
                 { data: 'total_paid', name: 'total_paid' },
                 { data: 'total_remaining', name: 'total_remaining' },
             ],
-            columnDefs: [{
-                searchable: false,
-                targets: [6],
-            }, ],
-            fnDrawCallback: function(oSettings) {
+            columnDefs: [
+                {
+                    searchable: false,
+                    targets: [6],
+                },
+            ],
+            fnDrawCallback: function (oSettings) {
                 $('#footer_sale_total').text(
                     sum_table_col($('#sr_sales_with_commission_table'), 'final-total')
                 );
@@ -446,7 +448,7 @@ $(document).ready(function() {
         });
 
         //Sales representive filter
-        $('select#sr_id, select#sr_business_id').change(function() {
+        $('select#sr_id, select#sr_business_id').change(function () {
             updateSalesRepresentativeReport();
         });
     }
@@ -457,7 +459,7 @@ $(document).ready(function() {
         serverSide: true,
         ajax: {
             url: '/reports/stock-expiry',
-            data: function(d) {
+            data: function (d) {
                 d.location_id = $('#location_id').val();
                 d.category_id = $('#category_id').val();
                 d.sub_category_id = $('#sub_category_id').val();
@@ -466,9 +468,7 @@ $(document).ready(function() {
                 d.exp_date_filter = $('#view_stock_filter').val();
             },
         },
-        order: [
-            [4, 'asc']
-        ],
+        order: [[4, 'asc']],
         pageLength: 100,
         lengthMenu: [
             [20, 50, 70, 100, 300, 500, 1000, -1],
@@ -485,23 +485,23 @@ $(document).ready(function() {
             { data: 'mfg_date', name: 'mfg_date' },
             // { data: 'edit', name: 'edit' },
         ],
-        fnDrawCallback: function(oSettings) {
+        fnDrawCallback: function (oSettings) {
             __show_date_diff_for_human($('#stock_expiry_report_table'));
-            $('button.stock_expiry_edit_btn').click(function() {
+            $('button.stock_expiry_edit_btn').click(function () {
                 var purchase_line_id = $(this).data('purchase_line_id');
 
                 $.ajax({
                     method: 'GET',
                     url: '/reports/stock-expiry-edit-modal/' + purchase_line_id,
                     dataType: 'html',
-                    success: function(data) {
+                    success: function (data) {
                         $('div.exp_update_modal').html(data).modal('show');
                         $('input#exp_date_expiry_modal').datepicker({
                             autoclose: true,
                             format: datepicker_date_format,
                         });
 
-                        $('form#stock_exp_modal_form').submit(function(e) {
+                        $('form#stock_exp_modal_form').submit(function (e) {
                             e.preventDefault();
 
                             $.ajax({
@@ -509,7 +509,7 @@ $(document).ready(function() {
                                 url: $('form#stock_exp_modal_form').attr('action'),
                                 dataType: 'json',
                                 data: $('form#stock_exp_modal_form').serialize(),
-                                success: function(data) {
+                                success: function (data) {
                                     if (data.success == 1) {
                                         $('div.exp_update_modal').modal('hide');
                                         toastr.success(data.msg);
@@ -532,32 +532,32 @@ $(document).ready(function() {
 
     //Profit / Loss
     if ($('#profit_loss_date_filter').length == 1) {
-        $('#profit_loss_date_filter').daterangepicker(dateRangeSettings, function(start, end) {
+        $('#profit_loss_date_filter').daterangepicker(dateRangeSettings, function (start, end) {
             $('#profit_loss_date_filter span').html(
                 start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format)
             );
             updateProfitLoss();
         });
-        $('#profit_loss_date_filter').on('cancel.daterangepicker', function(ev, picker) {
+        $('#profit_loss_date_filter').on('cancel.daterangepicker', function (ev, picker) {
             $('#profit_loss_date_filter').html(
                 '<i class="fa fa-calendar"></i> ' + LANG.filter_by_date
             );
         });
         updateProfitLoss();
     }
-    $('#profit_loss_location_filter').change(function() {
+    $('#profit_loss_location_filter').change(function () {
         updateProfitLoss();
     });
 
     //Product Purchase Report
     if ($('#product_pr_date_filter').length == 1) {
-        $('#product_pr_date_filter').daterangepicker(dateRangeSettings, function(start, end) {
+        $('#product_pr_date_filter').daterangepicker(dateRangeSettings, function (start, end) {
             $('#product_pr_date_filter').val(
                 start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format)
             );
             product_purchase_report.ajax.reload();
         });
-        $('#product_pr_date_filter').on('cancel.daterangepicker', function(ev, picker) {
+        $('#product_pr_date_filter').on('cancel.daterangepicker', function (ev, picker) {
             $('#product_pr_date_filter').val('');
             product_purchase_report.ajax.reload();
         });
@@ -566,18 +566,16 @@ $(document).ready(function() {
     }
     $(
         '#product_purchase_report_form #variation_id, #product_purchase_report_form #location_id, #product_purchase_report_form #supplier_id, #product_purchase_report_form #product_pr_date_filter'
-    ).change(function() {
+    ).change(function () {
         product_purchase_report.ajax.reload();
     });
     product_purchase_report = $('table#product_purchase_report_table').DataTable({
         processing: true,
         serverSide: true,
-        aaSorting: [
-            [3, 'desc']
-        ],
+        aaSorting: [[3, 'desc']],
         ajax: {
             url: '/reports/product-purchase-report',
-            data: function(d) {
+            data: function (d) {
                 var start = '';
                 var end = '';
                 if ($('#product_pr_date_filter').val()) {
@@ -610,7 +608,7 @@ $(document).ready(function() {
             { data: 'unit_purchase_price', name: 'purchase_lines.purchase_price_inc_tax' },
             { data: 'subtotal', name: 'subtotal', searchable: false },
         ],
-        fnDrawCallback: function(oSettings) {
+        fnDrawCallback: function (oSettings) {
             $('#footer_subtotal').text(
                 sum_table_col($('#product_purchase_report_table'), 'row_subtotal')
             );
@@ -626,16 +624,16 @@ $(document).ready(function() {
 
     if ($('#search_product').length > 0) {
         $('#search_product').autocomplete({
-            source: function(request, response) {
+            source: function (request, response) {
                 $.ajax({
                     url: '/purchases/get_products?check_enable_stock=false',
                     dataType: 'json',
                     data: {
                         term: request.term,
                     },
-                    success: function(data) {
+                    success: function (data) {
                         response(
-                            $.map(data, function(v, i) {
+                            $.map(data, function (v, i) {
                                 if (v.variation_id) {
                                     return { label: v.text, value: v.variation_id };
                                 }
@@ -646,12 +644,12 @@ $(document).ready(function() {
                 });
             },
             minLength: 2,
-            select: function(event, ui) {
+            select: function (event, ui) {
                 $('#variation_id').val(ui.item.value).change();
                 event.preventDefault();
                 $(this).val(ui.item.label);
             },
-            focus: function(event, ui) {
+            focus: function (event, ui) {
                 event.preventDefault();
                 $(this).val(ui.item.label);
             },
@@ -660,14 +658,14 @@ $(document).ready(function() {
 
     //Product Sell Report
     if ($('#product_sr_date_filter').length == 1) {
-        $('#product_sr_date_filter').daterangepicker(dateRangeSettings, function(start, end) {
+        $('#product_sr_date_filter').daterangepicker(dateRangeSettings, function (start, end) {
             $('#product_sr_date_filter').val(
                 start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format)
             );
             product_sell_report.ajax.reload();
             product_sell_grouped_report.ajax.reload();
         });
-        $('#product_sr_date_filter').on('cancel.daterangepicker', function(ev, picker) {
+        $('#product_sr_date_filter').on('cancel.daterangepicker', function (ev, picker) {
             $('#product_sr_date_filter').val('');
             product_sell_report.ajax.reload();
             product_sell_grouped_report.ajax.reload();
@@ -678,12 +676,10 @@ $(document).ready(function() {
     product_sell_report = $('table#product_sell_report_table').DataTable({
         processing: true,
         serverSide: true,
-        aaSorting: [
-            [3, 'desc']
-        ],
+        aaSorting: [[3, 'desc']],
         ajax: {
             url: '/reports/product-sell-report',
-            data: function(d) {
+            data: function (d) {
                 var start = '';
                 var end = '';
                 if ($('#product_sr_date_filter').val()) {
@@ -719,7 +715,7 @@ $(document).ready(function() {
             { data: 'unit_sale_price', name: 'transaction_sell_lines.unit_price_inc_tax' },
             { data: 'subtotal', name: 'subtotal', searchable: false },
         ],
-        fnDrawCallback: function(oSettings) {
+        fnDrawCallback: function (oSettings) {
             $('#footer_subtotal').text(
                 sum_table_col($('#product_sell_report_table'), 'row_subtotal')
             );
@@ -732,12 +728,10 @@ $(document).ready(function() {
     product_sell_grouped_report = $('table#product_sell_grouped_report_table').DataTable({
         processing: true,
         serverSide: true,
-        aaSorting: [
-            [1, 'desc']
-        ],
+        aaSorting: [[1, 'desc']],
         ajax: {
             url: '/reports/product-sell-grouped-report',
-            data: function(d) {
+            data: function (d) {
                 var start = '';
                 var end = '';
                 if ($('#product_sr_date_filter').val()) {
@@ -768,7 +762,7 @@ $(document).ready(function() {
             { data: 'total_qty_sold', name: 'total_qty_sold', searchable: false },
             { data: 'subtotal', name: 'subtotal', searchable: false },
         ],
-        fnDrawCallback: function(oSettings) {
+        fnDrawCallback: function (oSettings) {
             $('#footer_grouped_subtotal').text(
                 sum_table_col($('#product_sell_grouped_report_table'), 'row_subtotal')
             );
@@ -781,18 +775,18 @@ $(document).ready(function() {
 
     $(
         '#product_sell_report_form #variation_id, #product_sell_report_form #location_id, #product_sell_report_form #customer_id'
-    ).change(function() {
+    ).change(function () {
         product_sell_report.ajax.reload();
         product_sell_grouped_report.ajax.reload();
     });
 
-    $('#product_sell_report_form #search_product').keyup(function() {
+    $('#product_sell_report_form #search_product').keyup(function () {
         if ($(this).val().trim() == '') {
             $('#product_sell_report_form #variation_id').val('').change();
         }
     });
 
-    $(document).on('click', '.remove_from_stock_btn', function() {
+    $(document).on('click', '.remove_from_stock_btn', function () {
         swal({
             title: LANG.sure,
             icon: 'warning',
@@ -804,7 +798,7 @@ $(document).ready(function() {
                     method: 'GET',
                     url: $(this).data('href'),
                     dataType: 'json',
-                    success: function(result) {
+                    success: function (result) {
                         if (result.success == true) {
                             toastr.success(result.msg);
                             stock_expiry_report_table.ajax.reload();
@@ -825,7 +819,7 @@ $(document).ready(function() {
 
         ajax: {
             url: '/reports/lot-report',
-            data: function(d) {
+            data: function (d) {
                 d.location_id = $('#location_id').val();
                 d.category_id = $('#category_id').val();
                 d.sub_category_id = $('#sub_category_id').val();
@@ -848,7 +842,7 @@ $(document).ready(function() {
             { data: 'total_adjusted', name: 'total_adjusted', searchable: false },
         ],
 
-        fnDrawCallback: function(oSettings) {
+        fnDrawCallback: function (oSettings) {
             $('#footer_total_stock').html(__sum_stock($('#lot_report'), 'total_stock'));
             $('#footer_total_sold').html(__sum_stock($('#lot_report'), 'total_sold'));
             $('#footer_total_adjusted').html(__sum_stock($('#lot_report'), 'total_adjusted'));
@@ -859,7 +853,7 @@ $(document).ready(function() {
     });
 
     if ($('table#lot_report').length == 1) {
-        $('#location_id, #category_id, #sub_category_id, #unit, #brand').change(function() {
+        $('#location_id, #category_id, #sub_category_id, #unit, #brand').change(function () {
             lot_report.ajax.reload();
         });
     }
@@ -868,12 +862,10 @@ $(document).ready(function() {
     purchase_payment_report = $('table#purchase_payment_report_table').DataTable({
         processing: true,
         serverSide: true,
-        aaSorting: [
-            [2, 'desc']
-        ],
+        aaSorting: [[2, 'desc']],
         ajax: {
             url: '/reports/purchase-payment-report',
-            data: function(d) {
+            data: function (d) {
                 d.supplier_id = $('select#supplier_id').val();
                 d.location_id = $('select#location_id').val();
                 var start = '';
@@ -895,7 +887,8 @@ $(document).ready(function() {
             [20, 50, 70, 100, 300, 500, 1000, -1],
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
-        columns: [{
+        columns: [
+            {
                 orderable: false,
                 searchable: false,
                 data: null,
@@ -909,12 +902,12 @@ $(document).ready(function() {
             { data: 'ref_no', name: 't.ref_no' },
             { data: 'action', orderable: false, searchable: false },
         ],
-        fnDrawCallback: function(oSettings) {
+        fnDrawCallback: function (oSettings) {
             var total_amount = sum_table_col($('#purchase_payment_report_table'), 'paid-amount');
             $('#footer_total_amount').text(total_amount);
             __currency_convert_recursively($('#purchase_payment_report_table'));
         },
-        createdRow: function(row, data, dataIndex) {
+        createdRow: function (row, data, dataIndex) {
             if (!data.transaction_id) {
                 $(row).find('td:eq(0)').addClass('details-control');
             }
@@ -924,7 +917,7 @@ $(document).ready(function() {
     // Array to track the ids of the details displayed rows
     var ppr_detail_rows = [];
 
-    $('#purchase_payment_report_table tbody').on('click', 'tr td.details-control', function() {
+    $('#purchase_payment_report_table tbody').on('click', 'tr td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = purchase_payment_report.row(tr);
         var idx = $.inArray(tr.attr('id'), ppr_detail_rows);
@@ -948,20 +941,20 @@ $(document).ready(function() {
     });
 
     // On each draw, loop over the `detailRows` array and show any child rows
-    purchase_payment_report.on('draw', function() {
-        $.each(ppr_detail_rows, function(i, id) {
+    purchase_payment_report.on('draw', function () {
+        $.each(ppr_detail_rows, function (i, id) {
             $('#' + id + ' td.details-control').trigger('click');
         });
     });
 
     if ($('#ppr_date_filter').length == 1) {
-        $('#ppr_date_filter').daterangepicker(dateRangeSettings, function(start, end) {
+        $('#ppr_date_filter').daterangepicker(dateRangeSettings, function (start, end) {
             $('#ppr_date_filter span').val(
                 start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format)
             );
             purchase_payment_report.ajax.reload();
         });
-        $('#ppr_date_filter').on('cancel.daterangepicker', function(ev, picker) {
+        $('#ppr_date_filter').on('cancel.daterangepicker', function (ev, picker) {
             $('#ppr_date_filter').val('');
             purchase_payment_report.ajax.reload();
         });
@@ -969,7 +962,7 @@ $(document).ready(function() {
 
     $(
         '#purchase_payment_report_form #location_id, #purchase_payment_report_form #supplier_id'
-    ).change(function() {
+    ).change(function () {
         purchase_payment_report.ajax.reload();
     });
 
@@ -977,12 +970,10 @@ $(document).ready(function() {
     sell_payment_report = $('table#sell_payment_report_table').DataTable({
         processing: true,
         serverSide: true,
-        aaSorting: [
-            [2, 'desc']
-        ],
+        aaSorting: [[2, 'desc']],
         ajax: {
             url: '/reports/sell-payment-report',
-            data: function(d) {
+            data: function (d) {
                 d.supplier_id = $('select#customer_id').val();
                 d.location_id = $('select#location_id').val();
 
@@ -1005,7 +996,8 @@ $(document).ready(function() {
             [20, 50, 70, 100, 300, 500, 1000, -1],
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
-        columns: [{
+        columns: [
+            {
                 orderable: false,
                 searchable: false,
                 data: null,
@@ -1019,12 +1011,12 @@ $(document).ready(function() {
             { data: 'invoice_no', name: 't.invoice_no' },
             { data: 'action', orderable: false, searchable: false },
         ],
-        fnDrawCallback: function(oSettings) {
+        fnDrawCallback: function (oSettings) {
             var total_amount = sum_table_col($('#sell_payment_report_table'), 'paid-amount');
             $('#footer_total_amount').text(total_amount);
             __currency_convert_recursively($('#sell_payment_report_table'));
         },
-        createdRow: function(row, data, dataIndex) {
+        createdRow: function (row, data, dataIndex) {
             if (!data.transaction_id) {
                 $(row).find('td:eq(0)').addClass('details-control');
             }
@@ -1033,7 +1025,7 @@ $(document).ready(function() {
     // Array to track the ids of the details displayed rows
     var spr_detail_rows = [];
 
-    $('#sell_payment_report_table tbody').on('click', 'tr td.details-control', function() {
+    $('#sell_payment_report_table tbody').on('click', 'tr td.details-control', function () {
         var tr = $(this).closest('tr');
         var row = sell_payment_report.row(tr);
         var idx = $.inArray(tr.attr('id'), spr_detail_rows);
@@ -1057,27 +1049,27 @@ $(document).ready(function() {
     });
 
     // On each draw, loop over the `detailRows` array and show any child rows
-    sell_payment_report.on('draw', function() {
-        $.each(spr_detail_rows, function(i, id) {
+    sell_payment_report.on('draw', function () {
+        $.each(spr_detail_rows, function (i, id) {
             $('#' + id + ' td.details-control').trigger('click');
         });
     });
 
     if ($('#spr_date_filter').length == 1) {
-        $('#spr_date_filter').daterangepicker(dateRangeSettings, function(start, end) {
+        $('#spr_date_filter').daterangepicker(dateRangeSettings, function (start, end) {
             $('#spr_date_filter span').val(
                 start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format)
             );
             sell_payment_report.ajax.reload();
         });
-        $('#spr_date_filter').on('cancel.daterangepicker', function(ev, picker) {
+        $('#spr_date_filter').on('cancel.daterangepicker', function (ev, picker) {
             $('#spr_date_filter').val('');
             sell_payment_report.ajax.reload();
         });
     }
 
     $('#sell_payment_report_form #location_id, #sell_payment_report_form #customer_id').change(
-        function() {
+        function () {
             sell_payment_report.ajax.reload();
         }
     );
@@ -1105,7 +1097,7 @@ function updatePurchaseSell() {
         url: '/reports/purchase-sell',
         dataType: 'json',
         data: data,
-        success: function(data) {
+        success: function (data) {
             $('.total_purchase').html(
                 __currency_trans_from_en(data.purchase.total_purchase_exc_tax, true)
             );
@@ -1142,7 +1134,7 @@ function get_stock_details(rowData) {
             product_id: rowData.DT_RowId,
         },
         dataType: 'html',
-        success: function(data) {
+        success: function (data) {
             div.html(data).removeClass('loading');
             __currency_convert_recursively(div);
         },
@@ -1166,7 +1158,7 @@ function updateTaxReport() {
         url: '/reports/tax-report',
         dataType: 'json',
         data: data,
-        success: function(data) {
+        success: function (data) {
             $('.input_tax').html(data.input_tax);
             __currency_convert_recursively($('.input_tax'));
             $('.output_tax').html(data.output_tax);
@@ -1199,7 +1191,7 @@ function updateStockAdjustmentReport() {
         url: '/reports/stock-adjustment-report',
         dataType: 'json',
         data: data,
-        success: function(data) {
+        success: function (data) {
             $('.total_amount').html(__currency_trans_from_en(data.total_amount, true));
             $('.total_recovered').html(__currency_trans_from_en(data.total_recovered, true));
             $('.total_normal').html(__currency_trans_from_en(data.total_normal, true));
@@ -1210,11 +1202,11 @@ function updateStockAdjustmentReport() {
     stock_adjustment_table.ajax
         .url(
             '/stock-adjustments?location_id=' +
-            location_id +
-            '&start_date=' +
-            start +
-            '&end_date=' +
-            end
+                location_id +
+                '&start_date=' +
+                start +
+                '&end_date=' +
+                end
         )
         .load();
 }
@@ -1263,7 +1255,7 @@ function salesRepresentativeTotalExpense() {
         url: '/reports/sales-representative-total-expense',
         dataType: 'json',
         data: data_expense,
-        success: function(data) {
+        success: function (data) {
             $('span#sr_total_expenses').html(__currency_trans_from_en(data.total_expense, true));
         },
     });
@@ -1289,7 +1281,7 @@ function salesRepresentativeTotalSales() {
         url: '/reports/sales-representative-total-sell',
         dataType: 'json',
         data: data_expense,
-        success: function(data) {
+        success: function (data) {
             $('span#sr_total_sales').html(__currency_trans_from_en(data.total_sell_exc_tax, true));
             $('span#sr_total_sales_return').html(
                 __currency_trans_from_en(data.total_sell_return_exc_tax, true)
@@ -1318,7 +1310,7 @@ function salesRepresentativeTotalCommission() {
             url: '/reports/sales-representative-total-commission',
             dataType: 'json',
             data: data_sell,
-            success: function(data) {
+            success: function (data) {
                 var str =
                     '<div style="padding-right:15px; display: inline-block">' +
                     __currency_trans_from_en(data.total_commission, true) +
@@ -1361,7 +1353,7 @@ function updateProfitLoss() {
         url: '/reports/profit-loss',
         dataType: 'json',
         data: data,
-        success: function(data) {
+        success: function (data) {
             $('.opening_stock').html(__currency_trans_from_en(data.opening_stock, true));
             $('.closing_stock').html(__currency_trans_from_en(data.closing_stock, true));
             $('.total_sell').html(__currency_trans_from_en(data.total_sell, true));
@@ -1395,7 +1387,7 @@ function show_child_payments(rowData) {
     $.ajax({
         url: '/payments/show-child-payments/' + rowData.DT_RowId,
         dataType: 'html',
-        success: function(data) {
+        success: function (data) {
             div.html(data).removeClass('loading');
             __currency_convert_recursively(div);
         },

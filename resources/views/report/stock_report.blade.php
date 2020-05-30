@@ -34,15 +34,25 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        {!! Form::label('brand', __('product.brand') . ':') !!}
-                        {!! Form::select('brand', $brands, null, ['placeholder' => __('messages.all'), 'class' => 'form-control select2', 'style' => 'width:100%']); !!}
+                        {!! Form::label('suppliers', 'Suppliers :') !!}
+                        {!! Form::select('suppliers', $suppliers, null, ['placeholder' => __('messages.all'), 'class' => 'form-control select2', 'style' => 'width:100%']); !!}
                     </div>
                 </div>
-                <div class="col-md-3">
+                {{-- <div class="col-md-3">
                     <div class="form-group">
                         {!! Form::label('unit',__('product.unit') . ':') !!}
                         {!! Form::select('unit', $units, null, ['placeholder' => __('messages.all'), 'class' => 'form-control select2', 'style' => 'width:100%']); !!}
                     </div>
+                </div> --}}
+                <div class="row" id="location_filter">
+                    <div class="form-group col-md-3">
+                        {!! Form::label('from_date',   ' From Date:') !!}
+                        <input type="date" name="product_list_from_date" value="{{date('Y-m-d')}}" id="product_list_from_date" class="form-control">
+                    </div>
+                    <div class="form-group col-md-3">
+                        {!! Form::label('to_date',   ' To Date:') !!}
+                        <input type="date" name="product_list_to_date" id="product_list_to_date" value="" class="form-control">
+                    </div> 
                 </div>
                 {!! Form::close() !!}
             @endcomponent

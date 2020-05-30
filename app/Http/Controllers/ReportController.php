@@ -15,6 +15,7 @@ use App\Product;
 use App\PurchaseLine;
 use App\Restaurant\ResTable;
 use App\SellingPriceGroup;
+use App\Supplier;
 use App\Transaction;
 use App\TransactionPayment;
 use App\TransactionSellLine;
@@ -372,6 +373,19 @@ class ReportController extends Controller
             if (!empty($request->input('brand_id'))) {
                 $query->where('p.brand_id', $request->input('brand_id'));
             }
+
+            if (!empty($request->input('supplier_id'))) {
+                $query->where('p.supplier_id', $request->input('supplier_id'));
+            }
+
+            $from_date = request()->get('from_date', null);
+
+            $to_date = request()->get('to_date', null);
+            if (!empty($to_date)) {
+                // dd($products->first());
+                $query->whereDate('p.created_at','<=' ,$from_date)->whereDate('p.created_at','>=' , $to_date);
+            }
+
             if (!empty($request->input('unit_id'))) {
                 $query->where('p.unit_id', $request->input('unit_id'));
             }
@@ -410,6 +424,7 @@ class ReportController extends Controller
                 DB::raw("SUM(vld.qty_available) as stock"),
                 'variations.sub_sku as sku',
                 'p.id as product_id',
+                'p.created_at',
                 'p.name as product',
                 'p.image as image',
                 'p.type',
@@ -576,14 +591,14 @@ class ReportController extends Controller
         $categories = Category::where('business_id', $business_id)
                             ->where('parent_id', 0)
                             ->pluck('name', 'id');
-        $brands = Brands::where('business_id', $business_id)
-                            ->pluck('name', 'id');
+        $suppliers = Supplier::pluck('name', 'id');
+
         $units = Unit::where('business_id', $business_id)
                             ->pluck('short_name', 'id');
         $business_locations = BusinessLocation::forDropdown($business_id, true);
 
         return view('report.stock_report')
-                ->with(compact('categories', 'brands', 'units', 'business_locations'));
+                ->with(compact('categories', 'suppliers', 'units', 'business_locations'));
     }
 
     /**
