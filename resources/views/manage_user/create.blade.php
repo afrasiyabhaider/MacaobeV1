@@ -49,7 +49,7 @@
       <div class="col-md-6">
         <div class="form-group">
           {!! Form::label('role_location', 'Business Location:*') !!}
-            {!! Form::select('role_location', [], null, ['class' => 'form-control select2','required' => 'true']); !!}
+            {!! Form::select('role_location', $bussiness_locations, null, ['class' => 'form-control select2','required' => 'true']); !!}
         </div>
       </div>
       <div class="col-md-6">

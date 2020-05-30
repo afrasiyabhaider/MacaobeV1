@@ -2605,7 +2605,7 @@ class ProductController extends Controller
                             $objPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $user_location_id)->where("purchase_lines.product_id", $productId)->first();
 
                             $objTransaction = \App\Transaction::where("id", $objPurchaseLine->transaction_id)->update(['location_id' => $business_location_id]);
-
+                            
                             $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objPurchaseLine->variation_id)->where("product_id", $productId)->update(['location_id' => $business_location_id]);
                         } else {
                             // PL with new bussiness location id 
@@ -2620,6 +2620,7 @@ class ProductController extends Controller
 
                             //Update Variation_location_details Qty Remaining 
                             $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $objOldPurchaseLine->product_id)->update(['qty_available' => $LeftQty]);
+                            
                             $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objNewPurchaseLine->variation_id)->where("product_id", $objNewPurchaseLine->product_id)->update(['qty_available' => $qtyForPurchaseLine]);
                         }
                         DB::commit();
@@ -2753,6 +2754,7 @@ class ProductController extends Controller
                         }
                         $purchase_line->quantity = $qtyForPurchaseLine;
                         // dd($purchase_line); 
+                        // dd("Hello");
                         $purchase_line->save();
                         //Adjust stock over selling if found
                         // $this->productUtil->adjustStockOverSelling($transaction);
@@ -2766,6 +2768,7 @@ class ProductController extends Controller
                             $oldPurchaseLine = PurchaseLine::where("transaction_id", $objOldPurchaseLine->transaction_id)->where("product_id", $product->id)->update(['quantity' => $qtyForPurchaseLine]);
                         }
                         //Update Variation_location_details Qty Remaining 
+                        // dd("Hello");
                         $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOrignalPurchaseLine->variation_id)->where("product_id", $product->id)->update(['qty_available' => $LeftQty]);
                         $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $product->id)->update(['qty_available' => $qtyForPurchaseLine]);
 
@@ -2791,6 +2794,7 @@ class ProductController extends Controller
             ];
         } catch (\Exception $e) {
             DB::rollBack();
+            // dd($e->getMessage());
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
             $output = [

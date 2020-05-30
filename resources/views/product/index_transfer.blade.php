@@ -157,19 +157,19 @@
         </div>
     </div>
 @endcan
-<input type="hidden" id="is_rack_enabled" value="{{$rack_enabled}}">
+    <input type="hidden" id="is_rack_enabled" value="{{$rack_enabled}}">
 
-<div class="modal fade product_modal" tabindex="-1" role="dialog" 
-    aria-labelledby="gridSystemModalLabel">
-</div>
+    <div class="modal fade product_modal" tabindex="-1" role="dialog" 
+        aria-labelledby="gridSystemModalLabel">
+    </div>
 
-<div class="modal fade" id="view_product_modal" tabindex="-1" role="dialog" 
-    aria-labelledby="gridSystemModalLabel">
-</div>
+    <div class="modal fade" id="view_product_modal" tabindex="-1" role="dialog" 
+        aria-labelledby="gridSystemModalLabel">
+    </div>
 
-<div class="modal fade" id="opening_stock_modal" tabindex="-1" role="dialog" 
-    aria-labelledby="gridSystemModalLabel">
-</div>
+    <div class="modal fade" id="opening_stock_modal" tabindex="-1" role="dialog" 
+        aria-labelledby="gridSystemModalLabel">
+    </div>
 
 </section>
 <!-- /.content -->
@@ -412,8 +412,9 @@
                     //     dangerMode: true,
                     // }).then((willDelete) => {
                     //     if (willDelete) {
-                            $('#unknownDiscountModal').modal('show'); 
-                            $('form#bulkTransfer_form').submit();
+                        // If uncommented it will make issue in product transfer
+                            // $('#unknownDiscountModal').modal('show'); 
+                            // $('form#bulkTransfer_form').submit();
                     //     }
                     // });
                 } else{

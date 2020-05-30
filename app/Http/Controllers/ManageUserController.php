@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\BusinessLocation;
 use App\Contact;
 use App\System;
 use App\User;
@@ -111,9 +112,14 @@ class ManageUserController extends Controller
         }
 
         $business_id = request()->session()->get('user.business_id');
+        $bussiness_location = request()->session()->get('user.business_id');
+        $bussiness_locations = BusinessLocation::pluck('name','id');
+        // dd($bussiness_locations);
+
         $permitted_locations = auth()->user()->permitted_locations();
         $user_location_id = $permitted_locations[0];
 
+        // dd($permitted_locations);
         //Check if subscribed or not, then check for users quota
         if (!$this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
@@ -131,7 +137,7 @@ class ManageUserController extends Controller
         $contacts = Contact::contactDropdown($business_id, true, false);
 
         return view('manage_user.create')
-                ->with(compact('roles', 'username_ext', 'contacts','bussiness_location'));
+                ->with(compact('roles', 'username_ext', 'contacts','bussiness_location','bussiness_locations'));
     }
 
     /**
