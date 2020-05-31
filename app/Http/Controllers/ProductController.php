@@ -88,6 +88,8 @@ class ProductController extends Controller
         //Update USER SESSION
         $selling_price_group_count = SellingPriceGroup::countSellingPriceGroups($business_id);
 
+        // dd($business_id);
+
         if (request()->ajax()) {
             // $products = Product::leftJoin('brands', 'products.brand_id', '=', 'brands.id')
             //     ->join('units', 'products.unit_id', '=', 'units.id')
@@ -137,6 +139,7 @@ class ProductController extends Controller
                 ->leftJoin('sizes', 'products.sub_size_id', '=', 'sizes.id')
                 ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
                 ->leftJoin('variation_location_details as vld', 'vld.product_id', '=', 'products.id')
+                ->where('vld.location_id',1)
                 ->join('variations as v', 'v.product_id', '=', 'products.id')->join('suppliers','suppliers.id','=','products.supplier_id')
                 ->where('products.business_id', $business_id)
                 // ->where('vld.location_id', $business_location_id)
@@ -2724,13 +2727,14 @@ class ProductController extends Controller
                             //Quantity = remaining + used
                             $qty_remaining = $qty_remaining + $purchase_line->quantity_used;
 
-                            if ($qty_remaining != 0) {
+                            // if ($qty_remaining != 0) {
                                 //Calculate transaction total
                                 $purchase_total += ($purchase_price_inc_tax * $qty_remaining);
                                 $old_qty = $purchase_line->quantity;
-                            }
-                        } else {
-                            if ($qty_remaining != 0) {
+                            // }
+                        }
+                        else {
+                            // if ($qty_remaining != 0) {
                                 //create newly added purchase lines
                                 $purchase_line = new PurchaseLine();
                                 $purchase_line->product_id = $product->id;
@@ -2740,7 +2744,7 @@ class ProductController extends Controller
 
                                 //Calculate transaction total
                                 $purchase_total += ($purchase_price_inc_tax * $qty_remaining);
-                            }
+                            // }
                         }
                         if (!is_null($purchase_line)) {
                             $purchase_line->item_tax = $item_tax;
