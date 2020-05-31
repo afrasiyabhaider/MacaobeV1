@@ -364,6 +364,7 @@ class ProductController extends Controller
                 ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
                 ->where('products.business_id', $business_id)
                 ->where('vld.location_id', $business_location_id)->join('suppliers','suppliers.id','=','products.supplier_id')
+                ->where('vld.qty_available','>','0')
                 ->where('products.type', '!=', 'modifier')
                 ->select(
                     'products.id',
