@@ -131,7 +131,7 @@ class ProductController extends Controller
             //         DB::raw('MIN(v.sell_price_inc_tax) as min_price')
             //     )->orderBy('products.updated_at','DESC')->groupBy('products.id');
 
-             $products = Product::leftJoin('brands', 'products.brand_id', '=', 'brands.id')
+            $products = Product::leftJoin('brands', 'products.brand_id', '=', 'brands.id')
                 ->join('units', 'products.unit_id', '=', 'units.id')
                 ->leftJoin('categories as c1', 'products.category_id', '=', 'c1.id')
                 ->leftJoin('categories as c2', 'products.sub_category_id', '=', 'c2.id')
@@ -139,8 +139,8 @@ class ProductController extends Controller
                 ->leftJoin('sizes', 'products.sub_size_id', '=', 'sizes.id')
                 ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
                 ->leftJoin('variation_location_details as vld', 'vld.product_id', '=', 'products.id')
-                ->where('vld.location_id',1)
-                ->join('variations as v', 'v.product_id', '=', 'products.id')->join('suppliers','suppliers.id','=','products.supplier_id')
+                ->where('vld.location_id', 1)
+                ->join('variations as v', 'v.product_id', '=', 'products.id')->join('suppliers', 'suppliers.id', '=', 'products.supplier_id')
                 ->where('products.business_id', $business_id)
                 // ->where('vld.location_id', $business_location_id)
                 ->where('products.type', '!=', 'modifier')
@@ -170,16 +170,16 @@ class ProductController extends Controller
                     DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                     DB::raw('MIN(v.sell_price_inc_tax) as min_price')
-                )->orderBy('products.updated_at','DESC')->groupBy('products.id');
+                )->orderBy('products.updated_at', 'DESC')->groupBy('products.id');
 
             // $type = request()->get('type', null);
             // if (!empty($type)) {
             //     $products->where('products.p_type', $type);
             // }
-            
+
             $supplier_id = request()->input('supplier_id');
-            if(!empty($supplier_id)){
-                $products->where('products.supplier_id', '=',$supplier_id);
+            if (!empty($supplier_id)) {
+                $products->where('products.supplier_id', '=', $supplier_id);
             }
 
             $category_id = request()->get('category_id', null);
@@ -323,18 +323,18 @@ class ProductController extends Controller
 
         $business_locations = BusinessLocation::forDropdown($business_id, true);
 
-        return view('product.index',compact(
-                'rack_enabled',
-                'categories',
-                'brands',
-                'units',
-                'taxes',
-                'businessArr',
-                'business_locations',
-                'suppliers'
-            ));
-    // }
-}
+        return view('product.index', compact(
+            'rack_enabled',
+            'categories',
+            'brands',
+            'units',
+            'taxes',
+            'businessArr',
+            'business_locations',
+            'suppliers'
+        ));
+        // }
+    }
 
 
 
@@ -363,8 +363,8 @@ class ProductController extends Controller
                 ->leftJoin('sizes', 'products.sub_size_id', '=', 'sizes.id')
                 ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
                 ->where('products.business_id', $business_id)
-                ->where('vld.location_id', $business_location_id)->join('suppliers','suppliers.id','=','products.supplier_id')
-                ->where('vld.qty_available','>','0')
+                ->where('vld.location_id', $business_location_id)->join('suppliers', 'suppliers.id', '=', 'products.supplier_id')
+                ->where('vld.qty_available', '>', '0')
                 ->where('products.type', '!=', 'modifier')
                 ->select(
                     'products.id',
@@ -391,16 +391,16 @@ class ProductController extends Controller
                     DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                     DB::raw('MIN(v.sell_price_inc_tax) as min_price')
-                )->orderBy('products.updated_at','DESC')->groupBy('products.id');
+                )->orderBy('products.updated_at', 'DESC')->groupBy('products.id');
 
             $type = request()->get('type', null);
             if (!empty($type)) {
                 $products->where('products.p_type', $type);
             }
 
-            $supplier_id = request()->get('supplier_id',null);
-            if(!empty($supplier_id)){
-                $products->where('products.supplier_id', '=',$supplier_id);
+            $supplier_id = request()->get('supplier_id', null);
+            if (!empty($supplier_id)) {
+                $products->where('products.supplier_id', '=', $supplier_id);
             }
 
 
@@ -436,7 +436,7 @@ class ProductController extends Controller
             $to_date = request()->get('to_date', null);
             if (!empty($to_date)) {
                 // dd($products->first());
-                $products->whereDate('products.created_at','<=' ,$from_date)->whereDate('products.created_at','>=' , $to_date);
+                $products->whereDate('products.created_at', '<=', $from_date)->whereDate('products.created_at', '>=', $to_date);
             }
 
 
@@ -938,7 +938,7 @@ class ProductController extends Controller
         if (!auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
 
         try {
             $business_id = $request->session()->get('user.business_id');
@@ -1122,9 +1122,9 @@ class ProductController extends Controller
             $size = Size::find($request->input('size'));
             $product->name = $request->input('product_name');
             $product->image = $product_image;
-            if($request->input('hidden_supplier_id') == 0){
+            if ($request->input('hidden_supplier_id') == 0) {
                 $product->supplier_id = $request->input('supplier');
-            }else{
+            } else {
                 $product->supplier_id = $request->input('hidden_supplier_id');
             }
             $product->category_id = $request->input('category');
@@ -1144,8 +1144,8 @@ class ProductController extends Controller
             // $unit = str_replace($request->input('unit_price'),'.',',');
             // dd($this->productUtil->num_uf($request->input('unit_price')));
             // dd($unit);
-            $variation->sub_sku =$product->sku;
-            $variation->dpp_inc_tax =$this->productUtil->num_uf($request->input('unit_price'));
+            $variation->sub_sku = $product->sku;
+            $variation->dpp_inc_tax = $this->productUtil->num_uf($request->input('unit_price'));
             $variation->sell_price_inc_tax = $this->productUtil->num_uf($request->input('custom_price'));
             $variation->save();
 
@@ -1578,7 +1578,7 @@ class ProductController extends Controller
             $sub_categories = Category::where('business_id', $business_id)
                 ->where('parent_id', $category_id)
                 ->select(['name', 'id'])
-                ->orderBy('name','ASC')
+                ->orderBy('name', 'ASC')
                 ->get();
             $html = '<option value="">None</option>';
             if (!empty($sub_categories)) {
@@ -2497,7 +2497,7 @@ class ProductController extends Controller
         if (!auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         try {
             if (!empty($request->input('selected_products_bulkPrint'))) {
                 $business_id = $request->session()->get('user.business_id');
@@ -2506,29 +2506,29 @@ class ProductController extends Controller
                 // dd($selected_products);
                 $product = [];
                 foreach ($selected_products as $key => $objProduct) {
-                    
+
                     $arr = explode("@", $objProduct);
                     $productId = $arr[0];
                     $productQty = $arr[1];
 
                     $pro = Product::find($productId);
-                    
+
                     // for($i=0; $i<$productQty; $i++){
-                        $product[] = [
-                            'name' => $pro->name,
-                            'size' => $pro->sub_size()->first()->name,
-                            'refference' => $pro->refference,
-                            'color' => $pro->color()->first()->name,
-                            'barcode' => $pro->sku,
-                            'price' => $pro->variations()->first()->sell_price_inc_tax,
-                            'supplier' => $pro->supplier()->first()->name,
-                            'category' => $pro->sub_category()->first()->name,
-                            'count' => $productQty,
-                        ];
+                    $product[] = [
+                        'name' => $pro->name,
+                        'size' => $pro->sub_size()->first()->name,
+                        'refference' => $pro->refference,
+                        'color' => $pro->color()->first()->name,
+                        'barcode' => $pro->sku,
+                        'price' => $pro->variations()->first()->sell_price_inc_tax,
+                        'supplier' => $pro->supplier()->first()->name,
+                        'category' => $pro->sub_category()->first()->name,
+                        'count' => $productQty,
+                    ];
                     // }
                     // dd($productQty);
                 }
-                
+
                 // dd($product);
 
 
@@ -2632,6 +2632,7 @@ class ProductController extends Controller
         if (!auth()->user()->can('product.update')) {
             abort(403, 'Unauthorized action.');
         }
+        // dd($request->input());
         try {
             if (!empty($request->input('selected_products_bulkTransfer'))) {
                 $business_id = $request->session()->get('user.business_id');
@@ -2657,7 +2658,7 @@ class ProductController extends Controller
                             $objPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $user_location_id)->where("purchase_lines.product_id", $productId)->first();
 
                             $objTransaction = \App\Transaction::where("id", $objPurchaseLine->transaction_id)->update(['location_id' => $business_location_id]);
-                            
+
                             $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objPurchaseLine->variation_id)->where("product_id", $productId)->update(['location_id' => $business_location_id]);
                         } else {
                             // PL with new bussiness location id 
@@ -2672,7 +2673,7 @@ class ProductController extends Controller
 
                             //Update Variation_location_details Qty Remaining 
                             $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $objOldPurchaseLine->product_id)->update(['qty_available' => $LeftQty]);
-                            
+
                             $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objNewPurchaseLine->variation_id)->where("product_id", $objNewPurchaseLine->product_id)->update(['qty_available' => $qtyForPurchaseLine]);
                         }
                         DB::commit();
@@ -2729,22 +2730,21 @@ class ProductController extends Controller
                             $qty_remaining = $qty_remaining + $purchase_line->quantity_used;
 
                             // if ($qty_remaining != 0) {
-                                //Calculate transaction total
-                                $purchase_total += ($purchase_price_inc_tax * $qty_remaining);
-                                $old_qty = $purchase_line->quantity;
+                            //Calculate transaction total
+                            $purchase_total += ($purchase_price_inc_tax * $qty_remaining);
+                            $old_qty = $purchase_line->quantity;
                             // }
-                        }
-                        else {
+                        } else {
                             // if ($qty_remaining != 0) {
-                                //create newly added purchase lines
-                                $purchase_line = new PurchaseLine();
-                                $purchase_line->product_id = $product->id;
-                                $purchase_line->variation_id = $k;
+                            //create newly added purchase lines
+                            $purchase_line = new PurchaseLine();
+                            $purchase_line->product_id = $product->id;
+                            $purchase_line->variation_id = $k;
 
-                                $this->productUtil->updateProductQuantity($location_id, $product->id, $k, $qty_remaining, 0, null, false);
+                            $this->productUtil->updateProductQuantity($location_id, $product->id, $k, $qty_remaining, 0, null, false);
 
-                                //Calculate transaction total
-                                $purchase_total += ($purchase_price_inc_tax * $qty_remaining);
+                            //Calculate transaction total
+                            $purchase_total += ($purchase_price_inc_tax * $qty_remaining);
                             // }
                         }
                         if (!is_null($purchase_line)) {
@@ -2834,7 +2834,7 @@ class ProductController extends Controller
                     'success' => 1,
                     'msg' => "TRANSFER SUCCESSFULY !"
                 ];
-                
+
                 // return redirect('products')->with('status', $output);
 
                 // return view('product.massBulkTransfer')->with(compact( 'product' ));
@@ -2920,11 +2920,11 @@ class ProductController extends Controller
         //If brands, category are enabled then send else false.
         $noRefferenceProducts = (request()->session()->get('business.enable_category') == 1) ? Category::catAndSubCategories($business_id) : false;
         $suppliers = (request()->session()->get('business.enable_brand') == 1) ? Supplier::where('business_id', $business_id)
-                    ->pluck('name', 'id')
-                    ->prepend(__('lang_v1.all_suppliers'), 'all') : false;
+            ->pluck('name', 'id')
+            ->prepend(__('lang_v1.all_suppliers'), 'all') : false;
         $categories = Category::where('business_id', $business_id)
             ->where('parent_id', 0)
-            ->orderBy('name','Asc')
+            ->orderBy('name', 'Asc')
             ->pluck('name', 'id');
 
         $sizes = Size::where('business_id', $business_id)
@@ -2953,9 +2953,9 @@ class ProductController extends Controller
         // dd($refferenceCount);
 
         $suppliers = Supplier::where('business_id', $business_id)
-                    ->orderBy('name','Asc')->pluck('name', 'id');
+            ->orderBy('name', 'Asc')->pluck('name', 'id');
         $colors = Color::where('business_id', $business_id)
-                    ->orderBy('name','Asc')->pluck('name', 'id');
+            ->orderBy('name', 'Asc')->pluck('name', 'id');
         $units = Unit::forDropdown($business_id, true);
 
         $tax_dropdown = TaxRate::forBusinessDropdown($business_id, true, true);
@@ -2982,7 +2982,7 @@ class ProductController extends Controller
             if (!empty($duplicate_product->category_id)) {
                 $sub_categories = Category::where('business_id', $business_id)
                     ->where('parent_id', $duplicate_product->category_id)
-                    ->orderBy('name','DESC')
+                    ->orderBy('name', 'DESC')
                     ->pluck('name', 'id')
                     ->toArray();
             }
@@ -3024,7 +3024,7 @@ class ProductController extends Controller
         if (!auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
-        
+
         try {
             $business_id = $request->session()->get('user.business_id');
             $form_fields = [
@@ -3046,7 +3046,7 @@ class ProductController extends Controller
                 'single_dpp_inc_tax',
                 'profit_percent',
                 'single_dsp',
-                'single_dsp_inc_tax', 
+                'single_dsp_inc_tax',
                 'file',
                 'ref_description'
             ];
@@ -3116,14 +3116,14 @@ class ProductController extends Controller
 
                 $sku = $request->input('sku');
 
-                if(isset($request->input('sku')[$i]) && !empty($request->input('sku')[$i])){
+                if (isset($request->input('sku')[$i]) && !empty($request->input('sku')[$i])) {
                     $product->custom_barcode = 1;
                     $product->sku = $request->input('sku')[$i];
-                }else{
+                } else {
                     $sku = $this->productUtil->generateProductSku($product->id);
                     $product->sku = $sku;
                 }
-                if(isset($request->input('ref_description')[$i]) && !empty($request->input('ref_description')[$i])){
+                if (isset($request->input('ref_description')[$i]) && !empty($request->input('ref_description')[$i])) {
                     $product->description = $request->input('ref_description')[$i];
                 }
 

@@ -20,9 +20,9 @@
         @can('size.create')
             @slot('tool')
                 <div class="box-tools">
-                    <button type="button" class="btn btn-block btn-primary btn-modal" 
+                    <button type="button" class="btn btn-block btn-primary btn-modal" data-container=".size_modal"
                     data-href="{{action('SizeController@create')}}" 
-                    data-container=".size_modal">
+                    >
                     <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                 </div>
             @endslot

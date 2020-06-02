@@ -66,8 +66,8 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('/contacts/saleReport/{id}', 'ContactController@saleReport');
     Route::resource('contacts', 'ContactController');
 
-    Route::get('fraudster','ContactController@fraudster');
-    Route::get('change_fraudster','ContactController@change_fraudster');
+    Route::get('fraudster', 'ContactController@fraudster');
+    Route::get('change_fraudster', 'ContactController@change_fraudster');
     Route::get('categories/createSubCategory', 'CategoryController@createSubCategory');
     Route::get('categories/createCategory', 'CategoryController@createCategory');
     Route::resource('categories', 'CategoryController');
@@ -121,6 +121,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     // Route::get('suppliers', 'SupplierController@index');
     Route::get('/sizes/getSubSize/{id}', 'SizeController@getSubSize');
     Route::resource('sizes', 'SizeController');
+    // Route::put('sizes/{id}', 'SizesController@update');
     Route::resource('colors', 'ColorController');
 
     Route::resource('gift', 'GiftCardController');
@@ -346,7 +347,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
 
         //Map modifier to products
         Route::get('/product-modifiers/{id}/edit', 'Restaurant\ProductModifierSetController@edit');
-        
+
         Route::post('/product-modifiers/{id}/update', 'Restaurant\ProductModifierSetController@update');
         Route::get('/product-modifiers/product-row/{product_id}', 'Restaurant\ProductModifierSetController@product_row');
 
@@ -367,12 +368,12 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::resource('bookings', 'Restaurant\BookingController');
 
     // Website Routes
-    Route::get('website/product/list','WebsiteController@index');
-    Route::get('website/product/{id}/special_category','WebsiteController@specialCategoriesForm');
-    Route::post('website/product/special_category','WebsiteController@addspecialCategories');
-    Route::get('website/product/{id}/images','WebsiteController@addImagesForm');
-    Route::post('website/product/{id}/images','WebsiteController@addImages');
-    Route::delete('website/product/{id}/images','WebsiteController@deleteImage');
+    Route::get('website/product/list', 'WebsiteController@index');
+    Route::get('website/product/{id}/special_category', 'WebsiteController@specialCategoriesForm');
+    Route::post('website/product/special_category', 'WebsiteController@addspecialCategories');
+    Route::get('website/product/{id}/images', 'WebsiteController@addImagesForm');
+    Route::post('website/product/{id}/images', 'WebsiteController@addImages');
+    Route::delete('website/product/{id}/images', 'WebsiteController@deleteImage');
 });
 
 Route::get('permission-reset', function () {

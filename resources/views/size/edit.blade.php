@@ -1,8 +1,8 @@
 <div class="modal-dialog" role="document">
   <div class="modal-content">
 
-    {!! Form::open(['url' => action('SizesController@update', [$size->id]), 'method' => 'PUT', 'id' => 'size_edit_form' ]) !!}
-
+    {!! Form::open(['url' => action('SizeController@update', [$size->id]), 'method' => 'PUT', 'id' => 'size_edit_form' ]) !!}
+      @csrf
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       <h4 class="modal-title">@lang( 'size.edit_size' )</h4>

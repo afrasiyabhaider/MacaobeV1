@@ -20,9 +20,9 @@
         @can('color.create')
             @slot('tool')
                 <div class="box-tools">
-                    <button type="button" class="btn btn-block btn-primary btn-modal" 
+                    <button type="button" class="btn btn-block btn-primary btn-modal" data-container=".colors_modal"
                         data-href="{{action('ColorController@create')}}" 
-                        data-container=".colors_modal">
+                        >
                         <i class="fa fa-plus"></i> @lang( 'messages.add' )</button>
                 </div>
             @endslot

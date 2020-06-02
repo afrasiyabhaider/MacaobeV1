@@ -23,21 +23,21 @@ class ColorController extends Controller
             $business_id = request()->session()->get('user.business_id');
 
             $colors = Color::where('business_id', $business_id)
-                        ->select(['name','color_code', 'description', 'id']);
-        // print_r($colors);die();
+                ->select(['name', 'color_code', 'description', 'id']);
+            // print_r($colors);die();
 
             return DataTables::of($colors)
                 ->addColumn(
                     'action',
                     '@can("color.update")
-                    <button data-href="{{action(\'ColorController@edit\', [$id])}}" class="btn btn-xs btn-primary edit_color_button"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</button>
+                    <button data-href="{{action(\'ColorController@edit\', [$id])}}" class="btn btn-xs btn-primary btn-modal" data-container=".colors_modal"><i class="glyphicon glyphicon-edit"></i> @lang("messages.edit")</button>
                         &nbsp;
                     @endcan
                     @can("color.delete")
                         <button data-href="{{action(\'ColorController@destroy\', [$id])}}" class="btn btn-xs btn-danger delete_color_button"><i class="glyphicon glyphicon-trash"></i> @lang("messages.delete")</button>
                     @endcan'
                 )
-                ->removeColumn('id','description')
+                ->removeColumn('id', 'description')
                 ->rawColumns([2])
                 ->make(false);
         }
@@ -62,7 +62,7 @@ class ColorController extends Controller
         }
 
         return view('color.create')
-                ->with(compact('quick_add'));
+            ->with(compact('quick_add'));
     }
 
     /**
@@ -77,25 +77,27 @@ class ColorController extends Controller
             abort(403, 'Unauthorized action.');
         }
         try {
-            $input = $request->only(['name', 'description','color_code']);
+            $input = $request->only(['name', 'description', 'color_code']);
             $business_id = $request->session()->get('user.business_id');
             $input['business_id'] = $business_id;
             $input['created_by'] = $request->session()->get('user.id');
 
             $color = Color::create($input);
-            $output = ['success' => true,
-                            'data' => $color,
-                            'msg' => __("color.added_success")
-                        ];
+            $output = [
+                'success' => true,
+                'data' => $color,
+                'msg' => __("color.added_success")
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => false,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
-        return redirect()->back()->with(['success'=>$output]);
+        return redirect()->back()->with(['success' => $output]);
     }
 
     /**
@@ -143,25 +145,30 @@ class ColorController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        if (request()->ajax()) {
+        // dd($request->input());
+        if ($request->input('name')) {
             try {
-                $input = $request->only(['name', 'description','color_code']);
+                $input = $request->only(['name', 'description', 'color_code']);
                 $business_id = $request->session()->get('user.business_id');
 
                 $color = Color::where('business_id', $business_id)->findOrFail($id);
                 $color->name = $input['name'];
                 $color->description = $input['description'];
+                $color->color_code = $input['color_code'];
                 $color->save();
 
-                $output = ['success' => true,
-                            'msg' => __("color.updated_success")
-                            ];
+                $output = [
+                    'success' => true,
+                    'msg' => __("color.updated_success")
+                ];
+                return redirect()->back();
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-                $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = [
+                    'success' => false,
+                    'msg' => __("messages.something_went_wrong")
+                ];
             }
 
             return $output;
@@ -187,15 +194,17 @@ class ColorController extends Controller
                 $color = Color::where('business_id', $business_id)->findOrFail($id);
                 $color->delete();
 
-                $output = ['success' => true,
-                            'msg' => __("color.deleted_success")
-                            ];
+                $output = [
+                    'success' => true,
+                    'msg' => __("color.deleted_success")
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-                $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = [
+                    'success' => false,
+                    'msg' => __("messages.something_went_wrong")
+                ];
             }
 
             return $output;

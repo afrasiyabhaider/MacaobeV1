@@ -14,39 +14,33 @@ class SizeController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     function getSubSize($sizeId)
-    { 
+    function getSubSize($sizeId)
+    {
         $output = [];
-        try
-        {
-             $business_id = request()->session()->get('user.business_id');
+        try {
+            $business_id = request()->session()->get('user.business_id');
             $output['success'] = true;
-            $attributes = ['parent_id'=>$sizeId];
-            $objGiftCards = Size::where('business_id', $business_id)  
-                ->where(function ($query) use ($attributes) 
-                {
-                    foreach ($attributes as $key=>$value)
-                    {
+            $attributes = ['parent_id' => $sizeId];
+            $objGiftCards = Size::where('business_id', $business_id)
+                ->where(function ($query) use ($attributes) {
+                    foreach ($attributes as $key => $value) {
                         //you can use orWhere the first time, dosn't need to be ->where
-                        $query->orWhere($key,$value);
+                        $query->orWhere($key, $value);
                     }
                 })
                 ->get();
 
-            if(!empty($objGiftCards))
-            { 
+            if (!empty($objGiftCards)) {
                 $output['msg'] = $objGiftCards;
-            }else
-            {
+            } else {
                 $output['success'] = false;
                 $output['msg'] = "Sorry No Data Found ";
-
             }
-        }catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+        } catch (\Exception $e) {
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
             $output['success'] = false;
-            $output['msg'] = __('gift.error')." \n ". $e->getMessage();
+            $output['msg'] = __('gift.error') . " \n " . $e->getMessage();
         }
 
         return $output;;
@@ -56,7 +50,7 @@ class SizeController extends Controller
         if (!auth()->user()->can('size.view') && !auth()->user()->can('size.create')) {
             abort(403, 'Unauthorized action.');
         }
- 
+
         if (request()->ajax()) {
 
             $business_id = request()->session()->get('user.business_id');
@@ -66,7 +60,7 @@ class SizeController extends Controller
                 ->addColumn(
                     'action',
                     '@can("size.update")
-                    <button data-href="{{action(\'SizeController@edit\', [$id])}}" class="btn btn-xs btn-primary edit_category_button"><i class="glyphicon glyphicon-edit"></i>  @lang("messages.edit")</button>
+                    <button data-href="{{action(\'SizeController@edit\', [$id])}}"  class="btn btn-xs btn-primary btn-modal" data-container=".size_modal"><i class="glyphicon glyphicon-edit"></i>  @lang("messages.edit")</button>
                         &nbsp;
                     @endcan
                     @can("size.delete")
@@ -102,9 +96,9 @@ class SizeController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $sizes = Size::where('business_id', $business_id)
-                        ->where('parent_id', 0)
-                        ->select(['name', 'short_code', 'id'])
-                        ->get();
+            ->where('parent_id', 0)
+            ->select(['name', 'short_code', 'id'])
+            ->get();
         $parent_sizes = [];
         if (!empty($sizes)) {
             foreach ($sizes as $size) {
@@ -112,10 +106,10 @@ class SizeController extends Controller
             }
         }
         return view('size.create')
-                    ->with(compact('parent_sizes'));
+            ->with(compact('parent_sizes'));
     }
 
-     public function createCategory()
+    public function createCategory()
     {
         if (!auth()->user()->can('size.create')) {
             abort(403, 'Unauthorized action.');
@@ -123,16 +117,16 @@ class SizeController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $sizes = Size::where('business_id', $business_id)
-                        ->where('parent_id', 0)
-                        ->select(['name', 'short_code', 'id'])
-                        ->get();
+            ->where('parent_id', 0)
+            ->select(['name', 'short_code', 'id'])
+            ->get();
         $parent_sizes = [];
-         
+
         return view('size.createQuick')
-                    ->with(compact('parent_sizes'));
+            ->with(compact('parent_sizes'));
     }
 
-     public function createSubCategory()
+    public function createSubCategory()
     {
         if (!auth()->user()->can('size.create')) {
             abort(403, 'Unauthorized action.');
@@ -140,9 +134,9 @@ class SizeController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $sizes = Size::where('business_id', $business_id)
-                        ->where('parent_id', 0)
-                        ->select(['name', 'short_code', 'id'])
-                        ->get();
+            ->where('parent_id', 0)
+            ->select(['name', 'short_code', 'id'])
+            ->get();
         $parent_sizes = [];
         if (!empty($sizes)) {
             foreach ($sizes as $size) {
@@ -150,7 +144,7 @@ class SizeController extends Controller
             }
         }
         return view('size.createQuick')
-                    ->with(compact('parent_sizes'));
+            ->with(compact('parent_sizes'));
     }
 
     /**
@@ -176,16 +170,18 @@ class SizeController extends Controller
             $input['created_by'] = $request->session()->get('user.id');
 
             $size = Size::create($input);
-            $output = ['success' => true,
-                            'data' => $size,
-                            'msg' => __("size.added_success")
-                        ];
+            $output = [
+                'success' => true,
+                'data' => $size,
+                'msg' => __("size.added_success")
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => false,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
         return $output;
@@ -217,19 +213,19 @@ class SizeController extends Controller
         if (request()->ajax()) {
             $business_id = request()->session()->get('user.business_id');
             $size = Size::where('business_id', $business_id)->find($id);
-            
+
             $parent_sizes = Size::where('business_id', $business_id)
-                                        ->where('parent_id', 0)
-                                        ->where('id', '!=', $id)
-                                        ->pluck('name', 'id');
-            
+                ->where('parent_id', 0)
+                ->where('id', '!=', $id)
+                ->pluck('name', 'id');
+
             $is_parent = false;
-            
+
             if ($size->parent_id == 0) {
                 $is_parent = true;
                 $selected_parent = null;
             } else {
-                $selected_parent = $size->parent_id ;
+                $selected_parent = $size->parent_id;
             }
 
             return view('size.edit')
@@ -250,7 +246,8 @@ class SizeController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        if (request()->ajax()) {
+        // dd($request->input());
+        if ($request->input('name')) {
             try {
                 $input = $request->only(['name', 'short_code']);
                 $business_id = $request->session()->get('user.business_id');
@@ -265,15 +262,18 @@ class SizeController extends Controller
                 }
                 $size->save();
 
-                $output = ['success' => true,
-                            'msg' => __("size.updated_success")
-                            ];
+                $output = [
+                    'success' => true,
+                    'msg' => __("size.updated_success")
+                ];
+                return redirect()->back()->with(['output' => $output]);
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-                $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = [
+                    'success' => false,
+                    'msg' => __("messages.something_went_wrong")
+                ];
             }
 
             return $output;
@@ -299,15 +299,17 @@ class SizeController extends Controller
                 $size = Size::where('business_id', $business_id)->findOrFail($id);
                 $size->delete();
 
-                $output = ['success' => true,
-                            'msg' => __("size.deleted_success")
-                            ];
+                $output = [
+                    'success' => true,
+                    'msg' => __("size.deleted_success")
+                ];
             } catch (\Exception $e) {
-                \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-                $output = ['success' => false,
-                            'msg' => __("messages.something_went_wrong") . $e->getMessage()
-                        ];
+                \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+                $output = [
+                    'success' => false,
+                    'msg' => __("messages.something_went_wrong") . $e->getMessage()
+                ];
             }
 
             return $output;
