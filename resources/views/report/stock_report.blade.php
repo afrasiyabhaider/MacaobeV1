@@ -7,7 +7,50 @@
 <section class="content-header">
     <h1>{{ __('report.stock_report')}}</h1>
 </section>
-
+<div class="modal fade in" tabindex="-1" role="dialog" id="unknownDiscountModal" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"  id="closeThis" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">Ã—</span></button>
+                <h4 class="modal-title">SELECT BUSSINESS</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            {!! Form::label('category_id', 'Business :') !!}
+                            @foreach ($business_locations as $key=>$value)
+                                @if ($key != 1 && $value != "Main Shop")
+                                    @php
+                                        $newBusiness_locations[$key] = $value;
+                                    @endphp
+                                @endif
+                            @endforeach
+                            {{-- {{dd(collect($newBusiness_locations))}} --}}
+                            {{-- <select name="category_id" id="transferBusiness" class="form-control select2" style="width:100%">
+                                <optgroup>
+                                    <option value="all">{{__('lang_v1.all')}}</option>
+                                    @foreach ($business_locations as $key=>$item)
+                                        @if ($key != 1 && $item != "Main Shop")
+                                            <option value="{{$key}}">
+                                                {{$item}}
+                                            </option>
+                                        @endif
+                                    @endforeach
+                                </optgroup>
+                            </select> --}}
+                            {!! Form::select('category_id', collect($newBusiness_locations), null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'transferBussiness', 'placeholder' => __('lang_v1.all')]); !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="TransferSelected();">Finalize Transfer</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
 <!-- Main content -->
 <section class="content">
     <div class="row">
@@ -70,6 +113,16 @@
                         <i class="fa fa-print"></i> 
                         Print Selected
                     </button>
+            {!! Form::close() !!}
+            {!! Form::open(['url' => action('ProductController@massTransfer'), 'method' => 'post', 'id' => 'bulkTransfer_form','class' => 'ml-5' ]) !!}
+            {!! Form::hidden('selected_products_bulkTransfer', null, ['id' => 'selected_products_bulkTransfer']); !!}
+            {!! Form::hidden('selected_products_qty_bulkTransfer', null, ['id' => 'selected_products_qty_bulkTransfer']); !!}
+            {!! Form::hidden('bussiness_bulkTransfer', null, ['id' => 'bussiness_bulkTransfer']); !!}
+            {{-- {!! Form::submit(' Transfer Selected', array('class' => 'btn btn-warning', 'id' => 'bulkTransfer-selected')) !!} --}}
+            <button type="submit" class="btn btn-warning" id="bulkTransfer-selected">
+                <i class="fa fa-random"></i>
+                Transfer Selected
+            </button>
             {!! Form::close() !!}
         </div>
     </div>
@@ -147,6 +200,53 @@
                     // });
                 } else{
                     $('input#selected_products_bulkPrint').val('');
+                    swal('@lang("lang_v1.no_row_selected")');
+                }    
+            })
+
+            function TransferSelected()
+            {
+                var transferBussiness = $("#transferBussiness option:selected").val();
+
+                if(transferBussiness == "" || transferBussiness == undefined)
+                {
+                    alert("Please Choose Bussiness First to Transfer ");return(false);
+                } 
+                $("#bussiness_bulkTransfer").val(transferBussiness);
+                $('form#bulkTransfer_form').submit();
+            }
+
+            $(document).on('click', '#bulkTransfer-selected', function(e){
+                e.preventDefault();
+                var selected_rows = [];
+                var selected_rows_qty = [];
+                var i = 0;
+                $('.row-select:checked').each(function () {
+                    var selectedQty = $("#qty_"+$(this).val()).val();
+                    var selectedMaxQty = $("#qty_"+$(this).val()).attr('max');
+                    if(parseInt(selectedQty) <= parseInt(selectedMaxQty))
+                    {
+                        selected_rows[i++] = $(this).val()+"@"+selectedQty+"@"+selectedMaxQty;
+                    }
+                }); 
+                
+                if(selected_rows.length > 0){
+                    $('#unknownDiscountModal').modal('show'); 
+                    $('input#selected_products_bulkTransfer').val(selected_rows);
+                    // swal({
+                    //     title: LANG.sure,
+                    //     icon: "warning",
+                    //     buttons: true,
+                    //     dangerMode: true,
+                    // }).then((willDelete) => {
+                    //     if (willDelete) {
+                        // If uncommented it will make issue in product transfer
+                            // $('#unknownDiscountModal').modal('show'); 
+                            // $('form#bulkTransfer_form').submit();
+                    //     }
+                    // });
+                } else{
+                    $('input#selected_products_bulkTransfer').val('');
                     swal('@lang("lang_v1.no_row_selected")');
                 }    
             })
