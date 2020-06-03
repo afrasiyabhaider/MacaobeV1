@@ -370,6 +370,7 @@ class ProductUtil extends Util
      */
     public function getDetailsFromVariation($variation_id, $business_id, $location_id = null, $check_qty = false)
     {
+        // dd($check_qty);
         $query = Variation::join('products AS p', 'variations.product_id', '=', 'p.id')
             ->join('product_variations AS pv', 'variations.product_variation_id', '=', 'pv.id')
             ->leftjoin('variation_location_details AS vld', 'variations.id', '=', 'vld.variation_id')
@@ -380,7 +381,7 @@ class ProductUtil extends Util
             })
             ->where('p.business_id', $business_id)
             ->where('variations.id', $variation_id);
-            // return $query->first();
+        // return $query->first();
 
         //Add condition for check of quantity. (if stock is not enabled or qty_available > 0)
         if ($check_qty) {
@@ -390,7 +391,8 @@ class ProductUtil extends Util
             });
         }
 
-        if (!empty($location_id)) {
+        if (empty($location_id)) {
+            // dd("Hello");
             //Check for enable stock, if enabled check for location id.
             $query->where(function ($query) use ($location_id) {
                 $query->where('p.enable_stock', '!=', 1)
@@ -423,8 +425,8 @@ class ProductUtil extends Util
             'brands.name as brand',
             DB::raw("(SELECT purchase_price_inc_tax FROM purchase_lines WHERE 
                         variation_id=variations.id ORDER BY id DESC LIMIT 1) as last_purchased_price")
-        )
-            ->first();
+        )->first();
+
 
         return $products;
     }
