@@ -5,6 +5,16 @@
     
     
     <div class="col-md-5 pull-right">
+      <span class=" btn btn-info  pull-right" style="padding: 10px">
+        <i class="fa fa-user"></i>
+        <span class="h4 font-weight-bold">
+          {{Auth::user()->first_name}}
+          {{Auth::user()->last_name}}
+        </span> -
+        {{
+          Auth::user()->business_location()->first()->name
+        }}
+      </span>
       <a href="{{ action('Auth\LoginController@logout')}}" title="LogOff" data-toggle="tooltip" data-placement="bottom" class="btn btn-danger btn-flat m-6  m-5 pull-right" >
         <strong><i class="fa fa-sign-in fa-lg"></i> LogOff</strong>
       </a>

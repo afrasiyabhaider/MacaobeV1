@@ -327,7 +327,7 @@ class SellPosController extends Controller
 
         //If brands, category are enabled then send else false.
         $categories = (request()->session()->get('business.enable_category') == 1) ? Category::catAndSubCategories($business_id) : false;
-        $brands = Supplier::pluck('name', 'id');
+        $brands = Supplier::orderBy('name', 'ASC')->pluck('name', 'id');
         // $brands = (request()->session()->get('business.enable_brand') == 1) ? Brands::where('business_id', $business_id)
         //     ->pluck('name', 'id')
         //     ->prepend(__('lang_v1.all_brands'), 'all') : false;
@@ -775,7 +775,7 @@ class SellPosController extends Controller
                 'units.id as unit_id',
                 'transaction_sell_lines.sub_unit_id',
                 DB::raw('vld.qty_available + transaction_sell_lines.quantity AS qty_available')
-            )
+            )->orderBy('p.updated_at', 'DESC')
             ->get();
         $newSellDetails = array();
         if (!empty($sell_details)) {
@@ -2410,6 +2410,7 @@ class SellPosController extends Controller
                 ->where("p_type", "product")
                 ->orderBy('products.name', 'asc')
                 ->groupBy('variations.id')
+                ->orderBy('products.updated_at', 'DESC')
                 ->paginate(20);
 
 
@@ -2539,6 +2540,7 @@ class SellPosController extends Controller
                 ->where("p_type", "product")
                 ->orderBy('products.name', 'asc')
                 ->groupBy('variations.id')
+                ->orderBy('products.updated_at', 'DESC')
                 ->paginate(50);
 
             // dd($products->first());
