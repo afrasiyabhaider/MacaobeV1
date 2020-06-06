@@ -1,3 +1,9 @@
+<style>
+	.cust-pad{
+		padding: 10px;
+		margin-left: 5px;
+	}
+</style>
 <div class="row">
 	<div class="col-sm-12">
 		<div class="panel panel-default">
@@ -94,51 +100,58 @@
 
 					<tr>
 						<td>
-							<div class="col-sm-2 col-xs-6 col-2px-padding">
+							<div class="col-sm-6 col-xs-6 col-2px-padding">
 
-								<button type="button" 
-									class="btn btn-warning btn-block btn-flat " onClick="openDiscount();">All Discount</button>
+								<button type="button" class="btn btn-warning btn-sm pull-left cust-pad" onClick="openDiscount();">
+									All Discount
+								</button>
 
-								<button type="button" 
-									class=" hide btn btn-info btn-block btn-flat" onClick="openUnkown();">Unknown</button>
-							</div>
-							<div class="col-sm-3 col-xs-6 col-2px-padding">
-								<button type="button" 
-								class="btn bg-maroon btn-block btn-flat  "  
-								title="@lang('gift.title')" onclick="openGiftCard()">
-								<div class="text-center">
-									<i class="fa fa-check" aria-hidden="true"></i>
-    								<b>@lang('gift.title')</b>
-    							</div>
+								<button type="button" class=" hide btn btn-info btn-sm pull-left cust-pad" onClick="openUnkown();">
+									Unknown
+								</button>
+								<button type="button" class="btn bg-maroon btn-sm pull-left cust-pad" title="@lang('gift.title')" onclick="openGiftCard()">
+									<div class="text-center">
+										<i class="fa fa-check" aria-hidden="true"></i>
+										<b>@lang('gift.title')</b>
+									</div>
 								</button>
 								@if(empty($pos_settings['disable_suspend']))
+								{{-- pos-express-finalize --}}
 									<button type="button" 
-									class="btn bg-red btn-block btn-flat no-print pos-express-finalize" 
+									class="btn bg-red btn-block btn-flat no-print cust-pad" 
 									data-pay_method="suspend"
 									title="@lang('lang_v1.tooltip_suspend')" >
-									<div class="text-center">
-										<i class="fa fa-pause" aria-hidden="true"></i>
-	    								<b>@lang('lang_v1.suspend')</b>
-	    							</div>
+										<div class="text-center">
+											<i class="fa fa-pause" aria-hidden="true"></i>
+											<b>@lang('lang_v1.suspend')</b>
+										</div>
 									</button>
 								@endif
+							{{-- </div>
+							<div class="col-sm-2 col-xs-12 col-2px-padding"> --}}
+								{{-- pos-express-btn --}}
+								<button type="button" class="btn bg-navy   btn-sm no-print pull-left cust-pad @if($pos_settings['disable_pay_checkout'] != 0) hide @endif" id="pos-finalize" title="@lang('lang_v1.tooltip_checkout_multi_pay')">
+									<div class="text-center">
+										<i class="fa fa-check" aria-hidden="true"></i>
+										<b>@lang('lang_v1.checkout_multi_pay')</b>
+									</div>
+								</button>
 							</div>
-							<div class="col-sm-4 col-xs-12 col-2px-padding">
-								<button type="button" class="btn bg-navy  btn-block btn-flat btn-lg no-print @if($pos_settings['disable_pay_checkout'] != 0) hide @endif pos-express-btn" id="pos-finalize" title="@lang('lang_v1.tooltip_checkout_multi_pay')">
-								<div class="text-center">
-									<i class="fa fa-check" aria-hidden="true"></i>
-    								<b>@lang('lang_v1.checkout_multi_pay')</b>
-    							</div>
+							<div class="col-sm-3 col-xs-12 col-2px-padding">
+								<button type="button" class="btn btn-info btn-block btn-flat btn-lg no-print @if($pos_settings['disable_express_checkout'] != 0) hide @endif pos-express-btn pos-express-finalize" id="pos-save-card-external">
+								{{-- data-pay_method="card"  --}}
+									<i class="fa fa-credit-card"></i>
+									Card
 								</button>
 							</div>
 							<div class="col-sm-3 col-xs-12 col-2px-padding">
 								<button type="button" class="btn btn-success btn-block btn-flat btn-lg no-print @if($pos_settings['disable_express_checkout'] != 0) hide @endif pos-express-btn pos-express-finalize"
 								data-pay_method="cash"
 								title="@lang('tooltip.express_checkout')">
-								<div class="text-center">
-									<i class="fa fa-check" aria-hidden="true"></i>
-    								<b>@lang('lang_v1.express_checkout_cash')</b>
-    							</div>
+									<div class="text-center">
+										<i class="fa fa-dollar" aria-hidden="true"></i>
+										<b>@lang('lang_v1.express_checkout_cash')</b>
+									</div>
 								</button>
 							</div>
 

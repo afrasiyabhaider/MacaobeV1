@@ -484,6 +484,22 @@ $(document).ready(function() {
     });
 
     //on save card details
+    $('button#pos-save-card-external').click(function() {
+        $('select#method_0').val('card');
+        $('input#card_number_0').val('112233445566');
+        $('input#card_holder_name_0').val('Dummy User');
+        $('input#card_transaction_number_0').val('11223344');
+        $('select#card_type_0').val('credit');
+        $('input#card_month_0').val('01');
+        $('input#card_year_0').val('20000');
+        $('input#card_security_0').val('1122');
+
+        // $('div#card_details_modal').modal('hide');
+        pos_form_obj.submit();
+    });
+    /**
+     * Old Script
+     **/
     $('button#pos-save-card').click(function() {
         $('input#card_number_0').val($('#card_number').val());
         $('input#card_holder_name_0').val($('#card_holder_name').val());

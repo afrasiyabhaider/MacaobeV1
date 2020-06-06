@@ -506,9 +506,12 @@ class SellPosController extends Controller
                     $change_return['amount'] = $input['change_return'];
                     $change_return['is_return'] = 1;
                     $input['payment'][] = $change_return;
+                    // dd($change_return);
                 }
 
                 if (!$transaction->is_suspend && !empty($input['payment'])) {
+
+                    // dd($input['payment']);
                     $this->transactionUtil->createOrUpdatePaymentLines($transaction, $input['payment']);
                 }
                 // ADD BONUS POINTS 
@@ -638,7 +641,8 @@ class SellPosController extends Controller
             DB::rollBack();
 
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $msg = trans("messages.something_went_wrong" . $e->getMessage());
+            dd($e->getMessage());
+            $msg = trans("messages.something_went_wrong Here . " . $e->getMessage());
 
             if (get_class($e) == \App\Exceptions\PurchaseSellMismatch::class) {
                 $msg = $e->getMessage();
@@ -1051,7 +1055,7 @@ class SellPosController extends Controller
                     $tempPayment[] = $payment;
                 }
                 $input['payment'] = $tempPayment;
-                // print_r($input['products']);die();  
+                // print_r($input['products']);die(); 
 
                 $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
 
@@ -1757,15 +1761,21 @@ class SellPosController extends Controller
             } else {
                 $output = [
                     'success' => 0,
-                    'msg' => trans("messages.something_went_wrong")
+                    'msg' => trans("messages.something_went_wrong. " . $e->getMessage())
                 ];
             }
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+            $msg = trans("messages.something_went_wrong" . $e->getMessage());
+
+            if (get_class($e) == \App\Exceptions\PurchaseSellMismatch::class) {
+                $msg = $e->getMessage();
+            }
+
             $output = [
                 'success' => 0,
-                'msg' => __('messages.something_went_wrong')
+                'msg' => $msg
             ];
         }
 
