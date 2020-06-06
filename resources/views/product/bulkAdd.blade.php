@@ -544,8 +544,9 @@
 					</div>
 				@endforeach
 			</div> 
-        </div>
-      <div class="col-sm-12 @if(!session('business.enable_brand')) hide @endif">
+	   </div>
+	   {{-- @if(!session('business.enable_brand')) hide @endif --}}
+      <div class="col-sm-12 ">
           <div class="form-group">
             {!! Form::label('color_id', __('product.color') . ':') !!}
             <div class="input-group">
