@@ -430,6 +430,68 @@ class ProductUtil extends Util
 
         return $products;
     }
+    public function getDetailsFromVariationForOtherThanPOS($variation_id, $business_id, $location_id = null, $check_qty = false)
+    {
+        // dd($check_qty);
+        $query = Variation::join('products AS p', 'variations.product_id', '=', 'p.id')
+            ->join('product_variations AS pv', 'variations.product_variation_id', '=', 'pv.id')
+            ->leftjoin('variation_location_details AS vld', 'variations.id', '=', 'vld.variation_id')
+            ->leftjoin('units', 'p.unit_id', '=', 'units.id')
+            ->leftjoin('brands', function ($join) {
+                $join->on('p.brand_id', '=', 'brands.id')
+                    ->whereNull('brands.deleted_at');
+            })
+            ->where('p.business_id', $business_id)
+            ->where('variations.id', $variation_id);
+        // return $query->first();
+
+        //Add condition for check of quantity. (if stock is not enabled or qty_available > 0)
+        if ($check_qty) {
+            $query->where(function ($query) use ($location_id) {
+                $query->where('p.enable_stock', '!=', 1)
+                    ->orWhere('vld.qty_available', '>', 0);
+            });
+        }
+
+        if (!empty($location_id)) {
+            // dd("Hello");
+            //Check for enable stock, if enabled check for location id.
+            $query->where(function ($query) use ($location_id) {
+                $query->where('p.enable_stock', '!=', 1)
+                    ->orWhere('vld.location_id', $location_id);
+            });
+        }
+
+        $products = $query->select(
+            DB::raw("IF(pv.is_dummy = 0, CONCAT(p.name, 
+                    ' (', pv.name, ':',variations.name, ')'), p.name) AS product_name"),
+            'p.id as product_id',
+            'p.brand_id',
+            'p.category_id',
+            'p.tax as tax_id',
+            'p.enable_stock',
+            'p.enable_sr_no',
+            'p.name as product_actual_name',
+            'pv.name as product_variation_name',
+            'pv.is_dummy as is_dummy',
+            'variations.name as variation_name',
+            'variations.sub_sku',
+            'p.barcode_type',
+            'vld.qty_available',
+            'variations.default_sell_price',
+            'variations.sell_price_inc_tax',
+            'variations.id as variation_id',
+            'units.short_name as unit',
+            'units.id as unit_id',
+            'units.allow_decimal as unit_allow_decimal',
+            'brands.name as brand',
+            DB::raw("(SELECT purchase_price_inc_tax FROM purchase_lines WHERE 
+                        variation_id=variations.id ORDER BY id DESC LIMIT 1) as last_purchased_price")
+        )->first();
+
+
+        return $products;
+    }
 
     /**
      * Calculates the total amount of invoice

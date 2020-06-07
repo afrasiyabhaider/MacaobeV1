@@ -2567,9 +2567,10 @@ class SellPosController extends Controller
     {
         $business_id = request()->session()->get('user.business_id');
 
-        $variation_product = $this->productUtil->getDetailsFromVariation($variation_id, $business_id);
+        $variation_product = $this->productUtil->getDetailsFromVariationForOtherThanPOS($variation_id, $business_id);
 
         $data[] = 'null';
+        // dd($variation_id);
         if ($variation_product != null) {
             $product = Product::find($variation_product->product_id);
             $product_name = ProductNameCategory::where('name', $product->name)->first();
