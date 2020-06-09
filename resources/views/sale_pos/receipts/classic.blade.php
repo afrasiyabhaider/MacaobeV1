@@ -395,7 +395,7 @@
 @endif
 
 @if(!empty($receipt_details->footer_text))
-	<div class="row">
+	<div class="row" style="padding-left: 5px;padding-bottom:20px;padding-right:5px;>
 		<div class="col-xs-12">
 			{!! $receipt_details->footer_text !!}
 		</div>
