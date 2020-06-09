@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CashRegister;
+use App\Transaction;
 use Illuminate\Http\Request;
 
 use App\Utils\CashRegisterUtil;
@@ -121,8 +122,50 @@ class CashRegisterController extends Controller
         $close_time = \Carbon::now()->toDateTimeString();
         $details = $this->cashRegisterUtil->getRegisterTransactionDetails($user_id, $open_time, $close_time);
 
+        // $request = new Request();
+        
+        $business_id = request()->session()->get('user.business_id');
+        $user_id = request()->session()->get('user.id');
+        $transaction_status = 'final';
+        // $transaction_status = request()->get('status');
+
+        // dd($transaction_status);
+
+        $register = $this->cashRegisterUtil->getCurrentCashRegister($user_id);
+
+        $query = Transaction::where('business_id', $business_id)
+            ->where('transactions.created_by', $user_id)
+            ->where('transactions.type', 'sell')
+            ->where('is_direct_sale', 0);
+
+        if ($transaction_status == 'final') {
+            if (!empty($register->id)) {
+                $query->leftjoin('cash_register_transactions as crt', 'transactions.id', '=', 'crt.transaction_id')
+                    ->where('crt.cash_register_id', $register->id);
+            }
+        }
+
+        if ($transaction_status == 'quotation') {
+            $query->where('transactions.status', 'draft')
+                ->where('is_quotation', 1);
+        } elseif ($transaction_status == 'draft') {
+            $query->where('transactions.status', 'draft')
+                ->where('is_quotation', 0);
+        } else {
+            $query->where('transactions.status', $transaction_status);
+        }
+
+        
+        $transactions = $query->orderBy('transactions.created_at', 'desc')
+        ->groupBy('transactions.id')
+        ->select('transactions.*')
+        ->with(['contact'])
+        ->get();
+        // ->limit(10)
+        // dd($transactions);
+
         return view('cash_register.register_details')
-                ->with(compact('register_details', 'details'));
+                ->with(compact('register_details', 'details','transactions'));
     }
 
     /**

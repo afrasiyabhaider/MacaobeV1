@@ -62,6 +62,45 @@ class ProductUtil extends Util
 
         return true;
     }
+    /**
+     * Create single type product variation
+     *
+     * @param (int or object) $product
+     * @param $sku
+     * @param $purchase_price
+     * @param $dpp_inc_tax (default purchase pric including tax)
+     * @param $profit_percent
+     * @param $selling_price
+     *
+     * @return boolean
+     */
+    public function createSingleProductVariationForPOSUnkownBarCode($product, $sku, $purchase_price, $dpp_inc_tax, $profit_percent, $selling_price, $selling_price_inc_tax)
+    {
+        if (!is_object($product)) {
+            $product = Product::find($product);
+        }
+
+        //create product variations
+        $product_variation_data = [
+            'name' => 'DUMMY',
+            'is_dummy' => 1
+        ];
+        $product_variation = $product->product_variations()->create($product_variation_data);
+        //create variations
+        $variation_data = [
+            'name' => 'DUMMY',
+            'product_id' => $product->id,
+            'sub_sku' => $sku,
+            'default_purchase_price' => $purchase_price,
+            'dpp_inc_tax' => $dpp_inc_tax,
+            'profit_percent' => $profit_percent,
+            'default_sell_price' =>$selling_price,
+            'sell_price_inc_tax' => $selling_price_inc_tax
+        ];
+        $product_variation->variations()->create($variation_data);
+
+        return true;
+    }
 
     /**
      * Create variable type product variation

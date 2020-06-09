@@ -1812,8 +1812,9 @@ class SellPosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delete_transaction($id)
     {
+        // dd($id);
         if (!auth()->user()->can('sell.delete')) {
             abort(403, 'Unauthorized action.');
         }
@@ -2239,6 +2240,8 @@ class SellPosController extends Controller
         $transaction_status = $request->get('status');
 
         $register = $this->cashRegisterUtil->getCurrentCashRegister($user_id);
+
+        // dd($transaction_status);
 
         $query = Transaction::where('business_id', $business_id)
             ->where('transactions.created_by', $user_id)

@@ -2156,7 +2156,7 @@ class ProductController extends Controller
                 $product->save();
             }
 
-            $this->productUtil->createSingleProductVariation(
+            $this->productUtil->createSingleProductVariationForPOSUnkownBarCode(
                 $product->id,
                 $product->sku,
                 1,

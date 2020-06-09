@@ -148,6 +148,9 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::resource('purchases', 'PurchaseController');
 
     Route::get('/toggle-subscription/{id}', 'SellPosController@toggleRecurringInvoices');
+    
+    // Route::get('/pos/{id}', 'SellPosController@destroy');
+
     Route::get('/sells/subscriptions', 'SellPosController@listSubscriptions');
     Route::get('/sells/invoice-url/{id}', 'SellPosController@showInvoiceUrl');
     Route::get('/sells/duplicate/{id}', 'SellController@duplicateSell');
@@ -174,7 +177,10 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::post('/pos/bulkUnHide', 'SellPosController@bulkUnHide')->name("bulkUnHide");
     Route::post('/pos/hide/{transaction_id}', 'SellPosController@hide');
     Route::post('/pos/unhide/{transaction_id}', 'SellPosController@unhide');
+
     Route::resource('pos', 'SellPosController');
+
+    Route::post('/pos/transaction/{id}/delete', 'SellPosController@delete_transaction');
 
     Route::resource('roles', 'RoleController');
 

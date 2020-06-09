@@ -143,6 +143,7 @@
       </div>
 
       @include('cash_register.register_product_details')
+      @include('cash_register.register_recent_transaction')
       
       <div class="row">
         <div class="col-xs-6">
