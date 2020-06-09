@@ -3,7 +3,6 @@
 	.pgBr{page-break-before: always;}
 </style>
 <div class="row">
-
 	<!-- Logo -->
 	@if(!empty($receipt_details->logo))
 		<img src="{{$receipt_details->logo}}" class="img img-responsive center-block">
@@ -103,7 +102,9 @@
 			</span>
 
 			<span class="pull-center text-center col-xs-12 col-md-12">
-				<b>{{$receipt_details->date_label}}</b> {{date("d/m/Y  H:i:s",strtotime($receipt_details->invoice_date))}}
+				<b>{{$receipt_details->date_label}}</b> {{date("d/m/Y  H:i:s",strtotime($receipt_details->invoice_date))}} <span>
+					| <b>Operator : </b> {{$receipt_details->user}}
+				</span>
 
 				@if(!empty($receipt_details->serial_no_label) || !empty($receipt_details->repair_serial_no))
 					<br>
@@ -136,7 +137,7 @@
 		        @endif
 			</span>
 			 
-			<span class="pull-center text-center col-xs-12 col-md-12">
+			{{-- <span class="pull-center text-center col-xs-12 col-md-12">
 					<span class="pull-left text-center col-xs-6 col-md-6">
         				<!-- customer info -->
         				@if(!empty($receipt_details->customer_name))
@@ -150,7 +151,7 @@
         				 
         			</span>
 				 
-			</span>
+			</span> --}}
 			 
 		</p>
 	</div>
@@ -243,35 +244,35 @@
 
 		<table class="table table-condensed  ">
 			<thead>
-				<th>Mode</th>
-				<th>Amount</th>
+				<th style="width: 40%">Mode</th>
+				{{-- <th>Amount</th> --}}
 				<!--<th>Date</th>-->
+				@if(!empty($receipt_details->payments))
+					@foreach($receipt_details->payments as $payment)
+						@if($payment['method_name'] == 'gift_card' || $payment['method'] == 'coupon') 
+						{{-- <tr> --}}
+							<td>{{$payment['method']}} <br/> 
+								<img class="center-block" src="data:image/png;base64,{{DNS1D::getBarcodePNG($payment['barcode'], 'C128', 2,30,array(39, 48, 54), true)}}"></td>
+							{{-- <td>{{$payment['amount']}}</td> --}}
+							<!--<td>{{$payment['date']}}</td>-->
+						{{-- </tr> --}}
+						@else
+						{{-- <tr> --}}
+							<td>{{$payment['method']}}</td>
+							{{-- <td>{{$payment['amount']}}</td> --}}
+							<!--<td>{{$payment['date']}}</td>-->
+						{{-- </tr> --}}
+						@endif
+						
+					@endforeach
+				@endif
 			</thead>
 
-			@if(!empty($receipt_details->payments))
-				@foreach($receipt_details->payments as $payment)
-					@if($payment['method_name'] == 'gift_card' || $payment['method'] == 'coupon') 
-					<tr>
-						<td>{{$payment['method']}} <br/> 
-							<img class="center-block" src="data:image/png;base64,{{DNS1D::getBarcodePNG($payment['barcode'], 'C128', 2,30,array(39, 48, 54), true)}}"></td>
-						<td>{{$payment['amount']}}</td>
-						<!--<td>{{$payment['date']}}</td>-->
-					</tr>
-					@else
-					<tr>
-						<td>{{$payment['method']}}</td>
-						<td>{{$payment['amount']}}</td>
-						<!--<td>{{$payment['date']}}</td>-->
-					</tr>
-					@endif
-					
-				@endforeach
-			@endif
 
 			<!-- Total Paid-->
 			@if(!empty($receipt_details->total_paid))
 				<tr>
-					<th>
+					<th style="width: 40%">
 						{!! $receipt_details->total_paid_label !!}
 					</th>
 					<td>
@@ -309,10 +310,10 @@
 
 	<div class="col-xs-6">
         <div class="table-responsive">
-          	<table class="table">
+          	<table class="table table-condensed">
 				<tbody>
 					<tr>
-						<th style="width:70%">
+						<th style="width:40%">
 							{!! $receipt_details->subtotal_label !!}
 						</th>
 						<td>
@@ -323,7 +324,7 @@
 					<!-- Shipping Charges -->
 					@if(!empty($receipt_details->shipping_charges))
 						<tr>
-							<th style="width:70%">
+							<th style="width:40%">
 								{!! $receipt_details->shipping_charges_label !!}
 							</th>
 							<td>
@@ -368,7 +369,7 @@
 
 					<!-- Total -->
 					<tr>
-						<th>
+						<th style="width: 40%">
 							{!! $receipt_details->total_label !!}
 						</th>
 						<td>

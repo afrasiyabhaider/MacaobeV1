@@ -752,7 +752,8 @@ class TransactionUtil extends Util
             'table_unit_price_label' => $il->table_unit_price_label,
             'table_subtotal_label' => $il->table_subtotal_label,
 
-            'user' => $transaction->sales_person->first_name . " " . $transaction->sales_person->last_name,
+            'user' => $transaction->sales_person->first_name,
+            // 'user' => $transaction->sales_person->first_name . " " . $transaction->sales_person->last_name,
         ];
 
         //Display name
@@ -1006,14 +1007,16 @@ class TransactionUtil extends Util
         //Discount
         $output['line_discount_label'] = $invoice_layout->discount_label;
         $output['discount_label'] = $invoice_layout->discount_label;
-        $output['discount_label'] .= ($transaction->discount_type == 'percentage') ? ' (' . $transaction->discount_amount . '%) :' : '';
+        $output['discount_label'] .= ($transaction->discount_type == 'percentage') ? $transaction->discount_amount . '% :' : '';
+        // $output['discount_label'] .= ($transaction->discount_type == 'percentage') ? ' (' . $transaction->discount_amount . '%) :' : '';
 
         if ($transaction->discount_type == 'percentage') {
             $discount = ($transaction->discount_amount / 100) * $transaction->total_before_tax;
         } else {
             $discount = $transaction->discount_amount;
         }
-        $output['discount'] = ($discount != 0) ? $this->num_f($discount, $show_currency, $business_details) : 0;
+        $output['discount'] = ($discount != 0) ? $discount : 0;
+        // $output['discount'] = ($discount != 0) ? $this->num_f($discount, $show_currency, $business_details) : 0;
 
         //Format tax
         if (!empty($output['taxes'])) {
@@ -1220,7 +1223,8 @@ class TransactionUtil extends Util
                         } elseif ($value['method'] == 'card') {
                             $output['payments'][] =
                                 [
-                                    'method' => trans("lang_v1.card") . (!empty($value['card_transaction_number']) ? (', Transaction Number:' . $value['card_transaction_number']) : ''),
+                                    'method' => trans("lang_v1.card"),
+                                    // 'method' => trans("lang_v1.card") . (!empty($value['card_transaction_number']) ? (', Transaction Number:' . $value['card_transaction_number']) : ''),
                                     'method_name' => $value['method'],
                                     'date' => $this->format_date($value['paid_on'], false, $business_details),
                                     'amount' => $this->num_f($value['amount'], $show_currency, $business_details)
@@ -1401,7 +1405,8 @@ class TransactionUtil extends Util
                 'name' => $product->name,
                 'variation' => (empty($variation->name) || $variation->name == 'DUMMY') ? '' : $variation->name,
                 //Field for 2nd column
-                'quantity' => $this->num_f($line->quantity, false, $business_details, true),
+                'quantity' => $line->quantity,
+                // 'quantity' => $this->num_f($line->quantity, false, $business_details, true),
                 'units' => $unit_name,
 
                 'unit_price' => $this->num_f($line->unit_price, false, $business_details),
@@ -1463,7 +1468,9 @@ class TransactionUtil extends Util
 
             $line_array['line_discount'] = method_exists($line, 'get_discount_amount') ? $this->num_f($line->get_discount_amount(), false, $business_details) : 0;
             if ($line->line_discount_type == 'percentage') {
-                $line_array['line_discount'] .= ' (' . $this->num_f($line->line_discount_amount, false, $business_details) . '%)';
+                // $line_array['line_discount'] = $line->line_discount_amount;
+                $line_array['line_discount'] .= ' '.$line->line_discount_amount. '%';
+                // $line_array['line_discount'] .= ' (' . $this->num_f($line->line_discount_amount, false, $business_details) . '%)';
             }
 
             if ($il->show_brand == 1) {
@@ -1586,7 +1593,8 @@ class TransactionUtil extends Util
                 'name' => $product->name,
                 'variation' => (empty($variation->name) || $variation->name == 'DUMMY') ? '' : $variation->name,
                 //Field for 2nd column
-                'quantity' => $this->num_f($line->quantity_returned, false, $business_details, true),
+                'quantity' => $line->quantity_returned,
+                // 'quantity' => $this->num_f($line->quantity_returned, false, $business_details, true),
                 'units' => $unit_name,
 
                 'unit_price' => $this->num_f($line->unit_price, false, $business_details),
