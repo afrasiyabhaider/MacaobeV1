@@ -179,12 +179,14 @@
 					<th>{{$receipt_details->table_product_label}}</th>
 					<th>Qty</th>
 					<th>Orig Price</th>
-					<th>Disc %</th>
-					<th>Disc</th>
+					<th>Disc%</th>
+					<th>Price</th>
+					{{-- <th>Disc</th> --}}
 					<!-- <th>{{$receipt_details->table_subtotal_label}}</th> -->
 				</tr>
 			</thead>
 			<tbody>
+			{{-- @dd($receipt_details->lines) --}}
 				@php $i=0; @endphp
 				@forelse($receipt_details->lines as $line)
 				@php $i++; @endphp
@@ -210,7 +212,13 @@
 						$discPercentagePrice = $arr[1];
 						@endphp
 						<td>{{$discPercentagePrice}}</td>
-						<td>{{$discPrice}}</td>
+						<td>
+							{{
+								$line['line_total']
+							}}
+						</td>
+						{{-- <td>{{($line['unit_price_before_discount']*$line['quantity'])-$discPrice}}</td> --}}
+						{{-- <td>{{$discPrice}}</td> --}}
 						<!-- <td>{{$line['line_total']}}</td> -->
 					</tr>
 					@if(!empty($line['modifiers']))

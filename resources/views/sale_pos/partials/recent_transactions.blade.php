@@ -15,17 +15,20 @@
 					Amount
 				</th>
 				<th>
-					Date
+					Date Time
 				</th>
 				<th>
 					Mode
 				</th>
 				<th>
+					Qty
+				</th>
+				{{-- <th>
 					Operator
 				</th>
 				<th>
 					Discount
-				</th>
+				</th> --}}
 				<th>
 					Actions
 				</th>
@@ -51,9 +54,16 @@
 					{{ $transaction->final_total }}
 				</td>
 				<td>
-					{{
-						Carbon\Carbon::parse($transaction->transaction_date)->format('d.m.Y H:i:s')
-					}}
+					@if (Carbon\Carbon::parse($transaction->transaction_date)->format('d.m.Y') == Carbon\Carbon::create('now')->format('d.m.Y'))
+						{{
+							Carbon\Carbon::parse($transaction->transaction_date)->format('H:i s')
+						}}
+					@else
+						{{
+							Carbon\Carbon::parse($transaction->transaction_date)->format('d.m.Y H:i:s')
+						}}
+					@endif
+					
 				</td>
 				<td>
 					{{
@@ -61,6 +71,15 @@
 					}}
 				</td>
 				<td>
+					@php
+					    $qty = App\TransactionSellLine::where('transaction_id',$transaction->id)->sum('quantity')
+					@endphp
+					{{
+						(int)$qty.' Pcs'
+
+					}}
+				</td>
+				{{-- <td>
 					{{
 						$transaction->cash_register_payments()->first()->cash_register()->first()->user()->first()->username
 					}}
@@ -69,7 +88,7 @@
 					{{
 						$transaction->discount_amount
 					}}
-				</td>
+				</td> --}}
 				<td>
 					<a href="{{action('SellPosController@edit', [$transaction->id])}}">
 	    				<i class="fa fa-pencil text-muted" aria-hidden="true" title="{{__('lang_v1.click_to_edit')}}"></i>

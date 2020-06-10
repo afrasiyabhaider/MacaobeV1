@@ -26,14 +26,14 @@
                 <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_cash }}</span>
               </td>
             </tr>
-            <tr>
+            {{-- <tr>
               <td>
                 @lang('cash_register.checque_payment'):
               </td>
               <td>
                 <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_cheque }}</span>
               </td>
-            </tr>
+            </tr> --}}
             <tr>
               <td>
                 @lang('cash_register.card_payment'):
@@ -42,15 +42,23 @@
                 <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_card }}</span>
               </td>
             </tr>
-            <tr>
+            {{-- <tr>
+              <td>
+                Discount Given:
+              </td>
+              <td>
+                <span class="display_currency" data-currency_symbol="true">{{ $register_details->discount_given }}</span>
+              </td>
+            </tr> --}}
+            {{-- <tr>
               <td>
                 @lang('cash_register.bank_transfer'):
               </td>
               <td>
                 <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_bank_transfer }}</span>
               </td>
-            </tr>
-            @if(config('constants.enable_custom_payment_1'))
+            </tr> --}}
+            {{-- @if(config('constants.enable_custom_payment_1'))
               <tr>
                 <td>
                   @lang('lang_v1.custom_payment_1'):
@@ -79,15 +87,15 @@
                   <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_custom_pay_3 }}</span>
                 </td>
               </tr>
-            @endif
-            <tr>
+            @endif --}}
+            {{-- <tr>
               <td>
                 @lang('cash_register.other_payments'):
               </td>
               <td>
                 <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_other }}</span>
               </td>
-            </tr>
+            </tr> --}}
             <tr>
               <td>
                 @lang('cash_register.total_sales'):

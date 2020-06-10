@@ -10,27 +10,27 @@ title="Customer: {{optional($transaction->contact)->name}}
 "  --}}
 	<table class="table no-print">
           <thead>
-               <tr>
-                    <th>
+               <tr class="no-print">
+                    <th class="no-print">
                          Sr#
                     </th>
-                    <th>
+                    <th class="no-print">
                          Transaction
                     </th>
-                    <th>
+                    <th class="no-print">
                          Amount
                     </th>
                </tr>
           </thead>
 		@foreach ($transactions as $transaction)
-			<tr>
-				<td>
+			<tr class="no-print">
+				<td class="no-print">
 					{{ $loop->iteration}}.
 				</td>
-				<td>
+				<td class="no-print">
 					{{ $transaction->invoice_no }} ({{optional($transaction->contact)->name}})
 				</td>
-				<td class="display_currency">
+				<td class="display_currency no-print">
                          {{ $transaction->final_total }}
                          <i class="fa fa-euro-sign"></i>
 				</td>
@@ -38,5 +38,5 @@ title="Customer: {{optional($transaction->contact)->name}}
 		@endforeach
 	</table>
 @else
-	<p>@lang('sale.no_recent_transactions')</p>
+	<p  class="no-print">@lang('sale.no_recent_transactions')</p>
 @endif

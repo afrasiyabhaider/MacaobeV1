@@ -2271,9 +2271,9 @@ class SellPosController extends Controller
             ->with(['contact'])
             // ->limit(10)
             ->get();
+            // dd($transactions->first()->sell_lines()->pluck('quantity'));
             // dd($transactions->sum('final_total'));
-            // dd($transactions->first());
-            // dd($transactions->first()->cash_register_payments()->first()->cash_register()->first()->user()->first());
+            // dd($transactions->first(),$transactions->first()->payment_lines()->first());
             // dd($transactions->first()->cash_register_payments()->first()->cash_register()->first()->user()->first());
             // dd($transactions->first()->cash_register_payments()->first()->cash_register()->first());
             // dd($transactions->first()->cash_register_payments()->first()->pay_method);

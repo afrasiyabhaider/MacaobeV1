@@ -1469,9 +1469,11 @@ class TransactionUtil extends Util
             $line_array['line_discount'] = method_exists($line, 'get_discount_amount') ? $this->num_f($line->get_discount_amount(), false, $business_details) : 0;
             if ($line->line_discount_type == 'percentage') {
                 // $line_array['line_discount'] = $line->line_discount_amount;
-                $line_array['line_discount'] .= ' '.$line->line_discount_amount. '%';
+                $line_array['line_discount'] .= ' '.(int)$line->line_discount_amount. '%';
                 // $line_array['line_discount'] .= ' (' . $this->num_f($line->line_discount_amount, false, $business_details) . '%)';
             }
+
+            $line_array['sub_total_price'] = $this->num_f((($line->unit_price_inc_tax * $line->quantity) - (method_exists($line, 'get_discount_amount') ? $line->get_discount_amount() : 0)) , false, $business_details);
 
             if ($il->show_brand == 1) {
                 $line_array['brand'] = !empty($brand->name) ? $brand->name : '';
