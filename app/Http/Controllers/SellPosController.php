@@ -2269,9 +2269,14 @@ class SellPosController extends Controller
             ->groupBy('transactions.id')
             ->select('transactions.*')
             ->with(['contact'])
-            ->limit(10)
+            // ->limit(10)
             ->get();
-
+            // dd($transactions->sum('final_total'));
+            // dd($transactions->first());
+            // dd($transactions->first()->cash_register_payments()->first()->cash_register()->first()->user()->first());
+            // dd($transactions->first()->cash_register_payments()->first()->cash_register()->first()->user()->first());
+            // dd($transactions->first()->cash_register_payments()->first()->cash_register()->first());
+            // dd($transactions->first()->cash_register_payments()->first()->pay_method);
         return view('sale_pos.partials.recent_transactions')
             ->with(compact('transactions'));
     }

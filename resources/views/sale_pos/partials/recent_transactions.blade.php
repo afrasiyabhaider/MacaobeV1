@@ -1,5 +1,36 @@
 @if(!empty($transactions))
 	<table class="table table-slim no-border">
+		<thead>
+			<tr>
+				<th>Total</th>
+				<td class="display_currency">
+					{{$transactions->sum('final_total')}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					Receipt#
+				</th>
+				<th>
+					Amount
+				</th>
+				<th>
+					Date
+				</th>
+				<th>
+					Mode
+				</th>
+				<th>
+					Operator
+				</th>
+				<th>
+					Discount
+				</th>
+				<th>
+					Actions
+				</th>
+			</tr>
+		</thead>
 		@foreach ($transactions as $transaction)
 			<tr class="cursor-pointer" 
 	    		data-toggle="tooltip"
@@ -9,14 +40,35 @@
 		    			<br/>Mobile: {{$transaction->contact->mobile}}
 		    		@endif
 	    		" >
-				<td>
+				{{-- <td>
 					{{ $loop->iteration}}.
-				</td>
+				</td> --}}
 				<td>
-					{{ $transaction->invoice_no }} ({{optional($transaction->contact)->name}})
+					{{ $transaction->invoice_no }}
+					 {{-- ({{optional($transaction->contact)->name}}) --}}
 				</td>
 				<td class="display_currency">
 					{{ $transaction->final_total }}
+				</td>
+				<td>
+					{{
+						Carbon\Carbon::parse($transaction->transaction_date)->format('d.m.Y H:i:s')
+					}}
+				</td>
+				<td>
+					{{
+						$transaction->cash_register_payments()->first()->pay_method
+					}}
+				</td>
+				<td>
+					{{
+						$transaction->cash_register_payments()->first()->cash_register()->first()->user()->first()->username
+					}}
+				</td>
+				<td class="display_currency">
+					{{
+						$transaction->discount_amount
+					}}
 				</td>
 				<td>
 					<a href="{{action('SellPosController@edit', [$transaction->id])}}">
