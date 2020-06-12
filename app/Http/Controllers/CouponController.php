@@ -829,18 +829,21 @@ coupon ki 3 month expire date
             $objVariationsLocation = VariationLocationDetails::create($objVariationLocationDetails);
             //------ PRODUCT Creation Ends
             
+            // 'msg' => __('coupon.sucess') .'
+            // 'msg' => __('coupon.sucess') .'
+            // <script type="text/javascript"> 
+            //     $("#search_product").val("'.$objProduct->sku.'");
+            //     $("#search_product").autocomplete("search");
+            // </script>'
              
             DB::commit();
-            $output = ['success' => 1,
-                            'msg' => __('coupon.sucess') .'
-                            <script type="text/javascript"> 
-                                $("#search_product").val("'.$objProduct->sku.'");
-                                $("#search_product").autocomplete("search");
-                            </script>'
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => 'Cupon Added Successfully'
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage().' at line '.$e->getLine());
             
             $output = ['success' => 0,
                             'msg' => __("messages.something_went_wrong"). $e->getMessage()

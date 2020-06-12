@@ -42,14 +42,14 @@
                 <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_card }}</span>
               </td>
             </tr>
-            {{-- <tr>
+            <tr>
               <td>
                 Discount Given:
               </td>
               <td>
                 <span class="display_currency" data-currency_symbol="true">{{ $register_details->discount_given }}</span>
               </td>
-            </tr> --}}
+            </tr>
             {{-- <tr>
               <td>
                 @lang('cash_register.bank_transfer'):

@@ -1011,14 +1011,15 @@ class ProductController extends Controller
             $product->save();
 
             if ($product->type == 'single') {
-                $single_data = $request->only(['single_variation_id', 'single_dpp', 'single_dpp_inc_tax', 'single_dsp_inc_tax', 'profit_percent', 'single_dsp']);
+                $single_data = $request->only(['single_variation_id', 'single_dpp_inc_tax', 'single_dpp_inc_tax', 'single_dsp_inc_tax', 'profit_percent', 'single_dsp_inc_tax']);
+                
                 $variation = Variation::find($single_data['single_variation_id']);
 
                 $variation->sub_sku = $product->sku;
-                $variation->default_purchase_price = $this->productUtil->num_uf($single_data['single_dpp']);
+                $variation->default_purchase_price = $this->productUtil->num_uf($single_data['single_dpp_inc_tax']);
                 $variation->dpp_inc_tax = $this->productUtil->num_uf($single_data['single_dpp_inc_tax']);
                 $variation->profit_percent = $this->productUtil->num_uf($single_data['profit_percent']);
-                $variation->default_sell_price = $this->productUtil->num_uf($single_data['single_dsp']);
+                $variation->default_sell_price = $this->productUtil->num_uf($single_data['single_dsp_inc_tax']);
                 $variation->sell_price_inc_tax = $this->productUtil->num_uf($single_data['single_dsp_inc_tax']);
                 $variation->save();
             } elseif ($product->type == 'variable') {
@@ -1244,14 +1245,14 @@ class ProductController extends Controller
             $product->save();
 
             if ($product->type == 'single') {
-                $single_data = $request->only(['single_variation_id', 'single_dpp', 'single_dpp_inc_tax', 'single_dsp_inc_tax', 'profit_percent', 'single_dsp']);
+                $single_data = $request->only(['single_variation_id', 'single_dpp', 'single_dpp_inc_tax', 'single_dsp_inc_tax', 'profit_percent', 'single_dsp_inc_tax']);
                 $variation = Variation::find($single_data['single_variation_id']);
 
                 $variation->sub_sku = $product->sku;
-                $variation->default_purchase_price = $this->productUtil->num_uf($single_data['single_dpp']);
+                $variation->default_purchase_price = $this->productUtil->num_uf($single_data['single_dpp_inc_tax']);
                 $variation->dpp_inc_tax = $this->productUtil->num_uf($single_data['single_dpp_inc_tax']);
                 $variation->profit_percent = $this->productUtil->num_uf($single_data['profit_percent']);
-                $variation->default_sell_price = $this->productUtil->num_uf($single_data['single_dsp']);
+                $variation->default_sell_price = $this->productUtil->num_uf($single_data['single_dsp_inc_tax']);
                 $variation->sell_price_inc_tax = $this->productUtil->num_uf($single_data['single_dsp_inc_tax']);
                 $variation->save();
             } elseif ($product->type == 'variable') {
@@ -1389,14 +1390,14 @@ class ProductController extends Controller
             $product->save();
 
             if ($product->type == 'single') {
-                $single_data = $request->only(['single_variation_id', 'single_dpp', 'single_dpp_inc_tax', 'single_dsp_inc_tax', 'profit_percent', 'single_dsp']);
+                $single_data = $request->only(['single_variation_id', 'single_dpp_inc_tax', 'single_dpp_inc_tax', 'single_dsp_inc_tax', 'profit_percent', 'single_dsp_inc_tax']);
                 $variation = Variation::find($single_data['single_variation_id']);
 
                 $variation->sub_sku = $product->sku;
-                $variation->default_purchase_price = $this->productUtil->num_uf($single_data['single_dpp']);
+                $variation->default_purchase_price = $this->productUtil->num_uf($single_data['single_dpp_inc_tax']);
                 $variation->dpp_inc_tax = $this->productUtil->num_uf($single_data['single_dpp_inc_tax']);
                 $variation->profit_percent = $this->productUtil->num_uf($single_data['profit_percent']);
-                $variation->default_sell_price = $this->productUtil->num_uf($single_data['single_dsp']);
+                $variation->default_sell_price = $this->productUtil->num_uf($single_data['single_dsp_inc_tax']);
                 $variation->sell_price_inc_tax = $this->productUtil->num_uf($single_data['single_dsp_inc_tax']);
                 $variation->save();
             } elseif ($product->type == 'variable') {
@@ -2653,8 +2654,19 @@ class ProductController extends Controller
                     $LeftQty = $productOrignalQty - $productQty;
                     if (strcmp($productQty, $productOrignalQty) == 0) {
                         DB::beginTransaction();
-                        $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $business_location_id)->where("purchase_lines.product_id", $productId)->first();
-                        if (empty($objOldPurchaseLine)) {
+                        $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("purchase_lines.product_id", $productId)->first();
+                        // dd($objOldPurchaseLine);
+                        // ->where("t.location_id", $business_location_id)->where
+
+                        /**
+                         * ---------------IMPORTANT------------------
+                         * 
+                         * If Uncommented below if and other comments of location
+                         * Id then product will not be save as 0 qty
+                         *
+                         * */
+                        if (false) {
+                        // if (empty($objOldPurchaseLine)) {
                             $objPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $user_location_id)->where("purchase_lines.product_id", $productId)->first();
 
                             $objTransaction = \App\Transaction::where("id", $objPurchaseLine->transaction_id)->update(['location_id' => $business_location_id]);
@@ -2665,7 +2677,10 @@ class ProductController extends Controller
                             $objNewPurchaseLine = $objOldPurchaseLine;
                             $qtyForPurchaseLine = $productQty + $objNewPurchaseLine->quantity;
                             // PL with exisiting  location id 
-                            $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $user_location_id)->where("purchase_lines.product_id", $productId)->first();
+                            $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("purchase_lines.product_id", $productId)->first();
+                            // ->where("t.location_id", $user_location_id)
+
+                            // dd($objOldPurchaseLine);
 
                             // $product = Product::where('id', $productId)->update(['business_location_id' => $business_location_id]);
                             $oldPurchaseLine = PurchaseLine::where("transaction_id", $objOldPurchaseLine->transaction_id)->where("product_id", $objOldPurchaseLine->product_id)->where("variation_id", $objOldPurchaseLine->variation_id)->update(['quantity' => $LeftQty]); //Update OLD ONE AND THEN NEW ONE
@@ -2856,7 +2871,7 @@ class ProductController extends Controller
 
             $output = [
                 'success' => 0,
-                'msg' => __("messages.something_went_wrong") . "Message:" . $e->getMessage()
+                'msg' => __("messages.something_went_wrong") . "Message:" . $e->getMessage().' on Line: '.$e->getLine().' of '.$e->getFile()
             ];
         }
         // dd($output);
@@ -3130,7 +3145,7 @@ class ProductController extends Controller
                 $product->save();
 
                 if ($product->type == 'single') {
-                    $this->productUtil->createSingleProductVariation($product->id, $product->sku, $objInputs['single_dpp'][$i], $objInputs['single_dpp_inc_tax'][$i], $objInputs['profit_percent'][$i], $objInputs['single_dsp'][$i], $objInputs['single_dsp_inc_tax'][$i]);
+                    $this->productUtil->createSingleProductVariation($product->id, $product->sku, $objInputs['single_dpp_inc_tax'][$i], $objInputs['single_dpp_inc_tax'][$i], $objInputs['profit_percent'][$i], $objInputs['single_dsp_inc_tax'][$i], $objInputs['single_dsp_inc_tax'][$i]);
                 }
 
                 if ($product->enable_stock == 1) {

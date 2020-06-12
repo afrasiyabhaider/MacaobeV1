@@ -794,16 +794,16 @@ coupon ki 3 month expire date
             $GiftCard = GiftCard::create($objDetails);
 
             //------ PRODUCT Creation Start
-            
             $objProductDetails['name'] = "GiftCard - ".$GiftCard->barcode;
             $objProductDetails['business_id'] =$request->session()->get('user.business_id');
-            $objProductDetails['brand_id'] = 1;
+            // $objProductDetails['brand_id'] = 1;
             $objProductDetails['unit_id'] = 1;
             $objProductDetails['category_id'] = 1;
             $objProductDetails['barcode_type'] = 'C128';
             $objProductDetails['tax_type'] = 'exclusive';
             $objProductDetails['sku'] = "GIFT".$GiftCard->barcode;
             $objProductDetails['alert_quantity'] = '    1';
+            // dd($GiftCard->id);
             $objProductDetails['type'] = 'single';
             $objProductDetails['p_type'] = 'gift_card';
             $objProductDetails['gift_card'] = $GiftCard->id;
@@ -811,6 +811,7 @@ coupon ki 3 month expire date
 
 
             $objProduct = Product::create($objProductDetails);
+            // dd($objProduct);
 
              $product_variation_data = [
                     'name' => 'DUMMYGIFT',
@@ -850,7 +851,7 @@ coupon ki 3 month expire date
                         ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
+            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage().' on Line : '.$e->getLine());
             
             $output = ['success' => 0,
                             'msg' => __("messages.something_went_wrong"). $e->getMessage()

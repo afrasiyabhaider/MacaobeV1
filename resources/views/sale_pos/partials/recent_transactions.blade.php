@@ -1,4 +1,6 @@
 @if(!empty($transactions))
+
+{{-- @dd($transactions->first()->cash_register_payments()->first()) --}}
 	<table class="table table-slim no-border">
 		<thead>
 			<tr>

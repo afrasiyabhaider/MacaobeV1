@@ -2396,9 +2396,9 @@ class SellPosController extends Controller
             }
 
             //Include check for quantity
-            if ($check_qty) {
-                $products->where('VLD.qty_available', '>', 0);
-            }
+            // if ($check_qty) {
+            //     $products->where('VLD.qty_available', '>', 0);
+            // }
 
             if ($category_id != 'all') {
                 $products->where(function ($query) use ($category_id) {
@@ -2600,7 +2600,7 @@ class SellPosController extends Controller
             $ut = new ProductUtil();
             //  $ut = new \App\Utils\ProductUtil();
             $unit_price = $ut->num_f($product_prices->dpp_inc_tax);
-            $single_dpp = $ut->num_f($product_prices->single_dpp);
+            $single_dpp = $ut->num_f($product_prices->dpp_inc_tax);
             $sale_price = $ut->num_f($product_prices->sell_price_inc_tax);
 
             $data = [

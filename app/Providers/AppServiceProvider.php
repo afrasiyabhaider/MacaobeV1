@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Observers\VariationObserver;
+use App\Variation;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -19,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
         if (request()->has('lang')) {
             \App::setLocale(request()->get('lang'));
         }
+        // Variation::observe(VariationObserver::class);
         
         $asset_v = config('constants.asset_version', 1);
         View::share('asset_v', $asset_v);
