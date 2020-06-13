@@ -765,6 +765,7 @@ coupon ki 3 month expire date
      */
     public function saveQuickProduct(Request $request)
     {
+        return $request;
         if (!auth()->user()->can('gift.create')) {
             abort(403, 'Unauthorized action.');
         } 

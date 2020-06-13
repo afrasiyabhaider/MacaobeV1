@@ -757,6 +757,7 @@ coupon ki 3 month expire date
      */
     public function saveQuickProduct(Request $request)
     {
+        // return $request;
         if (!auth()->user()->can('coupon.create')) {
             abort(403, 'Unauthorized action.');
         } 
@@ -786,7 +787,7 @@ coupon ki 3 month expire date
             
             $objProductDetails['name'] = "Coupon - ".$GiftCard->barcode;
             $objProductDetails['business_id'] =$request->session()->get('user.business_id');
-            $objProductDetails['brand_id'] = 1;
+            // $objProductDetails['brand_id'] = 1;
             $objProductDetails['unit_id'] = 1;
             $objProductDetails['category_id'] = 1;
             $objProductDetails['barcode_type'] = 'C128';
@@ -839,7 +840,11 @@ coupon ki 3 month expire date
             DB::commit();
             $output = [
                 'success' => 1,
-                'msg' => 'Cupon Added Successfully'
+                'msg' => 'Cupon Added Successfully  
+                            <script type="text/javascript"> 
+                                $("#search_product").val("'.$objProduct->sku.'");
+                                $("#search_product").autocomplete("search");
+                            </script>'
             ];
         } catch (\Exception $e) {
             DB::rollBack();
