@@ -1173,7 +1173,7 @@ function pos_product_row(variation_id) {
             success: function(result) {
                 if (result.success) {
                     $('table#pos_table tbody')
-                        .append(result.html_content)
+                        .prepend(result.html_content)
                         .find('input.pos_quantity');
                     //increment row count
                     $('input#product_row_count').val(parseInt(product_row) + 1);
