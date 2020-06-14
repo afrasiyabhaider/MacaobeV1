@@ -20,11 +20,11 @@
                         <div class="form-group">
                             {!! Form::label('category_id', 'Business :') !!}
                             @foreach ($business_locations as $key=>$value)
-                                @if ($key != 1 && $value != "Main Shop")
+                                {{-- @if ($key != 1 && $value != "Main Shop") --}}
                                     @php
                                         $newBusiness_locations[$key] = $value;
                                     @endphp
-                                @endif
+                                {{-- @endif --}}
                             @endforeach
                             {{-- {{dd(collect($newBusiness_locations))}} --}}
                             {{-- <select name="category_id" id="transferBusiness" class="form-control select2" style="width:100%">
