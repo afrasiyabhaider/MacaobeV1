@@ -340,6 +340,7 @@ class ProductUtil extends Util
                 ->first();
 
             if (empty($variation_location_d)) {
+                
                 $variation_location_d = new VariationLocationDetails();
                 $variation_location_d->variation_id = $variation->id;
                 $variation_location_d->product_id = $product_id;
@@ -357,6 +358,29 @@ class ProductUtil extends Util
         }
 
         return true;
+    }
+
+    public function addProductFOrAllLocations($product_id, $variation_id)
+    {
+
+        $product = Product::find($product_id);
+
+        //Check if stock is enabled or not.
+        $variation = Variation::where('id', $variation_id)
+                ->where('product_id', $product_id)
+                ->first();
+        $locations= BusinessLocation::whereNotIn('id',[1,2])->pluck('id');
+        // dd($locations);
+        for ($i=0; $i < count($locations); $i++) { 
+            $variation_location_d = new VariationLocationDetails();
+            $variation_location_d->variation_id = $variation->id;
+            $variation_location_d->product_id = $product_id;
+            $variation_location_d->location_id = $locations[$i];
+            $variation_location_d->product_variation_id = $variation->product_variation_id;
+            $variation_location_d->qty_available = 0;
+
+            $variation_location_d->save();
+        }
     }
 
     /**
@@ -1027,6 +1051,7 @@ class ProductUtil extends Util
                     $purchase_lines[] = $purchase_line;
 
                     $this->updateProductQuantity($location_id, $product->id, $variation_id, $qty_formated);
+                    $this->addProductFOrAllLocations($product->id, $variation_id);
                 }
                 //create transaction & purchase lines
                 if (!empty($purchase_lines)) {
