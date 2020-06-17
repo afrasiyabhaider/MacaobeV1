@@ -403,7 +403,7 @@
 @endif
 
 @if(!empty($receipt_details->footer_text))
-	<div class="row" style="padding-left: 5px;padding-bottom:20px;padding-right:5px;>
+	<div class="row" style="padding-left: 5px;padding-bottom:20px;padding-right:5px;">
 		<div class="col-xs-12">
 			{!! $receipt_details->footer_text !!}
 		</div>
@@ -416,11 +416,13 @@
 		 
 			@if(($payment['method_name'] == 'gift_card' && !empty($payment['coupon'])) || ($payment['method_name'] == 'coupon' && !empty($payment['coupon'])))
 <div class="row pgBr">
-				<div class="col-xs-6 text-center pgBr">
+				<div class="col-xs-12 text-center pgBr">
 					<p><h1> DETAILS</h1></p>
-					<img  src="data:image/png;base64,{{DNS1D::getBarcodePNG($payment['coupon']['barcode'], 'C128', 2,30,array(39, 48, 54), true)}}">
+					<img class="center-block" src="data:image/png;base64,{{DNS1D::getBarcodePNG($payment['coupon']['barcode'], 'C128', 2,30,array(39, 48, 54), true)}}">
 					<br/>
-					<p><h1>Value : <b>{{$payment['coupon']['amount']}}</b></h1></p>
+					<h1>
+						Value : {{$payment['coupon']['amount']}} €
+					</h1>
 					<p>Details : {{$payment['coupon']['details']}}</p>
 					<p>You Can use this <b>Coupon</b> For Next Purchase within 3 Months or You can Extend the Expiry Date <br/> Happy Shopping </p>
 				</div>
@@ -429,10 +431,10 @@
 			@if(!empty($payment['p_type']))
 				@if(!empty($payment['p_type']['gift_card']))
 					@foreach($payment['p_type']['gift_card'] as $obj)
-<div class="row pgBr">
-				        <div class="col-xs-6 text-center pgBr">
+					<div class="row pgBr">
+				        <div class="col-xs-12 text-center pgBr">
 							<p><h1> Gift Card Details</h1></p>
-							<img  src="data:image/png;base64,{{DNS1D::getBarcodePNG($obj['barcode'], 'C128', 2,30,array(39, 48, 54), false)}}">
+							<img class="center-block" src="data:image/png;base64,{{DNS1D::getBarcodePNG($obj['barcode'], 'C128', 4,60,array(55,55,55), false)}}">
 							@php
                 			 $barcodeArr = str_split($obj['barcode'], 1);
                 		    @endphp
@@ -442,33 +444,45 @@
                 			    @endforeach
                 		    </center>
 							<br/>
-							<p><h1>Value : <b>{{$obj['value']}}</b></h1></p>
-							<p>Details : {{$obj['details']}}</p>
-							<p>You Can use this <b>Gift Card</b> For Next Purchase within 3 Months or You can Extend the Expiry Date <br/> Happy Shopping </p>
+							<h1>
+								Value : {{$obj['value']}} €
+							</h1>
+							<p>
+								Details : {{$obj['details']}}
+							</p>
+							<p>
+								You Can use this <b>Gift Card</b> For Next Purchase within 3 Months or You can Extend the Expiry Date <br/> Happy Shopping 
+							</p>
 						</div>
-</div>
+					</div>
 				    @endforeach
 				@endif
 				@if(!empty($payment['p_type']['coupon']))
 				    @foreach($payment['p_type']['coupon'] as $obj)
-<div class="row pgBr">
-				        <div class="col-xs-6 text-center pgBr">
+					<div class="row pgBr">
+				        <div class="col-xs-12 text-center pgBr">
 							<p><h1> Coupon Details</h1></p>
-							<img  src="data:image/png;base64,{{DNS1D::getBarcodePNG($obj['barcode'], 'C128', 2,30,array(39, 48, 54), false)}}">
+							<img class="center-block" src="data:image/png;base64,{{DNS1D::getBarcodePNG($obj['barcode'], 'C128', 4,60,array(55,55,55), false)}}">
 							@php
                 			 $barcodeArr = str_split($obj['barcode'], 1);
                 		    @endphp
                 			<center class='barcodetc' style='word-spacing: 15px;font-size: 20px;font-weight: bold;'>
                 			    @foreach($barcodeArr As $b)
-                			    <span >{{$b}}</span>
+							<span >{{$b}}</span>
                 			    @endforeach
                 		    </center>
 							<br/>
-							<p><h1>Value : <b>{{$obj['value']}}</b></h1></p>
-							<p>Details : {{$obj['details']}}</p>
-							<p>You Can use this <b>Coupon</b> For Next Purchase within 3 Months or You can Extend the Expiry Date <br/> Happy Shopping </p>
+							<h1>
+								Value : {{$obj['value']}} €
+							</h1>
+							<p>
+								Details : {{$obj['details']}}
+							</p>
+							<p>
+								You Can use this <b>Coupon</b> For Next Purchase within 3 Months or You can Extend the Expiry Date <br/> Happy Shopping 
+							</p>
 						</div>
-</div>
+					</div>
 				    @endforeach
 				@endif  
 			@endif 
