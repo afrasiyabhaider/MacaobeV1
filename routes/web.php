@@ -390,9 +390,17 @@ Route::get('route-clear', function () {
     \Artisan::call('route:clear');
     dd("Route Cleared");
 });
+Route::get('cache-clear', function () {
+    \Artisan::call('cache:clear');
+    dd("Cache Cleared");
+});
+Route::get('view-clear', function () {
+    \Artisan::call('view:clear');
+    dd("View Cleared");
+});
 Route::get('config-cache', function () {
     \Artisan::call('config:cache');
-    dd("Route Cleared");
+    dd("Config Cached");
 });
 Route::get('optimize', function () {
     \Artisan::call('optimize');
@@ -400,7 +408,7 @@ Route::get('optimize', function () {
 });
 Route::get('force-logout', function () {
     Auth::logout();
-    dd("Optimized");
+    dd("Logged Out");
 });
 
 /**
