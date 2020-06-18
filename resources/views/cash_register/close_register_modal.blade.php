@@ -47,7 +47,31 @@
                 Discount Given:
               </td>
               <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $register_details->discount_given }}</span>
+                <span class="display_currency" data-currency_symbol="true">{{ $discount}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Unknown Discount Given:
+              </td>
+              <td>
+                <span class="display_currency" data-currency_symbol="true">{{$details['transaction_details']->total_discount}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Coupons:
+              </td>
+              <td>
+                <span class="display_currency" data-currency_symbol="true">{{$coupon ?? 0}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Gift Card:
+              </td>
+              <td>
+                <span class="display_currency" data-currency_symbol="true">{{$gift_card ?? 0}}</span>
               </td>
             </tr>
             {{-- <tr>

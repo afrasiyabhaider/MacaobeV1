@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\CashRegister;
 use App\Transaction;
+use App\TransactionPayment;
+use App\TransactionSellLine;
 use Illuminate\Http\Request;
 
 use App\Utils\CashRegisterUtil;
@@ -70,10 +72,12 @@ class CashRegisterController extends Controller
             }
             $user_id = $request->session()->get('user.id');
             $business_id = $request->session()->get('user.business_id');
+            $location_id = request()->session()->get('user.business_location_id');
 
             $register = CashRegister::create([
                         'business_id' => $business_id,
                         'user_id' => $user_id,
+                        'location_id' => $location_id,
                         'status' => 'open'
                     ]);
             $register->cash_register_transactions()->create([
@@ -99,10 +103,10 @@ class CashRegisterController extends Controller
     {
         $register_details =  $this->cashRegisterUtil->getRegisterDetails($id);
         $user_id = $register_details->user_id;
+        $location_id = request()->session()->get('user.business_location_id');
         $open_time = $register_details['open_time'];
         $close_time = \Carbon::now()->toDateTimeString();
         $details = $this->cashRegisterUtil->getRegisterTransactionDetails($user_id, $open_time, $close_time);
-
         return view('cash_register.register_details')
                     ->with(compact('register_details', 'details'));
     }
@@ -118,6 +122,7 @@ class CashRegisterController extends Controller
         $register_details =  $this->cashRegisterUtil->getRegisterDetails();
 
         $user_id = auth()->user()->id;
+        $location_id = request()->session()->get('user.business_location_id');
         $open_time = $register_details['open_time'];
         $close_time = \Carbon::now()->toDateTimeString();
         $details = $this->cashRegisterUtil->getRegisterTransactionDetails($user_id, $open_time, $close_time);
@@ -126,6 +131,7 @@ class CashRegisterController extends Controller
         
         $business_id = request()->session()->get('user.business_id');
         $user_id = request()->session()->get('user.id');
+        $location_id = request()->session()->get('user.business_location_id');
         $transaction_status = 'final';
         // $transaction_status = request()->get('status');
 
@@ -134,7 +140,7 @@ class CashRegisterController extends Controller
         $register = $this->cashRegisterUtil->getCurrentCashRegister($user_id);
 
         $query = Transaction::where('business_id', $business_id)
-            ->where('transactions.created_by', $user_id)
+            ->where('transactions.location_id', $location_id)
             ->where('transactions.type', 'sell')
             ->where('is_direct_sale', 0);
 
@@ -163,9 +169,46 @@ class CashRegisterController extends Controller
         ->get();
         // ->limit(10)
         // dd($transactions);
+        // dd($register_details,$details,$transactions);
+        $location_id = request()->session()->get('user.business_location_id');
+        $prices = CashRegister::join(
+            'cash_register_transactions as ct',
+            'ct.cash_register_id',
+            '=',
+            'cash_registers.id'
+        )
+        ->join(
+            'business_locations as bl',
+            'bl.id',
+            '=',
+            'cash_registers.location_id'
+        )
+        ->join(
+            'users as u',
+            'u.id',
+            '=',
+            'cash_registers.user_id'
+        )
+        ->join(
+            'transaction_sell_lines as t',
+            't.transaction_id',
+            '=',
+            'ct.transaction_id'
+        )->where('cash_registers.location_id', $location_id)
+        ->where('cash_registers.status', 'open');
+        $transaction_ids = $prices->distinct('ct.transaction_id')->pluck('ct.transaction_id');
+        $register_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('line_discount_amount','>',0)->get()->unique('created_at');
+
+        $discount = $register_prices->sum('line_discount_amount');
+        
+        $payment_methods = TransactionPayment::whereIn('transaction_id',$transaction_ids)->get();
+
+        $gift_card = $payment_methods->where('method','gift_card')->sum('amount');
+        $coupon = $payment_methods->where('method','coupon')->sum('amount');
+        // dd($coupon);
 
         return view('cash_register.register_details')
-                ->with(compact('register_details', 'details','transactions'));
+                ->with(compact('register_details', 'details','transactions','discount','gift_card','coupon'));
     }
 
     /**
@@ -183,8 +226,44 @@ class CashRegisterController extends Controller
         $close_time = \Carbon::now()->toDateTimeString();
         $details = $this->cashRegisterUtil->getRegisterTransactionDetails($user_id, $open_time, $close_time);
 
+        $location_id = request()->session()->get('user.business_location_id');
+        $prices = CashRegister::join(
+            'cash_register_transactions as ct',
+            'ct.cash_register_id',
+            '=',
+            'cash_registers.id'
+        )
+        ->join(
+            'business_locations as bl',
+            'bl.id',
+            '=',
+            'cash_registers.location_id'
+        )
+        ->join(
+            'users as u',
+            'u.id',
+            '=',
+            'cash_registers.user_id'
+        )
+        ->join(
+            'transaction_sell_lines as t',
+            't.transaction_id',
+            '=',
+            'ct.transaction_id'
+        )->where('cash_registers.location_id', $location_id)
+        ->where('cash_registers.status', 'open');
+        $transaction_ids = $prices->distinct('ct.transaction_id')->pluck('ct.transaction_id');
+        $register_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('line_discount_amount','>',0)->get()->unique('created_at');
+
+        $discount = $register_prices->sum('line_discount_amount');
+        
+        $payment_methods = TransactionPayment::whereIn('transaction_id',$transaction_ids)->get();
+
+        $gift_card = $payment_methods->where('method','gift_card')->sum('amount');
+        $coupon = $payment_methods->where('method','coupon')->sum('amount');
+
         return view('cash_register.close_register_modal')
-                    ->with(compact('register_details', 'details'));
+                    ->with(compact('register_details', 'details','discount','gift_card','coupon'));
     }
 
     /**
@@ -208,10 +287,11 @@ class CashRegisterController extends Controller
                                     'closing_note']);
             $input['closing_amount'] = $this->cashRegisterUtil->num_uf($input['closing_amount']);
             $user_id = $request->session()->get('user.id');
+            $location_id = request()->session()->get('user.business_location_id');
             $input['closed_at'] = \Carbon::now()->format('Y-m-d H:i:s');
             $input['status'] = 'close';
 
-            CashRegister::where('user_id', $user_id)
+            CashRegister::where('location_id', $location_id)
                                 ->where('status', 'open')
                                 ->update($input);
             $output = ['success' => 1,

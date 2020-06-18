@@ -1,3 +1,4 @@
+
 <div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
 
@@ -47,7 +48,31 @@
                 Discount Given:
               </td>
               <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $register_details->discount_given }}</span>
+                <span class="display_currency" data-currency_symbol="true">{{ $discount }}</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Unknown Discount Given:
+              </td>
+              <td>
+                <span class="display_currency" data-currency_symbol="true">{{$details['transaction_details']->total_discount}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Coupons:
+              </td>
+              <td>
+                <span class="display_currency" data-currency_symbol="true">{{$coupon ?? 0}}</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Gift Card:
+              </td>
+              <td>
+                <span class="display_currency" data-currency_symbol="true">{{$gift_card ?? 0}}</span>
               </td>
             </tr>
             {{-- <tr>
@@ -155,8 +180,10 @@
       
       <div class="row">
         <div class="col-xs-6">
-          <b>@lang('report.user'):</b> {{ $register_details->user_name}}<br>
-          <b>Email:</b> {{ $register_details->email}}
+          <b>@lang('report.user'):</b> {{ Auth::user()->username}}<br>
+          <b>Email:</b> {{ Auth::user()->email}}
+          {{-- <b>@lang('report.user'):</b> {{ $register_details->user_name}}<br>
+          <b>Email:</b> {{ $register_details->email}} --}}
         </div>
         @if(!empty($register_details->closing_note))
           <div class="col-xs-6">
