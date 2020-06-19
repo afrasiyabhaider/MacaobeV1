@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CashRegister;
+use App\CashRegisterTransaction;
 use App\Transaction;
 use App\TransactionPayment;
 use App\TransactionSellLine;
@@ -207,8 +208,12 @@ class CashRegisterController extends Controller
         $coupon = $payment_methods->where('method','coupon')->sum('amount');
         // dd($coupon);
 
+        $card = $payment_methods->where('method','card')->sum('amount');
+
+        $cash_in_hand = CashRegisterTransaction::where('transaction_type','initial')->where('amount','>',0)->orderBy('id','DESC')->first()->amount;
+        // dd($cash_in_hand);
         return view('cash_register.register_details')
-                ->with(compact('register_details', 'details','transactions','discount','gift_card','coupon'));
+                ->with(compact('register_details', 'details','transactions','discount','gift_card','coupon','card','cash_in_hand'));
     }
 
     /**
@@ -262,8 +267,12 @@ class CashRegisterController extends Controller
         $gift_card = $payment_methods->where('method','gift_card')->sum('amount');
         $coupon = $payment_methods->where('method','coupon')->sum('amount');
 
+        $card = $payment_methods->where('method','card')->sum('amount');
+
+        $cash_in_hand = CashRegisterTransaction::where('transaction_type','initial')->where('amount','>',0)->orderBy('id','DESC')->first()->amount;
+
         return view('cash_register.close_register_modal')
-                    ->with(compact('register_details', 'details','discount','gift_card','coupon'));
+                    ->with(compact('register_details', 'details','discount','gift_card','coupon','card','cash_in_hand'));
     }
 
     /**

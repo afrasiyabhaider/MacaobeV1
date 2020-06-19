@@ -15,7 +15,8 @@
                 @lang('cash_register.cash_in_hand'):
               </td>
               <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $register_details->cash_in_hand }}</span>
+                <span class="display_currency" data-currency_symbol="true">{{ $cash_in_hand }}</span>
+                {{-- <span class="display_currency" data-currency_symbol="true">{{ $register_details->cash_in_hand }}</span> --}}
               </td>
             </tr>
             <tr>
@@ -39,7 +40,8 @@
                 @lang('cash_register.card_payment'):
               </td>
               <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_card }}</span>
+                <span class="display_currency" data-currency_symbol="true">{{ $card }}</span>
+                {{-- <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_card }}</span> --}}
               </td>
             </tr>
             <tr>
@@ -125,7 +127,7 @@
                 @lang('cash_register.total_sales'):
               </td>
               <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_sale }}</span>
+                <span class="display_currency" data-currency_symbol="true">{{ ($card + $register_details->total_cash ) }}</span>
               </td>
             </tr>
             <tr class="success">

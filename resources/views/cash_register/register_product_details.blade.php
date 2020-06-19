@@ -5,7 +5,7 @@
     <table class="table">
       <tr>
         <th>#</th>
-        <th>@lang('brand.brands')</th>
+        {{-- <th>@lang('brand.brands')</th> --}}
         <th>@lang('sale.qty')</th>
         <th>@lang('sale.total_amount')</th>
       </tr>
@@ -18,9 +18,9 @@
           <td>
             {{$loop->iteration}}.
           </td>
-          <td>
+          {{-- <td>
             {{$detail->brand_name}}
-          </td>
+          </td> --}}
           <td>
             {{$detail->total_quantity}}
             @php
@@ -46,7 +46,7 @@
       <!-- Final details -->
       <tr class="success">
         <th>#</th>
-        <th></th>
+        {{-- <th></th> --}}
         <th>{{$total_quantity}}</th>
         <th>
 

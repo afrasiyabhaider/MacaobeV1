@@ -195,11 +195,14 @@ $(document).ready(function() {
 
     //If change in unit price update price including tax and line total
     $('table#pos_table tbody').on('change', 'input.pos_unit_price', function() {
-        var unit_price = __read_number($(this));
+        var unit_price = $(this).val();
+        // var unit_price = __read_number($(this));
 
         var tr = $(this).parents('tr');
         var rowTc = tr.find('input.rowTc').val();
-        $('#row_unit_price' + rowTc).html(unit_price);
+        $('#row_unit_price' + rowTc).html(unit_price + ' €');
+        // $('#row_unit_price' + rowTc).html(__number_f(unit_price) + ' €');
+        // $('#row_unit_price' + rowTc).html(unit_price);
         //calculate discounted unit price
         var discounted_unit_price = calculate_discounted_unit_price(tr);
 

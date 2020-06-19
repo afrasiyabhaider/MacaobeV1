@@ -121,7 +121,12 @@
 	</td>
 	<td>
 		@if($product->sell_line_note != "return") 
-			<button type="button" class="btn btn-md btn-danger"  data-toggle="modal" data-target="#row_edit_product_price_modal_{{$row_count}}" name="un_discount" id="un_discount">Discount : <span class="val_un_discount" id="val_un_discount_{{$row_count}}">0</span></button>
+			<button type="button" class="btn btn-sm btn-danger" onclick="giveDiscount(10,<?=$row_count?>);"><i class="fa fa-check-circle-o" ></i> DISCOUNT : +10% </button>
+			<button type="button" class="btn btn-sm btn-success"  data-toggle="modal" data-target="#row_edit_product_price_modal_{{$row_count}}" name="un_discount" id="un_discount">
+				<i class="fa fa-chevron-up"></i>
+			</button>
+			Discount Given: <span class="val_un_discount" id="val_un_discount_{{$row_count}}"> 0 %</span>
+			{{-- <button type="button" class="btn btn-md btn-danger"  data-toggle="modal" data-target="#row_edit_product_price_modal_{{$row_count}}" name="un_discount" id="un_discount">Discount : <span class="val_un_discount" id="val_un_discount_{{$row_count}}">0</span></button> --}}
 		@endif
 		<!-- Description modal start -->
 		<div class="modal fade row_description_modal" id="row_discount_modal_{{$row_count}}" tabindex="-1" role="dialog">
