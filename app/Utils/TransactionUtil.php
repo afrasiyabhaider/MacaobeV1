@@ -1751,6 +1751,7 @@ class TransactionUtil extends Util
      */
     public function getPurchaseTotals($business_id, $start_date = null, $end_date = null, $location_id = null)
     {
+        // ->distinct('created_at')
         $query = Transaction::where('business_id', $business_id)
             ->where('type', 'purchase')
             ->select(
@@ -1840,6 +1841,7 @@ class TransactionUtil extends Util
         }
 
         $sell_details = $query->get();
+
 
         $output['total_sell_inc_tax'] = $sell_details->sum('final_total');
         //$output['total_sell_exc_tax'] = $sell_details->sum('total_exc_tax');
@@ -2199,11 +2201,20 @@ class TransactionUtil extends Util
     public function getTotalPaid($transaction_id)
     {
         $total_paid = TransactionPayment::where('transaction_id', $transaction_id)
-            ->select(DB::raw('SUM(IF( is_return = 0, amount, amount*-1))as total_paid'))
-            ->first()
-            ->total_paid;
+                ->select(DB::raw('SUM(IF( is_return = 0, amount, amount*-1))as total_paid'))
+                ->first()->total_paid;
+        $amount = Transaction::find($transaction_id)->final_total;
 
-        return $total_paid;
+        if(($amount+$amount) != $total_paid){
+            return $total_paid;
+        }
+        return $amount;
+        // return $total_paid;
+        // $total_paid = TransactionPayment::where('transaction_id', $transaction_id)->where('is_return',0)->get()->unique('created_at');
+        // // ->select(DB::raw('SUM(IF( is_return = 0, amount, amount*-1))as total_paid'))
+        //     // ->total_paid;
+
+        // // return $total_paid;
     }
 
     /**
@@ -3302,7 +3313,7 @@ class TransactionUtil extends Util
                         $tspl_qty_left_to_return = $tslpl->quantity - $tslpl->qty_returned;
 
                         $purchase_line = PurchaseLine::find($tslpl->purchase_line_id);
-                        dd($tslpl->purchase_line_id);
+                        // dd($tslpl->purchase_line_id);
                         if ($qty_left_to_update <= $tspl_qty_left_to_return) {
                             $purchase_line->quantity_sold -= $qty_left_to_update;
                             $purchase_line->save();
