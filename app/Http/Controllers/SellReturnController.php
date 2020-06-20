@@ -376,7 +376,7 @@ class SellReturnController extends Controller
                 $msg = $e->getMessage();
             } else {
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-                $msg = __('messages.something_went_wrong');
+                $msg = __('messages.something_went_wrong').' '."File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage();
             }
 
             $output = ['success' => 0,

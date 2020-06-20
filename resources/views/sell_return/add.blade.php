@@ -38,7 +38,7 @@
 				<div class="col-sm-4">
 					<div class="form-group">
 						{!! Form::label('invoice_no', __('sale.invoice_no').':') !!}
-						{!! Form::text('invoice_no', !empty($sell->return_parent->invoice_no) ? $sell->return_parent->invoice_no : null, ['class' => 'form-control']); !!}
+						{!! Form::text('invoice_no', !empty($sell->return_parent->invoice_no) ? $sell->return_parent->invoice_no : null, ['class' => 'form-control','autofocus'=>'true']); !!}
 					</div>
 				</div>
 				<div class="col-sm-3">

@@ -14,6 +14,7 @@
 <!-- </section> -->
 
 <!-- Main content -->
+{{-- @dd($pos_settings) --}}
 <section class="content no-print">
 	<div class="row">
 		<div class="@if(!empty($pos_settings['hide_product_suggestion']) && !empty($pos_settings['hide_recent_trans'])) col-md-10 col-md-offset-1 @else col-md-7 @endif col-sm-12">

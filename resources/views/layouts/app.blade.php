@@ -1,6 +1,6 @@
 @inject('request', 'Illuminate\Http\Request')
 
-@if($request->segment(1) == 'pos' && ($request->segment(2) == 'create' || $request->segment(3) == 'edit'))
+@if($request->segment(1) == 'pos' && ($request->segment(2) == 'create' || $request->segment(3) == 'edit' || $request->segment(2) == "return"))
     @php
         $pos_layout = true;
     @endphp
@@ -32,6 +32,7 @@
 
     <body class="@if($pos_layout) hold-transition lockscreen @else hold-transition skin-@if(!empty(session('business.theme_color'))){{session('business.theme_color')}}@else{{'blue'}}@endif sidebar-mini @endif">
         <div class="wrapper">
+            
             <script type="text/javascript">
                 if(localStorage.getItem("upos_sidebar_collapse") == 'true'){
                     var body = document.getElementsByTagName("body")[0];

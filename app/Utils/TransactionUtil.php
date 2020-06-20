@@ -3302,6 +3302,7 @@ class TransactionUtil extends Util
                         $tspl_qty_left_to_return = $tslpl->quantity - $tslpl->qty_returned;
 
                         $purchase_line = PurchaseLine::find($tslpl->purchase_line_id);
+                        dd($tslpl->purchase_line_id);
                         if ($qty_left_to_update <= $tspl_qty_left_to_return) {
                             $purchase_line->quantity_sold -= $qty_left_to_update;
                             $purchase_line->save();

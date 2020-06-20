@@ -855,6 +855,7 @@ class SellPosController extends Controller
 
         $shortcuts = json_decode($business_details->keyboard_shortcuts, true);
         $pos_settings = empty($business_details->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business_details->pos_settings, true);
+        
 
         $commsn_agnt_setting = $business_details->sales_cmsn_agnt;
         $commission_agent = [];
