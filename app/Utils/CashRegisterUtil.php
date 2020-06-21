@@ -268,9 +268,9 @@ class CashRegisterUtil extends Util
             DB::raw("SUM(IF(pay_method='card', 1, 0)) as total_card_slips"),
             // Start from here
             DB::raw("SUM(t.line_discount_amount) as discount_given"),
+            DB::raw("count(t.line_discount_amount) as discounted_receipts"),
             // DB::raw("SUM(t.line_discount_amount) as discount_given WHERE t.line_discount_amount>'0'"),
             // DB::raw("SUM(IF(t.line_discount_amount > 0.00 , t.line_discount_amount, 0)) as discount_given"),
-            DB::raw("count(t.line_discount_amount) as discounted_receipts"),
             // DB::raw("CONCAT(COALESCE(surname, ''), ' ', COALESCE(first_name, ''), ' ', COALESCE(last_name, '')) as user_name"),
             // DB::raw("SUM(IF(pay_method='gift_card', IF(transaction_type='sell', amount, 0), 0)) as total_gift"),
             // 'u.email'

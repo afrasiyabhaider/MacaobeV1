@@ -31,6 +31,10 @@ class Kernel extends ConsoleKernel
             //Scheduling backup, specify the time when the backup will get cleaned & time when it will run.
             $schedule->command('backup:run')->dailyAt('23:30');
 
+            //This command will auto close all registers
+            $schedule->command('cashRegister:close')->everyMinute();
+            // $schedule->command('cashRegister:close')->dailyAt('23:30');
+
             //Schedule to create recurring invoices
             $schedule->command('pos:generateSubscriptionInvoices')->daily();
         }

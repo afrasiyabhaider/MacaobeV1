@@ -270,7 +270,7 @@ class CashRegisterController extends Controller
         $card = $payment_methods->where('method','card')->sum('amount');
 
         $cash_in_hand = CashRegisterTransaction::where('transaction_type','initial')->where('amount','>',0)->orderBy('id','DESC')->first()->amount;
-
+        // dd($details);
         return view('cash_register.close_register_modal')
                     ->with(compact('register_details', 'details','discount','gift_card','coupon','card','cash_in_hand'));
     }
@@ -301,18 +301,36 @@ class CashRegisterController extends Controller
             $input['status'] = 'close';
 
             CashRegister::where('location_id', $location_id)
-                                ->where('status', 'open')
-                                ->update($input);
+                            ->where('status', 'open')
+                            ->update($input);
             $output = ['success' => 1,
                             'msg' => __('cash_register.close_success')
                         ];
         } catch (\Exception $e) {
             \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            $output = ['success' => 0,'msg' => __("messages.something_went_wrong")];
         }
 
         return redirect()->action('HomeController@index')->with('status', $output);
+    }
+
+    /**
+     * Close Register Automatically On the basis of time 
+     * 
+     **/
+    public function autoCloseRegister()
+    {
+        $registers = CashRegister::where('status','open')->where('location_id','>',0)->get();
+        foreach ($registers as $key => $value) {
+           $total_sale = $this->cashRegisterUtil->getRegisterDetails($value->id)->total_sale;
+           
+           $value->closing_amount = $total_sale;
+           $location_id = $value->location_id;
+           $value->closed_at = \Carbon::now()->format('Y-m-d H:i:s');
+           $value->status = 'close';
+            
+           $value->save();
+           
+        }
     }
 }
