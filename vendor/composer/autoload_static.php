@@ -778,6 +778,7 @@ class ComposerStaticInitd25fe27e03ec6c501754f7b68aafaf3d
         'App\\CashRegisterTransaction' => __DIR__ . '/../..' . '/app/CashRegisterTransaction.php',
         'App\\Category' => __DIR__ . '/../..' . '/app/Category.php',
         'App\\Color' => __DIR__ . '/../..' . '/app/Color.php',
+        'App\\Console\\Commands\\CloseCashRegister' => __DIR__ . '/../..' . '/app/Console/Commands/CloseCashRegister.php',
         'App\\Console\\Commands\\CreateDummyBusiness' => __DIR__ . '/../..' . '/app/Console/Commands/CreateDummyBusiness.php',
         'App\\Console\\Commands\\MapPurchaseSell' => __DIR__ . '/../..' . '/app/Console/Commands/MapPurchaseSell.php',
         'App\\Console\\Commands\\RecurringInvoice' => __DIR__ . '/../..' . '/app/Console/Commands/RecurringInvoice.php',

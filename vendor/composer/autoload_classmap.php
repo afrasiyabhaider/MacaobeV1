@@ -122,6 +122,7 @@ return array(
     'App\\CashRegisterTransaction' => $baseDir . '/app/CashRegisterTransaction.php',
     'App\\Category' => $baseDir . '/app/Category.php',
     'App\\Color' => $baseDir . '/app/Color.php',
+    'App\\Console\\Commands\\CloseCashRegister' => $baseDir . '/app/Console/Commands/CloseCashRegister.php',
     'App\\Console\\Commands\\CreateDummyBusiness' => $baseDir . '/app/Console/Commands/CreateDummyBusiness.php',
     'App\\Console\\Commands\\MapPurchaseSell' => $baseDir . '/app/Console/Commands/MapPurchaseSell.php',
     'App\\Console\\Commands\\RecurringInvoice' => $baseDir . '/app/Console/Commands/RecurringInvoice.php',

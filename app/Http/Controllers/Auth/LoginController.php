@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\CashRegister;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
 use App\Utils\BusinessUtil;
+use App\Utils\CashRegisterUtil;
 
 class LoginController extends Controller
 {
@@ -94,6 +96,23 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         $user = \Auth::user();
+        $location_id = $user->business_location_id;
+        // $location_id = request()->session()->get('user.business_location_id');
+        $register = CashRegister::where('status','open')->where('location_id',$location_id)->latest()->first();
+        if (!empty($register)) {
+            $open_date = \Carbon::parse($register->created_at)->format('d-m-Y');
+            $current = \Carbon::now()->format('d-m-Y');
+            if ($open_date != $current) {
+                $cashRegisterUtil = new CashRegisterUtil();
+                $total_sale = $cashRegisterUtil->getRegisterDetails($location_id)->total_sale;
+                $register->closing_amount = $total_sale;
+                $register->location_id = $location_id;
+                $register->closed_at = \Carbon::now()->format('Y-m-d H:i:s');
+                $register->status = 'close';
+                
+                $register->save();
+            }
+        }
         if (!$user->can('dashboard.data') && $user->can('sell.create')) {
             return '/pos/create';
         }
