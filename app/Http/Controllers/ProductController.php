@@ -91,45 +91,6 @@ class ProductController extends Controller
         // dd($business_id);
 
         if (request()->ajax()) {
-            // $products = Product::leftJoin('brands', 'products.brand_id', '=', 'brands.id')
-            //     ->join('units', 'products.unit_id', '=', 'units.id')
-            //     ->leftJoin('categories as c1', 'products.category_id', '=', 'c1.id')
-            //     ->leftJoin('categories as c2', 'products.sub_category_id', '=', 'c2.id')
-            //     ->leftJoin('tax_rates', 'products.tax', '=', 'tax_rates.id')
-            //     ->leftJoin('sizes', 'products.sub_size_id', '=', 'sizes.id')
-            //     ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
-            //     ->leftJoin('variation_location_details as vld', 'vld.product_id', '=', 'products.id')
-            //     ->join('variations as v', 'v.product_id', '=', 'products.id')->join('suppliers','suppliers.id','=','products.supplier_id')
-            //     ->where('products.business_id', $business_id)
-            //     ->where('vld.location_id', $business_location_id)
-            //     ->where('products.type', '!=', 'modifier')
-            //     ->select(
-            //         'products.id',
-            //         'products.name as product',
-            //         'products.type',
-            //         'products.description',
-            //         'products.supplier_id',
-            //         'suppliers.name as supplier_name',
-            //         'c1.name as category',
-            //         'c2.name as sub_category',
-            //         'units.actual_name as unit',
-            //         'brands.name as brand',
-            //         'tax_rates.name as tax',
-            //         'products.sku',
-            //         'products.created_at',
-            //         'products.bulk_add',
-            //         'products.image',
-            //         'products.refference',
-            //         'products.enable_stock',
-            //         'products.is_inactive',
-            //         'sizes.name as size',
-            //         'colors.name as color',
-            //         'v.dpp_inc_tax as purchase_price',
-            //         'v.sell_price_inc_tax as selling_price',
-            //         DB::raw('SUM(vld.qty_available) as current_stock'),
-            //         DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
-            //         DB::raw('MIN(v.sell_price_inc_tax) as min_price')
-            //     )->orderBy('products.updated_at','DESC')->groupBy('products.id');
 
             $products = Product::leftJoin('brands', 'products.brand_id', '=', 'brands.id')
                 ->join('units', 'products.unit_id', '=', 'units.id')
@@ -139,9 +100,9 @@ class ProductController extends Controller
                 ->leftJoin('sizes', 'products.sub_size_id', '=', 'sizes.id')
                 ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
                 ->leftJoin('variation_location_details as vld', 'vld.product_id', '=', 'products.id')
-                ->where('vld.location_id', 1)
+                // ->where('vld.location_id', 1)
                 ->join('variations as v', 'v.product_id', '=', 'products.id')->join('suppliers', 'suppliers.id', '=', 'products.supplier_id')
-                ->where('products.business_id', $business_id)
+                // ->where('products.business_id', $business_id)
                 // ->where('vld.location_id', $business_location_id)
                 ->where('products.type', '!=', 'modifier')
                 ->select(
@@ -1123,11 +1084,12 @@ class ProductController extends Controller
             $size = Size::find($request->input('size'));
             $product->name = $request->input('product_name');
             $product->image = $product_image;
-            if ($request->input('hidden_supplier_id') == 0) {
-                $product->supplier_id = $request->input('supplier');
-            } else {
-                $product->supplier_id = $request->input('hidden_supplier_id');
-            }
+            // if ($request->input('supplier_id') == 0) {
+            //     $product->supplier_id = $request->input('supplier');
+            // } else {
+                //     $product->supplier_id = $request->input('supplier');
+                // }
+            $product->supplier_id = $request->input('supplier');
             $product->category_id = $request->input('category');
             if ($request->input('sub_category') != 0) {
                 $product->sub_category_id = $request->input('sub_category');
@@ -1168,7 +1130,7 @@ class ProductController extends Controller
                 'msg' => __("messages.something_went_wrong")
             ];
         }
-        return redirect()->back()->with('status', $output);
+        return redirect(url('products/'.$product->id.'/edit'))->with('status', $output);
 
         $business_id = $request->session()->get('user.business_id');
         $product_details = $request->only(['name', 'brand_id', 'unit_id', 'category_id', 'tax', 'barcode_type', 'sku', 'alert_quantity', 'tax_type', 'weight', 'product_custom_field1', 'product_custom_field2', 'product_custom_field3', 'product_custom_field4', 'product_description']);

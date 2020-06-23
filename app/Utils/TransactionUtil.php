@@ -455,7 +455,8 @@ class TransactionUtil extends Util
             } else {
                 $payment_amount = $uf_data ? $this->num_uf($payment['amount']) : $payment['amount'];
                 //If amount is 0 then skip.
-                if ($payment_amount != 0) {
+                // if ($payment_amount != 0) {
+                if (true) {
                     $prefix_type = 'sell_payment';
                     if ($transaction->type == 'purchase') {
                         $prefix_type = 'purchase_payment';
