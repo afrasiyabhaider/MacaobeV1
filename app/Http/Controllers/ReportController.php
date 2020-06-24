@@ -356,7 +356,7 @@ class ReportController extends Controller
                         $quantity_sold =  (float) $row->quantity_sold;
                     }
 
-                    return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $quantity_sold . '" data-unit="' . $row->unit . '" >' . $quantity_sold . '</span> ' . $row->unit;
+                    return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $quantity_sold . '" data-unit="Pcs" >' . $quantity_sold . '</span> Pcs';
                 })
                 ->editColumn('quantity_available', function ($row) {
                     $quantity_available = 0;
@@ -364,7 +364,7 @@ class ReportController extends Controller
                         $quantity_available =  (float) $row->quantity_available;
                     }
 
-                    return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $quantity_available . '" data-unit="' . $row->unit . '" >' . $quantity_available . '</span> ' . $row->unit;
+                    return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $quantity_available . '" data-unit="Pcs" >' . $quantity_available . '</span> Pcs';
                 })
                 ->editColumn('total', function ($row) {
                     $total = 0;
@@ -372,7 +372,7 @@ class ReportController extends Controller
                         $total =  (float) $row->total;
                     }
 
-                    return '<span data-is_quantity="true" class="display_currency total" data-currency_symbol=false data-orig-value="' . $total . '" data-unit="' . $row->unit . '" >' . $total . '</span> ' . $row->unit;
+                    return '<span data-is_quantity="true" class="display_currency total" data-currency_symbol=false data-orig-value="' . $total . '" data-unit="Pcs" >' . $total . '</span> Pcs';
                 })
                 ->editColumn('transfered', function ($row) {
                     $transfered = 0;
@@ -380,7 +380,7 @@ class ReportController extends Controller
                         $transfered =  (float) $row->transfered;
                     }
 
-                    return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $transfered . '" data-unit="' . $row->unit . '" >' . $transfered . '</span> ' . $row->unit;
+                    return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $transfered . '" data-unit="Pcs" >' . $transfered . '</span> Pcs';
                 })
                 ->rawColumns(['quantity_sold', 'quantity_available', 'total','transfered'])
                 ->make(true);
