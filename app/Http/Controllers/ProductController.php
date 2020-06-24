@@ -100,9 +100,9 @@ class ProductController extends Controller
                 ->leftJoin('sizes', 'products.sub_size_id', '=', 'sizes.id')
                 ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
                 ->leftJoin('variation_location_details as vld', 'vld.product_id', '=', 'products.id')
-                // ->where('vld.location_id', 1)
+                ->where('vld.location_id', 1)
                 ->join('variations as v', 'v.product_id', '=', 'products.id')->join('suppliers', 'suppliers.id', '=', 'products.supplier_id')
-                // ->where('products.business_id', $business_id)
+                ->where('products.business_id', $business_id)
                 // ->where('vld.location_id', $business_location_id)
                 ->where('products.type', '!=', 'modifier')
                 ->select(
