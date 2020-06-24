@@ -1082,7 +1082,7 @@ class ProductController extends Controller
                 $product_image =  $this->productUtil->uploadFileArr($request, 'file', config('constants.product_img_path'), 0);
             }
             $size = Size::find($request->input('size'));
-            $product->name = $request->input('product_name');
+            // $product->name = $request->input('product_name');
             $product->image = $product_image;
             // if ($request->input('supplier_id') == 0) {
             //     $product->supplier_id = $request->input('supplier');
@@ -1122,12 +1122,12 @@ class ProductController extends Controller
             ];
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage());
+            // dd($e->getMessage());
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
 
             $output = [
                 'success' => 0,
-                'msg' => __("messages.something_went_wrong")
+                'msg' => __("messages.something_went_wrong".' '."File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage())
             ];
         }
         return redirect(url('products/'.$product->id.'/edit'))->with('status', $output);

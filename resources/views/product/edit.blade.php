@@ -143,7 +143,7 @@
 				</div>
 				<div class="col-sm-4">
 					<label>Product Name *</label>
-					<input type="text" name="product_name" value="{{$product->name}}" class="req form-control" id="product_name" required>
+					<input type="text" name="product_name" value="{{$product->name}}" class="req form-control" id="product_name" readonly required>
 				</div>
 				<div class="col-sm-4">
 					<label>Refference * @show_tooltip(__('tooltip.sku'))</label>
