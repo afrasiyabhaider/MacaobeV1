@@ -467,6 +467,17 @@
               </span>
             </a>
             <ul class="treeview-menu">
+              @can('stock_report.view')
+                <li class="{{ $request->segment(2) == 'supplier-report' ? 'active' : '' }}" ><a href="{{action('ReportController@supplier_report')}}"><i class="fa fa-user" aria-hidden="true"></i>
+                  Supplier Report
+                </a></li>
+              @endcan
+
+              @can('stock_report.view')
+                @if(session('business.enable_product_expiry') == 1)
+                <li class="{{ $request->segment(2) == 'stock-expiry' ? 'active' : '' }}" ><a href="{{action('ReportController@getStockExpiryReport')}}"><i class="fa fa-calendar-times-o"></i>@lang('report.stock_expiry_report')</a></li>
+                @endif
+              @endcan
               @can('profit_loss_report.view')
                 <li class="{{ $request->segment(2) == 'profit-loss' ? 'active' : '' }}" ><a href="{{action('ReportController@getProfitLoss')}}"><i class="fa fa-money"></i>@lang('report.profit_loss')</a></li>
               @endcan
@@ -487,12 +498,6 @@
               
               @can('stock_report.view')
                 <li class="{{ $request->segment(2) == 'stock-report' ? 'active' : '' }}" ><a href="{{action('ReportController@getStockReport')}}"><i class="fa fa-hourglass-half" aria-hidden="true"></i>@lang('report.stock_report')</a></li>
-              @endcan
-
-              @can('stock_report.view')
-                @if(session('business.enable_product_expiry') == 1)
-                <li class="{{ $request->segment(2) == 'stock-expiry' ? 'active' : '' }}" ><a href="{{action('ReportController@getStockExpiryReport')}}"><i class="fa fa-calendar-times-o"></i>@lang('report.stock_expiry_report')</a></li>
-                @endif
               @endcan
 
               {{-- @can('stock_report.view')

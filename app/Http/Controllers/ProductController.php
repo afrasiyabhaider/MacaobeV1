@@ -91,7 +91,8 @@ class ProductController extends Controller
         // dd($business_id);
 
         if (request()->ajax()) {
-
+            // ->where('vld.location_id', $business_location_id)
+            
             $products = Product::leftJoin('brands', 'products.brand_id', '=', 'brands.id')
                 ->join('units', 'products.unit_id', '=', 'units.id')
                 ->leftJoin('categories as c1', 'products.category_id', '=', 'c1.id')
@@ -103,7 +104,6 @@ class ProductController extends Controller
                 ->where('vld.location_id', 1)
                 ->join('variations as v', 'v.product_id', '=', 'products.id')->join('suppliers', 'suppliers.id', '=', 'products.supplier_id')
                 ->where('products.business_id', $business_id)
-                // ->where('vld.location_id', $business_location_id)
                 ->where('products.type', '!=', 'modifier')
                 ->select(
                     'products.id',
@@ -130,8 +130,8 @@ class ProductController extends Controller
                     'v.sell_price_inc_tax as selling_price',
                     DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
-                    DB::raw('MIN(v.sell_price_inc_tax) as min_price')
-                )->orderBy('products.updated_at', 'DESC')->groupBy('products.id');
+                    DB::raw('MIN(v.sell_price_inc_tax) as min_price'))
+                    ->orderBy('products.updated_at', 'DESC')->groupBy('products.id');
 
             // $type = request()->get('type', null);
             // if (!empty($type)) {
