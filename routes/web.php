@@ -384,6 +384,14 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::delete('website/product/{id}/images', 'WebsiteController@deleteImage');
 });
 
+Route::get('migrate-fresh', function () {
+    \Artisan::call('migrate:fresh');
+    dd("Migration Freshed");
+});
+Route::get('migrate', function () {
+    \Artisan::call('migrate');
+    dd("Table Migrated");
+});
 Route::get('permission-reset', function () {
     \Artisan::call('permission:cache-reset');
     dd("Permission Cache Resetted");

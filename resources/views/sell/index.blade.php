@@ -54,6 +54,7 @@
                             <th>@lang('sale.customer_name')</th>
                             <th>@lang('sale.location')</th>
                             <th>@lang('sale.payment_status')</th>
+                            <th>Method</th>
                             <th>@lang('sale.total_amount')</th>
                             <th>@lang('sale.total_paid')</th>
                             <th>@lang('purchase.payment_due')</th>
@@ -62,7 +63,7 @@
                     </thead>
                     <tfoot>
                         <tr class="bg-gray font-17 footer-total text-center">
-                            <td colspan="4"><strong>@lang('sale.total'):</strong></td>
+                            <td colspan="5"><strong>@lang('sale.total'):</strong></td>
                             <td id="footer_payment_status_count"></td>
                             <td><span class="display_currency" id="footer_sale_total" data-currency_symbol ="true"></span></td>
                             <td><span class="display_currency" id="footer_total_paid" data-currency_symbol ="true"></span></td>
@@ -232,6 +233,7 @@ $(document).ready( function(){
             { data: 'name', name: 'contacts.name'},
             { data: 'business_location', name: 'bl.name'},
             { data: 'payment_status', name: 'payment_status'},
+            { data: 'method', name: 'tp.method'},
             { data: 'final_total', name: 'final_total'},
             { data: 'total_paid', name: 'total_paid', "searchable": false},
             { data: 'total_remaining', name: 'total_remaining'},

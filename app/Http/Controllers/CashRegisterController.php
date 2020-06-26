@@ -211,7 +211,7 @@ class CashRegisterController extends Controller
         $card = $payment_methods->where('method','card')->sum('amount');
 
         $cash_in_hand = CashRegisterTransaction::where('transaction_type','initial')->where('amount','>',0)->orderBy('id','DESC')->first()->amount;
-        // dd($cash_in_hand);
+        // dd($register_details);
         return view('cash_register.register_details')
                 ->with(compact('register_details', 'details','transactions','discount','gift_card','coupon','card','cash_in_hand'));
     }

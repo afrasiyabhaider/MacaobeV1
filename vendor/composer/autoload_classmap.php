@@ -15,6 +15,7 @@ return array(
     'AddBusinessSettingsOptions' => $baseDir . '/database/migrations/2018_03_19_113601_add_business_settings_options.php',
     'AddChangesForSrNumberInProductsAndSaleLinesTable' => $baseDir . '/database/migrations/2018_03_29_115502_add_changes_for_sr_number_in_products_and_sale_lines_table.php',
     'AddChangesToInvoiceLayoutsTable' => $baseDir . '/database/migrations/2018_04_03_122709_add_changes_to_invoice_layouts_table.php',
+    'AddColumnInVariationLocationDetails' => $baseDir . '/database/migrations/2020_06_25_211239_add_column_in_variation_location_details.php',
     'AddColumnsForVariableProductModifications' => $baseDir . '/database/migrations/2018_10_22_114441_add_columns_for_variable_product_modifications.php',
     'AddCommissionAgentToTransactionsTable' => $baseDir . '/database/migrations/2018_02_26_134500_add_commission_agent_to_transactions_table.php',
     'AddContactIdToContactsTable' => $baseDir . '/database/migrations/2018_04_03_103037_add_contact_id_to_contacts_table.php',

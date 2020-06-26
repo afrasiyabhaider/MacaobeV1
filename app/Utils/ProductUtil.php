@@ -350,6 +350,7 @@ class ProductUtil extends Util
             }
 
             $variation_location_d->qty_available += $qty_difference;
+            // $variation_location_d->transfered_from = 5;
             $variation_location_d->save();
 
             //TODO: Add quantity in products table

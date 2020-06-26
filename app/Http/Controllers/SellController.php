@@ -104,6 +104,7 @@ class SellController extends Controller
                     'transactions.discount_amount',
                     'transactions.discount_type',
                     'transactions.total_before_tax',
+                    'tp.method',
                     DB::raw('SUM(IF(tp.is_return = 1,-1*tp.amount,tp.amount)) as total_paid'),
                     'bl.name as business_location',
                     DB::raw('COUNT(SR.id) as return_exists'),
