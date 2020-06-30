@@ -12,6 +12,7 @@
                 <th>SKU</th>
                 <th>@lang('business.product')</th>
                 <th>Refference</th>
+                <th>Location Name</th>
                 <th>Actions</th>
                 <th>@lang('sale.unit_price')</th>
                 <th>Color</th>

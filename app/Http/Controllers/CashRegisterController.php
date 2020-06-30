@@ -51,6 +51,7 @@ class CashRegisterController extends Controller
     public function create()
     {
         //Check if there is a open register, if yes then redirect to POS screen.
+        // dd($this->cashRegisterUtil->countOpenedRegister());
         if ($this->cashRegisterUtil->countOpenedRegister() != 0) {
             return redirect()->action('SellPosController@create');
         }

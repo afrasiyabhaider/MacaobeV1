@@ -259,6 +259,8 @@ class ManageUserController extends Controller
                     ->with(['contactAccess','business_location'])
                     ->findOrFail($id); 
 
+        $bussiness_locations = BusinessLocation::pluck('name','id');
+
         $roles_array = Role::where('business_id', $business_id)->get()->pluck('name', 'id');
         $roles = [];
         foreach ($roles_array as $key => $value) {
@@ -275,7 +277,7 @@ class ManageUserController extends Controller
         }
         
         return view('manage_user.edit')
-                ->with(compact('roles', 'user', 'contact_access', 'contacts', 'is_checked_checkbox'));
+                ->with(compact('roles', 'user', 'contact_access', 'contacts', 'is_checked_checkbox', 'bussiness_locations'));
     }
 
     /**
@@ -290,9 +292,9 @@ class ManageUserController extends Controller
         if (!auth()->user()->can('user.update')) {
             abort(403, 'Unauthorized action.');
         }
-
+        // dd($request->input());
         try {
-            $user_data = $request->only(['surname', 'first_name', 'last_name', 'email', 'selected_contacts']);
+            $user_data = $request->only(['surname', 'first_name', 'last_name', 'email', 'selected_contacts','business_location_id']);
 
             $user_data['status'] = !empty($request->input('is_active')) ? 'active' : 'inactive';
             $business_id = request()->session()->get('user.business_id');
@@ -311,11 +313,12 @@ class ManageUserController extends Controller
                 $user_data['cmmsn_percent'] = 0;
             }
 
-            $user = User::where('business_id', $business_id)
-                          ->findOrFail($id);
-
+            $user = User::findOrFail($id);
+            // $user = User::where('business_id', $business_id)
+            //               ->findOrFail($id);
             $user->update($user_data);
-
+            // dd($user);
+            
             $role_id = $request->input('role');
             $user_role = $user->roles->first();
 

@@ -360,6 +360,54 @@ class ProductUtil extends Util
 
         return true;
     }
+    public function updateProductQuantityInTransfer($location_id, $product_id, $variation_id, $new_quantity, $old_quantity = 0, $number_format = null, $uf_data = true,$transferFrom = 1)
+    {
+        if ($uf_data) {
+            $qty_difference = $this->num_uf($new_quantity, $number_format) - $this->num_uf($old_quantity, $number_format);
+        } else {
+            $qty_difference = $new_quantity - $old_quantity;
+        }
+
+
+        $product = Product::find($product_id);
+
+        //Check if stock is enabled or not.
+        if ($product->enable_stock == 1 && $qty_difference != 0) {
+            $variation = Variation::where('id', $variation_id)
+                ->where('product_id', $product_id)
+                ->first();
+
+            //Add quantity in VariationLocationDetails
+            $variation_location_d = VariationLocationDetails
+                ::where('variation_id', $variation->id)
+                ->where('product_id', $product_id)
+                ->where('product_variation_id', $variation->product_variation_id)
+                ->where('location_id', $location_id)
+                ->first();
+
+            if (empty($variation_location_d)) {
+                
+                $variation_location_d = new VariationLocationDetails();
+                $variation_location_d->variation_id = $variation->id;
+                $variation_location_d->product_id = $product_id;
+                $variation_location_d->location_id = $location_id;
+                $variation_location_d->product_variation_id = $variation->product_variation_id;
+                $variation_location_d->qty_available = 0;
+                $variation_location_d->transfered_from = $transferFrom;
+            }
+            
+            $variation_location_d->qty_available += $qty_difference;
+            $variation_location_d->transfered_from = $transferFrom;
+            // $variation_location_d->transfered_from = 5;
+            $variation_location_d->save();
+
+            //TODO: Add quantity in products table
+            // Product::where('id', $product_id)
+            //     ->increment('total_qty_available', $qty_difference);
+        }
+
+        return true;
+    }
 
     public function addProductFOrAllLocations($product_id, $variation_id)
     {

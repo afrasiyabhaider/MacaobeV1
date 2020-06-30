@@ -426,6 +426,7 @@ class ReportController extends Controller
                 ->join('categories', 'p.category_id', '=', 'categories.id')
                 ->join('categories as sub_cat', 'p.sub_category_id', '=', 'sub_cat.id')
                 ->leftjoin('variation_location_details as vld', 'variations.id', '=', 'vld.variation_id')
+                ->join('business_locations as bl', 'bl.id', '=', 'vld.location_id')
                 ->join('product_variations as pv', 'variations.product_variation_id', '=', 'pv.id')
                 ->where('p.business_id', $business_id)
                 ->whereIn('p.type', ['single', 'variable']);
@@ -508,6 +509,8 @@ class ReportController extends Controller
                 DB::raw("SUM(vld.qty_available) as stock"),
                 'variations.sub_sku as sku',
                 'p.id as product_id',
+                'bl.name as location_name',
+                'vld.location_id as location_id',
                 'p.created_at',
                 'p.name as product',
                 'p.image as image',
@@ -594,6 +597,9 @@ class ReportController extends Controller
 
                     return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $total_transfered . '" data-unit="' . $row->unit . '" >' . $total_transfered . '</span> ' . $row->unit;
                 })
+                ->editColumn('location_name', function ($row) {
+                    return '<span max="'.$row->location_id.'" id="location_' . $row->product_id . '">' . $row->location_name . '</span> ';
+                })
                 ->editColumn('total_adjusted', function ($row) {
                     $total_adjusted = 0;
                     if ($row->total_adjusted) {
@@ -670,7 +676,7 @@ class ReportController extends Controller
                 ->removeColumn('enable_stock')
                 ->removeColumn('unit')
                 // ->removeColumn('id')
-                ->rawColumns(['mass_delete', 'unit_price', 'total_transfered', 'total_sold', 'total_adjusted', 'stock', 'actions', 'image'])
+                ->rawColumns(['mass_delete', 'unit_price', 'total_transfered','location_name', 'total_sold', 'total_adjusted', 'stock', 'actions', 'image'])
                 ->make(true);
         }
 

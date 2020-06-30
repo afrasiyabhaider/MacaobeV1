@@ -230,10 +230,10 @@ class CashRegisterUtil extends Util
             'ct.transaction_id'
         );
         if (empty($register_id)) {
-            $user_id = auth()->user()->id;
+            // $user_id = auth()->user()->id;
             $location_id = request()->session()->get('user.business_location_id');
             $query->where('cash_registers.location_id', $location_id)
-                ->where('cash_registers.status', 'open');
+            ->where('cash_registers.status', 'open');
         } else {
             $query->where('cash_registers.id', $register_id);
         }

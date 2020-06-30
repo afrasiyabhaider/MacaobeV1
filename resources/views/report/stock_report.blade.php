@@ -181,9 +181,10 @@
                     // if(parseInt(selectedQty) <= parseInt(selectedMaxQty))
                     // {
                         selected_rows[i++] = $(this).val()+"@"+selectedQty;
-                    // }
-                }); 
-                console.log(selected_rows);
+                        // }
+                    }); 
+                    // return 0;
+                // console.log(selected_rows);
                 
                 if(selected_rows.length > 0){
                     $('input#selected_products_bulkPrint').val(selected_rows);
@@ -224,11 +225,15 @@
                 $('.row-select:checked').each(function () {
                     var selectedQty = $("#qty_"+$(this).val()).val();
                     var selectedMaxQty = $("#qty_"+$(this).val()).attr('max');
+                    var selectedLocation= $("#location_"+$(this).val()).text();
+                    var selectedLocationId= $("#location_"+$(this).val()).attr("max");
                     if(parseInt(selectedQty) <= parseInt(selectedMaxQty))
                     {
-                        selected_rows[i++] = $(this).val()+"@"+selectedQty+"@"+selectedMaxQty;
+                        selected_rows[i++] = $(this).val()+"@"+selectedQty+"@"+selectedMaxQty+"@"+selectedLocationId;
                     }
-                }); 
+                    // console.log(selectedQty +'    '+$(this).val() +'   '+selectedLocation+'   '+selectedLocationId);
+                });
+                
                 
                 if(selected_rows.length > 0){
                     $('#unknownDiscountModal').modal('show'); 

@@ -269,7 +269,6 @@ class SellPosController extends Controller
         if (!auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
         }
-
         $business_id = request()->session()->get('user.business_id');
         $objBusiness = Business::where("id", $business_id)->first();
         //Update USER SESSION

@@ -96,6 +96,7 @@ $(document).ready(function() {
             { data: 'sku', name: 'variations.sub_sku' },
             { data: 'product', name: 'p.name' },
             { data: 'refference', name: 'p.refference' },
+            { data: 'location_name', name: 'bl.name' },
             { data: 'actions', name: 'actions', searchable: false, orderable: false },
             { data: 'unit_price', name: 'variations.sell_price_inc_tax' },
             { data: 'color_name', name: 'colors.name' },

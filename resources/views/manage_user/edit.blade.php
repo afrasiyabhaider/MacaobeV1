@@ -48,8 +48,17 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                  {!! Form::label('role_location', 'Business Location:*') !!}
-                    {!! Form::select('role_location', [$user->business_location->id => $user->business_location->name],  $user->business_location->id, ['class' => 'form-control select2','required' => 'true']); !!}
+                  {!! Form::label('business_location_id', 'Business Location:*') !!}
+                    {{-- {!! Form::select('role_location', [$user->business_location->id => $user->business_location->name],  $user->business_location->id, ['class' => 'form-control select2','required' => 'true']); !!} --}}
+                    <select name="business_location_id" required class="form-control select2">
+                      @foreach ($bussiness_locations as $key=>$item)
+                        <option value="{{$key}}" @if($key == $user->business_location_id)
+                            selected
+                        @endif>
+                          {{$item}}
+                        </option>
+                      @endforeach
+                    </select>
                 </div>
               </div>
             <div class="col-md-6">
