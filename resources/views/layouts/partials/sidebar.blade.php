@@ -472,6 +472,11 @@
                   Supplier Report
                 </a></li>
               @endcan
+              @can('stock_report.view')
+                <li class="{{ $request->segment(2) == 'subcategory-report' ? 'active' : '' }}" ><a href="{{action('ReportController@sub_category_report')}}"><i class="fa fa-dropbox" aria-hidden="true"></i>
+                  Sub-Category Report
+                </a></li>
+              @endcan
 
               @can('stock_report.view')
                 @if(session('business.enable_product_expiry') == 1)

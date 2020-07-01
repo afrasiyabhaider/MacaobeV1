@@ -394,6 +394,111 @@ class ReportController extends Controller
         // dd($query->orderBy('supplier_id', 'ASC')->get()[1]);
     }
     /**
+     * Sub-Category Report
+     * 
+     * @return \Illuminate\Http\Response
+     * */
+
+    public function sub_category_report(Request $request)
+    {
+        if (!auth()->user()->can('stock_report.view')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
+        // $query = Product::join('categories as cat', 'products.sub_category_id', '=', 'cat.id')
+        //         ->join('purchase_lines as pl', 'products.id', '=', 'pl.product_id')
+        //         ->join('variation_location_details as vld', 'vld.variation_id', '=', 'pl.variation_id');
+
+        // $data = $query->groupBy('cat.name')->select(
+        //     'cat.name as id',
+        //     DB::raw("COUNT(products.id) as num_of_products"),
+        //     DB::raw("SUM(pl.quantity_sold) as quantity_sold"),
+        //     DB::raw("SUM(vld.qty_available) as quantity_available"),
+        //     DB::raw("SUM(pl.quantity_sold)+SUM(vld.qty_available) as total"),
+        //     DB::raw("COUNT(vld.id) as transfered"),
+        // )->get();
+
+        // dd($data);
+        if ($request->ajax()) {
+            $query = Product::join('categories as cat', 'products.sub_category_id', '=', 'cat.id')
+                ->join('purchase_lines as pl', 'products.id', '=', 'pl.product_id')
+                ->join('variation_location_details as vld', 'vld.variation_id', '=', 'pl.variation_id');
+
+            if (!empty($request->input('location_id'))) {
+                $location_id = $request->input('location_id');
+
+                $query->where('vld.location_id', $location_id);
+            }
+            if (!empty($request->input('category_id'))) {
+                $category_id = $request->input('category_id');
+
+                $query->where('products.category_id', $category_id);
+            }
+            $from_date = request()->get('from_date', null);
+
+            $to_date = request()->get('to_date', null);
+            if (!empty($to_date)) {
+                // dd($products->first());
+                $query->whereDate('cat.updated_at', '>=', $from_date)->whereDate('cat.updated_at', '<=', $to_date);
+            }
+
+            $data = $query->groupBy('cat.name')->select(
+                'cat.name as cat_name',
+                DB::raw("COUNT(products.id) as num_of_products"),
+                DB::raw("SUM(pl.quantity_sold) as quantity_sold"),
+                DB::raw("SUM(vld.qty_available) as quantity_available"),
+                DB::raw("SUM(pl.quantity_sold)+SUM(vld.qty_available) as total"),
+                DB::raw("COUNT(vld.id) as transfered"),
+            )
+            ->orderBy('cat.updated_at')
+            ->get();
+            return DataTables::of($data)
+                ->editColumn('quantity_sold', function ($row) {
+                    $quantity_sold = 0;
+                    if ($row->quantity_sold) {
+                        $quantity_sold =  (float) $row->quantity_sold;
+                    }
+
+                    return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $quantity_sold . '" data-unit="Pcs" >' . $quantity_sold . '</span> Pcs';
+                })
+                ->editColumn('quantity_available', function ($row) {
+                    $quantity_available = 0;
+                    if ($row->quantity_available) {
+                        $quantity_available =  (float) $row->quantity_available;
+                    }
+
+                    return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $quantity_available . '" data-unit="Pcs" >' . $quantity_available . '</span> Pcs';
+                })
+                ->editColumn('total', function ($row) {
+                    $total = 0;
+                    if ($row->total) {
+                        $total =  (float) $row->total;
+                    }
+
+                    return '<span data-is_quantity="true" class="display_currency total" data-currency_symbol=false data-orig-value="' . $total . '" data-unit="Pcs" >' . $total . '</span> Pcs';
+                })
+                ->editColumn('transfered', function ($row) {
+                    $transfered = 0;
+                    if ($row->transfered) {
+                        $transfered =  (float) $row->transfered;
+                    }
+
+                    return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $transfered . '" data-unit="Pcs" >' . $transfered . '</span> Pcs';
+                })
+                ->rawColumns(['quantity_sold', 'quantity_available', 'total','transfered'])
+                ->make(true);
+        }
+        $business_id = $request->session()->get('user.business_id');
+
+        $business_locations = BusinessLocation::forDropdown($business_id, true);
+
+        $categories = Category::forDropdown($business_id);
+
+        return view('report.sub_category_report')
+            ->with(compact('business_locations','categories'));
+        // dd($query->orderBy('supplier_id', 'ASC')->get()[1]);
+    }
+    /**
      * Shows product stock report
      *
      * @return \Illuminate\Http\Response

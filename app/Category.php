@@ -71,6 +71,7 @@ class Category extends Model
         $categories = Category::where('business_id', $business_id)
                             ->where('parent_id', 0)
                             ->pluck('name', 'id');
+        $categories->prepend('All Categories');
         return $categories;
     }
 }
