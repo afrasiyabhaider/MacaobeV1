@@ -2516,29 +2516,6 @@ class SellPosController extends Controller
                 $products->where('products.supplier_id', $supplier_id);
             }
 
-            // $products = Product::join(
-            //     'colors',
-            //     'products.color_id',
-            //     '=',
-            //     'colors.id'
-            // )->leftjoin(
-            //     'variation_location_details AS VLD',
-            //     function ($join) use ($location_id) {
-            //         $join->on('variations.id', '=', 'VLD.variation_id');
-
-            //         //Include Location
-            //         if (!empty($location_id)) {
-            //             $join->where(function ($query) use ($location_id) {
-            //                 $query->where('VLD.location_id', '=', $location_id);
-            //                 //Check null to show products even if no quantity is available in a location.
-            //                 //TODO: Maybe add a settings to show product not available at a location or not.
-            //                 $query->orWhereNull('VLD.location_id');
-            //             });;
-            //         }
-            //     }
-            // )->active()->where('products.type', '!=', 'modifier');
-            // $products->first()->color()->first();
-
             $products = $products->select(
                 'products.id as product_id',
                 'products.name',

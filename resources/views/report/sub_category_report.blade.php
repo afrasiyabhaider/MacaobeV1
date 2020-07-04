@@ -1,18 +1,18 @@
 @extends('layouts.app')
-@section('title','Supplier Report')
+@section('title','Sub-Category Report')
 
 @section('content')
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-     <h1>Supplier Report</h1>
+     <h1>Sub-Category Report</h1>
 </section>
 <section class="content">
      <div class="row">
           <div class="col-md-12">
                @component('components.filters', ['title' => __('report.filters')])
-               {!! Form::open(['url' => action('ReportController@supplier_report'), 'method' => 'get', 'id' =>
-               'supplier_report_filter_form' ]) !!}
+               {!! Form::open(['url' => action('ReportController@sub_category_report'), 'method' => 'get', 'id' =>
+               'sub_category_filter_form' ]) !!}
                <div class="col-md-3">
                     <div class="form-group">
                          {!! Form::label('category_id', 'Category' . ':') !!}
@@ -47,7 +47,7 @@
           @component('components.widget', ['class' => 'box-primary'])
           <div class="col-md-12">
                <div class="table-responsive">
-                    <table class="table table-bordered table-striped" id="supplier_report_table">
+                    <table class="table table-bordered table-striped" id="sub_category_table">
                          <thead>
                               <tr>
                                    <th>Name</th>
@@ -67,7 +67,7 @@
 @section('javascript')
 <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
 <script>
-     supplier_report_table = $('#supplier_report_table').DataTable({
+     sub_category_table = $('#sub_category_table').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
@@ -94,9 +94,9 @@
         ],
     });
     $(
-        '#supplier_report_filter_form #location_id,#product_list_to_date,#category_id'
+        '#sub_category_filter_form #location_id,#product_list_to_date,#category_id'
     ).change(function() {
-        supplier_report_table.ajax.reload();
+     sub_category_table.ajax.reload();
     });
 </script>
 @endsection

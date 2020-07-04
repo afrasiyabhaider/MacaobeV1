@@ -101,9 +101,9 @@ class ProductController extends Controller
                 ->leftJoin('sizes', 'products.sub_size_id', '=', 'sizes.id')
                 ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
                 ->leftJoin('variation_location_details as vld', 'vld.product_id', '=', 'products.id')
-                ->where('vld.location_id', 1)
+                // ->where('vld.location_id', 1)
                 ->join('variations as v', 'v.product_id', '=', 'products.id')->join('suppliers', 'suppliers.id', '=', 'products.supplier_id')
-                ->where('products.business_id', $business_id)
+                // ->where('products.business_id', $business_id)
                 ->where('products.type', '!=', 'modifier')
                 ->select(
                     'products.id',
@@ -124,6 +124,7 @@ class ProductController extends Controller
                     'products.refference',
                     'products.enable_stock',
                     'products.is_inactive',
+                    'products.updated_at',
                     'sizes.name as size',
                     'colors.name as color',
                     'v.dpp_inc_tax as purchase_price',
@@ -131,7 +132,9 @@ class ProductController extends Controller
                     DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                     DB::raw('MIN(v.sell_price_inc_tax) as min_price'))
-                    ->orderBy('products.updated_at', 'DESC')->groupBy('products.id');
+                    // ->orderBy('products.updated_at', 'DESC')
+                    ->orderBy('vld.updated_at', 'DESC')
+                    ->groupBy('products.id');
 
             // $type = request()->get('type', null);
             // if (!empty($type)) {

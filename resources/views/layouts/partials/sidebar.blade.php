@@ -477,6 +477,16 @@
                   Sub-Category Report
                 </a></li>
               @endcan
+              @can('stock_report.view')
+                <li class="{{ $request->segment(2) == 'product-first-report' ? 'active' : '' }}" ><a href="{{action('ReportController@product_first_report')}}"><i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                  Product Report N/S
+                </a></li>
+              @endcan
+              @can('stock_report.view')
+                <li class="{{ $request->segment(2) == 'product-second-report' ? 'active' : '' }}" ><a href="{{action('ReportController@product_first_report')}}"><i class="fa fa-cart-plus" aria-hidden="true"></i>
+                  Product Report W/S
+                </a></li>
+              @endcan
 
               @can('stock_report.view')
                 @if(session('business.enable_product_expiry') == 1)

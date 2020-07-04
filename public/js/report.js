@@ -711,23 +711,28 @@ $(document).ready(function() {
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
         columns: [
+            { data: 'image', name: 'products.image', searchable: false, orderable: false },
             { data: 'product_name', name: 'p.name' },
+            { data: 'product_reffernce', name: 'p.refference' },
+            { data: 'product_barcode', name: 'p.sku' },
+            { data: 'product_size', name: 's.name' },
             { data: 'customer', name: 'c.name' },
             { data: 'invoice_no', name: 't.invoice_no' },
+            { data: 'location_name', name: 'bl.name' },
             { data: 'transaction_date', name: 't.transaction_date' },
             { data: 'sell_qty', name: 'transaction_sell_lines.quantity' },
             { data: 'unit_price', name: 'transaction_sell_lines.unit_price_before_discount' },
             { data: 'discount_amount', name: 'transaction_sell_lines.line_discount_amount' },
-            { data: 'tax', name: 'tax_rates.name' },
-            { data: 'unit_sale_price', name: 'transaction_sell_lines.unit_price_inc_tax' },
-            { data: 'subtotal', name: 'subtotal', searchable: false },
+            // { data: 'tax', name: 'tax_rates.name' },
+            // { data: 'unit_sale_price', name: 'transaction_sell_lines.unit_price_inc_tax' },
+            // { data: 'subtotal', name: 'subtotal', searchable: false },
         ],
         fnDrawCallback: function(oSettings) {
-            $('#footer_subtotal').text(
-                sum_table_col($('#product_sell_report_table'), 'row_subtotal')
-            );
-            $('#footer_total_sold').html(__sum_stock($('#product_sell_report_table'), 'sell_qty'));
-            $('#footer_tax').html(__sum_stock($('#product_sell_report_table'), 'tax', 'left'));
+            // $('#footer_subtotal').text(
+            //     sum_table_col($('#product_sell_report_table'), 'row_subtotal')
+            // );
+            // $('#footer_total_sold').html(__sum_stock($('#product_sell_report_table'), 'sell_qty'));
+            // $('#footer_tax').html(__sum_stock($('#product_sell_report_table'), 'tax', 'left'));
             __currency_convert_recursively($('#product_sell_report_table'));
         },
     });

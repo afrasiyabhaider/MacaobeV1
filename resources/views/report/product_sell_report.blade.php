@@ -44,7 +44,7 @@
                             <span class="input-group-addon">
                                 <i class="fa fa-map-marker"></i>
                             </span>
-                            {!! Form::select('location_id', $business_locations, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+                            {!! Form::select('location_id', $business_locations, null, ['class' => 'form-control select2', 'placeholder' => 'All Locations', 'required']); !!}
                         </div>
                     </div>
                 </div>
@@ -78,19 +78,24 @@
                             id="product_sell_report_table">
                                 <thead>
                                     <tr>
+                                        <th>Image</th>
                                         <th>@lang('sale.product')</th>
+                                        <th>Refference</th>
+                                        <th>Barcode</th>
+                                        <th>Size</th>
                                         <th>@lang('sale.customer_name')</th>
                                         <th>@lang('sale.invoice_no')</th>
+                                        <th>Location</th>
                                         <th>@lang('messages.date')</th>
                                         <th>@lang('sale.qty')</th>
                                         <th>@lang('sale.unit_price')</th>
                                         <th>@lang('sale.discount')</th>
-                                        <th>@lang('sale.tax')</th>
+                                        {{-- <th>@lang('sale.tax')</th>
                                         <th>@lang('sale.price_inc_tax')</th>
-                                        <th>@lang('sale.total')</th>
+                                        <th>@lang('sale.total')</th> --}}
                                     </tr>
                                 </thead>
-                                <tfoot>
+                                {{-- <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
                                         <td colspan="4"><strong>@lang('sale.total'):</strong></td>
                                         <td id="footer_total_sold"></td>
@@ -100,7 +105,7 @@
                                         <td></td>
                                         <td><span class="display_currency" id="footer_subtotal" data-currency_symbol ="true"></span></td>
                                     </tr>
-                                </tfoot>
+                                </tfoot> --}}
                             </table>
                         </div>
                     </div>

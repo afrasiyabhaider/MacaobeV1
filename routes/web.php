@@ -213,6 +213,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('/reports/stock-report', 'ReportController@getStockReport');
     Route::get('/reports/supplier-report', 'ReportController@supplier_report');
     Route::get('/reports/subcategory-report', 'ReportController@sub_category_report');
+    Route::get('/reports/product-first-report', 'ReportController@product_first_report');
     Route::get('/reports/stock-details', 'ReportController@getStockDetails');
     Route::get('/reports/tax-report', 'ReportController@getTaxReport');
     Route::get('/reports/trending-products', 'ReportController@getTrendingProducts');

@@ -23,6 +23,21 @@ class TransactionSellLine extends Model
         return $this->belongsTo(\App\Product::class, 'product_id');
     }
 
+    /**
+     * Get the products image.
+     *
+     * @return string
+     */
+    public function getImageUrlAttribute()
+    {
+        if (!empty($this->image)) {
+            $image_url = asset('/uploads/img/' . $this->image);
+        } else {
+            $image_url = asset('/img/default.png');
+        }
+        return $image_url;
+    }
+
     public function variations()
     {
         return $this->belongsTo(\App\Variation::class, 'variation_id');
