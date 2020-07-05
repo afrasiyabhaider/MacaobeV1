@@ -89,23 +89,32 @@
                                         <th>@lang('messages.date')</th>
                                         <th>@lang('sale.qty')</th>
                                         <th>@lang('sale.unit_price')</th>
+                                        <th>@lang('sale.total')</th> 
                                         <th>@lang('sale.discount')</th>
                                         {{-- <th>@lang('sale.tax')</th>
                                         <th>@lang('sale.price_inc_tax')</th>
-                                        <th>@lang('sale.total')</th> --}}
+                                        --}}
                                     </tr>
                                 </thead>
-                                {{-- <tfoot>
+                                <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="4"><strong>@lang('sale.total'):</strong></td>
+                                        <td colspan="9">
+                                            <strong>@lang('sale.total'):</strong>
+                                        </td>
                                         <td id="footer_total_sold"></td>
                                         <td></td>
+                                        <td>
+                                            <span class="display_currency" id="amount" data-currency_symbol ="true">
+
+                                            </span>
+                                        </td>
                                         <td></td>
-                                        <td id="footer_tax"></td>
+                                        {{-- 
+                                            <td id="footer_tax"></td>
                                         <td></td>
-                                        <td><span class="display_currency" id="footer_subtotal" data-currency_symbol ="true"></span></td>
+                                        <td><span class="display_currency" id="footer_subtotal" data-currency_symbol ="true"></span></td> --}}
                                     </tr>
-                                </tfoot> --}}
+                                </tfoot>
                             </table>
                         </div>
                     </div>
