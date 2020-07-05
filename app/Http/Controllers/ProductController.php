@@ -132,8 +132,8 @@ class ProductController extends Controller
                     DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                     DB::raw('MIN(v.sell_price_inc_tax) as min_price'))
-                    // ->orderBy('products.updated_at', 'DESC')
-                    ->orderBy('vld.updated_at', 'DESC')
+                    ->orderBy('products.updated_at', 'DESC')
+                    // ->orderBy('vld.updated_at', 'DESC')
                     ->groupBy('products.id');
 
             // $type = request()->get('type', null);
