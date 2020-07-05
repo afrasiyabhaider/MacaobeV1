@@ -19,6 +19,7 @@ use App\VariationGroupPrice;
 use App\VariationLocationDetails;
 use App\VariationTemplate;
 use App\VariationValueTemplate;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ProductUtil extends Util
@@ -347,6 +348,7 @@ class ProductUtil extends Util
                 $variation_location_d->location_id = $location_id;
                 $variation_location_d->product_variation_id = $variation->product_variation_id;
                 $variation_location_d->qty_available = 0;
+                $variation_location_d->product_updated_at = Carbon::now();
             }
 
             $variation_location_d->qty_available += $qty_difference;

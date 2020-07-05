@@ -23,6 +23,7 @@ use App\VariationGroupPrice;
 
 use App\VariationLocationDetails;
 use App\VariationTemplate;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -126,14 +127,16 @@ class ProductController extends Controller
                     'products.is_inactive',
                     'products.updated_at',
                     'sizes.name as size',
+                    'vld.product_updated_at as product_date',
                     'colors.name as color',
                     'v.dpp_inc_tax as purchase_price',
                     'v.sell_price_inc_tax as selling_price',
                     DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                     DB::raw('MIN(v.sell_price_inc_tax) as min_price'))
-                    ->orderBy('products.updated_at', 'DESC')
+                    // ->orderBy('products.updated_at', 'DESC')
                     // ->orderBy('vld.updated_at', 'DESC')
+                    ->orderBy('vld.product_updated_at', 'DESC')
                     ->groupBy('products.id');
 
             // $type = request()->get('type', null);
@@ -243,6 +246,9 @@ class ProductController extends Controller
                 })
                 ->editColumn('image', function ($row) {
                     return '<div style="display: flex;"><img src="' . $row->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
+                })
+                ->editColumn('product_date', function ($row) {
+                    return Carbon::parse($row->product_date)->format('d-M-Y h:i:s A');
                 })
                 ->editColumn('bulk_add', function ($row) {
                     return $row->bulk_add;
@@ -1116,6 +1122,7 @@ class ProductController extends Controller
             $variation->save();
 
             $purchase_line = VariationLocationDetails::where('product_id', '=', $request->input('product_id'))->first();
+            $purchase_line->product_updated_at = Carbon::now();
             $purchase_line->qty_available = $request->input('quantity');
             $purchase_line->save();
             DB::commit();

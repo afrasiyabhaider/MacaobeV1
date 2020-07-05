@@ -189,7 +189,7 @@
                     "orderable": false,
                     "searchable": false
                 } ],
-                // aaSorting: [2, 'asc'],
+                aaSorting: [14, 'desc'],
                 columns: [
                         { data: 'mass_delete',searchable:false,orderable:false},
                         { data: 'image', name: 'products.image',searchable:false,orderable:false  },
@@ -205,7 +205,8 @@
                         { data: 'supplier_name', name: 'suppliers.name'},
                         { data: 'category', name: 'c1.name'},
                         { data: 'sub_category', name: 'c2.name'},
-                        { data: 'date', name: 'products.created_at'},
+                        { data: 'product_date', name: 'vld.product_updated_at'},
+                        // { data: 'date', name: 'products.created_at'},
                         { data: 'bulk_add', name: 'products.bulk_add'},
                         { data: 'sku', name: 'products.sku'},
                         { data: 'description', name: 'products.description'},
