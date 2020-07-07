@@ -38,21 +38,22 @@
      </div>
      <div class="row" style="margin-top: 20px;">
           @component('components.widget', ['class' => 'box-primary'])
-          <div class="col-md-12">
-               <div class="table-responsive">
-                    <table class="table table-bordered table-striped" id="supplier_report_table">
-                         <thead>
-                              <tr>
-                                   <th>Supplier Name</th>
-                                   <th>Available Stock</th>
-                                   <th>Total Sold</th>
-                                   <th>Total</th>
-                                   <th>Transferred</th>
-                              </tr>
-                         </thead>
-                    </table>
+               <div class="col-md-12">
+                    <div class="table-responsive">
+                         <table class="table table-bordered table-striped" id="supplier_report_table">
+                              <thead>
+                                   <tr>
+                                        <th>Supplier Name</th>
+                                        <th>Total Sold</th>
+                                        <th>Available Stock</th>
+                                        <th>Sale Percent</th>
+                                        <th>Total Pieces</th>
+                                        {{-- <th>Transferred</th> --}}
+                                   </tr>
+                              </thead>
+                         </table>
+                    </div>
                </div>
-          </div>
           @endcomponent
      </div>
 </section>
@@ -79,10 +80,11 @@
         aaSorting: [2, 'asc'],
         columns: [
             { data: 'supplier_name', name: 'supplier_name' },
-            { data: 'quantity_available', name: 'quantity_available' },
             { data: 'quantity_sold', name: 'quantity_sold' },
+            { data: 'quantity_available', name: 'quantity_available' },
+            { data: 'sale_percent', name: 'sale_percent' },
             { data: 'total', name: 'total' },
-            { data: 'transfered', name: 'transfered' },
+          //   { data: 'transfered', name: 'transfered' },
         ],
     });
     $(

@@ -358,6 +358,13 @@ class ReportController extends Controller
 
                     return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $quantity_sold . '" data-unit="Pcs" >' . $quantity_sold . '</span> Pcs';
                 })
+                ->addColumn('sale_percent', function ($row) {
+                    $quantity_available =  (float) $row->quantity_available;
+                    $quantity_sold =  (float) $row->quantity_sold;
+                    
+                    $percent = number_format((($quantity_sold/$quantity_available)*100),0);
+                    return $percent.'%';
+                })
                 ->editColumn('quantity_available', function ($row) {
                     $quantity_available = 0;
                     if ($row->quantity_available) {
