@@ -783,6 +783,15 @@ class ReportController extends Controller
                         return '<div style="display: flex;"><img src="' . $product->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
                     }
                 })
+                ->addColumn('sale_percent', function ($row) {
+                    $quantity_sold =  (float) $row->total_sold;
+                    $quantity_available =  (float) $row->stock  + $quantity_sold;
+                    if($quantity_available < 1){
+                        $quantity_available = 1;
+                    }
+                    $percent = number_format((($quantity_sold/$quantity_available)*100),0);
+                    return $percent.'%';
+                })
                 ->editColumn('stock', function ($row) {
                     if ($row->enable_stock) {
                         $stock = $row->stock ? $row->stock : 0;
@@ -1857,6 +1866,8 @@ class ReportController extends Controller
                 ->where('t.status', 'final')
                 ->select(
                     'p.name as product_name',
+                    'p.image as image',
+                    'p.refference as refference',
                     'p.type as product_type',
                     'pv.name as product_variation',
                     'v.name as variation_name',
@@ -1913,6 +1924,9 @@ class ReportController extends Controller
                      return '<a data-href="' . action('SellController@show', [$row->transaction_id])
                             . '" href="#" data-container=".view_modal" class="btn-modal">' . $row->invoice_no . '</a>';
                  })
+                 ->editColumn('image', function ($row) {
+                    return '<div style="display: flex;"><img src="' . $row->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
+                })
                 ->editColumn('transaction_date', '{{@format_date($transaction_date)}}')
                 ->editColumn('unit_sale_price', function ($row) {
                     return '<span class="display_currency" data-currency_symbol = true>' . $row->unit_sale_price . '</span>';
@@ -1938,7 +1952,7 @@ class ReportController extends Controller
                             $row->item_tax.
                        '</span>'.'<br>'.'<span class="tax" data-orig-value="'.(float)$row->item_tax.'" data-unit="'.$row->tax.'"><small>('.$row->tax.')</small></span>';
                 })
-                ->rawColumns(['invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax'])
+                ->rawColumns(['image','invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax'])
                 ->make(true);
         }
 

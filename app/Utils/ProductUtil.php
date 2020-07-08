@@ -454,12 +454,10 @@ class ProductUtil extends Util
         //Check if stock is enabled or not.
         if ($product->enable_stock == 1) {
             //Decrement Quantity in variations location table
-            VariationLocationDetails::where('variation_id', $variation_id)
+            $data[] = VariationLocationDetails::where('variation_id', $variation_id)
                 ->where('product_id', $product_id)
                 ->where('location_id', $location_id)
                 ->decrement('qty_available', $qty_difference);
-
-
             // Variation::where('id', $variation_id)
             //     ->where('product_id', $product_id)
             //     ->decrement('qty_available', $qty_difference);

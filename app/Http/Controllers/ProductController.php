@@ -131,7 +131,8 @@ class ProductController extends Controller
                     'colors.name as color',
                     'v.dpp_inc_tax as purchase_price',
                     'v.sell_price_inc_tax as selling_price',
-                    DB::raw('SUM(vld.qty_available) as current_stock'),
+                    'vld.qty_available as current_stock',
+                    // DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                     DB::raw('MIN(v.sell_price_inc_tax) as min_price'))
                     // ->orderBy('products.updated_at', 'DESC')

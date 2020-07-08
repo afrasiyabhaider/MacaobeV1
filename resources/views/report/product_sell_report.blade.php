@@ -78,26 +78,30 @@
                             id="product_sell_report_table">
                                 <thead>
                                     <tr>
+                                        <th>Image</th>
                                         <th>@lang('sale.product')</th>
+                                        <th>Refference</th>
                                         <th>@lang('sale.customer_name')</th>
                                         <th>@lang('sale.invoice_no')</th>
                                         <th>@lang('messages.date')</th>
-                                        <th>@lang('sale.qty')</th>
                                         <th>@lang('sale.unit_price')</th>
                                         <th>@lang('sale.discount')</th>
-                                        <th>@lang('sale.tax')</th>
-                                        <th>@lang('sale.price_inc_tax')</th>
+                                        {{-- <th>@lang('sale.tax')</th> --}}
+                                        <th>After Discount</th>
+                                        <th>@lang('sale.qty')</th>
                                         <th>@lang('sale.total')</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="4"><strong>@lang('sale.total'):</strong></td>
-                                        <td id="footer_total_sold"></td>
-                                        <td></td>
+                                        <td colspan="9">
+                                            <strong>@lang('sale.total'):</strong>
+                                        </td>
+                                        {{-- <td></td>
                                         <td></td>
                                         <td id="footer_tax"></td>
-                                        <td></td>
+                                        <td></td> --}}
+                                        <td id="footer_total_sold"></td>
                                         <td><span class="display_currency" id="footer_subtotal" data-currency_symbol ="true"></span></td>
                                     </tr>
                                 </tfoot>

@@ -19,6 +19,7 @@
                 <th>Category</th>
                 <th>Sub-Category</th>
                 <th>Size</th>
+                <th>Sale Percentage</th>
                 <th>@lang('report.current_stock')</th>
                 <th>Total Sold</th>
                 <th>Total Transfered</th>

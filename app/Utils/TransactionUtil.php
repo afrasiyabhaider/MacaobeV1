@@ -180,8 +180,10 @@ class TransactionUtil extends Util
             if (!empty($product['sub_unit_id']) && !empty($product['base_unit_multiplier'])) {
                 $multiplier = $product['base_unit_multiplier'];
             }
+            // dd($product);
             //Check if transaction_sell_lines_id is set.
             if (!empty($product['transaction_sell_lines_id'])) {
+
                 $edit_ids[] = $product['transaction_sell_lines_id'];
                 $this->editSellLine($product, $location_id, $status_before, $multiplier);
 
@@ -227,6 +229,7 @@ class TransactionUtil extends Util
 
                 $unit_price = ($product['un_discount'] != 0) ? $unit_price = $unit_price - $product['un_discount'] : $unit_price;
                 $uf_quantity = $uf_data ? $this->num_uf($product['quantity']) : $product['quantity'];
+
                 $uf_item_tax = $uf_data ? $this->num_uf($product['item_tax']) : $product['item_tax'];
                 $uf_unit_price_inc_tax = $uf_data ? $this->num_uf($product['unit_price_inc_tax']) : $product['unit_price_inc_tax'];
                 $line = [
@@ -286,7 +289,6 @@ class TransactionUtil extends Util
         if (!is_object($transaction)) {
             $transaction = Transaction::findOrFail($transaction);
         }
-
         //Delete the products removed and increment product stock.
         $deleted_lines = [];
         if (!empty($edit_ids)) {
@@ -2483,6 +2485,7 @@ class TransactionUtil extends Util
 
             //Iterate over the rows, assign the purchase line to sell lines.
             $qty_selling = $line->quantity;
+
             foreach ($rows as $k => $row) {
                 $qty_allocated = 0;
 
@@ -2506,7 +2509,6 @@ class TransactionUtil extends Util
                             'created_at' => \Carbon::now(),
                             'updated_at' => \Carbon::now()
                         ];
-
                     //Update purchase line
                     PurchaseLine::where('id', $row->purchase_lines_id)
                         ->update(['quantity_adjusted' => $row->quantity_adjusted + $qty_allocated]);
@@ -3299,8 +3301,9 @@ class TransactionUtil extends Util
      */
     public function updateQuantitySoldFromSellLine($sell_line, $new_quantity, $old_quantity)
     {
+        
         $qty_difference = $this->num_uf($new_quantity) - $this->num_uf($old_quantity);
-
+        
         if ($qty_difference != 0) {
             $qty_left_to_update = $qty_difference;
             $sell_line_purchase_lines = TransactionSellLinesPurchaseLines::where('sell_line_id', $sell_line->id)->get();
