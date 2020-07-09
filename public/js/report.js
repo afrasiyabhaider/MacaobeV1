@@ -827,7 +827,10 @@ $(document).ready(function() {
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
         columns: [
+            { data: 'image', name: 'products.image', searchable: false, orderable: false },
             { data: 'product_name', name: 'p.name' },
+            { data: 'refference', name: 'p.refference' },
+            { data: 'barcode', name: 'p.sku' },
             { data: 'transaction_date', name: 't.transaction_date' },
             { data: 'current_stock', name: 'current_stock', searchable: false, orderable: false },
             { data: 'total_qty_sold', name: 'total_qty_sold', searchable: false },

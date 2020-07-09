@@ -68,7 +68,7 @@
                     </li>
 
                     <li>
-                        <a href="#psr_grouped_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-bars" aria-hidden="true"></i> @lang('lang_v1.grouped')</a>
+                        <a href="#psr_grouped_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-cart-plus" aria-hidden="true"></i> Grouped Sold Products</a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -115,7 +115,10 @@
                             id="product_sell_grouped_report_table" style="width: 100%;">
                                 <thead>
                                     <tr>
+                                        <th>Image</th>
                                         <th>@lang('sale.product')</th>
+                                        <th>Reffernce</th>
+                                        <th>Barcode</th>
                                         <th>@lang('messages.date')</th>
                                         <th>@lang('report.current_stock')</th>
                                         <th>@lang('report.total_unit_sold')</th>
@@ -124,7 +127,7 @@
                                 </thead>
                                 <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="3"><strong>@lang('sale.total'):</strong></td>
+                                        <td colspan="6"><strong>@lang('sale.total'):</strong></td>
                                         <td id="footer_total_grouped_sold"></td>
                                         <td><span class="display_currency" id="footer_grouped_subtotal" data-currency_symbol ="true"></span></td>
                                     </tr>
