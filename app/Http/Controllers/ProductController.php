@@ -334,7 +334,8 @@ class ProductController extends Controller
                 ->leftJoin('sizes', 'products.sub_size_id', '=', 'sizes.id')
                 ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
                 ->where('products.business_id', $business_id)
-                ->where('vld.location_id', $business_location_id)->join('suppliers', 'suppliers.id', '=', 'products.supplier_id')
+                ->where('vld.location_id', $business_location_id)
+                ->join('suppliers', 'suppliers.id', '=', 'products.supplier_id')
                 ->where('vld.qty_available', '>', '0')
                 ->where('products.type', '!=', 'modifier')
                 ->select(
@@ -362,7 +363,9 @@ class ProductController extends Controller
                     DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                     DB::raw('MIN(v.sell_price_inc_tax) as min_price')
-                )->orderBy('products.updated_at', 'DESC')->groupBy('products.id');
+                )
+                ->groupBy('products.id')
+                ->orderBy('vld.product_updated_at', 'DESC');
 
             $type = request()->get('type', null);
             if (!empty($type)) {
@@ -759,6 +762,7 @@ class ProductController extends Controller
         //If brands, category are enabled then send else false.
         $noRefferenceProducts = (request()->session()->get('business.enable_category') == 1) ? Category::catAndSubCategories($business_id) : false;
         $suppliers = (request()->session()->get('business.enable_brand') == 1) ? Supplier::where('business_id', $business_id)
+            ->orderBy('name','ASC')
             ->pluck('name', 'id')
             ->prepend(__('lang_v1.all_suppliers'), 'all') : false;
         $categories = Category::where('parent_id', 0)->pluck('name', 'id');
@@ -778,7 +782,9 @@ class ProductController extends Controller
         $objBuss = \App\Business::find(request()->session()->get('user.business_id'));
         $refferenceCount = str_pad($objBuss->prod_refference, 4, '0', STR_PAD_LEFT);
 
-        $suppliers = Supplier::where('business_id', $business_id)->pluck('name', 'id');
+        $suppliers = Supplier::where('business_id', $business_id)
+                                ->orderBy('name','ASC')
+                                ->pluck('name', 'id');
         $colors = Color::where('business_id', $business_id)->pluck('name', 'id');
         $units = Unit::forDropdown($business_id, true);
 
@@ -1066,7 +1072,6 @@ class ProductController extends Controller
         }
 
         $request->validate([
-            'supplier' => ['required', Rule::notIn(0)],
             'supplier' => ['required', Rule::notIn(0)],
             'category' => ['required', Rule::notIn(0)],
             // 'sub_category' => [Rule::notIn(0)],

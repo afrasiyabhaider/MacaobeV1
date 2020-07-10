@@ -3,12 +3,11 @@
 
 @section('content')
 <style type="text/css">
-  .border-color
-  {
-    border-color : red;
+  .border-color {
+    border-color: red;
   }
-  .custom-form-control
-  {
+
+  .custom-form-control {
     border-radius: 0;
     box-shadow: none;
     border-color: #d2d6de;
@@ -22,286 +21,297 @@
     background-image: none;
     border: 1px solid #ccc;
   }
-  
 </style>
 
 <!-- Main content -->
 <section class="content">
-	@if ($errors->any())
-	    <div class="container">
-		    <div class="row">
-				<div class="col-sm-6">
-					<div>
-						<div class="alert alert-danger alert-dismissable">
-							<button type="button " class="close float-right" data-dismiss="alert" aria-label="Close">
-								<span aria-hidden="true">
-									<i class="fa fa-2x fa-times-circle"></i>
-								</span>
-							</button>
-							<h4>
-								Must Remove Following Errors
-							</h4>
-							<ul>
-								@foreach ($errors->all() as $item)
-									<li>
-										{{ $item}}
-									</li>
-								@endforeach
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-	    </div>
-	@endif
-{!! Form::open(['url' => action('ProductController@bulkUpdate'), 'method' => 'post', 
-    'id' => 'product_update_form','class' => 'product_update_form', 'files' => true ]) !!}
-    <input type="hidden" name="product_id" value="{{$product->id}}" id="product_id">
-   <div class="row">
-	   <div class="col-sm-8">
-		   <h3 class="text-muted">
-			   Update Product
-		   </h3>
-          @component('components.widget', ['class' => 'box-primary'])
-               <div class="row mb-5">
-                    <div class="col-sm-4">
-                         <label>Supplier</label>
-                         <input type="hidden" name="hidden_supplier_id" id="hidden_supplier_id" value="0">
-                         <select name="supplier" id="supplier_id" onchange="getSupplierDetails();" class="select2 form-control">
-                              <optgroup>
-                                   <option value="0">
-                                        Please Select Supplier
-                                   </option>
-                                   @foreach ($suppliers as $key=>$value)
-                                        <option value="{{$key}}" @if ($product->supplier_id == $key)
-                                            selected
-                                        @endif>
-                                             {{
+  @if ($errors->any())
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <div>
+          <div class="alert alert-danger alert-dismissable">
+            <button type="button " class="close float-right" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">
+                <i class="fa fa-2x fa-times-circle"></i>
+              </span>
+            </button>
+            <h4>
+              Must Remove Following Errors
+            </h4>
+            <ul>
+              @foreach ($errors->all() as $item)
+              <li>
+                {{ $item}}
+              </li>
+              @endforeach
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  @endif
+  {!! Form::open(['url' => action('ProductController@bulkUpdate'), 'method' => 'post',
+  'id' => 'product_update_form','class' => 'product_update_form', 'files' => true ]) !!}
+  <input type="hidden" name="product_id" value="{{$product->id}}" id="product_id">
+  <div class="row">
+    <div class="col-sm-8">
+      <h3 class="text-muted">
+        Update Product
+      </h3>
+      @component('components.widget', ['class' => 'box-primary'])
+      <div class="row mb-5">
+        <div class="col-sm-4">
+          <label>Supplier</label>
+          <input type="hidden" name="hidden_supplier_id" id="hidden_supplier_id" value="0">
+          <select name="supplier" id="supplier_id" onchange="getSupplierDetails();" class="select2 form-control">
+            <optgroup>
+              <option value="0">
+                Please Select Supplier
+              </option>
+              @foreach ($suppliers as $key=>$value)
+              <option value="{{$key}}" @if ($product->supplier_id == $key)
+                selected
+                @endif>
+                {{
                                                   $value
                                              }}
-                                        </option>
-                                   @endforeach
-                              </optgroup>
-                         </select>
-				</div>
-				<div class="col-sm-4">
-					<label>Category</label>
-					<select name="category" id="category_id"  class="select2 form-control">
-                              <optgroup>
-                                   <option value="0">
-                                        Please Select Category
-                                   </option>
-                                   @foreach ($categories as $key=>$value)
-								<option value="{{$key}}" @if ($product->category_id == $key)
-								    selected
-								@endif>
-                                             {{
+              </option>
+              @endforeach
+            </optgroup>
+          </select>
+        </div>
+        <div class="col-sm-4">
+          <label>Category</label>
+          <select name="category" id="category_id" class="select2 form-control">
+            <optgroup>
+              <option value="0">
+                Please Select Category
+              </option>
+              @foreach ($categories as $key=>$value)
+              <option value="{{$key}}" @if ($product->category_id == $key)
+                selected
+                @endif>
+                {{$value}}
+              </option>
+              @endforeach
+            </optgroup>
+          </select>
+        </div>
+        <div class="col-sm-4">
+          <label>Sub-Category</label>
+          <select name="sub_category" id="sub_category_id" class="select2 form-control">
+            <optgroup>
+              <option value="0">
+                Please Select Sub-Category
+              </option>
+              @foreach ($sub_categories as $key=>$value)
+              <option value="{{$key}}">
+                {{
                                                   $value
                                              }}
-                                        </option>
-                                   @endforeach
-                              </optgroup>
-                         </select>
-				</div>
-				<div class="col-sm-4">
-					<label>Sub-Category</label>
-					<select name="sub_category" id="sub_category_id"  class="select2 form-control">
-                              <optgroup>
-                                   <option value="0">
-                                        Please Select Sub-Category
-                                   </option>
-                                   @foreach ($sub_categories as $key=>$value)
-                                        <option value="{{$key}}">
-                                             {{
-                                                  $value
-                                             }}
-                                        </option>
-                                   @endforeach
-                              </optgroup>
-                         </select>
-				</div>
-			</div>
-			<div class="row" style="margin-top: 20px">
-				<div class="col-sm-4">
-					@if ($product->image != null)
-						<img src="{{asset('uploads/img/'.$product->image)}}" class="img-thumbnail img-responsive" style="width:100px" id="img-previewer" name="image">
-					@else
-						<img src="{{asset('img/default.png')}}" class="img-thumbnail img-responsive" style="width:100px" id="img-previewer" name="image">	    
-					@endif
-					<div class="form-group">
-						<label>
-						Product Image:
-						</label>
-						<input type="file" name="file[]" id="img-input"
-						    value="{{$product->image}}">
-						<small>
-							<span class="help-block">
-								@lang('purchase.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)]) <br> @lang('lang_v1.aspect_ratio_should_be_1_1')
-							</span>
-						</small>
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<label>Product Name *</label>
-					<input type="text" name="product_name" value="{{$product->name}}" class="req form-control" id="product_name" readonly required>
-				</div>
-				<div class="col-sm-4">
-					<label>Refference * @show_tooltip(__('tooltip.sku'))</label>
-					<input type="text" name="refference" value="{{$product->refference}}" id="refference_id" class="req form-control @error('refference') is-invalid @enderror" required>
-				</div>
-          @php
-              $ut = new \App\Utils\ProductUtil();
-              // dd();
-          @endphp
-				<div class="col-sm-4" style="margin-top: 30px">
-					<label>Unit Price * </label>
-					<input name="unit_price" autofocus required="true" type="text" class="req form-control col-12" value="{{$ut->num_f($product->variations()->first()->dpp_inc_tax)}}" id="unit_price" onchange="changeUnitPrice(this);">
-				</div>
-				<div class="col-sm-4" style="margin-top: 30px">
+              </option>
+              @endforeach
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 20px">
+        <div class="col-sm-4">
+          @if ($product->image != null)
+          <img src="{{asset('uploads/img/'.$product->image)}}" class="img-thumbnail img-responsive" style="width:100px"
+            id="img-previewer" name="image">
+          @else
+          <img src="{{asset('img/default.png')}}" class="img-thumbnail img-responsive" style="width:100px"
+            id="img-previewer" name="image">
+          @endif
+          <div class="form-group">
+            <label>
+              Product Image:
+            </label>
+            <input type="file" name="file[]" id="img-input" value="{{$product->image}}">
+            <small>
+              <span class="help-block">
+                @lang('purchase.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)]) <br>
+                @lang('lang_v1.aspect_ratio_should_be_1_1')
+              </span>
+            </small>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <label>Product Name *</label>
+          <input type="text" name="product_name" value="{{$product->name}}" class="req form-control" id="product_name"
+            readonly required>
+        </div>
+        <div class="col-sm-4">
+          <label>Refference * @show_tooltip(__('tooltip.sku'))</label>
+          <input type="text" name="refference" value="{{$product->refference}}" id="refference_id"
+            class="req form-control @error('refference') is-invalid @enderror" required>
+        </div>
+        @php
+        $ut = new \App\Utils\ProductUtil();
+        // dd();
+        @endphp
+        <div class="col-sm-4" style="margin-top: 30px">
+          <label>Unit Price * </label>
+          <input name="unit_price" autofocus required="true" type="text" class="req form-control col-12"
+            value="{{$ut->num_f($product->variations()->first()->dpp_inc_tax)}}" id="unit_price"
+            onchange="changeUnitPrice(this);">
+        </div>
+        <div class="col-sm-4" style="margin-top: 30px">
           <label>Sale Price * </label>
-					<input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$ut->num_f($product->variations()->first()->sell_price_inc_tax)}}" id="sale_price" onchange="DittoThis(this,'profit_percent')">
-				</div>
+          <input name="custom_price" required="true" type="text" class="req form-control col-12"
+            value="{{$ut->num_f($product->variations()->first()->sell_price_inc_tax)}}" id="sale_price"
+            onchange="DittoThis(this,'profit_percent')">
+        </div>
       </div>
       <div class="row">
         <div class="col-sm-4"></div>
         <div class="col-sm-4">
           <label>Barcode</label>
-					<input required="true" type="text" class=" form-control col-12" value="{{$product->sku}}" id="sku" name="sku">
+          <input required="true" type="text" class=" form-control col-12" value="{{$product->sku}}" id="sku" name="sku">
         </div>
         <div class="col-sm-4">
           <label>Description</label>
-					<input  type="text" class=" form-control col-12" value="{{$product->description}}" id="description" name="description">
+          <input type="text" class=" form-control col-12" value="{{$product->description}}" id="description"
+            name="description">
         </div>
       </div>
-			<div class="row" style="margin-top: 30px">
-				<div class="col-sm-4">
-					<label>Color *</label>
-					{{-- <input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$product->color()->first()->name}}" id="unit_price" onchange="DittoThis(this,'single_dsp')"> --}}
-					<select name="color" id="color_id" class="select2 form-control">
-						<optgroup>
-							<option value="0">
-								Please Select
-							</option>
-							@foreach ($colors as $key=>$item)
-								<option value="{{$key}}" @if ($key == $product->color()->first()->id)
-								    selected
-								@endif>
-									{{$item}}
-								</option>
-							@endforeach
-						</optgroup>
-					</select>
-				</div>
-				<div class="col-sm-4">
+      <div class="row" style="margin-top: 30px">
+        <div class="col-sm-4">
+          <label>Color *</label>
+          {{-- <input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$product->color()->first()->name}}"
+          id="unit_price" onchange="DittoThis(this,'single_dsp')"> --}}
+          <select name="color" id="color_id" class="select2 form-control">
+            <optgroup>
+              <option value="0">
+                Please Select
+              </option>
+              @foreach ($colors as $key=>$item)
+              <option value="{{$key}}" @if ($key==$product->color()->first()->id)
+                selected
+                @endif>
+                {{$item}}
+              </option>
+              @endforeach
+            </optgroup>
+          </select>
+        </div>
+        <div class="col-sm-4">
           <label>Quantity *</label>
-					<input name="quantity" required="true" type="number" class="req form-control col-12" min="1" value="{{$product->variation_location_details()->first()->qty_available}}" id="qty_id">
-				</div>
-				<div class="col-sm-4">
-					<label>Size *</label>
-					{{-- <input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$product->sub_size()->first()->name}}" id="unit_price"> --}}
-					<select name="size" id="sizes_id" class="select2 form-control">
-						<optgroup>
-							<option value="0">
-								Please Select
-							</option>
-							@foreach ($sizes as $key=>$item)
-								<option value="{{$item->id}}" @if ($item->id == $product->sub_size_id)
-								    selected
-								@endif>
-									{{$item->name}}
-								</option>
-							@endforeach
-						</optgroup>
-					</select>
-				</div>
-			</div>
-			<div class="row" style="margin-top: 30px">
-				<div class="col-sm-12">
-					<input type="hidden" name="submit_type" id="submit_type">
-					<div class="text-center row">
-						<div class="btn-group">
-							{{-- <a href="{{url('products/bulk_add')}}" class="btn btn-info">
-								<i class="fa fa-plus"></i>
-								Add New Product
-							</a> --}}
-							{{-- onclick="addThis();" --}}
-							<button type="submit" class="btn btn-success col-12 fa-2x" style="width:150px;padding:10px;font-size:20px" id="btnSubmit">
-								<i class="fa fa-save"></i>
-								@lang('messages.update')
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-          @endcomponent
-	   </div>
-		<div class="col-sm-4">
-			{{-- <h1>Hello There</h1> --}}
-			{{-- box-widget --}}
-			<h3 class="text-muted">Choose Product</h3>
-			<div class="box box-primary">
-				<div class="box-header with-border">
+          <input name="quantity" required="true" type="number" class="req form-control col-12" min="1"
+            value="{{$product->variation_location_details()->first()->qty_available}}" id="qty_id">
+        </div>
+        <div class="col-sm-4">
+          <label>Size *</label>
+          {{-- <input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$product->sub_size()->first()->name}}"
+          id="unit_price"> --}}
+          <select name="size" id="sizes_id" class="select2 form-control">
+            <optgroup>
+              <option value="0">
+                Please Select
+              </option>
+              @foreach ($sizes as $key=>$item)
+              <option value="{{$item->id}}" @if ($item->id == $product->sub_size_id)
+                selected
+                @endif>
+                {{$item->name}}
+              </option>
+              @endforeach
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 30px">
+        <div class="col-sm-12">
+          <input type="hidden" name="submit_type" id="submit_type">
+          <div class="text-center row">
+            <div class="btn-group">
+              {{-- <a href="{{url('products/bulk_add')}}" class="btn btn-info">
+              <i class="fa fa-plus"></i>
+              Add New Product
+              </a> --}}
+              {{-- onclick="addThis();" --}}
+              <button type="submit" class="btn btn-success col-12 fa-2x" style="width:150px;padding:10px;font-size:20px"
+                id="btnSubmit">
+                <i class="fa fa-save"></i>
+                @lang('messages.update')
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      @endcomponent
+    </div>
+    <div class="col-sm-4">
+      {{-- <h1>Hello There</h1> --}}
+      {{-- box-widget --}}
+      <h3 class="text-muted">Choose Product</h3>
+      <div class="box box-primary">
+        <div class="box-header with-border">
 
-				@if(!empty($noRefferenceProducts))
-					<select class="select2" id="product_category" style="width:45% !important">
-						<option value="all">@lang('lang_v1.all_category')</option>
-						@foreach($noRefferenceProducts as $noRefference)
-							<option value="{{$noRefference['id']}}">
-								{{$noRefference['name']}}
-							</option>
-						@endforeach
-						@foreach($noRefferenceProducts as $category)
-							@if(!empty($category['sub_categories']))
-								<optgroup label="{{$category['name']}}">
-									@foreach($category['sub_categories'] as $sc)
-										<i class="fa fa-minus"></i> <option value="{{$sc['id']}}">{{$sc['name']}}</option>
-									@endforeach
-								</optgroup>
-							@endif
-						@endforeach
-					</select>
-				@endif
+          @if(!empty($noRefferenceProducts))
+          <select class="select2" id="product_category" style="width:45% !important">
+            <option value="all">@lang('lang_v1.all_category')</option>
+            @foreach($noRefferenceProducts as $noRefference)
+            <option value="{{$noRefference['id']}}">
+              {{$noRefference['name']}}
+            </option>
+            @endforeach
+            @foreach($noRefferenceProducts as $category)
+            @if(!empty($category['sub_categories']))
+            <optgroup label="{{$category['name']}}">
+              @foreach($category['sub_categories'] as $sc)
+              <i class="fa fa-minus"></i>
+              <option value="{{$sc['id']}}">{{$sc['name']}}</option>
+              @endforeach
+            </optgroup>
+            @endif
+            @endforeach
+          </select>
+          @endif
 
-				@if(!empty($suppliers))
-					&nbsp;
-					 <select class="select2" id="supplier" style="width:45% !important">
-						<option value="all">All Suppliers</option>
-						@foreach($suppliers as $key=>$noRefference)
-							<option value="{{$key}}" @if ($key == $product->supplier_id)
-                  selected
+          @if(!empty($suppliers))
+          &nbsp;
+          <select class="select2" id="supplier" style="width:45% !important">
+            <option value="all">All Suppliers</option>
+            @foreach($suppliers as $key=>$noRefference)
+            <option value="{{$key}}" @if ($key==$product->supplier_id)
+              selected
               @endif>
-								{{$noRefference}}
-							</option>
-						@endforeach
-					</select>
-				@endif
+              {{$noRefference}}
+            </option>
+            @endforeach
+          </select>
+          @endif
 
-				
 
-				<div class="box-tools pull-right">
-					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-				</div>
 
-				<!-- /.box-tools -->
-				</div>
-				<!-- /.box-header -->
-				<input type="hidden" id="suggestion_page" value="1">
-				<div class="box-body">
-					<div class="row">
-						<div class="col-sm-12">
-							<div class="eq-height-row" id="product_list_body"></div>
-						</div>
-						<div class="col-sm-12 text-center" id="suggestion_page_loader" style="display: none;">
-							<i class="fa fa-spinner fa-spin fa-2x"></i>
-						</div>
-					</div>
-				</div>
-				<!-- /.box-body -->
-			</div>
-			{{-- @include('sale_pos.partials.product_list_box') --}}
-		</div>
-		</div>
-		{{-- <div class="row">
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+          </div>
+
+          <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <input type="hidden" id="suggestion_page" value="1">
+        <div class="box-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="eq-height-row" id="product_list_body"></div>
+            </div>
+            <div class="col-sm-12 text-center" id="suggestion_page_loader" style="display: none;">
+              <i class="fa fa-spinner fa-spin fa-2x"></i>
+            </div>
+          </div>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      {{-- @include('sale_pos.partials.product_list_box') --}}
+    </div>
+  </div>
+  {{-- <div class="row">
 			<div class="col-sm-12">
 				<input type="hidden" name="submit_type" id="submit_type">
 				<div class="text-center row">
@@ -319,7 +329,7 @@
 				</div>
 			</div>
 		</div> --}}
-{{-- 
+  {{-- 
 	<hr/>
 	<div class="row box box-primary" id="c"> 
       <div class="col-sm-12">
@@ -342,9 +352,9 @@
     <div class="row box box-primary" id="bulk_product_home"> 
       
 	</div> --}}
-	
-{!! Form::close() !!}
-  
+
+  {!! Form::close() !!}
+
 </section>
 <!-- /.content -->
 <!-- quick product modal -->
@@ -357,62 +367,67 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" id="btnClose">&times;</button>
         <h4 class="modal-title">Choose Size</h4>
-	  </div>
-	  <div class="row" style="margin: 10px;">
-			<div class="col-sm-12">
-				@foreach($sizes as $id => $objSize)
-					<div class="col-sm-4">
-						<input type="radio" id="btnSize_{{$objSize->id}}" name="chooseSize" class="" value="{{$objSize->id}}">
-						{{-- onclick="getSizes({{$objSize->id}})" --}}
-						<label class="custom-control-label" for="btnSize_{{$objSize->id}}">{{$objSize->name}} </label>
-					</div>
-				@endforeach
-			</div> 
-        </div>
-      <div class="col-sm-12 @if(!session('business.enable_brand')) hide @endif">
-          <div class="form-group">
-            {!! Form::label('color_id', __('product.color') . ':') !!}
-            <div class="input-group">
-              {!! Form::select('color_idc', $colors,  null, ['placeholder' => __('messages.please_select'), 'class' => 'req form-control','id' => 'color_idc', 'required' => 'true']); !!}
-            <span class="input-group-btn">
-                <button type="button" @if(!auth()->user()->can('color.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('ColorController@create', ['quick_add' => true])}}" title="@lang('color.add_brand')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
-              </span>
-            </div>
-          </div>
-        </div>
-        {{-- <div class="row" style="margin: 10px;">
-			<div class="col-sm-12">
-				@foreach($sizes as $id => $objSize)
-					<button type="button" class="col-sm-4 btn btn-md btn-danger" id="btnSize_{{$objSize->id}}" onclick="getSizes({{$objSize->id}})">{{$objSize->name}}</button>
-				@endforeach
-			</div> 
-        </div> --}}
-        <div class="row" id="sizeArea">
-          <div class="col-sm-12">
-            <div class="col-sm-4"><b>Size</b></div>
-            <div class="col-sm-4"><b>Sub-Size</b></div>
-            <div class="col-sm-3"><b>Qty</b></div>
-            <div class="col-sm-1"><b>X</b></div>
-          </div>
-        </div>
-      <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-danger text-left " style="float: left;" onclick="AddSize();" >+</button> -->
-        <button type="button" class="btn btn-success" onclick="addAnother();" data-dismiss="modal">Add This</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
+      <div class="row" style="margin: 10px;">
+        <div class="col-sm-12">
+          @foreach($sizes as $id => $objSize)
+          <div class="col-sm-4">
+            <input type="radio" id="btnSize_{{$objSize->id}}" name="chooseSize" class="" value="{{$objSize->id}}">
+            {{-- onclick="getSizes({{$objSize->id}})" --}}
+            <label class="custom-control-label" for="btnSize_{{$objSize->id}}">{{$objSize->name}} </label>
+          </div>
+          @endforeach
+        </div>
+      </div>
+      <div class="col-sm-12 @if(!session('business.enable_brand')) hide @endif">
+        <div class="form-group">
+          {!! Form::label('color_id', __('product.color') . ':') !!}
+          <div class="input-group">
+            {!! Form::select('color_idc', $colors, null, ['placeholder' => __('messages.please_select'), 'class' => 'req
+            form-control','id' => 'color_idc', 'required' => 'true']); !!}
+            <span class="input-group-btn">
+              <button type="button" @if(!auth()->user()->can('color.create')) disabled @endif class="btn btn-default
+                bg-white btn-flat btn-modal" data-href="{{action('ColorController@create', ['quick_add' => true])}}"
+                title="@lang('color.add_brand')" data-container=".view_modal"><i
+                  class="fa fa-plus-circle text-primary fa-lg"></i></button>
+            </span>
+          </div>
+        </div>
+      </div>
+      {{-- <div class="row" style="margin: 10px;">
+			<div class="col-sm-12">
+				@foreach($sizes as $id => $objSize)
+					<button type="button" class="col-sm-4 btn btn-md btn-danger" id="btnSize_{{$objSize->id}}"
+      onclick="getSizes({{$objSize->id}})">{{$objSize->name}}</button>
+      @endforeach
     </div>
-
+  </div> --}}
+  <div class="row" id="sizeArea">
+    <div class="col-sm-12">
+      <div class="col-sm-4"><b>Size</b></div>
+      <div class="col-sm-4"><b>Sub-Size</b></div>
+      <div class="col-sm-3"><b>Qty</b></div>
+      <div class="col-sm-1"><b>X</b></div>
+    </div>
   </div>
-</div> 
+  <div class="modal-footer">
+    <!-- <button type="button" class="btn btn-danger text-left " style="float: left;" onclick="AddSize();" >+</button> -->
+    <button type="button" class="btn btn-success" onclick="addAnother();" data-dismiss="modal">Add This</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+  </div>
+</div>
 
- 
+</div>
+</div>
+
+
 @endsection
 
 @section('javascript')
-  @php $asset_v = env('APP_VERSION'); @endphp
-  <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
-  <script type="text/javascript">
-	var url = {!! json_encode(url('')) !!};
+@php $asset_v = env('APP_VERSION'); @endphp
+<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+<script type="text/javascript">
+  var url = {!! json_encode(url('')) !!};
      $(document).ready(function (){
 		$("#refference_id").focus();
 		// console.log(url);
@@ -1099,13 +1114,11 @@
             if (result != 'null') {
               // console.log(result.category);
               if (result.product.supplier_id) {
-
-                // var test = $("#supplier_id").find('option[value="'+result.product.supplier_id+'"]').attr("selected");
-
-                // console.log(test);
-                // $("#supplier_id").val(result.product.supplier_id).change();
+                var selected_value = result.product.supplier_id;
+                // Change Select2 Option on Ajax Data retrival
+                $('#supplier_id').val(selected_value);
+                $('#supplier_id').select2().trigger('change');
                 $("#hidden_supplier_id").val(result.product.supplier_id);
-                
               }else{
                 $("#supplier_id").val(0).change();
                 toastr.error('Supplier not found. Please select manually.');
@@ -1199,6 +1212,6 @@
 			});
 	}
 
-	</script>
-  
+</script>
+
 @endsection
