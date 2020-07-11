@@ -107,10 +107,10 @@
                 Please Select Sub-Category
               </option>
               @foreach ($sub_categories as $key=>$value)
-              <option value="{{$key}}">
-                {{
-                                                  $value
-                                             }}
+              <option value="{{$key}}" @if ($product->sub_category_id == $key)
+                  selected
+                  @endif>
+                {{$value}}
               </option>
               @endforeach
             </optgroup>
@@ -147,7 +147,7 @@
         <div class="col-sm-4">
           <label>Refference * @show_tooltip(__('tooltip.sku'))</label>
           <input type="text" name="refference" value="{{$product->refference}}" id="refference_id"
-            class="req form-control @error('refference') is-invalid @enderror" required>
+            class="req form-control @error('refference') is-invalid @enderror" readonly required>
         </div>
         @php
         $ut = new \App\Utils\ProductUtil();
@@ -428,8 +428,14 @@
 <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
 <script type="text/javascript">
   var url = {!! json_encode(url('')) !!};
-     $(document).ready(function (){
+  $(function(){
 		$("#refference_id").focus();
+    $("#category_id").select().change();
+    setTimeout(function () {
+      $('#sub_category_id').val('{{$product->sub_category_id}}');
+      $('#sub_category_id').select2().change();
+    },1000);
+
 		// console.log(url);
 		// addAnother();
 		var supplier_id = {!! json_encode($product->supplier_id) !!};
@@ -444,6 +450,7 @@
 //         //return;
 // 	  }
     });
+    
      objPNC = <?=$pnc?>;
      rowSize = 0;
      function editPnc(x)
@@ -466,7 +473,7 @@
 		}
      }
      $("#sub_category_id").change(function () {
-		$("#refference_id").focus();
+        $("#refference_id").focus();
      });
      function changeUnitPrice(obj)
      {
@@ -1124,8 +1131,16 @@
                 toastr.error('Supplier not found. Please select manually.');
 
               }
-              $("#category_id").val(result.product.category_id).change();
-              $("#sub_category_id").val(result.product.sub_category_id).change();
+              //Changing Category
+              $("#category_id").val(result.product.category_id);
+              $("#category_id").select2().change();
+              //Changing Sub Category
+              setTimeout(function () {
+                $("#sub_category_id").val(result.product.sub_category_id);
+                $("#sub_category_id").select2().change();
+              },1000);
+              
+              // alert(result.product.sub_category_id);
               // toastr.success('Please select Sub-Category manually.');
               if (result.product.category_id == null) {
                 toastr.error('Category and Sub-Category not found. Please select manually.');
@@ -1147,7 +1162,9 @@
               $("#name_id").val(0); //important
               // console.log("Getting Ref : "+result.product.refference);
               // console.log("Before Ref: "+$("#refference_id").val());
-              $("#refference_id").val(result.product.refference);
+              setTimeout(function () {
+                $("#refference_id").val(result.product.refference);
+              },1000);
               // console.log("After Ref: "+$("#refference_id").val());
               // console.log("Ref : "+result.product.refference);
               $("#unit_price").val(result.unit_price);
