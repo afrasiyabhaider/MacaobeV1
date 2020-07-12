@@ -708,11 +708,6 @@ $(document).ready(function() {
                 d.location_id = $('select#location_id').val();
             },
         },
-        pageLength: 100,
-        lengthMenu: [
-            [20, 50, 70, 100, 300, 500, 1000, -1],
-            [20, 50, 70, 100, 300, 500, 1000, 'All'],
-        ],
         columns: [
             { data: 'image', name: 'products.image', searchable: false, orderable: false },
             { data: 'product_name', name: 'p.name' },
@@ -725,7 +720,7 @@ $(document).ready(function() {
             // { data: 'tax', name: 'tax_rates.name' },
             { data: 'unit_sale_price', name: 'transaction_sell_lines.unit_price_inc_tax' },
             { data: 'sell_qty', name: 'transaction_sell_lines.quantity' },
-            // { data: 'subtotal', name: 'subtotal', searchable: false },
+            { data: 'subtotal', name: 'subtotal', searchable: false },
         ],
         fnDrawCallback: function(oSettings) {
             $('#footer_subtotal').text(
@@ -733,7 +728,7 @@ $(document).ready(function() {
             );
             $('#footer_total_sold').html(__sum_stock($('#product_sell_report_table'), 'sell_qty'));
             // $('#footer_tax').html(__sum_stock($('#product_sell_report_table'), 'tax', 'left'));
-            // __currency_convert_recursively($('#product_sell_report_table'));
+            __currency_convert_recursively($('#product_sell_report_table'));
         },
     });
 
@@ -839,7 +834,7 @@ $(document).ready(function() {
             { data: 'transaction_date', name: 't.transaction_date' },
             { data: 'current_stock', name: 'current_stock', searchable: false, orderable: false },
             { data: 'total_qty_sold', name: 'total_qty_sold', searchable: false },
-            // { data: 'subtotal', name: 'subtotal', searchable: false },
+            { data: 'subtotal', name: 'subtotal', searchable: false },
         ],
         fnDrawCallback: function(oSettings) {
             $('#footer_grouped_subtotal').text(
@@ -848,7 +843,7 @@ $(document).ready(function() {
             $('#footer_total_grouped_sold').html(
                 __sum_stock($('#product_sell_grouped_report_table'), 'sell_qty')
             );
-            // __currency_convert_recursively($('#product_sell_grouped_report_table'));
+            __currency_convert_recursively($('#product_sell_grouped_report_table'));
         },
     });
 

@@ -108,8 +108,8 @@
               </option>
               @foreach ($sub_categories as $key=>$value)
               <option value="{{$key}}" @if ($product->sub_category_id == $key)
-                selected
-                @endif>
+                  selected
+                  @endif>
                 {{$value}}
               </option>
               @endforeach
@@ -199,10 +199,9 @@
           </select>
         </div>
         <div class="col-sm-4">
-          <label>Add Quantity</label>
-          <input name="quantity" type="number" class=" form-control col-12" id="qty_id"
-            placeholder="Add New Quantity this will be added">
-          {{-- value="{{$product->variation_location_details()->first()->qty_available}}" --}}
+          <label>Quantity *</label>
+          <input name="quantity" required="true" type="number" class="req form-control col-12" min="1"
+            value="{{$product->variation_location_details()->first()->qty_available}}" id="qty_id">
         </div>
         <div class="col-sm-4">
           <label>Size *</label>
@@ -252,60 +251,42 @@
       <div class="box box-primary">
         <div class="box-header with-border">
 
-          <div class="">
-            <div class="col-12">
-              @if(!empty($noRefferenceProducts))
-              <select class="select2" id="product_category" style="width:45% !important">
-                <option value="all">@lang('lang_v1.all_category')</option>
-                @foreach($noRefferenceProducts as $noRefference)
-                <option value="{{$noRefference['id']}}">
-                  {{$noRefference['name']}}
-                </option>
-                @endforeach
-                @foreach($noRefferenceProducts as $category)
-                @if(!empty($category['sub_categories']))
-                <optgroup label="{{$category['name']}}">
-                  @foreach($category['sub_categories'] as $sc)
-                  <i class="fa fa-minus"></i>
-                  <option value="{{$sc['id']}}">{{$sc['name']}}</option>
-                  @endforeach
-                </optgroup>
-                @endif
-                @endforeach
-              </select>
-              @endif
+          @if(!empty($noRefferenceProducts))
+          <select class="select2" id="product_category" style="width:45% !important">
+            <option value="all">@lang('lang_v1.all_category')</option>
+            @foreach($noRefferenceProducts as $noRefference)
+            <option value="{{$noRefference['id']}}">
+              {{$noRefference['name']}}
+            </option>
+            @endforeach
+            @foreach($noRefferenceProducts as $category)
+            @if(!empty($category['sub_categories']))
+            <optgroup label="{{$category['name']}}">
+              @foreach($category['sub_categories'] as $sc)
+              <i class="fa fa-minus"></i>
+              <option value="{{$sc['id']}}">{{$sc['name']}}</option>
+              @endforeach
+            </optgroup>
+            @endif
+            @endforeach
+          </select>
+          @endif
 
-              @if(!empty($suppliers))
-              &nbsp;
-              <select class="select2" id="supplier" style="width:45% !important">
-                <option value="all">All Suppliers</option>
-                @foreach($suppliers as $key=>$noRefference)
-                <option value="{{$key}}" @if ($key==$product->supplier_id)
-                  selected
-                  @endif>
-                  {{$noRefference}}
-                </option>
-                @endforeach
-              </select>
-              @endif
-            </div>
-          </div>
-          <div class="col-12 mt-10">
-            @if(!empty($business_locations))
-              &nbsp;
-              <select class="select2" id="location_id" style="width:45% !important">
-                {{-- <option value="all">All Locations</option> --}}
-                @foreach($business_locations as $key=>$noRefference)
-                <option value="{{$key}}"@if ($key==1)
-                  selected
-                  @endif>
-                   
-                  {{$noRefference}}
-                </option>
-                @endforeach
-              </select>
-              @endif
-          </div>
+          @if(!empty($suppliers))
+          &nbsp;
+          <select class="select2" id="supplier" style="width:45% !important">
+            <option value="all">All Suppliers</option>
+            @foreach($suppliers as $key=>$noRefference)
+            <option value="{{$key}}" @if ($key==$product->supplier_id)
+              selected
+              @endif>
+              {{$noRefference}}
+            </option>
+            @endforeach
+          </select>
+          @endif
+
+
 
           <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -1074,7 +1055,7 @@
 			var page = parseInt($('#suggestion_page').val());
 			page += 1;
 			$('#suggestion_page').val(page);
-			var location_id = $('select#location_id').val();
+			var location_id = $('input#location_id').val();
 			var category_id = $('select#product_category').val();
 			var brand_id = $('select#supplier_id').val();
 
@@ -1085,21 +1066,19 @@
 	get_product_suggestion_list(
         $('select#product_category').val(),
         $('select#supplier').val(),
-        $('select#location_id').val(),
-        // $('input#location_id').val(),
+        $('input#location_id').val(),
         null
 	);
-	$('select#product_category, select#supplier, select#location_id').on('change', function(e) {
+	$('select#product_category, select#supplier').on('change', function(e) {
         $('input#suggestion_page').val(1);
-        var location_id = $('select#location_id').val();
+        var location_id = $('input#location_id').val();
         if (location_id != '' || location_id != undefined) {
             get_product_suggestion_list(
                 $('select#product_category').val(),
                 $('select#supplier').val(),
-                $('select#location_id').val(),
+                $('input#location_id').val(),
                 null
             );
-            // alert(location_id);
         }
     });
 
@@ -1198,7 +1177,7 @@
               
               $("#sale_price").val(result.sale_price);
               $("#color_id").val(result.color.id).change();
-              // $("#qty_id").val(result.variation_location_details.qty_available);
+              $("#qty_id").val(result.variation_location_details.qty_available);
               $("#sizes_id").val(result.sub_size.id).change();
               // var product = result.product;
               // var supplier = result.supplier;

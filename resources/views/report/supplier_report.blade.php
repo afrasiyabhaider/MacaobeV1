@@ -40,7 +40,7 @@
           @component('components.widget', ['class' => 'box-primary'])
                <div class="col-md-12">
                     <div class="table-responsive">
-                         <table class="table table-bordered table-striped" id="supplier_report_table" style="width: 100%;">
+                         <table class="table table-bordered table-striped" id="supplier_report_table">
                               <thead>
                                    <tr>
                                         <th>Supplier Name</th>
@@ -87,7 +87,9 @@
           //   { data: 'transfered', name: 'transfered' },
         ],
     });
-    $('#supplier_report_filter_form #location_id,#product_list_to_date').change(function() {
+    $(
+        '#supplier_report_filter_form #location_id,#product_list_to_date'
+    ).change(function() {
         supplier_report_table.ajax.reload();
     });
 </script>
