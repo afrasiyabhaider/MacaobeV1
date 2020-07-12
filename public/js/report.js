@@ -108,7 +108,8 @@ $(document).ready(function() {
             { data: 'total_sold', name: 'total_sold', searchable: false },
             { data: 'total_transfered', name: 'total_transfered', searchable: false },
             { data: 'supplier_name', name: 'suppliers.name' },
-            { data: 'updated_at', name: 'updated_at' },
+            { data: 'product_date', name: 'vld.product_updated_at' },
+            // { data: 'updated_at', name: 'updated_at' },
             // { data: 'total_adjusted', name: 'total_adjusted', searchable: false },
         ],
         fnDrawCallback: function(oSettings) {

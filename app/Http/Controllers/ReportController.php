@@ -742,6 +742,7 @@ class ReportController extends Controller
                 'p.enable_stock as enable_stock',
                 'variations.sell_price_inc_tax as unit_price',
                 'pv.name as product_variation',
+                'vld.product_updated_at as product_date',
                 'variations.name as variation_name',
                 'vld.updated_at',
                 DB::raw('SUM(vld.qty_available) as current_stock')
