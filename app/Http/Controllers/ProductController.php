@@ -3237,7 +3237,8 @@ class ProductController extends Controller
                     $vld->location_id = 5;
                     // $vld->location_id = $location_id;
                     $vld->qty_available = 0;
-                    $vld->product_updated_at = Carbon::now();
+                    $vld->product_updated_at = '2020-07-10 00:00:00';
+                    // $vld->product_updated_at = Carbon::now();
                     $vld->save();
                     DB::commit();
                     $count++;
