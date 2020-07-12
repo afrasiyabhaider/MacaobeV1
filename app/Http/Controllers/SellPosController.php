@@ -2448,6 +2448,10 @@ class SellPosController extends Controller
         if ($request->ajax()) {
             $category_id = $request->get('category_id');
             $supplier_id = $request->get('supplier_id');
+            // $location_id = 1;
+            // if($request->get('location_id')){
+            //     $location_id = $request->get('location_id');
+            // }
             $location_id = $request->get('location_id');
             $term = $request->get('term');
             $check_qty = false;
@@ -2469,28 +2473,28 @@ class SellPosController extends Controller
                     'variations.product_id'
                 );
             }
-            $products->leftjoin(
+            // $products->leftjoin(
+            $products->join(
                 'variation_location_details AS VLD',
                 function ($join) use ($location_id) {
                     $join->on('variations.id', '=', 'VLD.variation_id');
 
                     //Include Location
-                    if (!empty($location_id)) {
+                    if (!empty($location_id) && $location_id != 'all') {
                         $join->where(function ($query) use ($location_id) {
                             $query->where('VLD.location_id', '=', $location_id);
                             //Check null to show products even if no quantity is available in a location.
                             //TODO: Maybe add a settings to show product not available at a location or not.
-                            $query->orWhereNull('VLD.location_id');
+                            // $query->orWhereNull('VLD.location_id');
                         });;
                     }
                 }
-            )
-                ->active()->where('products.type', '!=', 'modifier');
+            )->active()->where('products.type', '!=', 'modifier');
 
-            if (isset($location_id)) {
+            if (isset($location_id) && $location_id != 'all') {
                 $products->where('VLD.location_id', "=", $location_id);
             } else {
-                $products->where('VLD.location_id', "!=", 2);
+                $products->where('VLD.location_id', 1);
             }
             //Include search
             if (!empty($term)) {
@@ -2532,7 +2536,8 @@ class SellPosController extends Controller
                 'products.size_id'
             )
                 ->where("p_type", "product")
-                ->orderBy('products.name', 'asc')
+                ->orderBy('VLD.product_updated_at', 'DESC')
+                // ->orderBy('products.name', 'asc')
                 ->groupBy('variations.id')
                 ->orderBy('products.updated_at', 'DESC')
                 ->paginate(50);

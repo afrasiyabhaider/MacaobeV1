@@ -76,6 +76,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
 
     Route::get('/products', 'ProductController@index');
     Route::post('/products/bulkUpdate', 'ProductController@bulkUpdate');
+    Route::get('/products/addinlocation/{barcode}/{location}', 'ProductController@addProductZeroQtyInLocation');
     Route::post('/products/mass-deactivate', 'ProductController@massDeactivate');
     Route::get('/products/transfer', 'ProductController@transfer');
     Route::post('/products/mass-print', 'ProductController@massBulkPrint');

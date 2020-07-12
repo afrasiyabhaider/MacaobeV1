@@ -1081,7 +1081,7 @@ class ProductController extends Controller
             'custom_price' => 'required',
             'sku' => 'required',
             'color' => ['required', Rule::notIn(0)],
-            'quantity' => 'required',
+            // 'quantity' => 'required',
             'size' => ['required', Rule::notIn(0)],
         ]);
 
@@ -1126,10 +1126,12 @@ class ProductController extends Controller
             $variation->dpp_inc_tax = $this->productUtil->num_uf($request->input('unit_price'));
             $variation->sell_price_inc_tax = $this->productUtil->num_uf($request->input('custom_price'));
             $variation->save();
-
+            
             $purchase_line = VariationLocationDetails::where('product_id', '=', $request->input('product_id'))->first();
             $purchase_line->product_updated_at = Carbon::now();
-            $purchase_line->qty_available = $request->input('quantity');
+            if($request->input('quantity')){
+                $purchase_line->qty_available = $purchase_line->qty_available+$request->input('quantity');
+            }
             $purchase_line->save();
             DB::commit();
             $output = [
@@ -3208,5 +3210,43 @@ class ProductController extends Controller
             'product',
             'BulkId'
         ));
+    }
+    /**
+     *  Add Product in VLD (Variation Location Detail) for specific location 
+     *  from specific product's barcode
+     *
+     * */
+    public function addProductZeroQtyInLocation($barcode,$location_id)
+    {
+        try {
+            
+            $product_id = Product::where('sku',$barcode)->pluck('id');
+            $products = Product::where('id','>=',$product_id)->pluck('id');
+            $count = 0;
+            for ($i=0; $i < count($products); $i++) { 
+                $check = VariationLocationDetails::where('product_id',$products[$i])->where('location_id',$location_id)->first();
+                if (!$check) {
+                    DB::beginTransaction();
+                    $vld = new VariationLocationDetails();
+                    $p_variation_id = ProductVariation::where('product_id',$products[$i])->first()->id;
+                    $variation_id = Variation::where('product_id',$products[$i])->first()->id;
+    
+                    $vld->product_id = $products[$i];
+                    $vld->product_variation_id = $p_variation_id;
+                    $vld->variation_id = $variation_id;
+                    $vld->location_id = $location_id;
+                    $vld->qty_available = 0;
+                    $vld->product_updated_at = Carbon::now();
+                    $vld->save();
+                    DB::commit();
+                    $count++;
+                }
+            }
+            
+            dd($count.' products are saved into VLD with location id '.$location_id);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            dd($ex->getMessage().' in file: '.$ex->getFile().' on Line '.$ex->getLine());
+        }
     }
 }
