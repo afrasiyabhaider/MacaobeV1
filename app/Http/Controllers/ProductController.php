@@ -3209,4 +3209,63 @@ class ProductController extends Controller
             'BulkId'
         ));
     }
+    /**
+     *  Add Product in VLD (Variation Location Detail) for specific location 
+     *  from specific product's barcode
+     *
+     * */
+    // public function addProductZeroQtyInLocation($barcode,$location_id)
+    public function addProductZeroQtyInLocation()
+    {
+        try {
+            // $product_id = Product::where('sku',$barcode)->pluck('id');
+            // $products = Product::where('id','>=',$product_id)->pluck('id');
+            $products = Product::pluck('id');
+            $count = 0;
+            // dd($products);
+            // $id = VariationLocationDetails::pluck('id');
+            for ($i=0; $i < count($products); $i++) { 
+                if ($products[$i]) {
+                    DB::beginTransaction();
+                    $vld = new VariationLocationDetails();
+                    $p_variation_id = ProductVariation::where('product_id',$products[$i])->first()->id;
+                    $variation_id = Variation::where('product_id',$products[$i])->first()->id;
+    
+                    $vld->product_id = $products[$i];
+                    $vld->product_variation_id = $p_variation_id;
+                    $vld->variation_id = $variation_id;
+                    $vld->location_id = 5;
+                    // $vld->location_id = $location_id;
+                    $vld->qty_available = 0;
+                    $vld->product_updated_at = Carbon::now();
+                    $vld->save();
+                    DB::commit();
+                    $count++;
+                }
+            }
+            
+            dd($count.' products are saved into VLD with location id '.$location_id);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            dd($ex->getMessage().' in file: '.$ex->getFile().' on Line '.$ex->getLine());
+        }
+    }
+    /**
+     *  Add Date on Null in VLD
+     * 
+     **/
+    public function addDateinNull()
+    {
+        $products = VariationLocationDetails::where('product_updated_at',null)->get();
+        // dd($products);
+        $count = 0;
+        for ($i=0; $i < count($products); $i++) {
+            $vld = VariationLocationDetails::find($products[$i]->id);
+            $vld->product_updated_at = '2020-07-01 00:00:00';
+            $vld->save();
+            $count++;
+        }
+
+        dd($count.' product\'s updated at date is saved into VLD');
+    }
 }
