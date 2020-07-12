@@ -189,7 +189,7 @@
                     "orderable": false,
                     "searchable": false
                 } ],
-                aaSorting: [14, 'desc'],
+                // aaSorting: [14, 'desc'],
                 columns: [
                         { data: 'mass_delete',searchable:false,orderable:false},
                         { data: 'image', name: 'products.image',searchable:false,orderable:false  },
