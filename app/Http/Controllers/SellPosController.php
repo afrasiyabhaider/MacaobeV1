@@ -2565,7 +2565,66 @@ class SellPosController extends Controller
             $sub_size = $product->sub_size()->first();
             $purchase_lines = $product->purchase_lines()->first();
             $color = $product->color()->first();
-            $VariationLocationDetail = $product->variation_location_details()->first();
+            $VariationLocationDetail = $product->variation_location_details()->where('location_id')->first();
+            // dd($color);
+            if ($sub_category) {
+                $category = Category::find($sub_category->parent_id);
+            } else {
+                $sub_category = 'null';
+                $category = 'null';
+            }
+            $ut = new ProductUtil();
+            //  $ut = new \App\Utils\ProductUtil();
+            $unit_price = $ut->num_f($product_prices->dpp_inc_tax);
+            $single_dpp = $ut->num_f($product_prices->dpp_inc_tax);
+            $sale_price = $ut->num_f($product_prices->sell_price_inc_tax);
+
+            $data = [
+                'product' => $product,
+                'product_name' => $product_name,
+                'variation' => $variation_product,
+                'variation_location_details' => $VariationLocationDetail,
+                'product_price' => $product_prices,
+                'supplier' => $supplier,
+                'sub_category' => $sub_category,
+                'category' => $category,
+                'purchase_lines' => $purchase_lines,
+                'size' => $size,
+                'sub_size' => $sub_size,
+                'color' => $color,
+                'unit_price' => $unit_price,
+                'single_dpp' => $single_dpp,
+                'sale_price' => $sale_price,
+            ];
+        }
+        // dd($data);
+        // $category = Category::find($product->category_id);
+
+        return response()->json($data);
+    }
+    /**
+     *  Get Product Details for products/edit.blade.php with location
+     * 
+     */
+    public function getBulkProductLocationDetails($variation_id,$location_id)
+    {
+        $business_id = request()->session()->get('user.business_id');
+
+        $variation_product = $this->productUtil->getDetailsFromVariationForOtherThanPOS($variation_id, $business_id);
+
+        $data[] = 'null';
+        // dd($variation_id);
+        if ($variation_product != null) {
+            $product = Product::find($variation_product->product_id);
+            $product_name = ProductNameCategory::where('name', $product->name)->first();
+            $product_prices = Variation::find($variation_id);
+            $supplier = Supplier::find($product->supplier_id);
+            $sub_category = Category::find($product->sub_category_id);
+            $size = $product->size()->first();
+            $sub_size = $product->sub_size()->first();
+            $purchase_lines = $product->purchase_lines()->first();
+            $color = $product->color()->first();
+            $VariationLocationDetail = $product->variation_location_details()->where('location_id',$location_id)->first();
             // dd($color);
             if ($sub_category) {
                 $category = Category::find($sub_category->parent_id);
