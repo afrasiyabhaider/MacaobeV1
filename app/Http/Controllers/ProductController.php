@@ -919,7 +919,7 @@ class ProductController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-
+        
         try {
             $business_id = $request->session()->get('user.business_id');
             $product_details = $request->only(['name', 'brand_id', 'unit_id', 'category_id', 'tax', 'barcode_type', 'sku', 'alert_quantity', 'tax_type', 'weight', 'product_custom_field1', 'product_custom_field2', 'product_custom_field3', 'product_custom_field4', 'product_description']);
@@ -1129,8 +1129,13 @@ class ProductController extends Controller
             $variation->dpp_inc_tax = $this->productUtil->num_uf($request->input('unit_price'));
             $variation->sell_price_inc_tax = $this->productUtil->num_uf($request->input('custom_price'));
             $variation->save();
+            
+            $location = 1;
+            if($request->input('location_id')){
+                $location = $request->input('location_id');
+            }
 
-            $purchase_line = VariationLocationDetails::where('product_id', '=', $request->input('product_id'))->first();
+            $purchase_line = VariationLocationDetails::where('product_id', '=', $request->input('product_id'))->where('location_id',$request->input('location_id'))->first();
             $purchase_line->product_updated_at = Carbon::now();
             $purchase_line->qty_available = $request->input('quantity');
             $purchase_line->save();
@@ -1149,7 +1154,8 @@ class ProductController extends Controller
                 'msg' => __("messages.something_went_wrong".' '."File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage())
             ];
         }
-        return redirect(url('products/'.$product->id.'/edit'))->with('status', $output);
+        // dd($location);
+        return redirect(url('products/'.$product->id.'/edit'))->with('status', $output)->with('location_id_set',$location);
 
         $business_id = $request->session()->get('user.business_id');
         $product_details = $request->only(['name', 'brand_id', 'unit_id', 'category_id', 'tax', 'barcode_type', 'sku', 'alert_quantity', 'tax_type', 'weight', 'product_custom_field1', 'product_custom_field2', 'product_custom_field3', 'product_custom_field4', 'product_description']);

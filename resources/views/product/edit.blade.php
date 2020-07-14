@@ -55,6 +55,7 @@
   {!! Form::open(['url' => action('ProductController@bulkUpdate'), 'method' => 'post',
   'id' => 'product_update_form','class' => 'product_update_form', 'files' => true ]) !!}
   <input type="hidden" name="product_id" value="{{$product->id}}" id="product_id">
+  <input type="hidden" name="location_id" id="location_id" value="{{$product->variation_location_details()->first()->location_id}}" id="product_id">
   <div class="row">
     <div class="col-sm-8">
       <h3 class="text-muted">
@@ -200,7 +201,7 @@
         </div>
         <div class="col-sm-4">
           <label>Quantity *</label>
-          <input name="quantity" required="true" type="number" class="req form-control col-12" min="1"
+          <input name="quantity" required="true" type="number" class="req form-control col-12"
             value="{{(int)$product->variation_location_details()->first()->qty_available}}" id="qty_id">
         </div>
         <div class="col-sm-4">
@@ -294,8 +295,9 @@
               &nbsp;
               <select class="select2" id="location_id" style="width:45% !important">
                 {{-- <option value="all">All Locations</option> --}}
+                {{-- @dd($location_id_set) --}}
                 @foreach($business_locations as $key=>$noRefference)
-                <option value="{{$key}}"@if ($key==1)
+                <option value="{{$key}}"@if (isset($location_id_set) && $key == $location_id_set)
                   selected
                   @endif>
                    
@@ -1204,6 +1206,7 @@
                 $("#qty_id").removeClass('bg-red')
               }
               $("#qty_id").val(qty);
+              $("#location_id").val(result.variation_location_details.location_id);
               $("#sizes_id").val(result.sub_size.id).change();
               // var product = result.product;
               // var supplier = result.supplier;
@@ -1250,6 +1253,7 @@
 						var purchase_line = result.purchase_lines;
 						// Add Data into 
 						addDataOnLoad(supplier.id,product.unit_id,price.dpp_inc_tax,result.category.id,product.name,product.refference,product.sku,purchase_line.quantity,price.sell_price_inc_tax,product.color_id,product.size_id,product.image);
+            $("#location_id").val(result.variation_location_details.location_id);
 					}
 				},
 			});
