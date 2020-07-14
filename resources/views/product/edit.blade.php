@@ -107,10 +107,10 @@
                 Please Select Sub-Category
               </option>
               @foreach ($sub_categories as $key=>$value)
-              <option value="{{$key}}">
-                {{
-                                                  $value
-                                             }}
+              <option v<option value="{{$key}}" @if ($product->sub_category_id == $key)
+                selected
+                @endif>
+              {{$value}}
               </option>
               @endforeach
             </optgroup>
@@ -429,7 +429,12 @@
 <script type="text/javascript">
   var url = {!! json_encode(url('')) !!};
      $(document).ready(function (){
-		$("#refference_id").focus();
+    $("#refference_id").focus();
+    $("#category_id").select().change();
+    setTimeout(function () {
+      $('#sub_category_id').val('{{$product->sub_category_id}}');
+      $('#sub_category_id').select2().change();
+    },1000);
 		// console.log(url);
 		// addAnother();
 		var supplier_id = {!! json_encode($product->supplier_id) !!};
@@ -1124,8 +1129,17 @@
                 toastr.error('Supplier not found. Please select manually.');
 
               }
-              $("#category_id").val(result.product.category_id).change();
-              $("#sub_category_id").val(result.product.sub_category_id).change();
+              // $("#category_id").val(result.product.category_id).change();
+              // $("#sub_category_id").val(result.product.sub_category_id).change();
+
+              $("#category_id").val(result.product.category_id);
+              $("#category_id").select2().change();
+              //Changing Sub Category
+              setTimeout(function () {
+                $("#sub_category_id").val(result.product.sub_category_id);
+                $("#sub_category_id").select2().change();
+              },1000);
+
               // toastr.success('Please select Sub-Category manually.');
               if (result.product.category_id == null) {
                 toastr.error('Category and Sub-Category not found. Please select manually.');
@@ -1147,7 +1161,10 @@
               $("#name_id").val(0); //important
               // console.log("Getting Ref : "+result.product.refference);
               // console.log("Before Ref: "+$("#refference_id").val());
-              $("#refference_id").val(result.product.refference);
+              // $("#refference_id").val(result.product.refference);
+              setTimeout(function () {
+                $("#refference_id").val(result.product.refference);
+              },1000);
               // console.log("After Ref: "+$("#refference_id").val());
               // console.log("Ref : "+result.product.refference);
               $("#unit_price").val(result.unit_price);

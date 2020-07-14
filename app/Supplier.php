@@ -34,7 +34,8 @@ class Supplier extends Model
     public static function forDropdown($business_id, $show_none = false)
     {
         $Supplier = Supplier::where('business_id', $business_id)
-                    ->pluck('name', 'id');
+                            ->orderBy('name','ASC')
+                            ->pluck('name', 'id');
 
         if ($show_none) {
             $Supplier->prepend(__('lang_v1.none'), '');

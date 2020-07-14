@@ -102,39 +102,41 @@ class ProductController extends Controller
                 ->leftJoin('sizes', 'products.sub_size_id', '=', 'sizes.id')
                 ->leftJoin('colors', 'products.color_id', '=', 'colors.id')
                 ->leftJoin('variation_location_details as vld', 'vld.product_id', '=', 'products.id')
-                // ->where('vld.location_id', 1)
-                ->join('variations as v', 'v.product_id', '=', 'products.id')->join('suppliers', 'suppliers.id', '=', 'products.supplier_id')
-                // ->where('products.business_id', $business_id)
+                ->where('vld.location_id', 1)
+                ->join('variations as v', 'v.product_id', '=', 'products.id')
+                ->join('suppliers', 'suppliers.id', '=', 'products.supplier_id')
+                ->where('products.business_id', $business_id)
                 ->where('products.type', '!=', 'modifier')
                 ->select(
-                    'products.id',
-                    'products.name as product',
-                    'products.type',
-                    'products.description',
-                    'products.supplier_id',
-                    'suppliers.name as supplier_name',
-                    'c1.name as category',
-                    'c2.name as sub_category',
-                    'units.actual_name as unit',
-                    'brands.name as brand',
-                    'tax_rates.name as tax',
-                    'products.sku',
-                    'products.created_at',
-                    'products.bulk_add',
-                    'products.image',
-                    'products.refference',
-                    'products.enable_stock',
-                    'products.is_inactive',
-                    'products.updated_at',
-                    'sizes.name as size',
-                    'vld.product_updated_at as product_date',
-                    'colors.name as color',
-                    'v.dpp_inc_tax as purchase_price',
-                    'v.sell_price_inc_tax as selling_price',
-                    'vld.qty_available as current_stock',
-                    // DB::raw('SUM(vld.qty_available) as current_stock'),
-                    DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
-                    DB::raw('MIN(v.sell_price_inc_tax) as min_price'))
+                        'products.id',
+                        'products.name as product',
+                        'products.type',
+                        'products.description',
+                        'products.supplier_id',
+                        'suppliers.name as supplier_name',
+                        'c1.name as category',
+                        'c2.name as sub_category',
+                        'units.actual_name as unit',
+                        'brands.name as brand',
+                        'tax_rates.name as tax',
+                        'products.sku',
+                        'products.created_at',
+                        'products.bulk_add',
+                        'products.image',
+                        'products.refference',
+                        'products.enable_stock',
+                        'products.is_inactive',
+                        'products.updated_at',
+                        'sizes.name as size',
+                        'vld.product_updated_at as product_date',
+                        'colors.name as color',
+                        'v.dpp_inc_tax as purchase_price',
+                        'v.sell_price_inc_tax as selling_price',
+                        'vld.qty_available as current_stock',
+                        // DB::raw('SUM(vld.qty_available) as current_stock'),
+                        DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
+                        DB::raw('MIN(v.sell_price_inc_tax) as min_price')
+                    )
                     // ->orderBy('products.updated_at', 'DESC')
                     // ->orderBy('vld.updated_at', 'DESC')
                     ->orderBy('vld.product_updated_at', 'DESC')
@@ -147,7 +149,8 @@ class ProductController extends Controller
 
             $supplier_id = request()->input('supplier_id');
             if (!empty($supplier_id)) {
-                $products->where('products.supplier_id', '=', $supplier_id);
+                $products->where('suppliers.id', '=', $supplier_id);
+                // $products->where('products.supplier_id', '=', $supplier_id);
             }
 
             $category_id = request()->get('category_id', null);
@@ -176,8 +179,8 @@ class ProductController extends Controller
             $to_date = request()->get('to_date', null);
 
             if (!empty($to_date)) {
-                $products->whereDate('products.created_at', '>=', $from_date)
-                    ->whereDate('products.created_at', '<=', $to_date);
+                $products->whereDate('vld.product_updated_at', '>=', $from_date)
+                    ->whereDate('vld.product_updated_at', '<=', $to_date);
             }
 
             return Datatables::of($products)
