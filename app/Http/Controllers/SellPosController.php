@@ -2236,15 +2236,17 @@ class SellPosController extends Controller
     public function getRecentTransactions(Request $request)
     {
         $business_id = $request->session()->get('user.business_id');
+        $location_id = $request->session()->get('user.business_location_id');
         $user_id = $request->session()->get('user.id');
         $transaction_status = $request->get('status');
 
         $register = $this->cashRegisterUtil->getCurrentCashRegister($user_id);
-
+        // return $location_id;
         // dd($transaction_status);
 
         $query = Transaction::where('business_id', $business_id)
                             // ->where('transactions.created_by', $user_id)
+                            ->where('transactions.location_id', $location_id)
                             ->where('transactions.type', 'sell')
                             ->where('is_direct_sale', 0);
 
@@ -2428,7 +2430,8 @@ class SellPosController extends Controller
                 ->where("p_type", "product")
                 ->orderBy('products.name', 'asc')
                 ->groupBy('variations.id')
-                ->orderBy('products.updated_at', 'DESC')
+                ->orderBy('VLD.product_updated_at', 'DESC')
+                // ->orderBy('products.updated_at', 'DESC')
                 ->paginate(20);
 
 
