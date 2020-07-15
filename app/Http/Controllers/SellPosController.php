@@ -2237,7 +2237,6 @@ class SellPosController extends Controller
     {
         $business_id = $request->session()->get('user.business_id');
         $user_id = $request->session()->get('user.id');
-        // $user_id = Auth::user()->id;
         $transaction_status = $request->get('status');
 
         $register = $this->cashRegisterUtil->getCurrentCashRegister($user_id);
@@ -2245,9 +2244,9 @@ class SellPosController extends Controller
         // dd($transaction_status);
 
         $query = Transaction::where('business_id', $business_id)
-            ->where('transactions.created_by', $user_id)
-            ->where('transactions.type', 'sell')
-            ->where('is_direct_sale', 0);
+                            // ->where('transactions.created_by', $user_id)
+                            ->where('transactions.type', 'sell')
+                            ->where('is_direct_sale', 0);
 
         if ($transaction_status == 'final') {
             if (!empty($register->id)) {
