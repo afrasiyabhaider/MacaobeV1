@@ -1134,7 +1134,7 @@ class ProductController extends Controller
             if($request->input('location_id')){
                 $location = $request->input('location_id');
             }
-
+            session()->put('location_id',$location);
             $purchase_line = VariationLocationDetails::where('product_id', '=', $request->input('product_id'))->where('location_id',$request->input('location_id'))->first();
             $purchase_line->product_updated_at = Carbon::now();
             $purchase_line->qty_available = $request->input('quantity');

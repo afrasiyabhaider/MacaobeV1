@@ -55,7 +55,14 @@
   {!! Form::open(['url' => action('ProductController@bulkUpdate'), 'method' => 'post',
   'id' => 'product_update_form','class' => 'product_update_form', 'files' => true ]) !!}
   <input type="hidden" name="product_id" value="{{$product->id}}" id="product_id">
-  <input type="hidden" name="location_id" id="location_id" value="{{$product->variation_location_details()->first()->location_id}}" id="product_id">
+    @php
+        if (session()->get('location_id')) {
+            $loc = session()->get('location_id');
+          }else{
+            $loc = $product->variation_location_details()->first()->location_id;
+          }
+    @endphp
+  <input type="hidden" name="location_id" id="location_id" value="{{$loc}}" id="product_id">
   <div class="row">
     <div class="col-sm-8">
       <h3 class="text-muted">
@@ -201,8 +208,15 @@
         </div>
         <div class="col-sm-4">
           <label>Quantity *</label>
-          <input name="quantity" required="true" type="number" class="req form-control col-12"
-            value="{{(int)$product->variation_location_details()->first()->qty_available}}" id="qty_id">
+          @php
+              if (session()->get('location_id')) {
+                $qty = (int)$product->variation_location_details()->where('location_id',session()->get('location_id'))->first()->qty_available;
+              }else{
+                $qty = (int)$product->variation_location_details()->where('location_id',1)->first()->qty_available;
+              }
+          @endphp
+          <input name="quantity" required="true" type="number" class="req form-control col-12 @if($qty < 1)bg-red @endif"
+            value="{{$qty}}" id="qty_id">
         </div>
         <div class="col-sm-4">
           <label>Size *</label>
@@ -292,12 +306,12 @@
           </div>
           <div class="col-12 mt-10">
             @if(!empty($business_locations))
-              &nbsp;
+            &nbsp;
+            {{-- @dd(session()->get('location_id')) --}}
               <select class="select2" id="location_id" style="width:45% !important">
                 {{-- <option value="all">All Locations</option> --}}
-                {{-- @dd($location_id_set) --}}
                 @foreach($business_locations as $key=>$noRefference)
-                <option value="{{$key}}"@if (isset($location_id_set) && $key == $location_id_set)
+                <option value="{{$key}}"@if (session()->get('location_id') && $key == session()->get('location_id'))
                   selected
                   @endif>
                    
@@ -452,6 +466,7 @@
   var url = {!! json_encode(url('')) !!};
      $(document).ready(function (){
     $("#refference_id").focus();
+    $("#location_id").select().change();
     $("#category_id").select().change();
     setTimeout(function () {
       $('#sub_category_id').val('{{$product->sub_category_id}}');
