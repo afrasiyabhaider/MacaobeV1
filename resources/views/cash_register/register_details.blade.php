@@ -173,7 +173,7 @@
               </th>
               <td>
                 {{-- <span class="display_currency" data-currency_symbol="true">{{ ($card + $register_details->total_cash) }}</span> --}}
-                <b class="display_currency" data-currency_symbol="true">{{ $transactions->sum('final_total') + $card }}</b>
+                <b class="display_currency" data-currency_symbol="true">{{ $transactions->sum('final_total') }}</b>
               </td>
             </tr>
           </table>
