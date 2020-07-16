@@ -24,7 +24,8 @@
                 @lang('cash_register.cash_payment'):
               </th>
               <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_cash }}</span>
+                <span class="display_currency" data-currency_symbol="true">{{ $transactions->sum('final_total')+$details['transaction_details']->total_discount}}</span>
+                {{-- <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_cash }}</span> --}}
               </td>
             </tr>
             {{-- <tr>
