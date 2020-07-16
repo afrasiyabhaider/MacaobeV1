@@ -266,13 +266,16 @@ class CashRegisterUtil extends Util
             DB::raw("SUM(IF(transaction_type='refund', IF(pay_method='custom_pay_3', amount, 0), 0)) as total_custom_pay_3_refund"),
             DB::raw("SUM(IF(pay_method='cheque', 1, 0)) as total_cheques"),
             DB::raw("SUM(IF(pay_method='card', 1, 0)) as total_card_slips"),
+            // DB::raw("SELECT unit_price FROM transaction_sell_lines WHERE line_discount_amount > 0 as discount_given"),
             // Start from here
-            DB::raw("SUM(t.line_discount_amount) as discount_given"),
-            DB::raw("count(t.line_discount_amount) as discounted_receipts"),
+            // DB::raw("SUM(t.line_discount_amount) as discount_given"),
+            // DB::raw("count(t.line_discount_amount) as discounted_receipts"),
             // DB::raw("SUM(t.line_discount_amount) as discount_given WHERE t.line_discount_amount>'0'"),
             // DB::raw("SUM(IF(t.line_discount_amount > 0.00 , t.line_discount_amount, 0)) as discount_given"),
             // DB::raw("CONCAT(COALESCE(surname, ''), ' ', COALESCE(first_name, ''), ' ', COALESCE(last_name, '')) as user_name"),
             // DB::raw("SUM(IF(pay_method='gift_card', IF(transaction_type='sell', amount, 0), 0)) as total_gift"),
+            DB::raw("SUM(IF(line_discount_amount > 0.00 && unit_price > 0,unit_price, 0)) as discount_given"),
+            DB::raw("SUM(IF(unit_price = 0.00,unit_price_before_discount, 0)) as less_unit_price"),
             // 'u.email'
         )->first();
         // dd($register_details);

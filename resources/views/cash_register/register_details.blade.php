@@ -20,11 +20,16 @@
               </td>
             </tr>
             <tr>
+              @php
+                  $just_cash_sale = ($transactions->sum('final_total')+$details['transaction_details']->total_discount) - $card
+              @endphp
               <td>
                 @lang('cash_register.cash_payment'):
               </th>
               <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $transactions->sum('final_total')+$details['transaction_details']->total_discount}}</span>
+                <span class="display_currency" data-currency_symbol="true">
+                  {{$just_cash_sale}}
+                </span>
                 {{-- <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_cash }}</span> --}}
               </td>
             </tr>
@@ -50,6 +55,7 @@
                 Discount Given:
               </td>
               <td>
+                {{-- <span class="display_currency" data-currency_symbol="true">{{ $register_details->discount_given}}</span> --}}
                 <span class="display_currency" data-currency_symbol="true">{{ $discount }}</span>
               </td>
             </tr>
@@ -128,7 +134,7 @@
                 @lang('cash_register.total_cash')
               </td>
               <td>
-                <span class="display_currency" data-currency_symbol="true">{{$transactions->sum('final_total') + $cash_in_hand}}</span>
+                <span class="display_currency" data-currency_symbol="true">{{$just_cash_sale + $cash_in_hand}}</span>
                 {{-- <b><span class="display_currency" data-currency_symbol="true">{{ $register_details->cash_in_hand + $register_details->total_cash - $register_details->total_cash_refund }}</span></b> --}}
               </td>
               
