@@ -1,7 +1,7 @@
 
     
 <div class="table-responsive">
-    <table class="table table-bordered table-striped" id="stock_report_table">
+    <table class="table table-bordered ajax_view table-striped" id="stock_report_table">
         <thead>
             <tr>
                 <th>

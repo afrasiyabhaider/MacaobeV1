@@ -349,7 +349,7 @@
 		    	var value = currentElement.val(); 
 		    	if(input.value == value)
 		    	{
-		    		alert("you Already use This Please use another One");
+		    		alert("You already used this please use another one");
 		    		isOk = false;
 		    		return(false);
 		    	} 

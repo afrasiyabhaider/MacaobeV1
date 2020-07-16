@@ -40,7 +40,7 @@
           @component('components.widget', ['class' => 'box-primary'])
                <div class="col-md-12">
                     <div class="table-responsive">
-                         <table class="table table-bordered table-striped" id="supplier_report_table">
+                         <table class="table table-bordered ajax_view table-striped dataTable" id="supplier_report_table">
                               <thead>
                                    <tr>
                                         <th>Supplier Name</th>
@@ -60,6 +60,7 @@
 @endsection
 @section('javascript')
 <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
 <script>
      supplier_report_table = $('#supplier_report_table').DataTable({
         processing: true,

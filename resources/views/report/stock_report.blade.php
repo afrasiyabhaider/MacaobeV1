@@ -132,14 +132,19 @@
             </div>
         </div>
         @endcomponent
+        <div class="modal fade" id="view_product_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"></div>
 </section>
 <!-- /.content -->
 
 @endsection
 
 @section('javascript')
+<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
     <script>
+        $(document).on('shown.bs.modal', 'div.view_product_modal, div.view_modal', function(){
+            __currency_convert_recursively($(this));
+        });
         // $(document).on('click', '#bulkPrint-selected', function(e){
         //         e.preventDefault();
         //         var selected_rows = [];

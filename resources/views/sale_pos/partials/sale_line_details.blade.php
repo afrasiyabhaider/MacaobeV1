@@ -46,7 +46,7 @@
                 </td>
             @endif
             <td>
-                <span class="display_currency" data-currency_symbol="false" data-is_quantity="true">{{ $sell_line->quantity }}</span> @if(!empty($sell_line->sub_unit)) {{$sell_line->sub_unit->short_name}} @else {{$sell_line->product->unit->short_name}} @endif
+                <span data-currency_symbol="false" data-is_quantity="true">{{ $sell_line->quantity }}</span> @if(!empty($sell_line->sub_unit)) {{$sell_line->sub_unit->short_name}} @else {{$sell_line->product->unit->short_name}} @endif
             </td>
             @if(!empty($pos_settings['inline_service_staff']))
                 <td>
@@ -54,22 +54,22 @@
                 </td>
             @endif
             <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $sell_line->unit_price_before_discount }}</span>
+                <span >{{ $sell_line->unit_price_before_discount }}€</span>
             </td>
             <td>
                 <span class="display_currency" data-currency_symbol="true">{{ $sell_line->get_discount_amount() }}</span> @if($sell_line->line_discount_type == 'percentage') ({{$sell_line->line_discount_amount}}%) @endif
             </td>
             <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $sell_line->item_tax }}</span> 
+                <span >{{ $sell_line->item_tax }} €</span> 
                 @if(!empty($taxes[$sell_line->tax_id]))
                 ( {{ $taxes[$sell_line->tax_id]}} )
                 @endif
             </td>
             <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $sell_line->unit_price_inc_tax }}</span>
+                <span>{{ $sell_line->unit_price_inc_tax }} €</span>
             </td>
             <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $sell_line->quantity * $sell_line->unit_price_inc_tax }}</span>
+                <span>{{ $sell_line->quantity * $sell_line->unit_price_inc_tax }}€</span>
             </td>
         </tr>
         @if(!empty($sell_line->modifiers))
@@ -85,22 +85,22 @@
                 @endif
                 <td>{{ $modifier->quantity }}</td>
                 <td>
-                    <span class="display_currency" data-currency_symbol="true">{{ $modifier->unit_price }}</span>
+                    <span>{{ $modifier->unit_price }} €</span>
                 </td>
                 <td>
                     &nbsp;
                 </td>
                 <td>
-                    <span class="display_currency" data-currency_symbol="true">{{ $modifier->item_tax }}</span> 
+                    <span>{{ $modifier->item_tax }} €</span> 
                     @if(!empty($taxes[$modifier->tax_id]))
                     ( {{ $taxes[$modifier->tax_id]}} )
                     @endif
                 </td>
                 <td>
-                    <span class="display_currency" data-currency_symbol="true">{{ $modifier->unit_price_inc_tax }}</span>
+                    <span>{{ $modifier->unit_price_inc_tax }}€</span>
                 </td>
                 <td>
-                    <span class="display_currency" data-currency_symbol="true">{{ $modifier->quantity * $modifier->unit_price_inc_tax }}</span>
+                    <span>{{ $modifier->quantity * $modifier->unit_price_inc_tax }}€</span>
                 </td>
             </tr>
             @endforeach

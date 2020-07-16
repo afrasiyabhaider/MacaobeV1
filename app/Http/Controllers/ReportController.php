@@ -341,6 +341,7 @@ class ReportController extends Controller
             }
 
             $supplier_data = $query->groupBy('sup.id')->select(
+                'products.id as product_id',
                 'sup.id as supplier_id',
                 'sup.name as supplier_name',
                 DB::raw("COUNT(products.id) as num_of_products"),
@@ -902,6 +903,15 @@ class ReportController extends Controller
                 )
                 ->removeColumn('enable_stock')
                 ->removeColumn('unit')
+                ->setRowAttr([
+                    'data-href' => function ($row) {
+                        if (auth()->user()->can("product.view")) {
+                            return  action('ProductController@view', [$row->product()->first()->id]);
+                        } else {
+                            return '';
+                        }
+                    }
+                ])
                 // ->removeColumn('id')
                 ->rawColumns(['mass_delete', 'unit_price', 'total_transfered','location_name', 'total_sold', 'total_adjusted', 'stock', 'actions', 'image'])
                 ->make(true);
@@ -1866,6 +1876,7 @@ class ReportController extends Controller
                 ->where('t.type', 'sell')
                 ->where('t.status', 'final')
                 ->select(
+                    'p.id as product_id',
                     'p.name as product_name',
                     'p.image as image',
                     'p.refference as refference',
@@ -1953,6 +1964,15 @@ class ReportController extends Controller
                             $row->item_tax.
                        '</span>'.'<br>'.'<span class="tax" data-orig-value="'.(float)$row->item_tax.'" data-unit="'.$row->tax.'"><small>('.$row->tax.')</small></span>';
                 })
+                ->setRowAttr([
+                    'data-href' => function ($row) {
+                        if (auth()->user()->can("product.view")) {
+                            return  action('ProductController@view', [$row->product_id]);
+                        } else {
+                            return '';
+                        }
+                    }
+                ])
                 ->rawColumns(['image','invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax'])
                 ->make(true);
         }
@@ -2004,6 +2024,7 @@ class ReportController extends Controller
                 ->where('t.type', 'sell')
                 ->where('t.status', 'final')
                 ->select(
+                    'p.id as product_id',
                     'p.name as product_name',
                     'p.image as image',
                     'p.refference as refference',
@@ -2072,7 +2093,15 @@ class ReportController extends Controller
                 ->editColumn('subtotal', function ($row) {
                     return '<span class="display_currency row_subtotal" data-currency_symbol = true data-orig-value="' . $row->subtotal . '">' . $row->subtotal . '</span>';
                 })
-
+                ->setRowAttr([
+                    'data-href' => function ($row) {
+                        if (auth()->user()->can("product.view")) {
+                            return  action('ProductController@view', [$row->product_id]);
+                        } else {
+                            return '';
+                        }
+                    }
+                ])
                 ->rawColumns(['image','current_stock', 'subtotal', 'total_qty_sold'])
                 ->make(true);
         }

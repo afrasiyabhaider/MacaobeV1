@@ -104,7 +104,7 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ @format_date($payment_line->paid_on) }}</td>
                 <td>{{ $payment_line->payment_ref_no }}</td>
-                <td><span class="display_currency" data-currency_symbol="true">{{ $payment_line->amount }}</span></td>
+                <td><span>{{ $payment_line->amount }} €</span></td>
                 <td>
                   {{ $payment_types[$payment_line->method] or $payment_line->method }}
                   @if($payment_line->is_return == 1)
@@ -129,7 +129,7 @@
             <tr>
               <th>{{ __('sale.total') }}: </th>
               <td></td>
-              <td><span class="display_currency pull-right" data-currency_symbol="true">{{ $sell->total_before_tax }}</span></td>
+              <td><span class="pull-right">{{ $sell->total_before_tax }} €</span></td>
             </tr>
             <tr>
               <th>{{ __('sale.discount') }}:</th>
@@ -152,22 +152,22 @@
             <tr>
               <th>{{ __('sale.shipping') }}: @if($sell->shipping_details)({{$sell->shipping_details}}) @endif</th>
               <td><b>(+)</b></td>
-              <td><span class="display_currency pull-right" data-currency_symbol="true">{{ $sell->shipping_charges }}</span></td>
+              <td><span class=" pull-right">{{ $sell->shipping_charges }}€</span></td>
             </tr>
             <tr>
               <th>{{ __('sale.total_payable') }}: </th>
               <td></td>
-              <td><span class="display_currency pull-right">{{ $sell->final_total }}</span></td>
+              <td><span class=" pull-right">{{ $sell->final_total }}€</span></td>
             </tr>
             <tr>
               <th>{{ __('sale.total_paid') }}:</th>
               <td></td>
-              <td><span class="display_currency pull-right" data-currency_symbol="true" >{{ $total_paid }}</span></td>
+              <td><span class="pull-right"data-currency_symbol="true" >{{ $total_paid }}€</span></td>
             </tr>
             <tr>
               <th>{{ __('sale.total_remaining') }}:</th>
               <td></td>
-              <td><span class="display_currency pull-right" data-currency_symbol="true" >{{ $sell->final_total - $total_paid }}</span></td>
+              <td><span class="pull-right"  >{{ $sell->final_total - $total_paid }}€</span></td>
             </tr>
           </table>
         </div>

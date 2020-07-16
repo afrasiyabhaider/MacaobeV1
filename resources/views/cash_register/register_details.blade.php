@@ -1,4 +1,3 @@
-
 <div class="modal-dialog modal-lg" role="document">
   <div class="modal-content">
 
@@ -125,12 +124,13 @@
             </tr> --}}
             <tr>
               <td>
-                @lang('cash_register.total_sales'):
+                @lang('cash_register.total_cash')
               </td>
               <td>
-                <span class="display_currency" data-currency_symbol="true">{{ ($card + $register_details->total_cash) }}</span>
-                {{-- <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_sale }}</span> --}}
+                <span class="display_currency" data-currency_symbol="true">{{$transactions->sum('final_total') + $cash_in_hand}}</span>
+                {{-- <b><span class="display_currency" data-currency_symbol="true">{{ $register_details->cash_in_hand + $register_details->total_cash - $register_details->total_cash_refund }}</span></b> --}}
               </td>
+              
             </tr>
             <tr class="success">
               <th>
@@ -168,10 +168,11 @@
             </tr>
             <tr class="success">
               <th>
-                @lang('cash_register.total_cash')
+                @lang('cash_register.total_sales'):
               </th>
               <td>
-                <b><span class="display_currency" data-currency_symbol="true">{{ $register_details->cash_in_hand + $register_details->total_cash - $register_details->total_cash_refund }}</span></b>
+                {{-- <span class="display_currency" data-currency_symbol="true">{{ ($card + $register_details->total_cash) }}</span> --}}
+                <b class="display_currency" data-currency_symbol="true">{{ $register_details->total_sale }}</b>
               </td>
             </tr>
           </table>

@@ -74,7 +74,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="psr_detailed_tab">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped" 
+                            <table class="table table-bordered table-striped ajax_view dataTable" 
                             id="product_sell_report_table">
                                 <thead>
                                     <tr>
@@ -111,7 +111,7 @@
 
                     <div class="tab-pane" id="psr_grouped_tab">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped" 
+                            <table class="table table-bordered ajax_view table-striped dataTable" 
                             id="product_sell_grouped_report_table" style="width: 100%;">
                                 <thead>
                                     <tr>
@@ -144,9 +144,15 @@
 <div class="modal fade view_register" tabindex="-1" role="dialog" 
     aria-labelledby="gridSystemModalLabel">
 </div>
-
+<div class="modal fade" id="view_product_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"></div>
 @endsection
 
 @section('javascript')
-    <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+<script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+<script>
+    $(document).on('shown.bs.modal', 'div.view_product_modal, div.view_modal', function(){
+            __currency_convert_recursively($(this));
+        });
+</script>
 @endsection
