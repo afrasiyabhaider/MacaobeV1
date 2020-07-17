@@ -22,7 +22,7 @@
             <tr>
               @php
                 if($transactions->sum('final_total') ){
-                  $just_cash_sale = $transactions->sum('final_total') - $card;
+                  $just_cash_sale = $transactions->sum('final_total') - $card - $gift_card - $coupon;
                 }else{
                   $just_cash_sale = 0;
                 }
