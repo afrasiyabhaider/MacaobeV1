@@ -141,6 +141,7 @@ class CashRegisterController extends Controller
 
         $register = $this->cashRegisterUtil->getCurrentCashRegister($user_id);
 
+        // dd($register->cash_register_transactions()->first());
         $query = Transaction::where('business_id', $business_id)
             ->where('transactions.location_id', $location_id)
             ->where('transactions.type', 'sell')
@@ -214,8 +215,10 @@ class CashRegisterController extends Controller
         $card = TransactionSellLine::whereIn('transaction_id',$card_id)->get()->sum('unit_price');
         // $card = $payment_methods->where('method','card')->unique('created_at')->sum('amount');
 
-        $cash_in_hand = CashRegisterTransaction::where('transaction_type','initial')->where('amount','>',0)->orderBy('id','DESC')->first()->amount;
+        // $cash_in_hand = CashRegisterTransaction::where('transaction_type','initial')->where('amount','>',0)->orderBy('id','DESC')->first()->amount;
+        $cash_in_hand = $register->cash_register_transactions()->first()->amount;
 
+        // dd($cash_in_hand);
 
         // dd($register_details);
         return view('cash_register.register_details')
