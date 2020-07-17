@@ -209,7 +209,7 @@ class CashRegisterController extends Controller
         $coupon = $payment_methods->where('method','coupon')->sum('amount');
         // dd($coupon);
 
-        $card = $payment_methods->where('method','card')->unique('t.created_at')->sum('amount');
+        $card = $payment_methods->where('method','card')->unique('created_at')->sum('amount');
 
         $cash_in_hand = CashRegisterTransaction::where('transaction_type','initial')->where('amount','>',0)->orderBy('id','DESC')->first()->amount;
         // dd($register_details);
