@@ -21,7 +21,7 @@
             </tr>
             <tr>
               @php
-                  $just_cash_sale = $transactions->sum('final_total')-$details['transaction_details']->total_discount - $card
+                  $just_cash_sale = $transactions->sum('final_total') - $card
               @endphp
               <td>
                 @lang('cash_register.cash_payment'):
