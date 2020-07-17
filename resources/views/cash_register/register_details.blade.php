@@ -21,7 +21,11 @@
             </tr>
             <tr>
               @php
-                  $just_cash_sale = $transactions->sum('final_total') - $card
+                if($transactions->sum('final_total') ){
+                  $just_cash_sale = $transactions->sum('final_total') - $card;
+                }else{
+                  $just_cash_sale = 0;
+                }
               @endphp
               <td>
                 @lang('cash_register.cash_payment'):
