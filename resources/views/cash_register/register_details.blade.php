@@ -21,7 +21,7 @@
             </tr>
             <tr>
               @php
-                  $just_cash_sale = ($transactions->sum('final_total')+$details['transaction_details']->total_discount) - $card
+                  $just_cash_sale = $transactions->sum('final_total')-$details['transaction_details']->total_discount - $card
               @endphp
               <td>
                 @lang('cash_register.cash_payment'):
@@ -46,8 +46,8 @@
                 @lang('cash_register.card_payment'):
               </td>
               <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $card }}</span>
-                {{-- <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_card }}</span> --}}
+                {{-- <span class="display_currency" data-currency_symbol="true">{{ $card }}</span> --}}
+                <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_card }}</span>
               </td>
             </tr>
             <tr>
