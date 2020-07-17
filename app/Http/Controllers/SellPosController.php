@@ -2279,6 +2279,7 @@ class SellPosController extends Controller
             // dd($transactions->first()->cash_register_payments()->first()->cash_register()->first()->user()->first());
             // dd($transactions->first()->cash_register_payments()->first()->cash_register()->first());
             // dd($transactions->first()->cash_register_payments()->first()->pay_method);
+            // dd($transactions);
         return view('sale_pos.partials.recent_transactions')
             ->with(compact('transactions'));
     }

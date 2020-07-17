@@ -163,7 +163,7 @@ class CashRegisterController extends Controller
             $query->where('transactions.status', $transaction_status);
         }
 
-        
+        $before_transaction = $query;
         $transactions = $query->orderBy('transactions.created_at', 'desc')
         ->groupBy('transactions.id')
         ->select('transactions.*')
@@ -209,9 +209,14 @@ class CashRegisterController extends Controller
         $coupon = $payment_methods->where('method','coupon')->sum('amount');
         // dd($coupon);
 
-        $card = $payment_methods->where('method','card')->unique('created_at')->sum('amount');
+        $card_id = $payment_methods->where('method','card')->unique('created_at')->pluck('transaction_id');
+        $card = $query->sum('final_total');
+        // $card = TransactionSellLine::whereIn('transaction_id',$card_id)->get()->sum('unit_price');
+        // $card = $payment_methods->where('method','card')->unique('created_at')->sum('amount');
 
         $cash_in_hand = CashRegisterTransaction::where('transaction_type','initial')->where('amount','>',0)->orderBy('id','DESC')->first()->amount;
+
+
         // dd($register_details);
         return view('cash_register.register_details')
                 ->with(compact('register_details', 'details','transactions','discount','gift_card','coupon','card','cash_in_hand'));
