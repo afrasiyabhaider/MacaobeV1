@@ -906,6 +906,7 @@
     {
       $("#product_row_"+row).remove();
       pncRow--;
+      picRow--;
       // reffCount--;
     }
     var row =1;var lastBG = " padding: 10px; ";var pncRow = 0;
@@ -957,13 +958,13 @@
      //    console.log($(this).attr("id"));
 		// if(fieldsArr.includes($(this).attr("id")))
 		// {
-			if (($(this).attr('id') == "sku") && $(this).val()) {
+			if (($(this).attr('id') == "sku") && $(this).val() != undefined) {
 				html += ' <div class="col-md-'+size+' hide"><input class="custom-form-control" name="sku[]" type="text" value="'+$(this).val()+'"> </div>';
 			}
-			if (($(this).attr('id') == "ref_description") && $(this).val()) {
+			if (($(this).attr('id') == "ref_description") && $(this).val() != undefined) {
 				html += ' <div class="col-md-'+size+' hide"><input class="custom-form-control" name="ref_description[]" type="text" value="'+$(this).val()+'"> </div>';
 			}
-			console.log($(this).attr('id'));
+			// console.log($(this).attr('id'));
 		// }
 	 });
       $(".req").each(function() { 
@@ -1025,18 +1026,19 @@
             if($(".file-preview-image").attr("src")==undefined)
             {
               var file = ""; 
-              html += ' <div class="col-md-1"><img src="{{url("img/default.png")}}" width="86px" height="28px" /> <span class="hide" id="file_'+picRow+'"></span></div>';
+              html += ' <div class="col-md-1"><img src="{{url("img/default.png")}}" width="86px" height="48px" /> <span class="hide" id="file_'+picRow+'"></span></div>';
             }else
             {
               var file = $("#upload_image").clone();
               file.attr("name","file[]");
-              html += ' <div class="col-md-1"><img src="'+$(".file-preview-image").attr("src")+'" width="86px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
+              html += ' <div class="col-md-1"><img src="'+$(".file-preview-image").attr("src")+'" width="86px" height="48px" /> <span class="hide" id="'+row+'_file_'+picRow+'"></span></div>';
             }
              html += '<div class="col-md-1" style="float:right;"><button class="btn btn-sm btn-danger" onclick="removeThisRow('+row+');"><i class="fa fa-close"></i></button></div>';
                
               html += ' <div class="clearfix"></div></div>';
               PreviousHTML = $("#bulk_product_home").html();
 
+          //     $("#bulk_product_home").append(html);
               $("#bulk_product_home").prepend(html);
               $("#"+row+"_file_"+picRow).append(file);
           } 

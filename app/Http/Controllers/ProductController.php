@@ -3026,7 +3026,7 @@ class ProductController extends Controller
         if (!auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
-
+        // dd($request->file());
         try {
             $business_id = $request->session()->get('user.business_id');
             $form_fields = [
@@ -3108,6 +3108,8 @@ class ProductController extends Controller
                 //upload document
                 if (!empty($objInputs['file'][$i])) {
                     $product_details['image'] =  $this->productUtil->uploadFileArr($request, 'file', config('constants.product_img_path'), $i);
+                }else{
+                    $product_details['image'] = 'default.png';
                 }
 
                 $product = Product::create($product_details);
