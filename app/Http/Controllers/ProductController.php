@@ -93,7 +93,7 @@ class ProductController extends Controller
 
         if (request()->ajax()) {
             // ->where('vld.location_id', $business_location_id)
-            
+
             $products = Product::leftJoin('brands', 'products.brand_id', '=', 'brands.id')
                 ->join('units', 'products.unit_id', '=', 'units.id')
                 ->leftJoin('categories as c1', 'products.category_id', '=', 'c1.id')
@@ -108,39 +108,39 @@ class ProductController extends Controller
                 ->where('products.business_id', $business_id)
                 ->where('products.type', '!=', 'modifier')
                 ->select(
-                        'products.id',
-                        'products.name as product',
-                        'products.type',
-                        'products.description',
-                        'products.supplier_id',
-                        'suppliers.name as supplier_name',
-                        'c1.name as category',
-                        'c2.name as sub_category',
-                        'units.actual_name as unit',
-                        'brands.name as brand',
-                        'tax_rates.name as tax',
-                        'products.sku',
-                        'products.created_at',
-                        'products.bulk_add',
-                        'products.image',
-                        'products.refference',
-                        'products.enable_stock',
-                        'products.is_inactive',
-                        'products.updated_at',
-                        'sizes.name as size',
-                        'vld.product_updated_at as product_date',
-                        'colors.name as color',
-                        'v.dpp_inc_tax as purchase_price',
-                        'v.sell_price_inc_tax as selling_price',
-                        'vld.qty_available as current_stock',
-                        // DB::raw('SUM(vld.qty_available) as current_stock'),
-                        DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
-                        DB::raw('MIN(v.sell_price_inc_tax) as min_price')
-                    )
-                    // ->orderBy('products.updated_at', 'DESC')
-                    // ->orderBy('vld.updated_at', 'DESC')
-                    ->orderBy('vld.product_updated_at', 'DESC')
-                    ->groupBy('products.id');
+                    'products.id',
+                    'products.name as product',
+                    'products.type',
+                    'products.description',
+                    'products.supplier_id',
+                    'suppliers.name as supplier_name',
+                    'c1.name as category',
+                    'c2.name as sub_category',
+                    'units.actual_name as unit',
+                    'brands.name as brand',
+                    'tax_rates.name as tax',
+                    'products.sku',
+                    'products.created_at',
+                    'products.bulk_add',
+                    'products.image',
+                    'products.refference',
+                    'products.enable_stock',
+                    'products.is_inactive',
+                    'products.updated_at',
+                    'sizes.name as size',
+                    'vld.product_updated_at as product_date',
+                    'colors.name as color',
+                    'v.dpp_inc_tax as purchase_price',
+                    'v.sell_price_inc_tax as selling_price',
+                    'vld.qty_available as current_stock',
+                    // DB::raw('SUM(vld.qty_available) as current_stock'),
+                    DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
+                    DB::raw('MIN(v.sell_price_inc_tax) as min_price')
+                )
+                // ->orderBy('products.updated_at', 'DESC')
+                // ->orderBy('vld.updated_at', 'DESC')
+                ->orderBy('vld.product_updated_at', 'DESC')
+                ->groupBy('products.id');
 
             // $type = request()->get('type', null);
             // if (!empty($type)) {
@@ -363,6 +363,7 @@ class ProductController extends Controller
                     'colors.name as color',
                     'v.dpp_inc_tax as purchase_price',
                     'v.sell_price_inc_tax as selling_price',
+                    'vld.printing_qty as printing_qty',
                     DB::raw('SUM(vld.qty_available) as current_stock'),
                     DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                     DB::raw('MIN(v.sell_price_inc_tax) as min_price')
@@ -496,6 +497,10 @@ class ProductController extends Controller
                     if (number_format($row->current_stock) > 0)
                         return  '<input type="checkbox" class="row-select" value="' . $row->id . '"><input type="number" class="row-qty form-control" value="' . number_format($row->current_stock) . '" max="' . number_format($row->current_stock) . '" style="width:70px;" id="qty_' . $row->id . '">';
                 })
+                ->addColumn('printing_qty', function ($row) {
+                    if (number_format($row->current_stock) > 0)
+                        return  'Print: <input type="number" class="row-print-qty form-control disabled" value="' . $row->printing_qty . '" max="' . $row->printing_qty . '" style="width:70px;" id="printing_qty_' . $row->id . '">';
+                })
                 ->editColumn('current_stock', '@if($enable_stock == 1) {{@number_format($current_stock)}} @else -- @endif {{$unit}}')
                 ->addColumn(
                     'price',
@@ -510,7 +515,7 @@ class ProductController extends Controller
                         }
                     }
                 ])
-                ->rawColumns(['action', 'image', 'mass_delete', 'product', 'price'])
+                ->rawColumns(['printing_qty', 'action', 'image', 'mass_delete', 'product', 'price'])
                 ->make(true);
         }
 
@@ -765,7 +770,7 @@ class ProductController extends Controller
         //If brands, category are enabled then send else false.
         $noRefferenceProducts = (request()->session()->get('business.enable_category') == 1) ? Category::catAndSubCategories($business_id) : false;
         $suppliers = (request()->session()->get('business.enable_brand') == 1) ? Supplier::where('business_id', $business_id)
-            ->orderBy('name','ASC')
+            ->orderBy('name', 'ASC')
             ->pluck('name', 'id')
             ->prepend(__('lang_v1.all_suppliers'), 'all') : false;
         $categories = Category::where('parent_id', 0)->pluck('name', 'id');
@@ -786,8 +791,8 @@ class ProductController extends Controller
         $refferenceCount = str_pad($objBuss->prod_refference, 4, '0', STR_PAD_LEFT);
 
         $suppliers = Supplier::where('business_id', $business_id)
-                                ->orderBy('name','ASC')
-                                ->pluck('name', 'id');
+            ->orderBy('name', 'ASC')
+            ->pluck('name', 'id');
         $colors = Color::where('business_id', $business_id)->pluck('name', 'id');
         $units = Unit::forDropdown($business_id, true);
 
@@ -919,7 +924,7 @@ class ProductController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        
+
         try {
             $business_id = $request->session()->get('user.business_id');
             $product_details = $request->only(['name', 'brand_id', 'unit_id', 'category_id', 'tax', 'barcode_type', 'sku', 'alert_quantity', 'tax_type', 'weight', 'product_custom_field1', 'product_custom_field2', 'product_custom_field3', 'product_custom_field4', 'product_description']);
@@ -992,7 +997,7 @@ class ProductController extends Controller
 
             if ($product->type == 'single') {
                 $single_data = $request->only(['single_variation_id', 'single_dpp_inc_tax', 'single_dpp_inc_tax', 'single_dsp_inc_tax', 'profit_percent', 'single_dsp_inc_tax']);
-                
+
                 $variation = Variation::find($single_data['single_variation_id']);
 
                 $variation->sub_sku = $product->sku;
@@ -1105,8 +1110,8 @@ class ProductController extends Controller
             // if ($request->input('supplier_id') == 0) {
             //     $product->supplier_id = $request->input('supplier');
             // } else {
-                //     $product->supplier_id = $request->input('supplier');
-                // }
+            //     $product->supplier_id = $request->input('supplier');
+            // }
             $product->supplier_id = $request->input('supplier');
             $product->category_id = $request->input('category');
             if ($request->input('sub_category') != 0) {
@@ -1129,15 +1134,22 @@ class ProductController extends Controller
             $variation->dpp_inc_tax = $this->productUtil->num_uf($request->input('unit_price'));
             $variation->sell_price_inc_tax = $this->productUtil->num_uf($request->input('custom_price'));
             $variation->save();
-            
+
             $location = 1;
-            if($request->input('location_id')){
+            if ($request->input('location_id')) {
                 $location = $request->input('location_id');
             }
-            session()->put('location_id',$location);
-            $purchase_line = VariationLocationDetails::where('product_id', '=', $request->input('product_id'))->where('location_id',$request->input('location_id'))->first();
+            session()->put('location_id', $location);
+            $purchase_line = VariationLocationDetails::where('product_id', '=', $request->input('product_id'))->where('location_id', $request->input('location_id'))->first();
             $purchase_line->product_updated_at = Carbon::now();
-            $purchase_line->qty_available = $request->input('quantity');
+
+            if ($request->input('new_quantity')) {
+                $purchase_line->qty_available = $request->input('quantity') + $request->input('new_quantity');
+                $purchase_line->printing_qty = $request->input('new_quantity');
+            } else {
+                $purchase_line->qty_available = $request->input('quantity');
+            }
+
             $purchase_line->save();
             DB::commit();
             $output = [
@@ -1151,11 +1163,11 @@ class ProductController extends Controller
 
             $output = [
                 'success' => 0,
-                'msg' => __("messages.something_went_wrong".' '."File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage())
+                'msg' => __("messages.something_went_wrong" . ' ' . "File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage())
             ];
         }
         // dd($location);
-        return redirect(url('products/'.$product->id.'/edit'))->with('status', $output)->with('location_id_set',$location);
+        return redirect(url('products/' . $product->id . '/edit'))->with('status', $output)->with('location_id_set', $location);
 
         $business_id = $request->session()->get('user.business_id');
         $product_details = $request->only(['name', 'brand_id', 'unit_id', 'category_id', 'tax', 'barcode_type', 'sku', 'alert_quantity', 'tax_type', 'weight', 'product_custom_field1', 'product_custom_field2', 'product_custom_field3', 'product_custom_field4', 'product_description']);
@@ -2500,20 +2512,21 @@ class ProductController extends Controller
                     $productQty = $arr[1];
 
                     $pro = Product::find($productId);
+                    $vld = VariationLocationDetails::where('product_id',$productId)->first()->printing_qty;
 
-                    // for($i=0; $i<$productQty; $i++){
-                    $product[] = [
-                        'name' => $pro->name,
-                        'size' => $pro->sub_size()->first()->name,
-                        'refference' => $pro->refference,
-                        'color' => $pro->color()->first()->name,
-                        'barcode' => $pro->sku,
-                        'price' => $pro->variations()->first()->sell_price_inc_tax,
-                        'supplier' => $pro->supplier()->first()->name,
-                        'category' => $pro->sub_category()->first()->name,
-                        'count' => $productQty,
-                    ];
-                    // }
+                    for($i=0; $i<$productQty; $i++){
+                        $product[] = [
+                            'name' => $pro->name,
+                            'size' => $pro->sub_size()->first()->name,
+                            'refference' => $pro->refference,
+                            'color' => $pro->color()->first()->name,
+                            'barcode' => $pro->sku,
+                            'price' => $pro->variations()->first()->sell_price_inc_tax,
+                            'supplier' => $pro->supplier()->first()->name,
+                            'category' => $pro->sub_category()->first()->name,
+                            'count' => $productQty,
+                        ];
+                    }
                     // dd($productQty);
                 }
 
@@ -2551,6 +2564,7 @@ class ProductController extends Controller
                 $business_id = $request->session()->get('user.business_id');
 
                 $selected_products = explode(',', $request->input('selected_products_bulkPrint'));
+                $selected_products_qty = explode(',', $request->input('selected_products_bulkPrint_qty'));
 
                 $product = Product::where('business_id', $business_id)
                     ->whereIn('id', $selected_products)
@@ -2587,14 +2601,15 @@ class ProductController extends Controller
                         'products.image',
                         'products.enable_stock',
                         'products.is_inactive',
+                        'vld.printing_qty as printing_qty',
                         DB::raw('SUM(vld.qty_available) as current_stock'),
                         DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                         DB::raw('MIN(v.sell_price_inc_tax) as min_price')
                     )->groupBy('products.id')->get();
-
-
+                $print_qtys = $selected_products_qty;
+                // dd($print_qtys);
                 return view('product.massBulkPrint')
-                    ->with(compact('product'));
+                    ->with(compact('product','print_qtys'));
             }
 
             $output = [
@@ -2653,7 +2668,7 @@ class ProductController extends Controller
                          *
                          * */
                         if (false) {
-                        // if (empty($objOldPurchaseLine)) {
+                            // if (empty($objOldPurchaseLine)) {
                             $objPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $user_location_id)->where("purchase_lines.product_id", $productId)->first();
 
                             $objTransaction = \App\Transaction::where("id", $objPurchaseLine->transaction_id)->update(['location_id' => $business_location_id]);
@@ -2858,7 +2873,7 @@ class ProductController extends Controller
 
             $output = [
                 'success' => 0,
-                'msg' => __("messages.something_went_wrong") . "Message:" . $e->getMessage().' on Line: '.$e->getLine().' of '.$e->getFile()
+                'msg' => __("messages.something_went_wrong") . "Message:" . $e->getMessage() . ' on Line: ' . $e->getLine() . ' of ' . $e->getFile()
             ];
         }
         // dd($output);
@@ -3108,7 +3123,7 @@ class ProductController extends Controller
                 //upload document
                 if (!empty($objInputs['file'][$i])) {
                     $product_details['image'] =  $this->productUtil->uploadFileArr($request, 'file', config('constants.product_img_path'), $i);
-                }else{
+                } else {
                     $product_details['image'] = 'default.png';
                 }
 
@@ -3235,13 +3250,13 @@ class ProductController extends Controller
             $count = 0;
             // dd($products);
             // $id = VariationLocationDetails::pluck('id');
-            for ($i=0; $i < count($products); $i++) { 
+            for ($i = 0; $i < count($products); $i++) {
                 if ($products[$i]) {
                     DB::beginTransaction();
                     $vld = new VariationLocationDetails();
-                    $p_variation_id = ProductVariation::where('product_id',$products[$i])->first()->id;
-                    $variation_id = Variation::where('product_id',$products[$i])->first()->id;
-    
+                    $p_variation_id = ProductVariation::where('product_id', $products[$i])->first()->id;
+                    $variation_id = Variation::where('product_id', $products[$i])->first()->id;
+
                     $vld->product_id = $products[$i];
                     $vld->product_variation_id = $p_variation_id;
                     $vld->variation_id = $variation_id;
@@ -3255,11 +3270,11 @@ class ProductController extends Controller
                     $count++;
                 }
             }
-            
-            dd($count.' products are saved into VLD with location id '.$location_id);
+
+            dd($count . ' products are saved into VLD with location id ' . $location_id);
         } catch (\Exception $ex) {
             DB::rollback();
-            dd($ex->getMessage().' in file: '.$ex->getFile().' on Line '.$ex->getLine());
+            dd($ex->getMessage() . ' in file: ' . $ex->getFile() . ' on Line ' . $ex->getLine());
         }
     }
     /**
@@ -3268,16 +3283,16 @@ class ProductController extends Controller
      **/
     public function addDateinNull()
     {
-        $products = VariationLocationDetails::where('product_updated_at',null)->get();
+        $products = VariationLocationDetails::where('product_updated_at', null)->get();
         // dd($products);
         $count = 0;
-        for ($i=0; $i < count($products); $i++) {
+        for ($i = 0; $i < count($products); $i++) {
             $vld = VariationLocationDetails::find($products[$i]->id);
             $vld->product_updated_at = '2020-07-01 00:00:00';
             $vld->save();
             $count++;
         }
 
-        dd($count.' product\'s updated at date is saved into VLD');
+        dd($count . ' product\'s updated at date is saved into VLD');
     }
 }

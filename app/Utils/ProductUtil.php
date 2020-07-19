@@ -348,9 +348,11 @@ class ProductUtil extends Util
                 $variation_location_d->location_id = $location_id;
                 $variation_location_d->product_variation_id = $variation->product_variation_id;
                 $variation_location_d->qty_available = 0;
+                $variation_location_d->printing_qty = 0;
                 $variation_location_d->product_updated_at = Carbon::now();
             }
-
+            
+            $variation_location_d->printing_qty = $qty_difference;
             $variation_location_d->qty_available += $qty_difference;
             // $variation_location_d->transfered_from = 5;
             $variation_location_d->save();

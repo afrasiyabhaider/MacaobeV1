@@ -188,26 +188,9 @@
       </div>
       <div class="row" style="margin-top: 30px">
         <div class="col-sm-4">
-          <label>Color *</label>
           {{-- <input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$product->color()->first()->name}}"
           id="unit_price" onchange="DittoThis(this,'single_dsp')"> --}}
-          <select name="color" id="color_id" class="select2 form-control">
-            <optgroup>
-              <option value="0">
-                Please Select
-              </option>
-              @foreach ($colors as $key=>$item)
-              <option value="{{$key}}" @if ($key==$product->color()->first()->id)
-                selected
-                @endif>
-                {{$item}}
-              </option>
-              @endforeach
-            </optgroup>
-          </select>
-        </div>
-        <div class="col-sm-4">
-          <label>Quantity *</label>
+          <label>Old Quantity *(Already Exists)</label>
           @php
               if (session()->get('location_id')) {
                 $qty = (int)$product->variation_location_details()->where('location_id',session()->get('location_id'))->first()->qty_available;
@@ -217,6 +200,11 @@
           @endphp
           <input name="quantity" required="true" type="number" class="req form-control col-12 @if($qty < 1)bg-red @endif"
             value="{{$qty}}" id="qty_id">
+        </div>
+        <div class="col-sm-4">
+          <label>New Quantity * (This will be Printed)</label>
+          <input name="new_quantity" type="number" class="req form-control col-12 "
+            placeholder="Enter New quantity" id="print_qty_id">
         </div>
         <div class="col-sm-4">
           <label>Size *</label>
@@ -236,6 +224,25 @@
               @endforeach
             </optgroup>
           </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4">
+          <label>Color *</label>
+            <select name="color" id="color_id" class="select2 form-control">
+              <optgroup>
+                <option value="0">
+                  Please Select
+                </option>
+                @foreach ($colors as $key=>$item)
+                <option value="{{$key}}" @if ($key==$product->color()->first()->id)
+                  selected
+                  @endif>
+                  {{$item}}
+                </option>
+                @endforeach
+              </optgroup>
+            </select>
         </div>
       </div>
       <div class="row" style="margin-top: 30px">

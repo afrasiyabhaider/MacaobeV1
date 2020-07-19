@@ -24,6 +24,7 @@
         @endcan
         {!! Form::open(['url' => action('ProductController@massBulkPrint'), 'method' => 'post', 'id' => 'bulkPrint_form' ]) !!}
                 {!! Form::hidden('selected_products_bulkPrint', null, ['id' => 'selected_products_bulkPrint']); !!}
+                {!! Form::hidden('selected_products_bulkPrint_qty', null, ['id' => 'selected_products_bulkPrint_qty']); !!}
                 <button type="submit" class="btn btn-success pull-left" id="bulkPrint-selected" style="margin-left: 20px">
                     <i class="fa fa-print"></i> 
                     Print Selected
@@ -43,6 +44,9 @@
                 <th>
                     <input type="checkbox" id="select-all-row">
                     Select All
+                </th>
+                <th>
+                    Printing Qty
                 </th>
                 <th>Image</th>
                 <th>@lang('sale.product')</th>

@@ -210,11 +210,11 @@
                     }
                 },
                 columnDefs: [ {
-                    "targets": [0, 1, 11],
+                    "targets": [0,1,2, 12],
                     "orderable": false,
                     "searchable": false
                 } ],
-                aaSorting: [2, 'asc'],
+                // aaSorting: [3, 'asc'],
                 pageLength: 100,
                 lengthMenu: [
                     [20, 50, 70, 100, 300, 500, 1000, -1],
@@ -222,6 +222,7 @@
                 ],
                 columns: [
                         { data: 'mass_delete'},
+                        { data: 'printing_qty'},
                         { data: 'image', name: 'products.image'  },
                         { data: 'product', name: 'products.name'  },
                         { data: 'action', name: 'action'},
@@ -366,13 +367,19 @@
             $(document).on('click', '#bulkPrint-selected', function(e){
                 e.preventDefault();
                 var selected_rows = [];
+                var print_qty = [];
                 var i = 0;
+                var j = 0;
                 $('.row-select:checked').each(function () {
                     selected_rows[i++] = $(this).val();
+                    print_qty[j++] = $("#printing_qty_"+$(this).val()).val();
+                    // console.log(selected_rows);
+                    // console.log(print_qty);
+                    // return 0;
                 }); 
-                
                 if(selected_rows.length > 0){
                     $('input#selected_products_bulkPrint').val(selected_rows);
+                    $('input#selected_products_bulkPrint_qty').val(print_qty);
                     swal({
                         title: LANG.sure,
                         icon: "warning",

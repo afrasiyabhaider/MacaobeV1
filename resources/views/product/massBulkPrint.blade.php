@@ -73,8 +73,8 @@
 	<div class="row">
 		@php $i=0; @endphp
 		@foreach($product as $objProduct)
-			@php $i++; @endphp
-			@for($j=0;$j<$objProduct->current_stock;$j++)
+			{{-- @for($j=0;$j<$objProduct->current_stock;$j++) --}}
+			@for($j=0;$j<$print_qtys[$i];$j++)
 				<div class="col-md-4 col-xs-4 heh mt-sm-3">
 					<div class="">
 						<div class="col-xs-9 text-left"   style="font-size: 12px" >
@@ -134,6 +134,7 @@
 					<!--	<div class="col-md-6  col-xs-5 pull-left printList hide"  data-id="qty">Qty : {{$objProduct->current_stock  or ' '}}  </div>-->
 				</div>
 			@endfor 
+			@php $i++; @endphp
 			{{-- @if ($loop->iteration%3 == 0)
 				</div>
 				<div class="row" style="margin-top: 20px">
