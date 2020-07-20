@@ -2605,7 +2605,9 @@ class ProductController extends Controller
                         DB::raw('SUM(vld.qty_available) as current_stock'),
                         DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                         DB::raw('MIN(v.sell_price_inc_tax) as min_price')
-                    )->groupBy('products.id')->get();
+                    )->groupBy('products.id')
+                    ->value('vld.product_updated_at','DESC')
+                    ->get();
                 $print_qtys = $selected_products_qty;
                 // dd($print_qtys);
                 return view('product.massBulkPrint')
