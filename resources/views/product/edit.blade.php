@@ -173,9 +173,6 @@
             value="{{$ut->num_f($product->variations()->first()->sell_price_inc_tax)}}" id="sale_price"
             onchange="DittoThis(this,'profit_percent')">
         </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-4"></div>
         <div class="col-sm-4">
           <label>Barcode</label>
           <input required="true" type="text" class=" form-control col-12" value="{{$product->sku}}" id="sku" name="sku">
@@ -185,6 +182,10 @@
           <input type="text" class=" form-control col-12" value="{{$product->description}}" id="description"
             name="description">
         </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4"></div>
+        
       </div>
       <div class="row" style="margin-top: 30px">
         <div class="col-sm-4">
