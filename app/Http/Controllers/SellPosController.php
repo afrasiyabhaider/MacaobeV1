@@ -2430,7 +2430,7 @@ class SellPosController extends Controller
             )
                 ->where("p_type", "product")
                 ->groupBy('variations.id')
-                // ->orderBy('products.name', 'asc')
+                ->orderBy('products.name', 'asc')
                 ->orderBy('VLD.product_updated_at', 'DESC')
                 // ->orderBy('products.updated_at', 'DESC')
                 ->paginate(50);
