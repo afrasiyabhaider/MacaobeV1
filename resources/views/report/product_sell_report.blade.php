@@ -154,9 +154,9 @@
     $(document).on('shown.bs.modal', 'div.view_product_modal, div.view_modal', function(){
             __currency_convert_recursively($(this));
         });
-    $(function () {
-        var column = $("#product_sell_report_table").DataTable().column(10);
-        column.visible( !column.visible());
-    });
+    // $(function () {
+    //     var column = $("#product_sell_report_table").DataTable().column(10);
+    //     column.visible( !column.visible());
+    // });
 </script>
 @endsection
