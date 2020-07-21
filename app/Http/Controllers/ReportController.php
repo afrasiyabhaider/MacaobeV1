@@ -1939,12 +1939,19 @@ class ReportController extends Controller
                  ->editColumn('image', function ($row) {
                     return '<div style="display: flex;"><img src="' . $row->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
                 })
+                 ->editColumn('refference', function ($row) {
+                     if($row->refference){
+                         return $row->refference;
+                     }else{
+                         return '<b class="text-center">-</b>';
+                     }
+                })
                 ->editColumn('transaction_date', '{{@format_date($transaction_date)}}')
                 ->editColumn('unit_sale_price', function ($row) {
                     return '<span class="display_currency" data-currency_symbol = true>' . $row->unit_sale_price . '</span>';
                 })
                 ->editColumn('sell_qty', function ($row) {
-                    return '<span data-is_quantity="true" class="display_currency sell_qty" data-currency_symbol=false data-orig-value="' . (float)$row->sell_qty . '" data-unit="' . $row->unit . '" >' . (float) $row->sell_qty . '</span> ' .$row->unit;
+                    return '<span  class="sell_qty" data-currency_symbol=false data-orig-value="' . (int)$row->sell_qty . '" data-unit="' . $row->unit . '" >' . (int) $row->sell_qty . '</span> ' .$row->unit;
                 })
                  ->editColumn('subtotal', function ($row) {
                      return '<span class="display_currency row_subtotal" data-currency_symbol = true data-orig-value="' . $row->subtotal . '">' . $row->subtotal . '</span>';
@@ -1973,7 +1980,7 @@ class ReportController extends Controller
                         }
                     }
                 ])
-                ->rawColumns(['image','invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax'])
+                ->rawColumns(['refference','image','invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax'])
                 ->make(true);
         }
 
@@ -2041,8 +2048,10 @@ class ReportController extends Controller
                     'u.short_name as unit',
                     DB::raw('SUM((transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) * transaction_sell_lines.unit_price_inc_tax) as subtotal')
                 )
-                ->groupBy('v.id')
-                ->groupBy('formated_date');
+                // ->groupBy('v.id')
+                ->orderBy('p.name','ASC')
+                ->groupBy('p.name');
+                // ->groupBy('formated_date');
 
             if (!empty($variation_id)) {
                 $query->where('transaction_sell_lines.variation_id', $variation_id);

@@ -163,7 +163,7 @@
         @endphp
         <div class="col-sm-4" style="margin-top: 30px">
           <label>Unit Price * </label>
-          <input name="unit_price" autofocus required="true" type="text" class="req form-control col-12"
+          <input name="unit_price" required="true" type="text" class="req form-control col-12"
             value="{{$ut->num_f($product->variations()->first()->dpp_inc_tax)}}" id="unit_price"
             onchange="changeUnitPrice(this);">
         </div>
@@ -203,7 +203,7 @@
         </div>
         <div class="col-sm-4">
           <label>New Quantity * (This will be Printed)</label>
-          <input name="new_quantity" type="number" class="req form-control col-12 "
+          <input name="new_quantity" autofocus type="number" class="req form-control col-12 "
             placeholder="Enter New quantity" id="print_qty_id">
         </div>
         <div class="col-sm-4">
@@ -472,7 +472,7 @@
 <script type="text/javascript">
   var url = {!! json_encode(url('')) !!};
      $(document).ready(function (){
-    $("#refference_id").focus();
+    // $("#refference_id").focus();
     $("#location_id").select().change();
     $("#category_id").select().change();
     setTimeout(function () {
@@ -515,7 +515,7 @@
 		}
      }
      $("#sub_category_id").change(function () {
-		$("#refference_id").focus();
+		// $("#refference_id").focus();
      });
      function changeUnitPrice(obj)
      {

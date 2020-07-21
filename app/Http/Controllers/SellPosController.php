@@ -2429,11 +2429,11 @@ class SellPosController extends Controller
                 'products.sub_size_id'
             )
                 ->where("p_type", "product")
-                ->orderBy('products.name', 'asc')
                 ->groupBy('variations.id')
+                // ->orderBy('products.name', 'asc')
                 ->orderBy('VLD.product_updated_at', 'DESC')
                 // ->orderBy('products.updated_at', 'DESC')
-                ->paginate(20);
+                ->paginate(50);
 
 
 
@@ -2537,7 +2537,7 @@ class SellPosController extends Controller
                 'products.size_id'
             )
                 ->where("p_type", "product")
-                ->orderBy('products.name', 'asc')
+                // ->orderBy('products.name', 'asc')
                 ->groupBy('variations.id')
                 ->orderBy('VLD.product_updated_at', 'DESC')
                 // ->orderBy('products.updated_at', 'DESC')
