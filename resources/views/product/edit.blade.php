@@ -128,10 +128,10 @@
       <div class="row" style="margin-top: 20px">
         <div class="col-sm-4">
           @if ($product->image != null)
-          <img src="{{asset('uploads/img/'.$product->image)}}" class="img-thumbnail img-responsive" style="width:100px"
+          <img src="{{asset('uploads/img/'.$product->image)}}" class="img-thumbnail img-responsive" style="width:200px"
             id="img-previewer" name="image">
           @else
-          <img src="{{asset('img/default.png')}}" class="img-thumbnail img-responsive" style="width:100px"
+          <img src="{{asset('img/default.png')}}" class="img-thumbnail img-responsive" style="width:200px"
             id="img-previewer" name="image">
           @endif
           <div class="form-group">
