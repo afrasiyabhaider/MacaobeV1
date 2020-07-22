@@ -746,7 +746,8 @@ class ReportController extends Controller
                 'vld.product_updated_at as product_date',
                 'variations.name as variation_name',
                 'vld.updated_at',
-                DB::raw('SUM(vld.qty_available) as current_stock')
+                'vld.qty_available as current_stock'
+                // DB::raw('SUM(vld.qty_available) as current_stock')
             )->groupBy('variations.id')
                 ->orderBy('vld.product_updated_at', 'DESC');
             // dd($products->first());

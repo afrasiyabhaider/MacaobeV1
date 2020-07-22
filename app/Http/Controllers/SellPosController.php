@@ -2421,6 +2421,7 @@ class SellPosController extends Controller
                 'variations.id as variation_id',
                 'variations.name as variation',
                 'VLD.qty_available',
+                'VLD.product_updated_at',
                 'variations.default_sell_price as selling_price',
                 'variations.sub_sku',
                 'products.sku',
@@ -2431,14 +2432,13 @@ class SellPosController extends Controller
                 ->where("p_type", "product")
                 ->groupBy('variations.id')
                 ->orderBy('products.name', 'asc')
-                ->orderBy('VLD.product_updated_at', 'DESC')
+                // ->orderBy('VLD.product_updated_at', 'DESC')
                 // ->orderBy('products.updated_at', 'DESC')
                 ->paginate(50);
 
 
 
-            return view('sale_pos.partials.product_list')
-                ->with(compact('products'));
+            return view('sale_pos.partials.product_list')->with(compact('products'));
         }
     }
     /**

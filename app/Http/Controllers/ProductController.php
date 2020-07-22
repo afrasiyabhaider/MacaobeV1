@@ -1141,11 +1141,11 @@ class ProductController extends Controller
             }
             session()->put('location_id', $location);
             $purchase_line = VariationLocationDetails::where('product_id', '=', $request->input('product_id'))->where('location_id', $request->input('location_id'))->first();
-            $purchase_line->product_updated_at = Carbon::now();
-
+            
             if ($request->input('new_quantity')) {
                 $purchase_line->qty_available = $request->input('quantity') + $request->input('new_quantity');
                 $purchase_line->printing_qty = $request->input('new_quantity');
+                $purchase_line->product_updated_at = Carbon::now();
             } else {
                 $purchase_line->qty_available = $request->input('quantity');
             }
@@ -2606,7 +2606,8 @@ class ProductController extends Controller
                         DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                         DB::raw('MIN(v.sell_price_inc_tax) as min_price')
                     )->groupBy('products.id')
-                    ->orderBy('vld.product_updated_at','DESC')
+                    ->orderBy('products.refference','ASC')
+                    // ->orderBy('vld.product_updated_at','DESC')
                     ->get();
                 $print_qtys = $selected_products_qty;
                 // dd($print_qtys);
@@ -2659,13 +2660,13 @@ class ProductController extends Controller
                     if (strcmp($productQty, $productOrignalQty) == 0) {
                         DB::beginTransaction();
                         $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("purchase_lines.product_id", $productId)->first();
-                        // dd($objOldPurchaseLine);
+                        // dd($arr,$productQty,$productOrignalQty,$LeftQty);
                         // ->where("t.location_id", $business_location_id)->where
 
                         /**
                          * ---------------IMPORTANT------------------
                          * 
-                         * If Uncommented below if and other comments of location
+                         * If Uncommented below 'if()' and other comments of location
                          * Id then product will not be save as 0 qty
                          *
                          * */
@@ -2691,7 +2692,15 @@ class ProductController extends Controller
                             $oldPurchaseLine = PurchaseLine::where("transaction_id", $objNewPurchaseLine->transaction_id)->where("product_id", $objNewPurchaseLine->product_id)->where("variation_id", $objNewPurchaseLine->variation_id)->update(['quantity' => $qtyForPurchaseLine]);
 
                             //Update Variation_location_details Qty Remaining 
-                            $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $objOldPurchaseLine->product_id)->update(['qty_available' => $LeftQty]);
+                            $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $objOldPurchaseLine->product_id);
+                            ;
+                            
+                            $new_transfer_Qty = $oldPurchaseLine->first()->qty_available + $productQty;
+
+                            $oldPurchaseLine->update(['qty_available' => $new_transfer_Qty]);
+                            // $oldPurchaseLine->update(['qty_available' => $LeftQty]);
+                            
+                            // dd($user_location_id,$LeftQty,$oldPurchaseLine);
 
                             $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objNewPurchaseLine->variation_id)->where("product_id", $objNewPurchaseLine->product_id)->update(['qty_available' => $qtyForPurchaseLine]);
                         }
@@ -2790,9 +2799,18 @@ class ProductController extends Controller
                                 $transaction->update();
                             }
                             $transaction_id = $transaction->id;
-                            $qtyForPurchaseLine = $productQty + $purchase_line->quantity;
+
+                            $old_available_qty = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $product->id)->first();
+                            $qtyForPurchaseLine = $old_available_qty->qty_available+$productQty;
+
+                            // $qtyForPurchaseLine = $productQty + $purchase_line->quantity;
+                            // dd($qtyForPurchaseLine);
                         } else {
-                            $qtyForPurchaseLine = $productQty;
+
+                            $old_available_qty = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $product->id)->first();
+                            $qtyForPurchaseLine = $old_available_qty->qty_available+$productQty;
+
+
                             $transaction = \App\Transaction::where('type', 'opening_stock')
                                 ->where('business_id', $business_id)
                                 ->where('opening_stock_product_id', $product->id)
@@ -2839,9 +2857,16 @@ class ProductController extends Controller
                             $oldPurchaseLine = PurchaseLine::where("id", $objOrignalPurchaseLine->id)->update(['quantity' => $LeftQty]); //Update OLD ONE AND THEN NEW ONE
                             $oldPurchaseLine = PurchaseLine::where("transaction_id", $objOldPurchaseLine->transaction_id)->where("product_id", $product->id)->update(['quantity' => $qtyForPurchaseLine]);
                         }
+                        // dd($business_location_id,$LeftQty,$purchase_line,$qty_remaining,$qtyForPurchaseLine);
                         //Update Variation_location_details Qty Remaining 
                         // dd("Hello");
+
+                        /**
+                         * Qty for Location is Updating here 
+                         * 
+                         **/
                         $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOrignalPurchaseLine->variation_id)->where("product_id", $product->id)->update(['qty_available' => $LeftQty]);
+
                         $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $product->id)->update(['qty_available' => $qtyForPurchaseLine]);
 
                         //create transaction & purchase lines

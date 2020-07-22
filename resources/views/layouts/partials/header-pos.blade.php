@@ -37,10 +37,11 @@
         <strong><i class="fa fa-plus fa-lg"></i></strong>
       </a>
 
-      <button type="button" id="close_register" title="{{ __('cash_register.close_register') }}" data-toggle="tooltip" data-placement="bottom" class="btn btn-danger btn-flat m-6 p-5 m-5 btn-modal pull-right" data-container=".close_register_modal" 
+      {{-- Close Register Button --}}
+      {{-- <button type="button" id="close_register" title="{{ __('cash_register.close_register') }}" data-toggle="tooltip" data-placement="bottom" class="btn btn-danger btn-flat m-6 p-5 m-5 btn-modal pull-right" data-container=".close_register_modal" 
           data-href="{{ action('CashRegisterController@getCloseRegister')}}">
             <strong><i class="fa fa-window-close fa-lg"></i></strong>
-      </button>
+      </button> --}}
       
       <button type="button" id="register_details" title="{{ __('cash_register.register_details') }}" data-toggle="tooltip" data-placement="bottom" class="btn btn-success btn-flat m-6  m-5 btn-modal pull-right" data-container=".register_details_modal" 
           data-href="{{ action('CashRegisterController@getRegisterDetails')}}">
