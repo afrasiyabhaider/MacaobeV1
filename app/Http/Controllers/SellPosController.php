@@ -660,7 +660,7 @@ class SellPosController extends Controller
         }
 
         if (!$is_direct_sale) {
-            dd($this->cashRegisterUtil->countOpenedRegister());
+            // dd($this->cashRegisterUtil->countOpenedRegister());
             return $output;
         } else {
             if ($input['status'] == 'draft') {
