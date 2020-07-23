@@ -275,21 +275,23 @@ class SellPosController extends Controller
         //Update USER SESSION
         $user_id = request()->session()->get('user.id');
         $user = \App\User::find($user_id);
+
         request()->session()->put('user', $user->toArray());
+
         $business_location_id = request()->session()->get('user.business_location_id');
         //Update USER SESSION
 
         //Check if subscribed or not, then check for users quota
-        if (!$this->moduleUtil->isSubscribed($business_id)) {
-            return $this->moduleUtil->expiredResponse(action('HomeController@index'));
-        } elseif (!$this->moduleUtil->isQuotaAvailable('invoices', $business_id)) {
-            return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action('SellPosController@index'));
-        }
+        // if (!$this->moduleUtil->isSubscribed($business_id)) {
+        //     return $this->moduleUtil->expiredResponse(action('HomeController@index'));
+        // } elseif (!$this->moduleUtil->isQuotaAvailable('invoices', $business_id)) {
+        //     return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action('SellPosController@index'));
+        // }
 
         //Check if there is a open register, if no then redirect to Create Register screen.
-        if ($this->cashRegisterUtil->countOpenedRegister() == 0) {
-            return redirect()->action('CashRegisterController@create');
-        }
+        // if ($this->cashRegisterUtil->countOpenedRegister() == 0) {
+        //     return redirect()->action('CashRegisterController@create');
+        // }
 
         $walk_in_customer = $this->contactUtil->getWalkInCustomer($business_id);
 
