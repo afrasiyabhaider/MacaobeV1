@@ -282,11 +282,11 @@ class SellPosController extends Controller
         //Update USER SESSION
 
         //Check if subscribed or not, then check for users quota
-        // if (!$this->moduleUtil->isSubscribed($business_id)) {
-        //     return $this->moduleUtil->expiredResponse(action('HomeController@index'));
-        // } elseif (!$this->moduleUtil->isQuotaAvailable('invoices', $business_id)) {
-        //     return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action('SellPosController@index'));
-        // }
+        if (!$this->moduleUtil->isSubscribed($business_id)) {
+            return $this->moduleUtil->expiredResponse(action('HomeController@index'));
+        } elseif (!$this->moduleUtil->isQuotaAvailable('invoices', $business_id)) {
+            return $this->moduleUtil->quotaExpiredResponse('invoices', $business_id, action('SellPosController@index'));
+        }
 
         //Check if there is a open register, if no then redirect to Create Register screen.
         // if ($this->cashRegisterUtil->countOpenedRegister() == 0) {
@@ -399,9 +399,9 @@ class SellPosController extends Controller
 
         // dd($this->cashRegisterUtil->countOpenedRegister(),request()->session()->get('user.business_location_id'));
         //Check if there is a open register, if no then redirect to Create Register screen.
-        if (!$is_direct_sale && $this->cashRegisterUtil->countOpenedRegister() == 0) {
-            return redirect()->action('CashRegisterController@create');
-        }
+        // if (!$is_direct_sale && $this->cashRegisterUtil->countOpenedRegister() == 0) {
+        //     return redirect()->action('CashRegisterController@create');
+        // }
 
         try {
             $input = $request->except('_token');
