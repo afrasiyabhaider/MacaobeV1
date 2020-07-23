@@ -424,7 +424,7 @@ class SellPosController extends Controller
                         ->with('status', $output);
                 }
             }
-
+            
             $input['is_quotation'] = 0;
             //status is send as quotation from Add sales screen.
             if ($input['status'] == 'quotation') {
@@ -540,7 +540,6 @@ class SellPosController extends Controller
 
                     Contact::where($dataWhere)->update($dataUpdate);
                 }
-
                 $update_transaction = false;
                 if ($this->transactionUtil->isModuleEnabled('tables')) {
                     $transaction->res_table_id = request()->get('res_table_id');
@@ -553,6 +552,7 @@ class SellPosController extends Controller
                 if ($update_transaction) {
                     $transaction->save();
                 }
+                
 
                 //Check for final and do some processing.
                 if ($input['status'] == 'final') {
@@ -573,6 +573,7 @@ class SellPosController extends Controller
                         }
                     }
 
+
                     //Add payments to Cash Register
                     if (!$is_direct_sale && !$transaction->is_suspend && !empty($input['payment'])) {
                         $this->cashRegisterUtil->addSellPayments($transaction, $input['payment']);
@@ -580,7 +581,7 @@ class SellPosController extends Controller
 
                     //Update payment status
                     $this->transactionUtil->updatePaymentStatus($transaction->id, $transaction->final_total);
-
+                    
                     //Allocate the quantity from purchase and add mapping of
                     //purchase & sell lines in
                     //transaction_sell_lines_purchase_lines table
@@ -598,12 +599,13 @@ class SellPosController extends Controller
                     //Auto send notification
                     $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $transaction->contact);
                 }
-
+                
                 //Set Module fields
                 if (!empty($input['has_module_data'])) {
                     $this->moduleUtil->getModuleData('after_sale_saved', ['transaction' => $transaction, 'input' => $input]);
                 }
 
+                
                 Media::uploadMedia($business_id, $transaction, $request, 'documents');
 
                 DB::commit();
@@ -658,6 +660,7 @@ class SellPosController extends Controller
         }
 
         if (!$is_direct_sale) {
+            dd($this->cashRegisterUtil->countOpenedRegister());
             return $output;
         } else {
             if ($input['status'] == 'draft') {
