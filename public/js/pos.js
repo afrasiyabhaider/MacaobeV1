@@ -468,9 +468,6 @@ $(document).ready(function() {
             first_row.trigger('change');
         }
 
-        alert(pos_form_obj);
-        console.log(pos_form_obj);
-        return 0;
         //Change payment method.
         $('#payment_rows_div').find('.payment_types_dropdown').first().val(pay_method);
         if (pay_method == 'card') {
@@ -500,12 +497,8 @@ $(document).ready(function() {
         $('input#card_month_0').val('01');
         $('input#card_year_0').val('20000');
         $('input#card_security_0').val('1122');
-
+        // Here Form submitting of POS_Create
         // $('div#card_details_modal').modal('hide');
-
-        alert(pos_form_obj);
-        console.log(pos_form_obj);
-        return 0;
         pos_form_obj.submit();
     });
     /**
@@ -521,10 +514,6 @@ $(document).ready(function() {
         $('input#card_security_0').val($('#card_security').val());
 
         $('div#card_details_modal').modal('hide');
-
-        alert(pos_form_obj);
-        console.log(pos_form_obj);
-        return 0;
         pos_form_obj.submit();
     });
 
