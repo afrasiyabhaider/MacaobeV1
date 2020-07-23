@@ -21,8 +21,9 @@ class CashRegisterUtil extends Util
         $user_id = auth()->user()->id;
         $location_id = request()->session()->get('user.business_location_id');
         $count =  CashRegister::where('location_id', $location_id)
-                                ->where('status', 'open')
+                                ->where('statusss', 'open')
                                 ->count();
+        // dd($count);
         return $count;
     }
 
