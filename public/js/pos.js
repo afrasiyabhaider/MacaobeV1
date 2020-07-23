@@ -475,7 +475,10 @@ $(document).ready(function() {
         } else if (pay_method == 'suspend') {
             $('div#confirmSuspendModal').modal('show');
         } else {
-            pos_form_obj.submit();
+            alert(pos_form_obj);
+            console.log(pos_form_obj);
+            return 0;
+            // pos_form_obj.submit();
         }
     });
 
