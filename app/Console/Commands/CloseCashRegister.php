@@ -43,6 +43,7 @@ class CloseCashRegister extends Command
         // $cashRegister = new CashRegisterController();
         
         // $cashRegister->autoCloseRegister();
+        return 'Could Not run this command';
         $registers = CashRegister::where('status','open')->where('location_id','>',0)->get();
         $cashRegisterUtil = new CashRegisterUtil();
         foreach ($registers as $key => $value) {

@@ -290,7 +290,7 @@ class CashRegisterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function postCloseRegisterrrrr(Request $request)
+    public function postCloseRegister(Request $request)
     {
         try {
             //Disable in demo
