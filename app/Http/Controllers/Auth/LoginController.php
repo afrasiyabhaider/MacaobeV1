@@ -113,7 +113,7 @@ class LoginController extends Controller
                 $register->closing_amount = $total_sale;
                 $register->location_id = $location_id;
                 $register->closed_at = Carbon::now()->format('Y-m-d H:i:s');
-                $register->status = 'close';
+                $register->statusss = 'close';
                 
                 $register->save();
             }

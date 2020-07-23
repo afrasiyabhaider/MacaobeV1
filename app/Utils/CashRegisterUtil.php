@@ -73,7 +73,7 @@ class CashRegisterUtil extends Util
         $user_id = auth()->user()->id;
         $location_id = request()->session()->get('user.business_location_id');
         $register =  CashRegister::where('location_id', $location_id)
-                                ->where('status', 'open')
+                                ->where('statusss', 'open')
                                 ->first();
         // dd($register);
         //If draft -> final then add all
@@ -155,7 +155,7 @@ class CashRegisterUtil extends Util
         $user_id = auth()->user()->id;
         $location_id = request()->session()->get('user.business_location_id');
         $register =  CashRegister::where('location_id', $location_id)
-                                ->where('status', 'open')
+                                ->where('statusss', 'open')
                                 ->first();
 
         $total_payment = CashRegisterTransaction::where('transaction_id', $transaction->id)
@@ -235,7 +235,7 @@ class CashRegisterUtil extends Util
             // $user_id = auth()->user()->id;
             $location_id = request()->session()->get('user.business_location_id');
             $query->where('cash_registers.location_id', $location_id)
-            ->where('cash_registers.status', 'open');
+            ->where('cash_registers.statusss', 'open');
         } else {
             $query->where('cash_registers.id', $register_id);
         }
