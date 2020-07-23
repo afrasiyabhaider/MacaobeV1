@@ -33,10 +33,10 @@
           data-href="{{ action('CashRegisterController@getRegisterDetails')}}">
             <strong><i class="fa fa-briefcase fa-lg" aria-hidden="true"></i></strong>
           </button>
-          <button type="button" id="close_register" title="{{ __('cash_register.close_register') }}" data-toggle="tooltip" data-placement="bottom" class="btn btn-danger btn-flat pull-left m-8 hidden-xs btn-sm mt-10 btn-modal" data-container=".close_register_modal" 
+          {{-- <button type="button" id="close_register" title="{{ __('cash_register.close_register') }}" data-toggle="tooltip" data-placement="bottom" class="btn btn-danger btn-flat pull-left m-8 hidden-xs btn-sm mt-10 btn-modal" data-container=".close_register_modal" 
           data-href="{{ action('CashRegisterController@getCloseRegister')}}">
             <strong><i class="fa fa-window-close fa-lg"></i></strong>
-          </button>
+          </button> --}}
         @endif
 
         @can('sell.create')
