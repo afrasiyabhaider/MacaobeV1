@@ -138,7 +138,7 @@
 								</button>
 							</div>
 							<div class="col-sm-3 col-xs-12 col-2px-padding">
-								<button type="button" class="btn btn-info btn-block btn-flat btn-lg no-print @if($pos_settings['disable_express_checkout'] != 0) hide @endif pos-express-btn pos-express-finalize"  data-pay_method="card" id="pos-save-card-external">
+								<button type="button" class="btn btn-info btn-block btn-flat btn-lg no-print @if($pos_settings['disable_express_checkout'] != 0) hide @endif pos-express-btn pos-express-finalize"  id="pos-save-card-external">
 								{{-- data-pay_method="card"  --}}
 									<i class="fa fa-credit-card"></i>
 									Card
