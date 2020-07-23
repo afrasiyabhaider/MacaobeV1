@@ -644,7 +644,7 @@ class SellPosController extends Controller
             DB::rollBack();
 
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            dd($e->getMessage());
+            dd($e->getMessage().' in File: '.$ex->getMessage().' on Line: '.$ex->getLine());
             $msg = trans("messages.something_went_wrong Here . " . $e->getMessage());
 
             if (get_class($e) == \App\Exceptions\PurchaseSellMismatch::class) {
