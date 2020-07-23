@@ -327,7 +327,7 @@ class CashRegisterController extends Controller
      * Close Register Automatically On the basis of time 
      * 
      **/
-    public function autoCloseRegisterrrr()
+    public function autoCloseRegister()
     {
         $registers = CashRegister::where('status','open')->where('location_id','>',0)->get();
         foreach ($registers as $key => $value) {
