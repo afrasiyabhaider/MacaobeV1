@@ -279,10 +279,10 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
 
     Route::get('/cash-register/register-details', 'CashRegisterController@getRegisterDetails');
 
-    Route::get('/cash-register/close-register', 'CashRegisterController@getCloseRegister');
-    Route::post('/cash-register/close-register', 'CashRegisterController@postCloseRegister');
+    // Route::get('/cash-register/close-register', 'CashRegisterController@getCloseRegister');
+    // Route::post('/cash-register/close-register', 'CashRegisterController@postCloseRegister');
 
-    Route::get('/cash-register/auto-close', 'CashRegisterController@autoCloseRegister');
+    // Route::get('/cash-register/auto-close', 'CashRegisterController@autoCloseRegister');
 
 
     Route::resource('cash-register', 'CashRegisterController');
