@@ -100,7 +100,7 @@ class LoginController extends Controller
         $user = Auth::user();
         $location_id = $user->business_location_id;
         // $location_id = request()->session()->get('user.business_location_id');
-        $register = CashRegister::where('status','open')->where('location_id',$location_id)->latest()->first();
+        $register = CashRegister::where('statusss','open')->where('location_id',$location_id)->latest()->first();
 
         dd($user,$register);
         if (!empty($register)) {
