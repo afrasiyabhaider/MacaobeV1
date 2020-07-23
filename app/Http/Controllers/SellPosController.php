@@ -397,7 +397,7 @@ class SellPosController extends Controller
             $is_direct_sale = true;
         }
 
-        // dd($this->cashRegisterUtil->countOpenedRegister(),request()->session()->get('user.business_location_id'));
+        dd($is_direct_sale,$this->cashRegisterUtil->countOpenedRegister(),request()->session()->get('user.business_location_id'));
         //Check if there is a open register, if no then redirect to Create Register screen.
         if (!$is_direct_sale && $this->cashRegisterUtil->countOpenedRegister() == 0) {
             return redirect()->action('CashRegisterController@create');
