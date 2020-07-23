@@ -396,9 +396,9 @@ class SellPosController extends Controller
         }
 
         //Check if there is a open register, if no then redirect to Create Register screen.
-        if (!$is_direct_sale && $this->cashRegisterUtil->countOpenedRegister() == 0) {
-            return redirect()->action('CashRegisterController@create');
-        }
+        // if (!$is_direct_sale && $this->cashRegisterUtil->countOpenedRegister() == 0) {
+        //     return redirect()->action('CashRegisterController@create');
+        // }
 
         try {
             $input = $request->except('_token');
