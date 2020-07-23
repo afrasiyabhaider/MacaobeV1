@@ -336,7 +336,7 @@ class CashRegisterController extends Controller
            $value->closing_amount = $total_sale;
            $location_id = $value->location_id;
            $value->closed_at = \Carbon::now()->format('Y-m-d H:i:s');
-           $value->status = 'close';
+           $value->statusss = 'close';
             
            $value->save();
            
