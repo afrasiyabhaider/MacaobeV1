@@ -74,6 +74,7 @@ class CashRegisterUtil extends Util
         $register =  CashRegister::where('location_id', $location_id)
                                 ->where('status', 'open')
                                 ->first();
+        dd($register);
         //If draft -> final then add all
         //If final -> draft then refund all
         //If final -> final then update payments
