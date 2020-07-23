@@ -80,7 +80,7 @@ class CashRegisterController extends Controller
                         'business_id' => $business_id,
                         'user_id' => $user_id,
                         'location_id' => $location_id,
-                        'status' => 'open'
+                        'statusss' => 'open'
                     ]);
             $register->cash_register_transactions()->create([
                             'amount' => $initial_amount,
