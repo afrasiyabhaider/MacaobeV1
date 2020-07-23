@@ -338,7 +338,7 @@ class CashRegisterUtil extends Util
     {
         $location_id = request()->session()->get('user.business_location_id');
         $register =  CashRegister::where('location_id', $location_id)
-                                ->where('status', 'open')
+                                ->where('statusss', 'open')
                                 ->first();
 
         return $register;
