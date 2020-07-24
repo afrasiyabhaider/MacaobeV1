@@ -300,13 +300,15 @@
 				<div class="row">
 					<div class="col-md-6">
 				        <div class="form-group">
-				            <label for="discount_type_modal">Discount Amount:*</label>
-				            <div class="input-group">
-				                <span class="input-group-addon">
-				                    <i class="fa fa-info"></i>
-				                </span>
-				                <input type="text" class="form-control" placeholder="0.00" id="unknownDiscountAmount">
-				            </div>
+							<label for="discount_type_modal">
+							  Discount Amount:*
+							</label>
+							<div class="input-group">
+								<span class="input-group-addon">
+									<i class="fa fa-info"></i>
+								</span>
+								<input type="text" class="form-control" placeholder="0.00" id="unknownDiscountAmount">
+							</div>
 				        </div>
 				    </div>
 				</div>

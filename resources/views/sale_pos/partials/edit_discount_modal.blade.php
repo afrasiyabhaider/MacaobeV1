@@ -15,11 +15,13 @@
 				                <span class="input-group-addon">
 				                    <i class="fa fa-info"></i>
 				                </span>
-				                <select class="form-control valid" required="" id="discount_type_modal" name="discount_type_modal" aria-required="true" aria-invalid="false">
-				                	<!-- <option value="">Please Select</option> -->
-				                	<!-- <option value="fixed" >Fixed</option> -->
-				                	<option value="percentage" >Percentage</option>
-				                	<option value="fixed" selected="selected">Unknown</option>
+				                <select class="form-control valid" required id="discount_type_modal" name="discount_type_modal" aria-required="true" aria-invalid="false">
+								 <optgroup>
+									 <!-- <option value="">Please Select</option> -->
+									 <!-- <option value="fixed" >Fixed</option> -->
+									 <option value="fixed" selected>Unknown</option>
+									 <option value="percentage" >Percentage</option>
+								 </optgroup>
 				                </select>
 				            </div>
 				        </div>
@@ -32,7 +34,8 @@
 				                <span class="input-group-addon">
 				                    <i class="fa fa-info"></i>
 				                </span>
-				                {!! Form::text('discount_amount_modal', @num_format($sales_discount), ['class' => 'form-control input_number']); !!}
+							 {{-- {!! Form::text('discount_amount_modal', '{{$sales_discount}}', ['class' => 'form-control input_number']); !!} --}}
+							<input type="text" id="discount_amount_modal" class="form-control input_number" value="{{$sales_discount,0}}">
 				            </div>
 				        </div>
 				    </div>

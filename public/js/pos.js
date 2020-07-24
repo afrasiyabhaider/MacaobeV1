@@ -632,7 +632,7 @@ $(document).ready(function() {
     $(document).on('change', '.payment-amount', function() {
         calculate_balance_due();
     });
-
+    var c = null;
     //Update discount
     $('button#posEditDiscountModalUpdate').click(function() {
         //Close modal
@@ -643,7 +643,7 @@ $(document).ready(function() {
         $('input#discount_type').val($('select#discount_type_modal').val());
 
         $('.val_un_discount').each(function() {
-            var c = $(this);
+            c = $(this);
             if ($('select#discount_type_modal').val() == 'percentage') {
                 c.html(__read_number($('input#discount_amount_modal')) + '%');
             } else {
@@ -651,7 +651,7 @@ $(document).ready(function() {
             }
         });
         $('.row_discount_amount').each(function() {
-            var c = $(this);
+            c = $(this);
             if ($('select#discount_type_modal').val() == 'percentage') {
                 c.val($('input#discount_amount_modal').val());
             } else {
@@ -660,11 +660,14 @@ $(document).ready(function() {
             // c.change();
         });
         if ($('select#discount_type_modal').val() == 'percentage') {
-            c.html(__read_number($('input#discount_amount_modal')) + '%');
+            // console.log(c);
+            c.html($('input#discount_amount_modal').val() + '%');
+            // c.html(__read_number($('input#discount_amount_modal')) + '%');
         } else {
             __write_number(
                 $('input#discount_amount'),
-                __read_number($('input#discount_amount_modal'))
+                $('input#discount_amount_modal').val()
+                // __read_number($('input#discount_amount_modal'))
             );
             pos_total_row();
         }
