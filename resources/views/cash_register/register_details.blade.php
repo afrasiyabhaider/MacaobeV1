@@ -51,7 +51,8 @@
               </td>
               <td>
                 {{-- <span class="display_currency" data-currency_symbol="true">{{ $card }}</span> --}}
-                <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_card }}</span>
+                <span class="display_currency" data-currency_symbol="true">{{ $card }}</span>
+                {{-- <span class="display_currency" data-currency_symbol="true">{{ $register_details->total_card }}</span> --}}
               </td>
             </tr>
             <tr>
