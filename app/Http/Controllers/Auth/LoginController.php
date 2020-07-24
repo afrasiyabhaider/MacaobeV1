@@ -102,7 +102,7 @@ class LoginController extends Controller
         // $location_id = request()->session()->get('user.business_location_id');
         $register = CashRegister::where('statusss','open')->where('location_id',$location_id)->latest()->first();
 
-        dd($user,$register);
+        // dd($user,$register);
         if (!empty($register)) {
             $open_date = Carbon::parse($register->created_at)->format('d-m-Y');
             $current = Carbon::now()->format('d-m-Y');
