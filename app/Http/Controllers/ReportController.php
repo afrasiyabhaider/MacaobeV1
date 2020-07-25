@@ -1890,6 +1890,7 @@ class ReportController extends Controller
                     't.transaction_date as transaction_date',
                     'transaction_sell_lines.unit_price_before_discount as unit_price',
                     'transaction_sell_lines.unit_price_inc_tax as unit_sale_price',
+                    'transaction_sell_lines.original_amount as original_amount',
                     DB::raw('(transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) as sell_qty'),
                     'transaction_sell_lines.line_discount_type as discount_type',
                     'transaction_sell_lines.line_discount_amount as discount_amount',
@@ -1960,6 +1961,13 @@ class ReportController extends Controller
                 ->editColumn('unit_price', function ($row) {
                     return '<span class="display_currency" data-currency_symbol = true>' . $row->unit_price . '</span>';
                 })
+                ->editColumn('original_amount', function ($row) {
+                    if ($row->original_amount) {
+                        return '<span class="display_currency" data-currency_symbol = true>' . $row->original_amount . '</span>';
+                    }else{
+                        return '-';
+                    }
+                })
                 ->editColumn('discount_amount', '
                     @if($discount_type == "percentage")
                         {{@number_format($discount_amount)}} %
@@ -1981,7 +1989,7 @@ class ReportController extends Controller
                         }
                     }
                 ])
-                ->rawColumns(['refference','image','invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax'])
+                ->rawColumns(['original_amount','refference','image','invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax'])
                 ->make(true);
         }
 

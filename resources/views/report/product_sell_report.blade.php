@@ -84,6 +84,7 @@
                                         <th>@lang('sale.customer_name')</th>
                                         <th>@lang('sale.invoice_no')</th>
                                         <th>@lang('messages.date')</th>
+                                        <th>Before Force Price</th>
                                         <th>@lang('sale.unit_price')</th>
                                         <th>@lang('sale.discount')</th>
                                         {{-- <th>@lang('sale.tax')</th> --}}
@@ -94,7 +95,7 @@
                                 </thead>
                                 <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="9">
+                                        <td colspan="10">
                                             <strong>@lang('sale.total'):</strong>
                                         </td>
                                         {{-- <td></td>

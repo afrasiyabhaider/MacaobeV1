@@ -716,6 +716,7 @@ $(document).ready(function() {
             { data: 'customer', name: 'c.name' },
             { data: 'invoice_no', name: 't.invoice_no' },
             { data: 'transaction_date', name: 't.transaction_date' },
+            { data: 'original_amount', name: 'original_amount' },
             { data: 'unit_price', name: 'transaction_sell_lines.unit_price_before_discount' },
             { data: 'discount_amount', name: 'transaction_sell_lines.line_discount_amount' },
             // { data: 'tax', name: 'tax_rates.name' },

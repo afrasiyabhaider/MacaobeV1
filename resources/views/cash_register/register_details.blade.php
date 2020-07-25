@@ -144,6 +144,14 @@
               </td>
               
             </tr>
+            <tr>
+              <td>
+                Total Forced Prices
+              </td>
+              <td>
+                <span>{{$forced_prices}}</span>
+              </td>
+            </tr>
             <tr class="success">
               <th>
                 @lang('cash_register.total_refund')

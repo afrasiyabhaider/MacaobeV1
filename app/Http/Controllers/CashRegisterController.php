@@ -207,6 +207,8 @@ class CashRegisterController extends Controller
         $register_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('discounted_amount','>',0)->get()->unique('created_at');
 
         $discount = $register_prices->sum('discounted_amount');
+
+        $forced_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('original_amount','>',0)->count('id');
         
         $payment_methods = TransactionPayment::whereIn('transaction_id',$transaction_ids)->get();
 
@@ -226,7 +228,7 @@ class CashRegisterController extends Controller
 
         // dd($register_details);
         return view('cash_register.register_details')
-                ->with(compact('register_details', 'details','transactions','discount','gift_card','coupon','card','cash_in_hand'));
+                ->with(compact('register_details', 'details','transactions','discount','gift_card','coupon','card','cash_in_hand','forced_prices'));
     }
 
     /**
@@ -273,6 +275,8 @@ class CashRegisterController extends Controller
         $transaction_ids = $prices->distinct('ct.transaction_id')->pluck('ct.transaction_id');
         $register_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('line_discount_amount','>',0)->get()->unique('created_at');
 
+        $forced_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('original_amount','>',0)->get()->unique('created_at')->count('id');
+
         $discount = $register_prices->sum('line_discount_amount');
         
         $payment_methods = TransactionPayment::whereIn('transaction_id',$transaction_ids)->get();
@@ -285,7 +289,7 @@ class CashRegisterController extends Controller
         $cash_in_hand = CashRegisterTransaction::where('transaction_type','initial')->where('amount','>',0)->orderBy('id','DESC')->first()->amount;
         // dd($details);
         return view('cash_register.close_register_modal')
-                    ->with(compact('register_details', 'details','discount','gift_card','coupon','card','cash_in_hand'));
+                    ->with(compact('register_details', 'details','discount','gift_card','coupon','card','cash_in_hand','forced_prices'));
     }
 
     /**

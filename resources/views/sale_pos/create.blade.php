@@ -238,6 +238,9 @@
 										@lang('sale.price_inc_tax')
 									</th>
 									<th class="text-center col-md-3">
+										Original Price
+									</th>
+									<th class="text-center col-md-3">
 										UP
 									</th>
 									<th class="text-center col-md-2">

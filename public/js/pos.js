@@ -204,6 +204,7 @@ $(document).ready(function() {
         // $('#row_unit_price' + rowTc).html(__number_f(unit_price) + ' €');
         // $('#row_unit_price' + rowTc).html(unit_price);
         //calculate discounted unit price
+
         var discounted_unit_price = calculate_discounted_unit_price(tr);
 
         var tax_rate = tr.find('select.tax_id').find(':selected').data('rate');
@@ -475,7 +476,7 @@ $(document).ready(function() {
         } else if (pay_method == 'suspend') {
             $('div#confirmSuspendModal').modal('show');
         } else {
-            pos_form_obj.submit();
+            pos_form_obj.submit(); //Submitting form
         }
     });
 
@@ -595,6 +596,8 @@ $(document).ready(function() {
             if (cnf) {
                 $('div.pos-processing').show();
                 $('#pos-save').attr('disabled', 'true');
+                console.log($('#row_original_price0').val());
+                // console.log($(form));
                 var data = $(form).serialize();
                 data = data + '&status=final';
                 var url = $(form).attr('action');
@@ -858,7 +861,7 @@ $(document).ready(function() {
     $('#search_box').keyup(function() {
         var search_txt = $('input#search_box').val();
         if (search_txt != '' || search_txt != undefined) {
-            console.log(search_txt);
+            // console.log(search_txt);
             get_product_suggestion_list(
                 $('select#product_category').val(),
                 $('select#product_brand').val(),
@@ -1529,6 +1532,7 @@ function pos_print(receipt) {
         }, 1000);
     }
 }
+var i = 1;
 
 function calculate_discounted_unit_price(row) {
     var this_unit_price = __read_number(row.find('input.pos_unit_price'));
@@ -1536,7 +1540,13 @@ function calculate_discounted_unit_price(row) {
     var row_discount_type = row.find('select.row_discount_type').val();
     var rowTc = row.find('input.rowTc').val();
     var row_discount_amount = __read_number(row.find('input.row_discount_amount'));
-
+    // SHow orignal Value if Forced price is entered
+    // if (i != 1) {
+    if ($('#input_actual_price' + rowTc).val() != row.find('input.pos_unit_price').val()) {
+        $('#input_original_price' + rowTc).val($('#input_actual_price' + rowTc).val());
+    }
+    i++;
+    // $('#input_original_price' + rowTc).val($('#row_discount_amount_' + rowTc).val());
     if (row_discount_amount) {
         if (row_discount_type == 'fixed') {
             row_discounted_unit_price = this_unit_price - row_discount_amount;
@@ -1566,7 +1576,6 @@ function get_unit_price_from_discounted_unit_price(row, discounted_unit_price) {
             this_unit_price = __get_principle(discounted_unit_price, row_discount_amount, true);
         }
     }
-
     return this_unit_price;
 }
 

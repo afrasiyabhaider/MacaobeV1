@@ -174,6 +174,7 @@ class TransactionUtil extends Util
         foreach ($products as $product) {
             $multiplier = 1;
             $discounted_amount = 0.00;
+            // dd($transaction,$product);
             if (isset($product['sub_unit_id']) && $product['sub_unit_id'] == $product['product_unit_id']) {
                 unset($product['sub_unit_id']);
             }
@@ -242,6 +243,7 @@ class TransactionUtil extends Util
                     'unit_price_before_discount' => $unit_price_before_discount,
                     'unit_price' => $unit_price,
                     'discounted_amount' => $discounted_amount,
+                    'original_amount' => $this->num_uf($product['original_price']),
                     'un_discount' =>  $product['un_discount'],
                     'line_discount_type' => !empty($product['line_discount_type']) ? $product['line_discount_type'] : null,
                     'line_discount_amount' => !empty($product['line_discount_amount']) ? $uf_data ? $this->num_uf($product['line_discount_amount']) : $product['line_discount_amount'] : 0,
