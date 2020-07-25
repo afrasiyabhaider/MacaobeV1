@@ -200,9 +200,13 @@ class CashRegisterController extends Controller
         )->where('cash_registers.location_id', $location_id)
         ->where('cash_registers.statusss', 'open');
         $transaction_ids = $prices->distinct('ct.transaction_id')->pluck('ct.transaction_id');
-        $register_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('line_discount_amount','>',0)->get()->unique('created_at');
+        // $register_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('line_discount_amount','>',0)->get()->unique('created_at');
 
-        $discount = $register_prices->sum('line_discount_amount');
+        // $discount = $register_prices->sum('line_discount_amount');
+        
+        $register_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('discounted_amount','>',0)->get()->unique('created_at');
+
+        $discount = $register_prices->sum('discounted_amount');
         
         $payment_methods = TransactionPayment::whereIn('transaction_id',$transaction_ids)->get();
 
