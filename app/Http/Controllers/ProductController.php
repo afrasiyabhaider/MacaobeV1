@@ -2704,7 +2704,7 @@ class ProductController extends Controller
                             $oldPurchaseLine->update(['qty_available' => $new_transfer_Qty]);
                             // $oldPurchaseLine->update(['qty_available' => $LeftQty]);
                             
-                            // dd($user_location_id,$LeftQty,$oldPurchaseLine);
+                            dd($user_location_id,$LeftQty,$oldPurchaseLine);
 
                             $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objNewPurchaseLine->variation_id)->where("product_id", $objNewPurchaseLine->product_id)->update(['qty_available' => $qtyForPurchaseLine]);
                         }
@@ -2871,14 +2871,16 @@ class ProductController extends Controller
                          * Qty for Location is Updating here 
                          * 
                          **/
-                        // dd($user_location_id,$LeftQty,'2nd',$business_location_id,$qtyForPurchaseLine);
                         $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOrignalPurchaseLine->variation_id)->where("product_id", $product->id)->update(['qty_available' => $LeftQty]);
-
+                        
                         $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $product->id)->first();
                         $new_qty = (float)$oldPurchaseLine->qty_available + (float)$qtyForPurchaseLine;
+                        
+                        // dd($oldPurchaseLine,(float)$oldPurchaseLine->qty_available,(float)$qtyForPurchaseLine,$new_qty);
 
-                        // dd((float)$oldPurchaseLine->qty_available,(float)$qtyForPurchaseLine,$new_qty);
-                        $oldPurchaseLine->update(['qty_available' => $new_qty,'product_updated_at'=>Carbon::now()]);
+                        $oldPurchaseLine->qty_available = $new_qty;
+                        $oldPurchaseLine->product_updated_at=Carbon::now();
+                        $oldPurchaseLine->save();
 
                         //create transaction & purchase lines
                         DB::commit();
