@@ -2704,9 +2704,10 @@ class ProductController extends Controller
                             $oldPurchaseLine->update(['qty_available' => $new_transfer_Qty]);
                             // $oldPurchaseLine->update(['qty_available' => $LeftQty]);
                             
-                            dd($user_location_id,$LeftQty,$oldPurchaseLine);
+                            // dd($user_location_id,$LeftQty,$oldPurchaseLine);
 
-                            $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objNewPurchaseLine->variation_id)->where("product_id", $objNewPurchaseLine->product_id)->update(['qty_available' => $qtyForPurchaseLine]);
+                            // Commented below for checking
+                            // $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objNewPurchaseLine->variation_id)->where("product_id", $objNewPurchaseLine->product_id)->update(['qty_available' => $qtyForPurchaseLine]);
                         }
                         DB::commit();
                     } else {
@@ -2810,10 +2811,10 @@ class ProductController extends Controller
                             // $qtyForPurchaseLine = $productQty + $purchase_line->quantity;
                             // dd($qtyForPurchaseLine);
                         } else {
-                            // dd($objOldPurchaseLine);
                             $old_available_qty = VariationLocationDetails::where("location_id", $location_id)->where("product_id", $product->id)->first();
+                            // dd((float)$old_available_qty->qty_available,$location_id);
                             // $old_available_qty = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $product->id)->first();
-                            $qtyForPurchaseLine = $productQty;
+                            $qtyForPurchaseLine = (float)$productQty;
                             
                             // dd($location_id,$old_available_qty->qty_available,$qtyForPurchaseLine,$LeftQty);
 
@@ -2873,14 +2874,14 @@ class ProductController extends Controller
                          **/
                         $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOrignalPurchaseLine->variation_id)->where("product_id", $product->id)->update(['qty_available' => $LeftQty]);
                         
-                        $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $product->id)->first();
-                        $new_qty = (float)$oldPurchaseLine->qty_available + (float)$qtyForPurchaseLine;
+                        $transfer_to_location = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $product->id)->first();
+                        $new_qty = (float)$transfer_to_location->qty_available + (float)$qtyForPurchaseLine;
                         
-                        // dd($oldPurchaseLine,(float)$oldPurchaseLine->qty_available,(float)$qtyForPurchaseLine,$new_qty);
+                        // dd($transfer_to_location,(float)$transfer_to_location->qty_available,(float)$qtyForPurchaseLine,$new_qty);
 
-                        $oldPurchaseLine->qty_available = $new_qty;
-                        $oldPurchaseLine->product_updated_at=Carbon::now();
-                        $oldPurchaseLine->save();
+                        $transfer_to_location->qty_available = $new_qty;
+                        $transfer_to_location->product_updated_at=Carbon::now();
+                        $transfer_to_location->save();
 
                         //create transaction & purchase lines
                         DB::commit();
