@@ -333,8 +333,7 @@ class ProductUtil extends Util
                 ->first();
 
             //Add quantity in VariationLocationDetails
-            $variation_location_d = VariationLocationDetails
-                ::where('variation_id', $variation->id)
+                $variation_location_d = VariationLocationDetails::where('variation_id', $variation->id)
                 ->where('product_id', $product_id)
                 ->where('product_variation_id', $variation->product_variation_id)
                 ->where('location_id', $location_id)

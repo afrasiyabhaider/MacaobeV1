@@ -2696,12 +2696,12 @@ class ProductController extends Controller
                             $oldPurchaseLine = PurchaseLine::where("transaction_id", $objNewPurchaseLine->transaction_id)->where("product_id", $objNewPurchaseLine->product_id)->where("variation_id", $objNewPurchaseLine->variation_id)->update(['quantity' => $qtyForPurchaseLine]);
 
                             //Update Variation_location_details Qty Remaining 
-                            $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $objOldPurchaseLine->product_id);
+                            $old_qty_of_product = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $objOldPurchaseLine->product_id);
                             ;
                             
-                            $new_transfer_Qty = $oldPurchaseLine->first()->qty_available - $productQty;
+                            $new_transfer_Qty = $old_qty_of_product->first()->qty_available - $productQty;
 
-                            $oldPurchaseLine->update(['qty_available' => $new_transfer_Qty]);
+                            $old_qty_of_product->update(['qty_available' => $new_transfer_Qty]);
                             // $oldPurchaseLine->update(['qty_available' => $LeftQty]);
                             
                             // dd($user_location_id,$LeftQty,$oldPurchaseLine);
@@ -2775,7 +2775,7 @@ class ProductController extends Controller
                             $purchase_line->product_id = $product->id;
                             $purchase_line->variation_id = $k;
 
-                            $this->productUtil->updateProductQuantity($location_id, $product->id, $k, $qty_remaining, 0, null, false);
+                            // $this->productUtil->updateProductQuantity($location_id, $product->id, $k, $qty_remaining, 0, null, false);
 
                             //Calculate transaction total
                             $purchase_total += ($purchase_price_inc_tax * $qty_remaining);
