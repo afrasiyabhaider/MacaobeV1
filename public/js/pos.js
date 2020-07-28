@@ -200,7 +200,7 @@ $(document).ready(function() {
 
         var tr = $(this).parents('tr');
         var rowTc = tr.find('input.rowTc').val();
-        $('#row_unit_price' + rowTc).html(unit_price + ' €');
+        $('#row_unit_price' + rowTc).html(__number_f(unit_price) + ' €');
         // $('#row_unit_price' + rowTc).html(__number_f(unit_price) + ' €');
         // $('#row_unit_price' + rowTc).html(unit_price);
         //calculate discounted unit price
@@ -208,15 +208,20 @@ $(document).ready(function() {
         var discounted_unit_price = calculate_discounted_unit_price(tr);
 
         var tax_rate = tr.find('select.tax_id').find(':selected').data('rate');
+        // var quantity = tr.find('input.pos_quantity').val();
         var quantity = __read_number(tr.find('input.pos_quantity'));
 
         var unit_price_inc_tax = __add_percent(discounted_unit_price, tax_rate);
         var line_total = quantity * unit_price_inc_tax;
 
+        // alert(__number_f(line_total));
         __write_number(tr.find('input.pos_unit_price_inc_tax'), unit_price_inc_tax);
-        __write_number(tr.find('input.pos_line_total'), line_total, false, 2);
+        __write_number(tr.find('input.pos_line_total'), line_total);
+        // __write_number(tr.find('input.pos_line_total'), __currency_trans_from_en(line_total, true));
+
         tr.find('span.pos_line_total_text').text(__currency_trans_from_en(line_total, true));
         pos_each_row(tr);
+        // setInterval(pos_total_row, 1000);
         pos_total_row();
         round_row_to_iraqi_dinnar(tr);
     });
@@ -1252,7 +1257,7 @@ function pos_total_row() {
         total_quantity = total_quantity + __read_number($(this).find('input.pos_quantity'));
         price_total = price_total + __read_number($(this).find('input.pos_line_total'));
     });
-
+    // alert(__currency_trans_from_en(price_total, true));
     //Go through the modifier prices.
     $('input.modifiers_price').each(function() {
         price_total = price_total + __read_number($(this));
@@ -1282,12 +1287,14 @@ function calculate_billing_details(price_total) {
 
     var total_payable = price_total + order_tax - discount + shipping_charges;
 
+    // alert(price_total + '  + ' + order_tax + ' - ' + discount + '  +  ' + shipping_charges);
     __write_number($('input#final_total_input'), total_payable);
     var curr_exchange_rate = 1;
     if ($('#exchange_rate').length > 0 && $('#exchange_rate').val()) {
         curr_exchange_rate = __read_number($('#exchange_rate'));
     }
     var shown_total = total_payable * curr_exchange_rate;
+    // alert(total_payable + '     ' + curr_exchange_rate);
     $('span#total_payable').text(__currency_trans_from_en(shown_total, false));
 
     $('span.total_payable_span').text(__currency_trans_from_en(total_payable, true));
@@ -1535,11 +1542,13 @@ function pos_print(receipt) {
 var i = 1;
 
 function calculate_discounted_unit_price(row) {
-    var this_unit_price = __read_number(row.find('input.pos_unit_price'));
+    var this_unit_price = row.find('input.pos_unit_price').val();
+    // var this_unit_price = __read_number(row.find('input.pos_unit_price'));
     var row_discounted_unit_price = this_unit_price;
     var row_discount_type = row.find('select.row_discount_type').val();
     var rowTc = row.find('input.rowTc').val();
-    var row_discount_amount = __read_number(row.find('input.row_discount_amount'));
+    var row_discount_amount = row.find('input.row_discount_amount').val();
+    // var row_discount_amount = __read_number(row.find('input.row_discount_amount'));
     // SHow orignal Value if Forced price is entered
     // if (i != 1) {
     if ($('#input_actual_price' + rowTc).val() != row.find('input.pos_unit_price').val()) {
@@ -1594,7 +1603,7 @@ $('table#pos_table tbody').on('change', 'input.pos_line_total', function() {
     if (pos_form_validator) {
         pos_form_validator.element(quantity_element);
     }
-    tr.find('span.pos_line_total_text').text(__currency_trans_from_en(subtotal, true));
+    tr.find('span.pos_line_total_text').text(__number_f(subtotal));
 
     pos_total_row();
 });

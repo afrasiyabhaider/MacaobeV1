@@ -215,7 +215,9 @@ class TransactionUtil extends Util
                 }
             } else {
                 //calculate unit price and unit price before discount
-                $uf_unit_price = $uf_data ? $this->num_uf($product['unit_price']) : $product['unit_price'];
+                // $uf_unit_price = $uf_data ? $this->num_uf($product['unit_price']) : $product['unit_price'];
+                $uf_unit_price = (float)$product['unit_price'];
+                // dd($product,$uf_unit_price);
                 $unit_price_before_discount = $uf_unit_price / $multiplier;
                 $unit_price = $unit_price_before_discount;
                 if (!empty($product['line_discount_type']) && $product['line_discount_amount']) {
@@ -228,14 +230,17 @@ class TransactionUtil extends Util
                         $unit_price = ((100 - $discount_amount) * $unit_price_before_discount) / 100;
                         $discounted_amount = $unit_price_before_discount-$unit_price; 
                     }
-                    // dd($unit_price_before_discount,$unit_price);
                 }
+                // dd($this->num_f($unit_price_before_discount));
 
                 $unit_price = ($product['un_discount'] != 0) ? $unit_price = $unit_price - $product['un_discount'] : $unit_price;
-                $uf_quantity = $uf_data ? $this->num_uf($product['quantity']) : $product['quantity'];
 
+                
+                $uf_quantity = $uf_data ? $this->num_uf($product['quantity']) : $product['quantity'];
+                
                 $uf_item_tax = $uf_data ? $this->num_uf($product['item_tax']) : $product['item_tax'];
                 $uf_unit_price_inc_tax = $uf_data ? $this->num_uf($product['unit_price_inc_tax']) : $product['unit_price_inc_tax'];
+                // dd($uf_unit_price_inc_tax);
                 $line = [
                     'product_id' => $product['product_id'],
                     'variation_id' => $product['variation_id'],
@@ -273,6 +278,7 @@ class TransactionUtil extends Util
                         foreach ($product['modifier'] as $key => $value) {
                             if (!empty($product['modifier_price'][$key])) {
                                 $this_price = $uf_data ? $this->num_uf($product['modifier_price'][$key]) : $product['modifier_price'][$key];
+                                // dd($this_price);
                                 $sell_line_modifiers[] = [
                                     'product_id' => $product['modifier_set_id'][$key],
                                     'variation_id' => $value,

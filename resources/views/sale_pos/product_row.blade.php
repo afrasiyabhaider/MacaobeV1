@@ -260,7 +260,7 @@
 		<input type="text" name="products[{{$row_count}}][unit_price_inc_tax]" class="form-control pos_unit_price_inc_tax input_number" value="{{@num_format($unit_price_inc_tax)}}" @if(!auth()->user()->can('edit_product_price_from_sale_screen')) readonly @endif @if(!empty($pos_settings['enable_msp'])) data-rule-min-value="{{$unit_price_inc_tax}}" data-msg-min-value="{{__('lang_v1.minimum_selling_price_error_msg', ['price' => @num_format($unit_price_inc_tax)])}}" @endif>
 
 		<input id="input_actual_price{{$row_count}}" type="text" name="products[{{$row_count}}][original_price]" class="form-control input_number" value="{{@num_format($unit_price_inc_tax)}}" readonly>
-		<input id="input_original_price{{$row_count}}" type="text" name="products[{{$row_count}}][original_price]" class="form-control input_number" value="0,00" readonly>
+		<input id="input_original_price{{$row_count}}" type="text" name="products[{{$row_count}}][original_price]" class="form-control input_number" value="{{@num_format(0.00)}}" readonly>
 	</td>
 	{{-- <input type="text" name="products[{{$row_count}}][original_price]" class="form-control pos_unit_price_inc_tax input_number" value="{{@num_format($unit_price_inc_tax)}}" @if(!auth()->user()->can('edit_product_price_from_sale_screen')) readonly @endif @if(!empty($pos_settings['enable_msp'])) data-rule-min-value="{{$unit_price_inc_tax}}" data-msg-min-value="{{__('lang_v1.minimum_selling_price_error_msg', ['price' => @num_format($unit_price_inc_tax)])}}" @endif> --}}
 	<td class="text-center v-center">
@@ -280,6 +280,7 @@
 
 		@endphp
 		<input type="{{$subtotal_type}}" id="pos_line_total_{{$row_count}}" onChange="unKnownDiscountTotal({{$row_count}});" class="form-control pos_line_total @if(!empty($pos_settings['is_pos_subtotal_editable'])) input_number @endif" value="{{@num_format($product->quantity_ordered*$unit_price_inc_tax )}}">
+
 		<span id="pos_line_total_text_{{$row_count}}" class="display_currency pos_line_total_text @if(!empty($pos_settings['is_pos_subtotal_editable'])) hide @endif" data-currency_symbol="true">{{$product->quantity_ordered*$unit_price_inc_tax}}</span>
 	</td>
 	<td class="text-center">

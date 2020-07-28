@@ -8,7 +8,7 @@
 			<div class="row">
 				<div class="form-group col-xs-6 @if(!auth()->user()->can('edit_product_price_from_sale_screen')) hide @endif">
 					<label>@lang('sale.unit_price')</label>
-						<input type="text" id="unit_price_{{$row_count}}" name="products[{{$row_count}}][unit_price]" class="form-control pos_unit_price input_number mousetrap" value="{{@num_format(!empty($product->unit_price_before_discount) ? $product->unit_price_before_discount : $product->default_sell_price)}}">
+						<input type="text" id="unit_price_{{$row_count}}" name="products[{{$row_count}}][unit_price]" class="form-control pos_unit_price input_number mousetrap" value="{{!empty($product->unit_price_before_discount) ? $product->unit_price_before_discount : $product->default_sell_price}}">
 				</div>
 				@php
 					$discount_type = !empty($product->line_discount_type) ? $product->line_discount_type : 'fixed';
@@ -33,7 +33,7 @@
 				</div>
 				<div class="form-group col-xs-6 col-sm-6 @if(!auth()->user()->can('edit_product_discount_from_sale_screen')) hide @endif">
 					<label>@lang('sale.discount_amount')</label>
-						{!! Form::text("products[$row_count][line_discount_amount]", @num_format($discount_amount), ["id"=>"row_discount_amount_$row_count",'class' => 'form-control input_number row_discount_amount']); !!}
+						{!! Form::text("products[$row_count][line_discount_amount]", $discount_amount, ["id"=>"row_discount_amount_$row_count",'class' => 'form-control input_number row_discount_amount']); !!}
 				</div>
 				<div class="form-group col-xs-6 {{$hide_tax}}">
 					<label>@lang('sale.tax')</label>

@@ -217,6 +217,7 @@
                         </td>
 						<td>{{$line['quantity']}}   </td>
 						<td>{{$line['unit_price_before_discount']}}</td>
+						{{-- <td>{{$line['unit_price_inc_tax']}}</td> --}}
 						@php
 						$arr = explode(" ",$line['line_discount']);
 						$discPrice = $arr[0];
