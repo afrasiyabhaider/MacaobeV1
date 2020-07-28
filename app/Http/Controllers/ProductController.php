@@ -2697,17 +2697,23 @@ class ProductController extends Controller
 
                             //Update Variation_location_details Qty Remaining 
                             $old_qty_of_product = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $objOldPurchaseLine->product_id);
-                            ;
                             
-                            $new_transfer_Qty = $old_qty_of_product->first()->qty_available - $productQty;
+                            // $new_transfer_Qty = $old_qty_of_product->first()->qty_available + $productQty;
 
-                            $old_qty_of_product->update(['qty_available' => $new_transfer_Qty]);
-                            // $oldPurchaseLine->update(['qty_available' => $LeftQty]);
+                            // dd($new_transfer_Qty);
+                            // $old_qty_of_product->update(['qty_available' => $new_transfer_Qty]);
+                            $old_qty_of_product->update(['qty_available' => $LeftQty]);
                             
                             // dd($user_location_id,$LeftQty,$oldPurchaseLine);
 
                             // Commented below for checking
-                            // $oldPurchaseLine = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objNewPurchaseLine->variation_id)->where("product_id", $objNewPurchaseLine->product_id)->update(['qty_available' => $qtyForPurchaseLine]);
+                            $after_transfer = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objNewPurchaseLine->variation_id)->where("product_id", $objNewPurchaseLine->product_id);
+
+                            $before_transfer_qty = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objNewPurchaseLine->variation_id)->where("product_id", $objNewPurchaseLine->product_id)->first()->qty_available;
+                            
+                            $new_qty = $before_transfer_qty + $productQty; 
+
+                            $after_transfer->update(['qty_available' => $new_qty]);
                         }
                         DB::commit();
                     } else {
@@ -2769,17 +2775,19 @@ class ProductController extends Controller
 
                             // }
                         } else {
-                            // if ($qty_remaining != 0) {
+                            if ($qty_remaining != 0) {
                             //create newly added purchase lines
-                            $purchase_line = new PurchaseLine();
-                            $purchase_line->product_id = $product->id;
-                            $purchase_line->variation_id = $k;
+                                $purchase_line = new PurchaseLine();
+                                $purchase_line->product_id = $product->id;
+                                $purchase_line->variation_id = $k;
 
-                            // $this->productUtil->updateProductQuantity($location_id, $product->id, $k, $qty_remaining, 0, null, false);
+                                // dd($qty_remaining);
 
-                            //Calculate transaction total
-                            $purchase_total += ($purchase_price_inc_tax * $qty_remaining);
-                            // }
+                                // $this->productUtil->updateProductQuantity($location_id, $product->id, $k, $qty_remaining, 0, null, false);
+
+                                //Calculate transaction total
+                                $purchase_total += ($purchase_price_inc_tax * $qty_remaining);
+                            }
                         }
                         if (!is_null($purchase_line)) {
                             $purchase_line->item_tax = $item_tax;
@@ -2867,7 +2875,7 @@ class ProductController extends Controller
                         // dd($business_location_id,$LeftQty,$purchase_line,$qty_remaining,$qtyForPurchaseLine);
                         //Update Variation_location_details Qty Remaining 
                         // dd("Hello");
-
+                        // dd($LeftQty);
                         /**
                          * Qty for Location is Updating here 
                          * 
