@@ -196,6 +196,7 @@
                         { data: 'product', name: 'products.name'  },
                         { data: 'action', name: 'action',searchable:false,orderable:false},
                         { data: 'refference', name: 'products.refference'  },
+                        { data: 'sku', name: 'products.sku'},
                         { data: 'purchase_price', name: 'v.dpp_inc_tax'},
                         { data: 'selling_price', name: 'v.sell_price_inc_tax'},
                         { data: 'color', name: 'color_id'},
@@ -208,7 +209,6 @@
                         { data: 'product_date', name: 'vld.product_updated_at'},
                         // { data: 'date', name: 'products.created_at'},
                         { data: 'bulk_add', name: 'products.bulk_add'},
-                        { data: 'sku', name: 'products.sku'},
                         { data: 'description', name: 'products.description'},
                     ],
                     createdRow: function( row, data, dataIndex ) {

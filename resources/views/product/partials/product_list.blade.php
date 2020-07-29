@@ -1,4 +1,4 @@
-
+@inject('request', 'Illuminate\Http\Request')
 <div class="row"  style="margin-bottom: 20px;">
     <div class="col-md-3">
         <div class="@if((url()->current() == url('products')) ||(url()->current() == url('website/product/list')) ) hidden @endif"">
@@ -38,6 +38,7 @@
     </div>
 </div>
 <div class="table-responsive">
+    {{-- @dd($request->segment(2)) --}}
     <table class="table table-bordered table-striped ajax_view table-text-center" id="product_table">
         <thead>
             <tr>
@@ -45,13 +46,17 @@
                     <input type="checkbox" id="select-all-row">
                     Select All
                 </th>
-                <th>
-                    Printing Qty
-                </th>
+                @if ($request->segment(1) != 'products' || $request->segment(2) != null)
+                    
+                    <th>
+                        Printing Qty
+                    </th>
+                @endif
                 <th>Image</th>
                 <th>@lang('sale.product')</th>
                 <th>@lang('messages.action')</th>
                 <th>Refference</th>
+                <th>@lang('product.sku')</th>
                 <th>Purchase Price</th>
                 <th>@lang('lang_v1.selling_price')</th>
                 <th>@lang('product.color')</th>
@@ -63,7 +68,6 @@
                 <th>@lang('product.sub_category')</th>
                 <th>Date</th>
                 <th>BulkCode</th>
-                <th>@lang('product.sku')</th>
                 <th>Description</th>
             </tr>
         </thead>

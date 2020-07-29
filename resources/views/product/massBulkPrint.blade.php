@@ -74,8 +74,8 @@
 		@php $i=0; @endphp
 		@foreach($product as $objProduct)
 			{{-- @for($j=0;$j<$objProduct->current_stock;$j++) --}}
-			@for($j=0;$j<$objProduct->printing_qty;$j++)
-			{{-- @for($j=0;$j<$print_qtys[$i];$j++) --}}
+			{{-- @for($j=0;$j<$objProduct->printing_qty;$j++) --}}
+			@for($j=0;$j<$print_qtys[$i];$j++)
 				<div class="col-md-4 col-xs-4 heh mt-sm-3">
 					<div class="">
 						<div class="col-xs-9 text-left"   style="font-size: 12px" >

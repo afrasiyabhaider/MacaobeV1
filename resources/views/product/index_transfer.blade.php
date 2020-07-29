@@ -227,6 +227,7 @@
                         { data: 'product', name: 'products.name'  },
                         { data: 'action', name: 'action'},
                         { data: 'refference', name: 'products.refference'  },
+                        { data: 'sku', name: 'products.sku'},
                         { data: 'purchase_price', name: 'purchase_price', searchable: false},
                         { data: 'selling_price', name: 'selling_price', searchable: false},
                         { data: 'color', name: 'colors.name'},
@@ -238,7 +239,6 @@
                         { data: 'sub_category', name: 'c2.name'},
                         { data: 'date', name: 'products.created_at'},
                         { data: 'bulk_add', name: 'products.bulk_add', searchable: true},
-                        { data: 'sku', name: 'products.sku'},
                         { data: 'description', name: 'products.description'},
                     ],
                     createdRow: function( row, data, dataIndex ) {

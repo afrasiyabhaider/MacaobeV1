@@ -1899,6 +1899,7 @@ class ReportController extends Controller
                     'u.short_name as unit',
                     DB::raw('((transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) * transaction_sell_lines.unit_price_inc_tax) as subtotal')
                 )
+                ->orderBy('t.invoice_no','DESC')
                 ->groupBy('transaction_sell_lines.id');
 
             if (!empty($variation_id)) {

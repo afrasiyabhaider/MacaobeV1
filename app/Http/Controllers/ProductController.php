@@ -2609,8 +2609,13 @@ class ProductController extends Controller
                     ->orderBy('products.refference','ASC')
                     // ->orderBy('vld.product_updated_at','DESC')
                     ->get();
-                $print_qtys = $selected_products_qty;
-                // dd($print_qtys);
+
+                // Below code is to arrange desired qtys as per products
+                $s_products = collect($selected_products);
+                $qtys = $s_products->combine($selected_products_qty);
+
+                $print_qtys = $qtys->sortKeysDesc()->values()->toArray();
+                
                 return view('product.massBulkPrint')
                     ->with(compact('product','print_qtys'));
             }
