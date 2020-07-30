@@ -509,7 +509,7 @@ class ProductController extends Controller
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can("product.view")) {
-                            return  action('ProductController@nothing', [$row->id]);
+                            return  action('ProductController@view', [$row->id]);
                         } else {
                             return '';
                         }

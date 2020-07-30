@@ -5,8 +5,8 @@
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>@lang('sale.products')
-        <small>@lang('lang_v1.manage_products')</small>
+    <h1>
+        Transfer Products
     </h1>
     <!-- <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
@@ -137,7 +137,7 @@
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a href="#product_list_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-cubes" aria-hidden="true"></i> @lang('lang_v1.all_products')</a>
+                        <a href="#product_list_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-random" aria-hidden="true"></i> Transfer Products</a>
                     </li>
 
                     <li>

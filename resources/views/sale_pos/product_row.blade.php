@@ -32,7 +32,7 @@
 			$unit_price_inc_tax = $product->sell_price_inc_tax;
 			if($hide_tax == 'hide'){
 				$tax_id = null;
-				$unit_price_inc_tax = $product->default_sell_price;
+				$unit_price_inc_tax = $product->sell_price_inc_tax;
 			}
 		@endphp
 
@@ -244,7 +244,7 @@
 
 		<input type="hidden" class="base_unit_multiplier" name="products[{{$row_count}}][base_unit_multiplier]" value="{{$multiplier}}">
 
-		<input type="hidden" class="hidden_base_unit_sell_price" value="{{$product->default_sell_price / $multiplier}}">
+		<input type="hidden" class="hidden_base_unit_sell_price" value="{{$product->sell_price_inc_tax / $multiplier}}">
 		
 	</td>
 	@if(!empty($waiters))
@@ -264,14 +264,14 @@
 	</td>
 	{{-- <input type="text" name="products[{{$row_count}}][original_price]" class="form-control pos_unit_price_inc_tax input_number" value="{{@num_format($unit_price_inc_tax)}}" @if(!auth()->user()->can('edit_product_price_from_sale_screen')) readonly @endif @if(!empty($pos_settings['enable_msp'])) data-rule-min-value="{{$unit_price_inc_tax}}" data-msg-min-value="{{__('lang_v1.minimum_selling_price_error_msg', ['price' => @num_format($unit_price_inc_tax)])}}" @endif> --}}
 	<td class="text-center v-center">
-		{{-- <input type="text" name="row_original_price{{$row_count}}" id="" value="{{$product->default_sell_price}}" class="form-control"> --}}
+		{{-- <input type="text" name="row_original_price{{$row_count}}" id="" value="{{$product->sell_price_inc_tax}}" class="form-control"> --}}
 		<div id="row_original_price{{$row_count}}" class="row_original_price">
-			{{@num_format(!empty($product->unit_price_before_discount) ? $product->unit_price_before_discount : $product->default_sell_price)}}
+			{{@num_format(!empty($product->unit_price_before_discount) ? $product->unit_price_before_discount : $product->sell_price_inc_tax)}}
 		</div>
 	</td>
 	<td class="text-center v-center">
 		<div id="row_unit_price{{$row_count}}" class="row_unit_price" >
-			{{@num_format(!empty($product->unit_price_before_discount) ? $product->unit_price_before_discount : $product->default_sell_price)}}
+			{{@num_format(!empty($product->unit_price_before_discount) ? $product->unit_price_before_discount : $product->sell_price_inc_tax)}}
 		</div>
 	</td>
 	<td class="text-center v-center">
@@ -287,3 +287,4 @@
 		<i class="fa fa-close text-danger pos_remove_row cursor-pointer" aria-hidden="true"></i>
 	</td>
 </tr>
+{{-- @dd($product); --}}

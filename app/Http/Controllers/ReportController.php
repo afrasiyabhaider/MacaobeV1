@@ -26,6 +26,7 @@ use App\Utils\ProductUtil;
 use App\Utils\TransactionUtil;
 use App\Variation;
 use App\VariationLocationDetails;
+use Carbon\Carbon;
 use Charts;
 use Datatables;
 use DB;
@@ -1949,7 +1950,9 @@ class ReportController extends Controller
                          return '<b class="text-center">-</b>';
                      }
                 })
-                ->editColumn('transaction_date', '{{@format_date($transaction_date)}}')
+                ->editColumn('transaction_date', function($row){
+                    return Carbon::parse($row->transaction_date)->format('d-M-Y H:i');
+                })
                 ->editColumn('unit_sale_price', function ($row) {
                     return '<span class="display_currency" data-currency_symbol = true>' . $row->unit_sale_price . '</span>';
                 })
