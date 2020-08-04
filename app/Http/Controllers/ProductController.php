@@ -506,15 +506,15 @@ class ProductController extends Controller
                     'price',
                     '<div style="white-space: nowrap;"><span class="display_currency" data-currency_symbol="true">{{$min_price}}</span> @if($max_price != $min_price && $type == "variable") -  <span class="display_currency" data-currency_symbol="true">{{$max_price}}</span>@endif </div>'
                 )
-                ->setRowAttr([
-                    'data-href' => function ($row) {
-                        if (auth()->user()->can("product.view")) {
-                            return  action('ProductController@view', [$row->id]);
-                        } else {
-                            return '';
-                        }
-                    }
-                ])
+                // ->setRowAttr([
+                //     'data-href' => function ($row) {
+                //         if (auth()->user()->can("product.view")) {
+                //             return  action('ProductController@view', [$row->id]);
+                //         } else {
+                //             return '';
+                //         }
+                //     }
+                // ])
                 ->rawColumns(['printing_qty', 'action', 'image', 'mass_delete', 'product', 'price'])
                 ->make(true);
         }

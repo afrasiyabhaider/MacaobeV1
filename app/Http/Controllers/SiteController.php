@@ -191,7 +191,7 @@ class SiteController extends Controller
     {
         $products = VariationLocationDetails::where('product_updated_at',null)->get();
 
-        // dd($products->pluck('product_updated_at'));
+        // dd($date,$products->pluck('product_updated_at'));
         foreach ($products as $product) {
             // dd($product);
             $vld = VariationLocationDetails::find($product->id);
