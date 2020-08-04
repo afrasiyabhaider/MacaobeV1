@@ -444,3 +444,4 @@ Route::get('product/{ref}/color/{color}/size/{size}', 'SiteController@get_color_
 Route::get('product/{ref}/size/{size}', 'SiteController@get_size_qty');
 Route::get('product/list', 'SiteController@all_products');
 Route::get('products/category/{id}', 'SiteController@products_by_category');
+Route::get('products/nulldate/{date}', 'SiteController@update_null_product_date');

@@ -186,4 +186,17 @@ class SiteController extends Controller
 
         return view('site.listings.category_listing',compact('category','products'));
     }
+
+    public function update_null_product_date($date)
+    {
+        $products = VariationLocationDetails::where('product_updated_at',null)->get();
+
+        // dd($products->pluck('product_updated_at'));
+        foreach ($products as $product) {
+            // dd($product);
+            $vld = VariationLocationDetails::find($product->id);
+            $vld->product_updated_at = $date;
+            $vld->save();
+        }
+    }
 }

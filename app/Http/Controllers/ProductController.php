@@ -2725,6 +2725,7 @@ class ProductController extends Controller
                             $new_qty = $before_transfer_qty + $productQty; 
 
                             $after_transfer->update(['qty_available' => $new_qty]);
+                            $after_transfer->update(['product_update_at'=>Carbon::now()]);
                         }
                         DB::commit();
                     } else {
