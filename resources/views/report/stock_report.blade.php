@@ -105,9 +105,10 @@
     @component('components.widget', ['class' => 'box-primary'])
     <div class="row">
         <div class="col-12">
-            {!! Form::open(['url' => action('ProductController@selectedBulkPrint'), 'method' => 'post', 'id' => 'bulkPrint_form' ]) !!}
+            {!! Form::open(['url' => action('ProductController@massBulkPrint'), 'method' => 'post', 'id' => 'bulkPrint_form' ]) !!}
                     {{-- {!! Form::submit('Print Selected', array('class' => 'btn btn-md btn-warning', 'id' => 'bulkPrint-selected')) !!} --}}
                     {!! Form::hidden('selected_products_bulkPrint', null, ['id' => 'selected_products_bulkPrint']); !!}
+                    {!! Form::hidden('selected_products_bulkPrint_qty', null, ['id' => 'selected_products_bulkPrint_qty']); !!}
 
                     <button type="submit" class="btn btn-success pull-left" id="bulkPrint-selected" style="margin-left: 20px">
                         <i class="fa fa-print"></i> 
@@ -139,7 +140,7 @@
 @endsection
 
 @section('javascript')
-<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+{{-- <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script> --}}
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
     <script>
         $(document).on('shown.bs.modal', 'div.view_product_modal, div.view_modal', function(){
@@ -175,40 +176,73 @@
             * Desired Qty of Barcodes
             *
             **/
+
             $(document).on('click', '#bulkPrint-selected', function(e){
                 e.preventDefault();
                 var selected_rows = [];
-                var selected_rows_qty = [];
+                var print_qty = [];
                 var i = 0;
+                var j = 0;
                 $('.row-select:checked').each(function () {
-                    var selectedQty = $("#qty_"+$(this).val()).val();
-                    // var selectedMaxQty = $("#qty_"+$(this).val()).attr('max');
-                    // if(parseInt(selectedQty) <= parseInt(selectedMaxQty))
-                    // {
-                        selected_rows[i++] = $(this).val()+"@"+selectedQty;
-                        // }
-                    }); 
+                    selected_rows[i++] = $(this).val();
+                    print_qty[j++] = $("#printing_qty_"+$(this).val()).val();
+                    // console.log(selected_rows);
+                    // console.log(print_qty);
                     // return 0;
-                // console.log(selected_rows);
-                
+                }); 
                 if(selected_rows.length > 0){
                     $('input#selected_products_bulkPrint').val(selected_rows);
-                    // swal({
-                    //     title: LANG.sure,
-                    //     icon: "warning",
-                    //     buttons: true,
-                    //     dangerMode: true,
-                    // }).then((willDelete) => {
-                    //     if (willDelete) {
-                            $('#unknownDiscountModal').modal('show'); 
+                    $('input#selected_products_bulkPrint_qty').val(print_qty);
+                    swal({
+                        title: LANG.sure,
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    }).then((willDelete) => {
+                        if (willDelete) {
                             $('form#bulkPrint_form').submit();
-                    //     }
-                    // });
+                        }
+                    });
                 } else{
                     $('input#selected_products_bulkPrint').val('');
                     swal('@lang("lang_v1.no_row_selected")');
                 }    
             })
+
+            // $(document).on('click', '#bulkPrint-selected', function(e){
+            //     e.preventDefault();
+            //     var selected_rows = [];
+            //     var selected_rows_qty = [];
+            //     var i = 0;
+            //     $('.row-select:checked').each(function () {
+            //         var selectedQty = $("#qty_"+$(this).val()).val();
+            //         // var selectedMaxQty = $("#qty_"+$(this).val()).attr('max');
+            //         // if(parseInt(selectedQty) <= parseInt(selectedMaxQty))
+            //         // {
+            //             selected_rows[i++] = $(this).val()+"@"+selectedQty;
+            //             // }
+            //         }); 
+            //         // return 0;
+            //     // console.log(selected_rows);
+                
+            //     if(selected_rows.length > 0){
+            //         $('input#selected_products_bulkPrint').val(selected_rows);
+            //         // swal({
+            //         //     title: LANG.sure,
+            //         //     icon: "warning",
+            //         //     buttons: true,
+            //         //     dangerMode: true,
+            //         // }).then((willDelete) => {
+            //         //     if (willDelete) {
+            //                 $('#unknownDiscountModal').modal('show'); 
+            //                 $('form#bulkPrint_form').submit();
+            //         //     }
+            //         // });
+            //     } else{
+            //         $('input#selected_products_bulkPrint').val('');
+            //         swal('@lang("lang_v1.no_row_selected")');
+            //     }    
+            // })
 
             function TransferSelected()
             {

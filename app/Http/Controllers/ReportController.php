@@ -755,7 +755,8 @@ class ReportController extends Controller
             // dd($products->first()->product()->first()->image_url);
             return DataTables::of($products)
                 ->addColumn('mass_delete', function ($row) {
-                    return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '"><input type="number" class="row-qty form-control" value="' . number_format($row->current_stock) . '" max="' . number_format($row->current_stock) . '" style="width:70px;" id="qty_' . $row->product_id . '">';
+                    return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '"> <input type="number" class="row-print-qty form-control disabled" value="' . number_format($row->current_stock) . '" max="' . number_format($row->current_stock) . '" style="width:70px;" id="printing_qty_' . $row->product_id . '">';
+                    // return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '"><input type="number" class="row-qty form-control" value="' . number_format($row->current_stock) . '" max="' . number_format($row->current_stock) . '" style="width:70px;" id="qty_' . $row->product_id . '">';
                 })
                 // ->addColumn('color_id', function ($row) {
                 //     // return  $row->first()->product()->first()->color()->first()->name;
@@ -782,9 +783,9 @@ class ReportController extends Controller
                 ->editColumn('image', function ($row) {
                     $product = Product::find($row->product_id);
                     if (!empty($product->image) && !is_null($product->image)) {
-                        return '<div style="display: flex;"><img src="' . asset('/uploads/img/' . $product->image) . '" alt="Product image" class="product-thumbnail-small"></div>';
+                        return '<div style="display: flex;"><img src="' . asset('/uploads/img/' . $product->image) . '" alt="Product image" class="product-thumbnail-small" data-href="{{action(ProductController@view, [$row->product()->first()->id])}}"></div>';
                     } else {
-                        return '<div style="display: flex;"><img src="' . $product->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
+                        return '<div style="display: flex;"><img src="' . $product->image_url . '" alt="Product image" class="product-thumbnail-small" data-href="{{action(ProductController@view, [$row->product()->first()->id])}}"></div>';
                     }
                 })
                 ->addColumn('sale_percent', function ($row) {
@@ -905,15 +906,15 @@ class ReportController extends Controller
                 )
                 ->removeColumn('enable_stock')
                 ->removeColumn('unit')
-                ->setRowAttr([
-                    'data-href' => function ($row) {
-                        if (auth()->user()->can("product.view")) {
-                            return  action('ProductController@view', [$row->product()->first()->id]);
-                        } else {
-                            return '';
-                        }
-                    }
-                ])
+                // ->setRowAttr([
+                //     'data-href' => function ($row) {
+                //         if (auth()->user()->can("product.view")) {
+                //             return  action('ProductController@view', [$row->product()->first()->id]);
+                //         } else {
+                //             return '';
+                //         }
+                //     }
+                // ])
                 // ->removeColumn('id')
                 ->rawColumns(['mass_delete', 'unit_price', 'total_transfered','location_name', 'total_sold', 'total_adjusted', 'stock', 'actions', 'image'])
                 ->make(true);
