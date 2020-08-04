@@ -2606,7 +2606,8 @@ class ProductController extends Controller
                         DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                         DB::raw('MIN(v.sell_price_inc_tax) as min_price')
                     )->groupBy('products.id')
-                    ->orderBy('products.refference','ASC')
+                    ->orderBy('products.id','DESC')
+                    // ->orderBy('products.refference','ASC')
                     // ->orderBy('vld.product_updated_at','DESC')
                     ->get();
 
@@ -2616,6 +2617,8 @@ class ProductController extends Controller
 
                 $print_qtys = $qtys->sortKeysDesc()->values()->toArray();
                 
+                // dd($qtys,$s_products,$selected_products_qty,$print_qtys,$product);
+
                 return view('product.massBulkPrint')
                     ->with(compact('product','print_qtys'));
             }
