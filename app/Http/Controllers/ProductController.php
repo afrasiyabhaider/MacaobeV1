@@ -2602,22 +2602,24 @@ class ProductController extends Controller
                         'products.enable_stock',
                         'products.is_inactive',
                         'vld.printing_qty as printing_qty',
+                        'vld.product_updated_at',
                         DB::raw('SUM(vld.qty_available) as current_stock'),
                         DB::raw('MAX(v.sell_price_inc_tax) as max_price'),
                         DB::raw('MIN(v.sell_price_inc_tax) as min_price')
                     )->groupBy('products.id')
-                    ->orderBy('products.id','ASC')
+                    // ->orderBy('products.id','ASC')
                     // ->orderBy('products.refference','ASC')
-                    // ->orderBy('vld.product_updated_at','DESC')
+                    ->orderBy('vld.product_updated_at','DESC')
                     ->get();
 
                 // Below code is to arrange desired qtys as per products
                 $s_products = collect($selected_products);
                 $qtys = $s_products->combine($selected_products_qty);
 
-                $print_qtys = $qtys->sortKeys()->values()->toArray();
+                $print_qtys = $selected_products_qty;
+                // $print_qtys = $qtys->sortKeys()->values()->toArray();
                 
-                // dd($qtys,$s_products,$selected_products_qty,$print_qtys,$product);
+                // dd($qtys,$s_products,$selected_products_qty,$print_qtys,$product->pluck('id'));
 
                 return view('product.massBulkPrint')
                     ->with(compact('product','print_qtys'));
