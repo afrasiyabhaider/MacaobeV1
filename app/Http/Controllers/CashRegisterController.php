@@ -208,7 +208,7 @@ class CashRegisterController extends Controller
 
         $discount = $register_prices->sum('discounted_amount');
 
-        $forced_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('original_amount','>',0)->count('id');
+        $forced_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('original_amount','>',0)->where('discounted_amount',0.00)->count('id');
         
         $payment_methods = TransactionPayment::whereIn('transaction_id',$transaction_ids)->get();
 
@@ -275,7 +275,7 @@ class CashRegisterController extends Controller
         $transaction_ids = $prices->distinct('ct.transaction_id')->pluck('ct.transaction_id');
         $register_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('line_discount_amount','>',0)->get()->unique('created_at');
 
-        $forced_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('original_amount','>',0)->get()->unique('created_at')->count('id');
+        $forced_prices = TransactionSellLine::whereIn('transaction_id',$transaction_ids)->where('original_amount','>',0)->where('discounted_amount',0.00)->get()->unique('created_at')->count('id');
 
         $discount = $register_prices->sum('line_discount_amount');
         
