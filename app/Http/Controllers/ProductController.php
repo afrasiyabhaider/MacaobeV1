@@ -2609,7 +2609,7 @@ class ProductController extends Controller
                     )->groupBy('products.id')
                     // ->orderBy('products.id','ASC')
                     // ->orderBy('products.refference','ASC')
-                    // ->orderBy('vld.product_updated_at','DESC')
+                    ->orderBy('vld.product_updated_at','DESC')
                     ->get();
 
                 // Below code is to arrange desired qtys as per products
@@ -2617,7 +2617,7 @@ class ProductController extends Controller
                 $qtys = $s_products->combine($selected_products_qty);
 
                 $print_qtys = $selected_products_qty;
-                $print_qtys = $qtys->sortKeys()->values()->toArray();
+                // $print_qtys = $qtys->sortKeys()->values()->toArray();
                 // $print_qtys = $qtys->sortKeysDesc()->values()->toArray();
                 
                 // dd($qtys,$s_products,$selected_products_qty,$print_qtys,$product->pluck('id'));
