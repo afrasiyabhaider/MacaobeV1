@@ -263,7 +263,8 @@ class ProductController extends Controller
                 })
                 ->editColumn('type', '@lang("lang_v1." . $type)')
                 ->editColumn('purchase_price', function($row){
-                    if(auth()->user()->getRoleNameAttribute() != 'Admin'){
+                    if(auth()->user()->getRoleNameAttribute() != 'Admin' && auth()->user()->getRoleNameAttribute() != 'admin lalouviere' && auth()->user()->getRoleNameAttribute() != '	
+                    ADMIN DOUAIRE' && auth()->user()->getRoleNameAttribute() != 'ADMIN BELLE ILE'){
                         return '-';
                     }else{
                         return $row->purchase_price;
@@ -503,7 +504,9 @@ class ProductController extends Controller
                 })
                 ->editColumn('type', '@lang("lang_v1." . $type)')
                 ->editColumn('purchase_price', function($row){
-                    if(auth()->user()->getRoleNameAttribute() != 'Admin'){
+
+                    if(auth()->user()->getRoleNameAttribute() != 'Admin' && auth()->user()->getRoleNameAttribute() != 'admin lalouviere' && auth()->user()->getRoleNameAttribute() != '	
+                    ADMIN DOUAIRE' && auth()->user()->getRoleNameAttribute() != 'ADMIN BELLE ILE'){
                         return '-';
                     }else{
                         return $row->purchase_price;
