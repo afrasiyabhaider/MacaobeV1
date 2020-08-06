@@ -733,6 +733,7 @@ class ReportController extends Controller
                 'p.created_at',
                 'p.name as product',
                 'p.image as image',
+                'p.description as description',
                 'p.type',
                 'p.refference',
                 'colors.name as color_name',
@@ -838,6 +839,13 @@ class ReportController extends Controller
                     }
 
                     return '<span data-is_quantity="true" class="display_currency total_adjusted" data-currency_symbol=false  data-orig-value="' . $total_adjusted . '" data-unit="' . $row->unit . '" >' . $total_adjusted . '</span> ' . $row->unit;
+                })
+                ->editColumn('description', function ($row) {
+                    $description = '-';
+                    if ($row->description) {
+                        $description = $row->description;
+                    }
+                    return $description;
                 })
                 ->editColumn('unit_price', function ($row) use ($allowed_selling_price_group) {
                     $html = '';

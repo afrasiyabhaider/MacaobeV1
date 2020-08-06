@@ -25,6 +25,7 @@
                 <th>Total Transfered</th>
                 <th>Supplier</th>
                 <th>Transfered On</th>
+                <th>Description</th>
                 {{-- <th>@lang('lang_v1.total_unit_adjusted')</th> --}}
             </tr>
         </thead>
