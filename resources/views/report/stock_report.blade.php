@@ -262,8 +262,8 @@
                 var selected_rows_qty = [];
                 var i = 0;
                 $('.row-select:checked').each(function () {
-                    var selectedQty = $("#qty_"+$(this).val()).val();
-                    var selectedMaxQty = $("#qty_"+$(this).val()).attr('max');
+                    var selectedQty = $("#printing_qty_"+$(this).val()).val();
+                    var selectedMaxQty = $("#printing_qty_"+$(this).val()).attr('max');
                     var selectedLocation= $("#location_"+$(this).val()).text();
                     var selectedLocationId= $("#location_"+$(this).val()).attr("max");
                     if(parseInt(selectedQty) <= parseInt(selectedMaxQty))
@@ -284,9 +284,9 @@
                     //     dangerMode: true,
                     // }).then((willDelete) => {
                     //     if (willDelete) {
-                        // If uncommented it will make issue in product transfer
-                            // $('#unknownDiscountModal').modal('show'); 
-                            // $('form#bulkTransfer_form').submit();
+                    //     // If uncommented it will make issue in product transfer
+                    //         $('#unknownDiscountModal').modal('show'); 
+                    //         $('form#bulkTransfer_form').submit();
                     //     }
                     // });
                 } else{

@@ -234,7 +234,7 @@
                         { data: 'size', name: 'sizes.name'},
                         { data: 'current_stock', searchable: false},
                         { data: 'type', name: 'products.type'},
-                         { data: 'supplier_name', name: 'products.supplier_name'},
+                         { data: 'supplier_name', name: 'suppliers.name'},
                         { data: 'category', name: 'c1.name'},
                         { data: 'sub_category', name: 'c2.name'},
                         { data: 'date', name: 'products.created_at'},

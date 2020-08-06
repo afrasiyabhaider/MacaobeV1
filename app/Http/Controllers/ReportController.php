@@ -923,7 +923,7 @@ class ReportController extends Controller
         $categories = Category::where('business_id', $business_id)
             ->where('parent_id', 0)
             ->pluck('name', 'id');
-        $suppliers = Supplier::pluck('name', 'id');
+        $suppliers = Supplier::orderBy('name','ASC')->pluck('name', 'id');
 
         $units = Unit::where('business_id', $business_id)
             ->pluck('short_name', 'id');
