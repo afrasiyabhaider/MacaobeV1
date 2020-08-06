@@ -77,6 +77,7 @@ class ProductController extends Controller
     }
     public function index()
     {
+        // dd(auth()->user()->getRoleNameAttribute());
         if (!auth()->user()->can('product.view') && !auth()->user()->can('product.create')) {
             abort(403, 'Unauthorized action.');
         }
@@ -261,6 +262,14 @@ class ProductController extends Controller
                     return $row->created_at;
                 })
                 ->editColumn('type', '@lang("lang_v1." . $type)')
+                ->editColumn('purchase_price', function($row){
+                    if(auth()->user()->getRoleNameAttribute() != 'Admin'){
+                        return '-';
+                    }else{
+                        return $row->purchase_price;
+                        // return '<span class="display_currency" data-currency_symbol="true">{{$row->purchase_price}}</span>';
+                    }
+                })
                 ->addColumn('mass_delete', function ($row) {
                     return  '<input type="checkbox" class="row-select" value="' . $row->id . '">';
                 })
@@ -278,7 +287,7 @@ class ProductController extends Controller
                         }
                     }
                 ])
-                ->rawColumns(['action', 'image', 'mass_delete', 'product', 'price'])
+                ->rawColumns(['action','purchase_price' ,'image', 'mass_delete', 'product', 'price'])
                 ->make(true);
         }
 
@@ -493,6 +502,14 @@ class ProductController extends Controller
                     return $row->created_at;
                 })
                 ->editColumn('type', '@lang("lang_v1." . $type)')
+                ->editColumn('purchase_price', function($row){
+                    if(auth()->user()->getRoleNameAttribute() != 'Admin'){
+                        return '-';
+                    }else{
+                        return $row->purchase_price;
+                        // return '<span class="display_currency" data-currency_symbol="true">{{$purchase_price}}</span>';
+                    }
+                })
                 ->addColumn('mass_delete', function ($row) {
                     if (number_format($row->current_stock) > 0)
                         return  '<input type="checkbox" class="row-select" value="' . $row->id . '"><input type="number" class="row-qty form-control" value="' . number_format($row->current_stock) . '" max="' . number_format($row->current_stock) . '" style="width:70px;" id="qty_' . $row->id . '">';
@@ -515,7 +532,7 @@ class ProductController extends Controller
                 //         }
                 //     }
                 // ])
-                ->rawColumns(['printing_qty', 'action', 'image', 'mass_delete', 'product', 'price'])
+                ->rawColumns(['printing_qty', 'purchase_price' ,'action', 'image', 'mass_delete', 'product', 'price'])
                 ->make(true);
         }
 
