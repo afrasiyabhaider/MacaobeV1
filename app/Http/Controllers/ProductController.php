@@ -2629,7 +2629,7 @@ class ProductController extends Controller
                     )->groupBy('products.id')
                     // ->orderBy('products.id','ASC')
                     // ->orderBy('products.refference','ASC')
-                    ->orderBy('vld.product_updated_at','DESC')
+                    // ->orderBy('vld.product_updated_at','DESC')
                     ->get();
 
                 // Below code is to arrange desired qtys as per products
