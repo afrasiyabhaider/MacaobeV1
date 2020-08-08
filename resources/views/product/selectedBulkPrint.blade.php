@@ -71,6 +71,9 @@
 <!-- Main content -->
 <section class="content">
 	<div class="row">
+		<div class="col-md-4 col-xs-4 heh mt-sm-3">
+			{{$location}}
+		</div>
 		@php $i=0; @endphp
 		@foreach($product as $objProduct)
 			@php $i++; @endphp

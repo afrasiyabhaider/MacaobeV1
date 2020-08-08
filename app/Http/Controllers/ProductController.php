@@ -2581,6 +2581,78 @@ class ProductController extends Controller
         }
         try {
             if (!empty($request->input('selected_products_bulkPrint'))) {
+                $business_location = $request->input('printing_location_id');
+                $location = 'All Location';
+                if($business_location){
+                    $location = BusinessLocation::find($business_location)->name;
+                }
+                $business_id = $request->session()->get('user.business_id');
+
+                $selected_products = explode(',', $request->input('selected_products_bulkPrint'));
+                $selected_products_qty = explode(',', $request->input('selected_products_bulkPrint_qty'));
+
+                for($i=0 ; $i < count($selected_products); $i++){
+                    $pro = Product::find($selected_products[$i]);
+                    $product[] = [
+                        'id' => $pro->id,
+                        'name' => $pro->name,
+                        'type' => $pro->type,
+                        'size' => $pro->sub_size()->first()->name,
+                        'refference' => $pro->refference,
+                        'ColorName' => $pro->color()->first()->name,
+                        'sku' => $pro->sku,
+                        'max_price' => $pro->variations()->first()->sell_price_inc_tax,
+                        'min_price' => $pro->variations()->first()->sell_price_inc_tax,
+                        'supplier' => $pro->supplier()->first()->name,
+                        'sub_category' => $pro->sub_category()->first()->name,
+                        'count' => $selected_products_qty[$i],
+                    ];
+                }
+               
+                $s_products = collect($selected_products);
+                $qtys = $s_products->combine($selected_products_qty);
+
+                $print_qtys = $selected_products_qty;
+                $product = collect($product);
+                // dd($location);
+                // $print_qtys = $qtys->sortKeys()->values()->toArray();
+                // $print_qtys = $qtys->sortKeysDesc()->values()->toArray();
+                
+                // dd($qtys,$s_products,$selected_products_qty,$print_qtys,$product->pluck('id'));
+
+                return view('product.massBulkPrint')
+                    ->with(compact('product','print_qtys','location'));
+            }
+
+            $output = [
+                'success' => 1,
+                'msg' => __('lang_v1.success')
+            ];
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong") . "Message:" . $e->getMessage()
+            ];
+        }
+        dd($output);
+        die();
+        // return redirect()->back()->with(['status' => $output]);
+    }
+    public function oldMassBulkPrint(Request $request)
+    {
+        if (!auth()->user()->can('product.update')) {
+            abort(403, 'Unauthorized action.');
+        }
+        try {
+            if (!empty($request->input('selected_products_bulkPrint'))) {
+                $business_location = $request->input('printing_location_id');
+                $location = 'All Location';
+                if($business_location){
+                    $location = BusinessLocation::find($business_location)->name;
+                }
                 $business_id = $request->session()->get('user.business_id');
 
                 $selected_products = explode(',', $request->input('selected_products_bulkPrint'));
@@ -2629,7 +2701,7 @@ class ProductController extends Controller
                     )->groupBy('products.id')
                     // ->orderBy('products.id','ASC')
                     // ->orderBy('products.refference','ASC')
-                    // ->orderBy('vld.product_updated_at','DESC')
+                    ->orderBy('vld.product_updated_at','DESC')
                     ->get();
 
                 // Below code is to arrange desired qtys as per products
@@ -2637,13 +2709,14 @@ class ProductController extends Controller
                 $qtys = $s_products->combine($selected_products_qty);
 
                 $print_qtys = $selected_products_qty;
+                // dd($location);
                 // $print_qtys = $qtys->sortKeys()->values()->toArray();
                 // $print_qtys = $qtys->sortKeysDesc()->values()->toArray();
                 
-                // dd($qtys,$s_products,$selected_products_qty,$print_qtys,$product->pluck('id'));
+                dd($qtys,$s_products,$selected_products_qty,$print_qtys,$product->pluck('id'));
 
                 return view('product.massBulkPrint')
-                    ->with(compact('product','print_qtys'));
+                    ->with(compact('product','print_qtys','location'));
             }
 
             $output = [
@@ -2663,7 +2736,7 @@ class ProductController extends Controller
         die();
         // return redirect()->back()->with(['status' => $output]);
     }
-
+    
     public function massTransfer(Request $request)
     {
         if (!auth()->user()->can('product.update')) {

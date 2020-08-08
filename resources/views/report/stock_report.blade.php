@@ -109,6 +109,7 @@
                     {{-- {!! Form::submit('Print Selected', array('class' => 'btn btn-md btn-warning', 'id' => 'bulkPrint-selected')) !!} --}}
                     {!! Form::hidden('selected_products_bulkPrint', null, ['id' => 'selected_products_bulkPrint']); !!}
                     {!! Form::hidden('selected_products_bulkPrint_qty', null, ['id' => 'selected_products_bulkPrint_qty']); !!}
+                    {!! Form::hidden('printing_location_id', 1, ['id' => 'printing_location_id']); !!}
 
                     <button type="submit" class="btn btn-success pull-left" id="bulkPrint-selected" style="margin-left: 20px">
                         <i class="fa fa-print"></i> 
@@ -193,6 +194,8 @@
                 if(selected_rows.length > 0){
                     $('input#selected_products_bulkPrint').val(selected_rows);
                     $('input#selected_products_bulkPrint_qty').val(print_qty);
+                    $('input#printing_location_id').val($("#location_id").val());
+                    $("#location_id").val(1);
                     swal({
                         title: LANG.sure,
                         icon: "warning",
@@ -277,6 +280,7 @@
                 if(selected_rows.length > 0){
                     $('#unknownDiscountModal').modal('show'); 
                     $('input#selected_products_bulkTransfer').val(selected_rows);
+                    
                     // swal({
                     //     title: LANG.sure,
                     //     icon: "warning",

@@ -71,26 +71,33 @@
 <!-- Main content -->
 <section class="content">
 	<div class="row">
+		<div class="col-md-4 col-xs-4 heh mt-sm-3 text-center">
+			<h2>
+				{{$location}}
+			</h2>
+		</div>
 		@php $i=0; @endphp
 		@foreach($product as $objProduct)
 			{{-- @for($j=0;$j<$objProduct->current_stock;$j++) --}}
 			{{-- @for($j=0;$j<$objProduct->printing_qty;$j++) --}}
-			@for($j=0;$j<$print_qtys[$i];$j++)
+			{{-- @dd($objProduct) --}}
+			@for($j=0;$j<$objProduct['count'];$j++)
 				<div class="col-md-4 col-xs-4 heh mt-sm-3">
 					<div class="">
 						<div class="col-xs-9 text-left"   style="font-size: 12px" >
-							<strong class="printList" data-id="subcat">{{$objProduct->sub_category}}</strong>-
-							<strong class="printList" data-id="name">{{$objProduct->product}} </strong>
+							{{-- @dd($objProduct) --}}
+							<strong class="printList" data-id="subcat">{{$objProduct['sub_category']}}</strong>-
+							<strong class="printList" data-id="name">{{$objProduct['name']}} </strong>
 						</div>
 						<div  class="col-xs-3 printList text-right" data-id="size"  style="font-size: 12px"> 
-							{{$objProduct->SubSizeName }} 
+							{{$objProduct['size'] }} 
 						</div>
 
 					</div>
 					<div class="col-md-12 col-xs-12 col-sm-12">
-						<img style="width: 100%"  src="data:image/png;base64,{{DNS1D::getBarcodePNG($objProduct->sku, 'C128', 2,30,array(39, 48, 54), false)}}">
+						<img style="width: 100%"  src="data:image/png;base64,{{DNS1D::getBarcodePNG($objProduct['sku'], 'C128', 2,30,array(39, 48, 54), false)}}">
 						@php
-							$barcodeArr = str_split($objProduct->sku, 1);
+							$barcodeArr = str_split($objProduct['sku'], 1);
 						@endphp
 						<center class='barcodetc' style='word-spacing: 5px;font-size: 15px;font-weight: bold;'>
 						@foreach($barcodeArr As $b)
@@ -105,22 +112,22 @@
 								€ 
 								</span>
 							{{-- i.fa.fa-euro-sign --}}
-							@if($objProduct->max_price != $objProduct->min_price && $objProduct->type == "variable") 
+							@if($objProduct['max_price'] != $objProduct['min_price'] && $objProduct['type'] == "variable") 
 							-  <span class="display_currency" data-currency_symbol="true" >
-								{{$objProduct->max_price}}
+								{{$objProduct['max_price']}}
 							</span> 
 							@else 
 							{{-- €  --}}
 								<span class="display_currency" data-currency_symbol="true">
-									{{$objProduct->max_price}}
+									{{$objProduct['max_price']}}
 								</span> 
 							@endif
 						</div>
 						<div class="col-xs-3 printList text-center" data-id="color"  style="font-size: 12px"> 
-							{{$objProduct->ColorName}} 
+							{{$objProduct['ColorName']}} 
 						</div>
 						<div class="col-xs-4 text-center printList" data-id="refference" style="font-size: 12px">
-							{{$objProduct->refference }}
+							{{$objProduct['refference'] }}
 						</div>
 						{{-- <div  class="col printList text-right" data-id="subcat" style="font-size: 14px">
 							{{$objProduct->sub_category}}
@@ -132,7 +139,7 @@
 
 					
 					
-					<!--	<div class="col-md-6  col-xs-5 pull-left printList hide"  data-id="qty">Qty : {{$objProduct->current_stock  or ' '}}  </div>-->
+					{{-- <!--	<div class="col-md-6  col-xs-5 pull-left printList hide"  data-id="qty">Qty : {{$objProduct['current_stock']  or ' '}}  </div>--> --}}
 				</div>
 			@endfor 
 			@php $i++; @endphp
