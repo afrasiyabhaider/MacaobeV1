@@ -230,7 +230,6 @@
               {{-- @can('product.view') --}}
               @if (auth()->user()->getRoleNameAttribute() == 'Admin' || auth()->user()->getRoleNameAttribute() == 'admin lalouviere' || auth()->user()->getRoleNameAttribute() == '	
               ADMIN DOUAIRE' || auth()->user()->getRoleNameAttribute() == 'ADMIN BELLE ILE')
-              Hello
                 <li class="{{ $request->segment(1) == 'products' && $request->segment(2) == '' ? 'active' : '' }}"><a href="{{action('ProductController@index')}}"><i class="fa fa-list"></i>@lang('lang_v1.list_products')</a></li>
                 <li class="{{ $request->segment(1) == 'products' && $request->segment(2) == 'transfer' ? 'active' : '' }}"><a href="{{action('ProductController@transfer')}}"><i class="fa fa-random"></i>Transfer Products</a></li>
               @endif
