@@ -436,7 +436,8 @@ Route::get('force-logout', function () {
  * 
  */
 
-Route::get('/', 'SiteController@home')->name('site.home');
+Route::get('/', 'HomeController@index')->name('site.home');
+// Route::get('/', 'SiteController@home')->name('site.home');
 Route::get('product/{id}/detail', 'SiteController@detail')->name('product.detail');
 
 Route::get('product/{ref}/color/{id}', 'SiteController@get_color_sizes');
