@@ -1,5 +1,7 @@
 @extends('layouts.onlyApp')
-@section('title', __('sale.products'))
+@section('title')
+	{{$location}} - Barcodes
+@endsection
 <style type="text/css">
 	.heh{
 		height: 118px;
@@ -71,11 +73,6 @@
 <!-- Main content -->
 <section class="content">
 	<div class="row">
-		<div class="col-md-4 col-xs-4 heh mt-sm-3 text-center">
-			<h2>
-				{{$location}}
-			</h2>
-		</div>
 		@php $i=0; @endphp
 		@foreach($product as $objProduct)
 			{{-- @for($j=0;$j<$objProduct->current_stock;$j++) --}}
