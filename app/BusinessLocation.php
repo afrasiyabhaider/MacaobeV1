@@ -44,7 +44,7 @@ class BusinessLocation extends Model
         $locations = $result->pluck('name', 'id');
 
         if ($show_all) {
-            $locations->prepend(__('report.all_locations'), '');
+            $locations->prepend([__('report.all_locations'),1]);
         }
 
         if ($receipt_printer_type_attribute) {
@@ -79,7 +79,7 @@ class BusinessLocation extends Model
         $locations = $result->pluck('name', 'id');
 
         if ($show_all) {
-            $locations->prepend(__('report.all_locations'), '');
+            $locations->prepend(__('report.all_locations'), 0);
         }
 
         if ($receipt_printer_type_attribute) {

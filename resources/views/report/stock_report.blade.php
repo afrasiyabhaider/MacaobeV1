@@ -55,6 +55,7 @@
 <section class="content">
     <div class="row">
         <div class="col-md-12">
+            {{-- @dd($business_locations) --}}
             @component('components.filters', ['title' => __('report.filters')])
               {!! Form::open(['url' => action('ReportController@getStockReport'), 'method' => 'get', 'id' => 'stock_report_filter_form' ]) !!}
                 <div class="col-md-3">
@@ -120,6 +121,7 @@
             {!! Form::hidden('selected_products_bulkTransfer', null, ['id' => 'selected_products_bulkTransfer']); !!}
             {!! Form::hidden('selected_products_qty_bulkTransfer', null, ['id' => 'selected_products_qty_bulkTransfer']); !!}
             {!! Form::hidden('bussiness_bulkTransfer', null, ['id' => 'bussiness_bulkTransfer']); !!}
+            {!! Form::hidden('current_location', null, ['id' => 'current_location']); !!}
             {{-- {!! Form::submit(' Transfer Selected', array('class' => 'btn btn-warning', 'id' => 'bulkTransfer-selected')) !!} --}}
             <button type="submit" class="btn btn-warning" id="bulkTransfer-selected">
                 <i class="fa fa-random"></i>
@@ -256,6 +258,7 @@
                     alert("Please Choose Bussiness First to Transfer ");return(false);
                 } 
                 $("#bussiness_bulkTransfer").val(transferBussiness);
+                $("#current_location").val($("#location_id").val());
                 $('form#bulkTransfer_form').submit();
             }
 

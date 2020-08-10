@@ -2747,6 +2747,10 @@ class ProductController extends Controller
             if (!empty($request->input('selected_products_bulkTransfer'))) {
                 $business_id = $request->session()->get('user.business_id');
                 $user_location_id = $request->session()->get('user.business_location_id');
+                if($request->input('current_location')){
+                    $user_location_id = $request->input('current_location');
+                }
+                // dd($user_location_id);
                 $user_id = $request->session()->get('user.id');
 
                 $selected_products = explode(',', $request->input('selected_products_bulkTransfer'));
@@ -2825,8 +2829,15 @@ class ProductController extends Controller
                         DB::beginTransaction();
                         $tempProduct = Product::with(['variations', 'purchase_lines', 'product_tax'])->findOrFail($productId);
                         $oldTranscationLine = $tempProduct->purchase_lines;
-                        $objOrignalPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $user_location_id)->where("purchase_lines.product_id", $productId)->first();
-                        $objOrignalPurchaseLine = PurchaseLine::where("transaction_id", $objOrignalPurchaseLine->transaction_id)->where("product_id", $objOrignalPurchaseLine->product_id)->first();
+
+                        // $user_location_id;
+                        $location_main = 1;
+                        $objOrignalPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $location_main)->where("purchase_lines.product_id", $productId)->first();
+
+                        // dd($objOrignalPurchaseLine);
+
+                        $objOrignalPurchaseLine = PurchaseLine::where("transaction_id", 
+                        $objOrignalPurchaseLine->transaction_id)->where("product_id", $objOrignalPurchaseLine->product_id)->first();
 
                         $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $business_location_id)->where("purchase_lines.product_id", $productId)->first();
 
@@ -2974,6 +2985,7 @@ class ProductController extends Controller
                             $oldPurchaseLine = PurchaseLine::where("id", $objOrignalPurchaseLine->id)->update(['quantity' => $LeftQty]);
                             $oldPurchaseLine = PurchaseLine::where("transaction_id", $objOldPurchaseLine->transaction_id)->where("product_id", $product->id)->update(['quantity' => $qtyForPurchaseLine]);
                         } else {
+                            // dd($oldPurchaseLine);
                             $oldPurchaseLine = PurchaseLine::where("id", $objOrignalPurchaseLine->id)->update(['quantity' => $LeftQty]); //Update OLD ONE AND THEN NEW ONE
                             $oldPurchaseLine = PurchaseLine::where("transaction_id", $objOldPurchaseLine->transaction_id)->where("product_id", $product->id)->update(['quantity' => $qtyForPurchaseLine]);
                         }
