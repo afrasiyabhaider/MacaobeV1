@@ -2748,6 +2748,13 @@ class ProductController extends Controller
                 $business_id = $request->session()->get('user.business_id');
                 $user_location_id = $request->session()->get('user.business_location_id');
                 if($request->input('current_location')){
+                    if($request->input('current_location') == 0){
+                        $output = [
+                            'success' => 0,
+                            'msg' => "All Location is Invalid Select Valid Location"
+                        ];
+                        return redirect()->back()->with('status', $output);
+                    }
                     $user_location_id = $request->input('current_location');
                 }
                 // dd($user_location_id);

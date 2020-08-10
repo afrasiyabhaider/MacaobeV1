@@ -686,6 +686,11 @@ $(document).ready(function() {
     product_sell_report = $('table#product_sell_report_table').DataTable({
         processing: true,
         serverSide: true,
+        pageLength: -1,
+        lengthMenu: [
+            [20, 50, 70, 100, 300, 500, 1000, -1],
+            [20, 50, 70, 100, 300, 500, 1000, 'All'],
+        ],
         aaSorting: [
             [3, 'desc']
         ],
@@ -800,6 +805,11 @@ $(document).ready(function() {
     product_sell_grouped_report = $('table#product_sell_grouped_report_table').DataTable({
         processing: true,
         serverSide: true,
+        pageLength: -1,
+        lengthMenu: [
+            [20, 50, 70, 100, 300, 500, 1000, -1],
+            [20, 50, 70, 100, 300, 500, 1000, 'All'],
+        ],
         aaSorting: [
             [1, 'desc']
         ],
@@ -824,11 +834,6 @@ $(document).ready(function() {
                 d.location_id = $('select#location_id').val();
             },
         },
-        pageLength: 100,
-        lengthMenu: [
-            [20, 50, 70, 100, 300, 500, 1000, -1],
-            [20, 50, 70, 100, 300, 500, 1000, 'All'],
-        ],
         columns: [
             { data: 'image', name: 'products.image', searchable: false, orderable: false },
             { data: 'product_name', name: 'p.name' },
