@@ -684,10 +684,15 @@ class ReportController extends Controller
 
             $from_date = request()->get('from_date', null);
 
-            $to_date = request()->get('to_date', null);
+            $to_date = request()->get('to_date',null);
+            // dd($to_date);
+            // if($to_date == 'no'){
+            //     $to_date = Carbon::now();
+            // }
             if (!empty($to_date)) {
                 // dd($products->first());
                 $query->whereDate('p.created_at', '>=', $from_date)->whereDate('p.created_at', '<=', $to_date);
+                $query->where('vld.qty_available', '>',0);
             }
 
             if (!empty($request->input('unit_id'))) {
