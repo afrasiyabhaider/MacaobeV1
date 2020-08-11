@@ -2203,6 +2203,14 @@ class ReportController extends Controller
         $business_id = $request->session()->get('user.business_id');
         if ($request->ajax()) {
             $variation_id = $request->get('variation_id', null);
+
+            $location_id = $request->get('location_id', null);
+
+            $vld_str = '';
+            if (!empty($location_id)) {
+                $vld_str = "AND vld.location_id=$location_id";
+            }
+
             $query = TransactionSellLine::join(
                 'transactions as t',
                 'transaction_sell_lines.transaction_id',
@@ -2218,6 +2226,7 @@ class ReportController extends Controller
                 ->join('product_variations as pv', 'v.product_variation_id', '=', 'pv.id')
                 ->join('contacts as c', 't.contact_id', '=', 'c.id')
                 ->join('products as p', 'pv.product_id', '=', 'p.id')
+                ->join('suppliers as s', 'p.supplier_id', '=', 's.id')
                 ->leftjoin('tax_rates', 'transaction_sell_lines.tax_id', '=', 'tax_rates.id')
                 ->leftjoin('units as u', 'p.unit_id', '=', 'u.id')
                 ->where('t.business_id', $business_id)
@@ -2227,6 +2236,8 @@ class ReportController extends Controller
                     'p.id as product_id',
                     'p.name as product_name',
                     'p.image as image',
+                    'p.supplier_id as supplier_id',
+                    's.name as supplier',
                     'p.refference as refference',
                     'p.type as product_type',
                     'pv.name as product_variation',
@@ -2237,6 +2248,7 @@ class ReportController extends Controller
                     't.transaction_date as transaction_date',
                     'transaction_sell_lines.unit_price_before_discount as unit_price',
                     'transaction_sell_lines.unit_price_inc_tax as unit_sale_price',
+                    DB::raw("(SELECT SUM(vld.qty_available) FROM variation_location_details as vld WHERE vld.variation_id=v.id $vld_str) as current_stock"),
                     'transaction_sell_lines.original_amount as original_amount',
                     DB::raw('(transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) as sell_qty'),
                     'transaction_sell_lines.line_discount_type as discount_type',
@@ -2271,6 +2283,11 @@ class ReportController extends Controller
             $customer_id = $request->get('customer_id', null);
             if (!empty($customer_id)) {
                 $query->where('t.contact_id', $customer_id);
+            }
+
+            $supplier_id = $request->get('supplier_id', null);
+            if (!empty($supplier_id)) {
+                $query->where('p.supplier_id', $supplier_id);
             }
 
             return Datatables::of($query)
@@ -2330,6 +2347,13 @@ class ReportController extends Controller
                             $row->item_tax.
                        '</span>'.'<br>'.'<span class="tax" data-orig-value="'.(float)$row->item_tax.'" data-unit="'.$row->tax.'"><small>('.$row->tax.')</small></span>';
                 })
+                ->editColumn('current_stock', function ($row) {
+                    // if ($row->enable_stock) {
+                        return '<span data-is_quantity="true" class="display_currency current_stock" data-currency_symbol=false data-orig-value="' . (int) $row->current_stock . '" data-unit="' . $row->unit . '" >' . (int) $row->current_stock . '</span> ' . $row->unit;
+                    // } else {
+                    //     return '';
+                    // }
+                })
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can("product.view")) {
@@ -2339,15 +2363,16 @@ class ReportController extends Controller
                         }
                     }
                 ])
-                ->rawColumns(['original_amount','refference','image','invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax'])
+                ->rawColumns(['original_amount','refference','image','invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax','current_stock'])
                 ->make(true);
         }
 
         $business_locations = BusinessLocation::forDropdown($business_id);
         $customers = Contact::customersDropdown($business_id);
+        $suppliers = Supplier::forDropdown($business_id);
 
         return view('report.product_sell_report')
-            ->with(compact('business_locations', 'customers'));
+            ->with(compact('business_locations', 'customers','suppliers'));
     }
 
     /**

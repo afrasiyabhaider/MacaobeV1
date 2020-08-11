@@ -28,6 +28,17 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
+                        {!! Form::label('supplier_id', 'Supplier' . ':') !!}
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="fa fa-user"></i>
+                            </span>
+                            {!! Form::select('supplier_id', $suppliers, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+                        </div>
+                    </div>
+                </div>
+                {{-- <div class="col-md-3">
+                    <div class="form-group">
                         {!! Form::label('customer_id', __('contact.customer') . ':') !!}
                         <div class="input-group">
                             <span class="input-group-addon">
@@ -36,7 +47,7 @@
                             {!! Form::select('customer_id', $customers, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-md-3">
                     <div class="form-group">
                         {!! Form::label('location_id', __('purchase.business_location').':') !!}
@@ -81,9 +92,11 @@
                                         <th>Image</th>
                                         <th>@lang('sale.product')</th>
                                         <th>Refference</th>
-                                        <th>@lang('sale.customer_name')</th>
+                                        {{-- <th>@lang('sale.customer_name')</th> --}}
+                                        <th>Supplier</th>
                                         <th>@lang('sale.invoice_no')</th>
                                         <th>@lang('messages.date')</th>
+                                        <th>Current Stock</th>
                                         <th>Before Force Price</th>
                                         <th>@lang('sale.unit_price')</th>
                                         <th>@lang('sale.discount')</th>

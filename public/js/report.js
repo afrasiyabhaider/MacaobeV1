@@ -717,7 +717,8 @@ $(document).ready(function() {
                 d.end_date = end;
 
                 d.variation_id = $('#variation_id').val();
-                d.customer_id = $('select#customer_id').val();
+                d.supplier_id = $('select#supplier_id').val();
+                // d.customer_id = $('select#customer_id').val();
                 d.location_id = $('select#location_id').val();
             },
         },
@@ -725,9 +726,11 @@ $(document).ready(function() {
             { data: 'image', name: 'products.image', searchable: false, orderable: false },
             { data: 'product_name', name: 'p.name' },
             { data: 'refference', name: 'p.refference' },
-            { data: 'customer', name: 'c.name' },
+            // { data: 'customer', name: 'c.name' },
+            { data: 'supplier', name: 'p.supplier_id' },
             { data: 'invoice_no', name: 't.invoice_no' },
             { data: 'transaction_date', name: 't.transaction_date' },
+            { data: 'current_stock', name: 'current_stock' },
             { data: 'original_amount', name: 'original_amount' },
             { data: 'unit_price', name: 'transaction_sell_lines.unit_price_before_discount' },
             { data: 'discount_amount', name: 'transaction_sell_lines.line_discount_amount' },
@@ -862,7 +865,7 @@ $(document).ready(function() {
     });
 
     $(
-        '#product_sell_report_form #variation_id, #product_sell_report_form #location_id, #product_sell_report_form #customer_id'
+        '#product_sell_report_form #variation_id, #product_sell_report_form #location_id, #product_sell_report_form #customer_id, #product_sell_report_form #supplier_id'
     ).change(function() {
         product_sell_report.ajax.reload();
         product_sell_grouped_report.ajax.reload();
