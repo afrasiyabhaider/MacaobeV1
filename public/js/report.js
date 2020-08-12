@@ -727,7 +727,7 @@ $(document).ready(function() {
             { data: 'product_name', name: 'p.name' },
             { data: 'refference', name: 'p.refference' },
             // { data: 'customer', name: 'c.name' },
-            { data: 'supplier', name: 'p.supplier_id' },
+            { data: 'supplier_id', name: 'p.supplier_id' },
             { data: 'invoice_no', name: 't.invoice_no' },
             { data: 'transaction_date', name: 't.transaction_date' },
             { data: 'current_stock', name: 'current_stock' },

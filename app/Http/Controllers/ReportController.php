@@ -2226,7 +2226,7 @@ class ReportController extends Controller
                 ->join('product_variations as pv', 'v.product_variation_id', '=', 'pv.id')
                 ->join('contacts as c', 't.contact_id', '=', 'c.id')
                 ->join('products as p', 'pv.product_id', '=', 'p.id')
-                ->join('suppliers as s', 'p.supplier_id', '=', 's.id')
+                // ->join('suppliers as s', 's.id','=','p.supplier_id')
                 ->leftjoin('tax_rates', 'transaction_sell_lines.tax_id', '=', 'tax_rates.id')
                 ->leftjoin('units as u', 'p.unit_id', '=', 'u.id')
                 ->where('t.business_id', $business_id)
@@ -2237,7 +2237,7 @@ class ReportController extends Controller
                     'p.name as product_name',
                     'p.image as image',
                     'p.supplier_id as supplier_id',
-                    's.name as supplier',
+                    // 's.name as supplier',
                     'p.refference as refference',
                     'p.type as product_type',
                     'pv.name as product_variation',
@@ -2311,6 +2311,13 @@ class ReportController extends Controller
                          return $row->refference;
                      }else{
                          return '<b class="text-center">-</b>';
+                     }
+                })
+                 ->editColumn('supplier_id', function ($row) {
+                     if($row->product()->first()->supplier()->first()){
+                         return $row->product()->first()->supplier()->first()['name'];
+                    }else{
+                         return '-';
                      }
                 })
                 ->editColumn('transaction_date', function($row){
@@ -2410,6 +2417,7 @@ class ReportController extends Controller
                 )
                 ->join('product_variations as pv', 'v.product_variation_id', '=', 'pv.id')
                 ->join('products as p', 'pv.product_id', '=', 'p.id')
+                // ->join('suppliers as s', 'p.supplier_id', '=', 's.id')
                 ->leftjoin('units as u', 'p.unit_id', '=', 'u.id')
                 ->where('t.business_id', $business_id)
                 ->where('t.type', 'sell')

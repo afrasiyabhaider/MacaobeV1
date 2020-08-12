@@ -2135,7 +2135,10 @@ class SellPosController extends Controller
             $customer_id = request()->get('customer_id', null);
             $cg = $this->contactUtil->getCustomerGroup($business_id, $customer_id);
             $percent = (empty($cg) || empty($cg->amount)) ? 0 : $cg->amount;
-            $product->default_sell_price = $product->default_sell_price + ($percent * $product->default_sell_price / 100);
+            $product->default_sell_price = $product->sell_price_inc_tax + ($percent * $product->sell_price_inc_tax / 100);
+            // dd($product->default_sell_price);
+            // $product->default_sell_price = $product->default_sell_price + ($percent * $product->default_sell_price / 100);
+
             $product->sell_price_inc_tax = $product->sell_price_inc_tax + ($percent * $product->sell_price_inc_tax / 100);
 
             $tax_dropdown = TaxRate::forBusinessDropdown($business_id, true, true);

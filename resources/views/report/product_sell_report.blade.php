@@ -108,7 +108,7 @@
                                 </thead>
                                 <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="10">
+                                        <td colspan="11">
                                             <strong>@lang('sale.total'):</strong>
                                         </td>
                                         {{-- <td></td>

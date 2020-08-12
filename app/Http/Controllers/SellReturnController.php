@@ -332,6 +332,7 @@ class SellReturnController extends Controller
                 //Update quantity returned in sell line
                 $returns = [];
                 $product_lines = $request->input('products');
+                
                 foreach ($product_lines as $product_line) {
                     $returns[$product_line['sell_line_id']] = $product_line['quantity'];
                 }
