@@ -928,6 +928,7 @@ class SellPosController extends Controller
         if (!auth()->user()->can('sell.create') && !auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
         }
+        // dd($request->input());
         $is_direct_sale = false;
         if (!empty($request->input('is_direct_sale'))) {
             $is_direct_sale = true;
@@ -1064,8 +1065,9 @@ class SellPosController extends Controller
                 }
                 $input['payment'] = $tempPayment;
                 // print_r($input['products']);die(); 
-
+                // dd($transaction, $input['products'], $input['location_id']);
                 $this->transactionUtil->createOrUpdateSellLines($transaction, $input['products'], $input['location_id']);
+                // dd("Hello");
 
                 if (!$is_direct_sale) {
                     //Add change return
@@ -1211,7 +1213,7 @@ class SellPosController extends Controller
             DB::rollBack();
 
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            $msg = trans("messages.something_went_wrong" . $e->getMessage());
+            $msg = trans("Something Went Wrong <br><br> File:" . $e->getFile() . "Line: " . $e->getLine() . " Message:" . $e->getMessage());
 
             if (get_class($e) == \App\Exceptions\PurchaseSellMismatch::class) {
                 $msg = $e->getMessage();
