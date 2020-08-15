@@ -615,10 +615,11 @@ $(document).ready(function() {
         columns: [
             { data: 'product_name', name: 'p.name' },
             { data: 'supplier', name: 'c.name' },
-            { data: 'ref_no', name: 't.ref_no' },
+            { data: 'ref_no', name: 'p.refference' },
             { data: 'transaction_date', name: 't.transaction_date' },
+            { data: 'size', name: 's.name' },
             { data: 'purchase_qty', name: 'purchase_lines.quantity' },
-            { data: 'quantity_adjusted', name: 'purchase_lines.quantity_adjusted' },
+            // { data: 'quantity_adjusted', name: 'purchase_lines.quantity_adjusted' },
             { data: 'unit_purchase_price', name: 'purchase_lines.purchase_price_inc_tax' },
             { data: 'subtotal', name: 'subtotal', searchable: false },
         ],
@@ -627,7 +628,7 @@ $(document).ready(function() {
                 sum_table_col($('#product_purchase_report_table'), 'row_subtotal')
             );
             $('#footer_total_purchase').html(
-                __sum_stock($('#product_purchase_report_table'), 'purchase_qty')
+                sum_table_col($('#product_purchase_report_table'), 'purchase_qty')
             );
             $('#footer_total_adjusted').html(
                 __sum_stock($('#product_purchase_report_table'), 'quantity_adjusted')

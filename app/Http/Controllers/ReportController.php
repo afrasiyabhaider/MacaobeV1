@@ -2107,6 +2107,121 @@ class ReportController extends Controller
                     'v.id'
                 )
                 ->join('product_variations as pv', 'v.product_variation_id', '=', 'pv.id')
+                ->join('products as p', 'purchase_lines.product_id', '=', 'p.id')
+                ->join('suppliers as c', 'p.supplier_id', '=', 'c.id')
+                ->join('sizes as s', 'p.sub_size_id', '=', 's.id')
+                ->where('t.business_id', $business_id)
+                ->where('purchase_lines.purchase_price_inc_tax', '<',100)
+                // ->where('t.type', 'purchase')
+                ->select(
+                    'p.id as product_id',
+                    'p.name as product_name',
+                    'p.type as product_type',
+                    'c.name as supplier',
+                    's.name as size',
+                    't.id as transaction_id',
+                    'p.refference as ref_no',
+                    'p.created_at as transaction_date',
+                    'purchase_lines.purchase_price_inc_tax as unit_purchase_price',
+                    DB::raw('(purchase_lines.quantity - purchase_lines.quantity_returned) as purchase_qty'),
+                    'purchase_lines.quantity_adjusted',
+                    DB::raw('(purchase_lines.quantity* purchase_lines.purchase_price_inc_tax) as subtotal')
+                )
+                // ->distinct('p.refference') 
+                ->orderBy('purchase_lines.updated_at','DESC')
+                // ->distinct('ref_no')
+                // ->groupBy('p.refference');
+                ->groupBy('purchase_lines.product_id');
+
+                
+            if (!empty($variation_id)) {
+                $query->where('purchase_lines.variation_id', $variation_id);
+            }
+            $start = $request->get('start_date');
+            $end = $request->get('end_date');
+            if (!empty($start) && !empty($end)) {
+                // dd($start,$end);
+                $query->whereDate('p.created_at', '>=', $start)
+                ->whereDate('p.created_at', '<=', $end);
+                // $query->whereBetween(DB::raw('date(transaction_date)'), [$start_date, $end_date]);
+            }
+
+            $permitted_locations = auth()->user()->permitted_locations();
+            if ($permitted_locations != 'all') {
+                $query->whereIn('t.location_id', $permitted_locations);
+            }
+
+            $location_id = $request->get('location_id', null);
+            if (!empty($location_id)) {
+                $query->where('t.location_id', $location_id);
+            }
+
+            $supplier_id = $request->get('supplier_id', null);
+            if (!empty($supplier_id)) {
+                $query->where('p.supplier_id', $supplier_id);
+            }
+
+            return Datatables::of($query)
+                ->editColumn('product_name', function ($row) {
+                    $product_name = $row->product_name;
+                    if ($row->product_type == 'variable') {
+                        $product_name .= ' - ' . $row->product_variation . ' - ' . $row->variation_name;
+                    }
+
+                    return $product_name;
+                })
+                ->editColumn('ref_no', function ($row) {
+                    return '<a data-href="' . action('PurchaseController@show', [$row->transaction_id])
+                        . '" href="#" data-container=".view_modal" class="btn-modal">' . $row->ref_no . '</a>';
+                })
+                ->editColumn('purchase_qty', function ($row) {
+                    return '<span data-is_quantity="true" class=" purchase_qty" data-currency_symbol=false data-orig-value="' . (int) $row->purchase_qty . '" data-unit="' . $row->unit . '" >' . (int) $row->purchase_qty . '</span> ' . $row->unit;
+                })
+                ->editColumn('quantity_adjusted', function ($row) {
+                    return '<span data-is_quantity="true" class="display_currency quantity_adjusted" data-currency_symbol=false data-orig-value="' . (float) $row->quantity_adjusted . '" data-unit="' . $row->unit . '" >' . (float) $row->quantity_adjusted . '</span> ' . $row->unit;
+                })
+                ->editColumn('subtotal', function ($row) {
+                    return '<span class="display_currency row_subtotal" data-currency_symbol=true data-orig-value="' . $row->subtotal . '">' . $row->subtotal . '</span>';
+                })
+                ->editColumn('transaction_date', function ($row) {
+                    return  Carbon::parse($row->transaction_date)->format('d-m-Y H:i');
+                })
+                ->editColumn('unit_purchase_price', function ($row) {
+                    return '<span class="display_currency" data-currency_symbol = true>' . $row->unit_purchase_price . '</span>';
+                })
+                ->rawColumns(['ref_no', 'unit_purchase_price', 'subtotal', 'purchase_qty', 'quantity_adjusted'])
+                ->make(true);
+        }
+
+        $business_locations = BusinessLocation::forDropdown($business_id);
+        $suppliers = Supplier::forDropdown($business_id);
+        // $suppliers = Contact::suppliersDropdown($business_id);
+
+        return view('report.product_purchase_report')
+            ->with(compact('business_locations', 'suppliers'));
+    }
+    public function old_getproductPurchaseReport(Request $request)
+    {
+        if (!auth()->user()->can('purchase_n_sell_report.view')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $business_id = $request->session()->get('user.business_id');
+        if ($request->ajax()) {
+            $variation_id = $request->get('variation_id', null);
+            $query = PurchaseLine::join(
+                'transactions as t',
+                'purchase_lines.transaction_id',
+                '=',
+                't.id'
+            )
+                ->join(
+                    'variations as v',
+                    'purchase_lines.variation_id',
+                    '=',
+                    'v.id'
+                )
+                ->join('product_variations as pv', 'v.product_variation_id', '=', 'pv.id')
                 ->join('contacts as c', 't.contact_id', '=', 'c.id')
                 ->join('products as p', 'pv.product_id', '=', 'p.id')
                 ->leftjoin('units as u', 'p.unit_id', '=', 'u.id')
