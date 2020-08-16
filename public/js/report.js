@@ -613,10 +613,12 @@ $(document).ready(function() {
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
         columns: [
+            { data: 'image', name: 'image', searchable: false },
             { data: 'product_name', name: 'p.name' },
             { data: 'supplier', name: 'c.name' },
             { data: 'ref_no', name: 'p.refference' },
-            { data: 'transaction_date', name: 't.transaction_date' },
+            { data: 'location_name', name: 'bl.name' },
+            { data: 'transaction_date', name: 'vld.product_updated_at' },
             { data: 'size', name: 's.name' },
             { data: 'purchase_qty', name: 'purchase_lines.quantity' },
             // { data: 'quantity_adjusted', name: 'purchase_lines.quantity_adjusted' },
