@@ -101,7 +101,7 @@
 				              	<td>{{ $sell_line->formatted_qty }} {{$unit_name}}</td>
 				              	
 				              	<td>
-						            <input type="text" name="products[{{$loop->index}}][quantity]" value="{{@format_quantity($sell_line->quantity_returned)}}"
+						            <input type="text" name="products[{{$loop->index}}][quantity]" value="{{@format_quantity($sell_line->quantity)}}"
 						            class="form-control input-sm input_number return_qty input_quantity"
 						            data-rule-abs_digit="{{$check_decimal}}" 
 						            data-msg-abs_digit="@lang('lang_v1.decimal_value_not_allowed')"

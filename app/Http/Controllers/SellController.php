@@ -275,11 +275,12 @@ class SellController extends Controller
                         }
 
                         $html .= '<li><a href="' . action('TransactionPaymentController@show', [$row->id]) . '" class="view_payment_modal"><i class="fa fa-money"></i> ' . __("purchase.view_payments") . '</a></li>';
+                        // <li><a href="' . url('sell-return/add/'.$row->id) . '"><i class="fa fa-undo"></i> ' . __("lang_v1.sell_return") . '</a></li>
 
                         if (auth()->user()->can("sell.create")) {
                             $html .= '<li><a href="' . action('SellController@duplicateSell', [$row->id]) . '"><i class="fa fa-copy"></i> ' . __("lang_v1.duplicate_sell") . '</a></li>
 
-                            <li><a href="' . url('sell-return/add/'.$row->id) . '"><i class="fa fa-undo"></i> ' . __("lang_v1.sell_return") . '</a></li>
+                            <li><a href="' . url('sell-return/add') . '"><i class="fa fa-undo"></i> ' . __("lang_v1.sell_return") . '</a></li>
 
                             <li><a href="' . action('SellPosController@showInvoiceUrl', [$row->id]) . '" class="view_invoice_url"><i class="fa fa-external-link"></i> ' . __("lang_v1.view_invoice_url") . '</a></li>';
                         }
