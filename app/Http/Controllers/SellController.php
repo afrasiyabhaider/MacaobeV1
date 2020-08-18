@@ -279,7 +279,7 @@ class SellController extends Controller
                         if (auth()->user()->can("sell.create")) {
                             $html .= '<li><a href="' . action('SellController@duplicateSell', [$row->id]) . '"><i class="fa fa-copy"></i> ' . __("lang_v1.duplicate_sell") . '</a></li>
 
-                            <li><a href="' . action('SellReturnController@add', [$row->id]) . '"><i class="fa fa-undo"></i> ' . __("lang_v1.sell_return") . '</a></li>
+                            <li><a href="' . url('sell-return/add/'.$row->id) . '"><i class="fa fa-undo"></i> ' . __("lang_v1.sell_return") . '</a></li>
 
                             <li><a href="' . action('SellPosController@showInvoiceUrl', [$row->id]) . '" class="view_invoice_url"><i class="fa fa-external-link"></i> ' . __("lang_v1.view_invoice_url") . '</a></li>';
                         }

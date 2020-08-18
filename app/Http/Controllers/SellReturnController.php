@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\BusinessLocation;
+use App\InvoiceScheme;
 use App\Transaction;
 use App\TaxRate;
 
@@ -212,13 +213,37 @@ class SellReturnController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function add($id)
+    public function add()
+    {
+        // return 'Hello';
+        if (!auth()->user()->can('sell.create')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
+        $business_id = request()->session()->get('user.business_id');
+
+         $invoice_scheme = InvoiceScheme::where('is_default',1)->first();
+
+        return view('sell_return.add')
+            ->with(compact('invoice_scheme'));
+    }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addWithId($id)
     {
         if (!auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
         }
-
+        
         $business_id = request()->session()->get('user.business_id');
+
+         $invoice_scheme = InvoiceScheme::where('is_default',1)->first();
+
+        // dd($pos_settings);
+
         //Check if subscribed or not
         if (!$this->moduleUtil->isSubscribed($business_id)) {
             return $this->moduleUtil->expiredResponse();
@@ -241,9 +266,63 @@ class SellReturnController extends Controller
 
             $sell->sell_lines[$key]->formatted_qty = $this->transactionUtil->num_f($value->quantity, false, null, true);
         }
+        // dd($sell->invoice_no);
 
-        return view('sell_return.add')
-            ->with(compact('sell','passValues'));
+        return view('sell_return.old_add')
+            ->with(compact('sell','passValues','invoice_scheme'));
+    }
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getInvoiceData($id)
+    {
+        if (!auth()->user()->can('sell.create')) {
+            abort(403, 'Unauthorized action.');
+        }
+        
+        $business_id = request()->session()->get('user.business_id');
+
+         $invoice_scheme = InvoiceScheme::where('is_default',1)->first();
+
+        // dd($pos_settings);
+
+        //Check if subscribed or not
+        if (!$this->moduleUtil->isSubscribed($business_id)) {
+            return $this->moduleUtil->expiredResponse();
+        }
+
+        $sell = Transaction::where('business_id', $business_id)
+                            ->with(['sell_lines', 'location', 'return_parent', 'contact', 'tax', 'sell_lines.sub_unit', 'sell_lines.product', 'sell_lines.product.unit'])
+                            ->where('invoice_no',$id)->first();
+        if(!$sell){
+            $output = ['success' => 0];
+            return $output;
+        }
+
+        $passValues['isAdjusted'] = false;
+        foreach ($sell->sell_lines as $key => $value) {
+            if (!empty($value->sub_unit_id)) {
+                $formated_sell_line = $this->transactionUtil->recalculateSellLineTotals($business_id, $value);
+                $sell->sell_lines[$key] = $formated_sell_line;
+            } 
+            if((int)$value['quantity_returned'] > 0 )
+            {
+                $passValues['isAdjusted'] = true;
+            }
+
+            $sell->sell_lines[$key]->formatted_qty = $this->transactionUtil->num_f($value->quantity, false, null, true);
+        }
+        // dd($invoice_scheme);
+
+        $returnHTML = view('sell_return.partials.invoice-result')
+        ->with(compact('sell','passValues','invoice_scheme'))->render();
+
+        return response()->json(array('success' => true, 'html'=>$returnHTML));
+
+        return view('sell_return.partials.invoice-result')
+            ->with(compact('sell','passValues','invoice_scheme'));
     }
 
     /**
@@ -257,6 +336,7 @@ class SellReturnController extends Controller
         if (!auth()->user()->can('sell.create')) {
             abort(403, 'Unauthorized action.');
         }
+        // dd($request->input('products'));
 
         try {
             $input = $request->except('_token');
@@ -364,11 +444,18 @@ class SellReturnController extends Controller
                 $RedirectURL = '<script>
                             window.location = "'.url('/pos/return/'.$input['transaction_id'].'/'.$ReturnProductsID).'";
                             </script>';
+                return redirect(url('/pos/return/'.$input['transaction_id'].'/'.$ReturnProductsID));
 
                 $output = ['success' => 1,
                             'msg' =>$RedirectURL
                             // ,'receipt' => $receipt
                         ];
+            }else{
+                $output = [
+                    'success' => 0,
+                    'msg' => __('No Product Selected')
+                ];
+                return redirect()->back()->with(['status' => $output]);
             }
         } catch (\Exception $e) {
             DB::rollBack();
@@ -377,7 +464,7 @@ class SellReturnController extends Controller
                 $msg = $e->getMessage();
             } else {
                 \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-                $msg = __('messages.something_went_wrong').' '."File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage();
+                $msg = __('messages.something_went_wrong').' '."File:" . $e->getFile(). "Line:" . $e->getLine(). " Message:" . $e->getMessage();
             }
 
             $output = ['success' => 0,

@@ -18,7 +18,8 @@
 	<div class="row">
 		<div class="@if(!empty($pos_settings['hide_product_suggestion']) && !empty($pos_settings['hide_recent_trans'])) col-md-10 col-md-offset-1 @else col-md-7 @endif col-sm-12">
 			<div class="box box-success">
-				<div class="box-header with-border">
+				<div class="box-header with-border" >
+					<div class="col-12" style="margin-bottom: 10px">
 					<h3 class="box-title">
 						Editing 
 						@if($transaction->status == 'draft' && $transaction->is_quotation == 1) 
@@ -29,10 +30,34 @@
 							Invoice 
 						@endif 
 					<span class="text-success">#{{$transaction->invoice_no}}</span> <i class="fa fa-keyboard-o hover-q text-muted" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="bottom" data-content="@include('sale_pos.partials.keyboard_shortcuts_details')" data-html="true" data-trigger="hover" data-original-title="" title=""></i></h3>
-					<div class="pull-right box-tools">
-                <a class="btn btn-success btn-sm" href="{{action('SellPosController@create')}}">
-                  <strong><i class="fa fa-plus"></i> POS</strong></a>
-              </div>
+					<div class="pull-right box-tools ">
+							{{-- onclick="openReturnWindow();" --}}
+							<a title="Return Sale" data-toggle="tooltip" data-placement="bottom" class="btn btn-danger btn-md pull-right" href="{{url('sell-return/add')}}" target="__blank">
+								<strong><i class="fa fa-undo"></i></strong>
+								Return
+							   {{-- <strong><i class="fa fa-asl-interpreting"></i></strong> --}}
+							   {{-- RETURN --}}
+						   </a>
+							<button type="button" onclick="openPopupWindow('/products/transfer');" title="Transfer Products" data-toggle="tooltip" data-placement="bottom" class="btn btn-warning pull-right" style="margin-right: 5px">
+								<strong><i class="fa fa-random fa-lg"></i></strong>
+								Transfer
+							</button>
+							<button type="button" title="Gift Card" data-toggle="tooltip" data-placement="bottom" class="btn btn-success pos_add_quick_product pull-right" data-href="{{action('GiftCardController@quickAdd')}}" data-container=".quick_add_product_modal" style="margin-right: 5px">
+								<i class="fa fa-archive fa-lg"></i>
+								Gift Card
+							</button>
+							<button type="button" title="Add Cupons" data-toggle="tooltip" data-placement="bottom" class=" btn btn-success pos_add_quick_product pull-right" data-href="{{action('CouponController@quickAdd')}}" data-container=".quick_add_product_modal" style="margin-right: 5px">
+								<i class="fa fa-calendar-check-o fa-lg"></i>
+								Cupon
+							</button>
+						<button type="button" title="Add Cupons" data-toggle="tooltip" data-placement="bottom" class=" btn btn-success pos_add_quick_product pull-right" datahref="{{action('SellPosController@create')}}" style="margin-right: 5px">
+
+							<strong>
+								<i class="fa fa-laptop"></i> 
+								POS
+							</strong>
+						</button>
+					</div>
 				</div>
 				<input type="hidden" id="item_addition_method" value="{{$business_details->item_addition_method}}">
 				{!! Form::open(['url' => action('SellPosController@returnCreate', [$transaction->id]), 'method' => 'post', 'id' => 'edit_pos_sell_form' ]) !!}

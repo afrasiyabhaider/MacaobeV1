@@ -24,12 +24,13 @@
 						<h3 class="box-title">POS Terminal <i class="fa fa-keyboard-o hover-q text-muted" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="bottom" data-content="@include('sale_pos.partials.keyboard_shortcuts_details')" data-html="true" data-trigger="hover" data-original-title="" title=""></i></h3>
 					</div>
 					<div>
-						<button type="button"  title="Return Sale" data-toggle="tooltip" data-placement="bottom"   class="btn btn-danger btn-md pull-right" onclick="openReturnWindow();">
+						{{-- onclick="openReturnWindow();" --}}
+						<a title="Return Sale" data-toggle="tooltip" data-placement="bottom" class="btn btn-danger btn-md pull-right" href="{{url('sell-return/add')}}" target="__blank">
 							<strong><i class="fa fa-undo"></i></strong>
 							Return
 						   {{-- <strong><i class="fa fa-asl-interpreting"></i></strong> --}}
 						   {{-- RETURN --}}
-					   </button>
+					   </a>
 						<button type="button" onclick="openPopupWindow('/products/transfer');" title="Transfer Products" data-toggle="tooltip" data-placement="bottom" class="btn btn-warning pull-right" style="margin-right: 5px">
 							<strong><i class="fa fa-random fa-lg"></i></strong>
 							Transfer

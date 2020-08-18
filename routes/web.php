@@ -309,10 +309,14 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::post('/import-opening-stock/store', 'ImportOpeningStockController@store');
 
     //Sell return
+    Route::get('/sell-return/add', 'SellReturnController@add');
     Route::resource('sell-return', 'SellReturnController');
     Route::get('sell-return/get-product-row', 'SellReturnController@getProductRow');
+    Route::get('/sell-return/add/{id}', 'SellReturnController@addWithId');
+    
+    Route::get('sell-return/invoice/{transaction_id}', 'SellReturnController@getInvoiceData');
+
     Route::get('/sell-return/print/{id}', 'SellReturnController@printInvoice');
-    Route::get('/sell-return/add/{id}', 'SellReturnController@add');
 
     //Backup
     Route::get('backup/download/{file_name}', 'BackUpController@download');
