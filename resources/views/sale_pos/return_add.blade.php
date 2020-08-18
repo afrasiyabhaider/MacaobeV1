@@ -19,7 +19,6 @@
 		<div class="@if(!empty($pos_settings['hide_product_suggestion']) && !empty($pos_settings['hide_recent_trans'])) col-md-10 col-md-offset-1 @else col-md-7 @endif col-sm-12">
 			<div class="box box-success">
 				<div class="box-header with-border" >
-					<div class="col-12" style="margin-bottom: 10px">
 					<h3 class="box-title">
 						Editing 
 						@if($transaction->status == 'draft' && $transaction->is_quotation == 1) 
@@ -29,7 +28,8 @@
 						@elseif($transaction->status == 'final') 
 							Invoice 
 						@endif 
-					<span class="text-success">#{{$transaction->invoice_no}}</span> <i class="fa fa-keyboard-o hover-q text-muted" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="bottom" data-content="@include('sale_pos.partials.keyboard_shortcuts_details')" data-html="true" data-trigger="hover" data-original-title="" title=""></i></h3>
+						<span class="text-success">#{{$transaction->invoice_no}}</span> <i class="fa fa-keyboard-o hover-q text-muted" aria-hidden="true" data-container="body" data-toggle="popover" data-placement="bottom" data-content="@include('sale_pos.partials.keyboard_shortcuts_details')" data-html="true" data-trigger="hover" data-original-title="" title=""></i>
+					</h3>
 					<div class="pull-right box-tools ">
 							{{-- onclick="openReturnWindow();" --}}
 							<a title="Return Sale" data-toggle="tooltip" data-placement="bottom" class="btn btn-danger btn-md pull-right" href="{{url('sell-return/add')}}" target="__blank">
