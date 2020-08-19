@@ -327,7 +327,8 @@ class ProductUtil extends Util
         $product = Product::find($product_id);
 
         //Check if stock is enabled or not.
-        if ($product->enable_stock == 1 && $qty_difference != 0) {
+        // && $qty_difference != 0
+        if ($product->enable_stock == 1 ) {
             $variation = Variation::where('id', $variation_id)
                 ->where('product_id', $product_id)
                 ->first();
@@ -356,11 +357,12 @@ class ProductUtil extends Util
             // $variation_location_d->transfered_from = 5;
             $variation_location_d->save();
 
+            // dd($this->num_uf($new_quantity, $number_format), $this->num_uf($old_quantity, $number_format),$new_quantity,$qty_difference,$variation_location_d);
             //TODO: Add quantity in products table
             // Product::where('id', $product_id)
             //     ->increment('total_qty_available', $qty_difference);
         }
-
+        // dd('Hello');
         return true;
     }
     public function updateProductQuantityInTransfer($location_id, $product_id, $variation_id, $new_quantity, $old_quantity = 0, $number_format = null, $uf_data = true,$transferFrom = 1)

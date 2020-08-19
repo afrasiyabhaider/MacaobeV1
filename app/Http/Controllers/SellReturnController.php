@@ -416,6 +416,13 @@ class SellReturnController extends Controller
                 foreach ($product_lines as $product_line) {
                     $returns[$product_line['sell_line_id']] = $product_line['quantity'];
                 }
+                /**
+                 * With below written code system was updating quantity for 
+                 * return 
+                 * 
+                 **/ 
+
+
                 foreach ($sell->sell_lines as $sell_line) {
                     if (array_key_exists($sell_line->id, $returns)) {
                         $multiplier = 1;
@@ -432,10 +439,10 @@ class SellReturnController extends Controller
                         $sell_line->save();
 
                         //update quantity sold in corresponding purchase lines
-                        $this->transactionUtil->updateQuantitySoldFromSellLine($sell_line, $quantity_formated, $quantity_before);
+                        // $this->transactionUtil->updateQuantitySoldFromSellLine($sell_line, $quantity_formated, $quantity_before);
 
                         // Update quantity in variation location details
-                        $this->productUtil->updateProductQuantity($sell_return->location_id, $sell_line->product_id, $sell_line->variation_id, $quantity_formated, $quantity_before);
+                        // $this->productUtil->updateProductQuantity($sell_return->location_id, $sell_line->product_id, $sell_line->variation_id, $quantity_formated, $quantity_before);
                     }
                 }
                 $receipt = $this->receiptContent($business_id, $sell_return->location_id, $sell_return->id);

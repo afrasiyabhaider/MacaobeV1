@@ -3339,8 +3339,11 @@ class TransactionUtil extends Util
     {
         
         $qty_difference = $this->num_uf($new_quantity) - $this->num_uf($old_quantity);
+
+        // dd($qty_difference);
         
-        if ($qty_difference != 0) {
+        if (true) {
+        // if ($qty_difference != 0) {
             $qty_left_to_update = $qty_difference;
             $sell_line_purchase_lines = TransactionSellLinesPurchaseLines::where('sell_line_id', $sell_line->id)->get();
 
@@ -3399,6 +3402,7 @@ class TransactionUtil extends Util
                 }
             }
         }
+        // dd($sell_line_purchase_lines);
     }
     public function Old_updateQuantitySoldFromSellLine($sell_line, $new_quantity, $old_quantity)
     {

@@ -1047,13 +1047,14 @@ class SellPosController extends Controller
                     $calTotal += (float) $tempProduct['unit_price_inc_tax'];
                     $tempProducts[] = $tempProduct;
                 }
-                if ($transaction['final_total'] < 0) {
-                    $output = [
-                        'success' => 0,
-                        'msg' => 'Your Total Amount is ' . $transaction['final_total'] . ' Cannot Be in Negative .Please Add More Product '
-                    ];
-                    return $output;
-                }
+                // if ($transaction['final_total'] < 0) {
+                //     // return $input;
+                //     $output = [
+                //         'success' => 0,
+                //         'msg' => 'Your Total Amount is ' . $transaction['final_total'] . ' Cannot Be in Negative .Please Add More Product '
+                //     ];
+                //     return $output;
+                // }
                 $input['products'] = $tempProducts;
 
                 $tempPayment = array();
@@ -1125,7 +1126,46 @@ class SellPosController extends Controller
                             if (!empty($product['base_unit_multiplier'])) {
                                 $decrease_qty = $decrease_qty * $product['base_unit_multiplier'];
                             }
+                            // dd($product);
+                            if($product['sell_line_note'] == 'return'){
+                                $sell_line = TransactionSellLine::find($product['transaction_sell_lines_id']);
+                                // return $sell_line;
 
+                                $multiplier = 1;
+                                if (!empty($sell_line->sub_unit)) {
+                                    $multiplier = $sell_line->sub_unit->base_unit_multiplier;
+                                }
+
+                                $quantity = $this->transactionUtil->num_uf($product['transaction_sell_lines_id']) * $multiplier;
+                                $quantity = $product['quantity'];
+
+                                $quantity_before = '0,00';
+                                // $quantity_before = $this->transactionUtil->num_f($sell_line->quantity_returned);
+
+                                $quantity_formated = $quantity;
+        
+                                $sell_line->quantity_returned = $quantity;
+                                $sell_line->save();
+        
+                                $sell = Transaction::where('business_id', $business_id)
+                                ->with(['sell_lines', 'sell_lines.sub_unit'])
+                                ->findOrFail($sell_line->transaction_id);
+
+                                // dd($sell_line, $quantity_formated, $quantity_before);
+
+                                //Check if any sell return exists for the sale
+                                $sell_return = Transaction::where('business_id', $business_id)
+                                        ->where('type', 'sell_return')
+                                        ->where('return_parent_id', $sell->id)
+                                        ->first();
+
+                                //update quantity sold in corresponding purchase lines
+                                $this->transactionUtil->updateQuantitySoldFromSellLine($sell_line, $quantity_formated, $quantity_before);
+                                // dd($sell_line->product_id);
+                                // Update quantity in variation location details
+                                $this->productUtil->updateProductQuantity($sell_return->location_id, $sell_line->product_id, $sell_line->variation_id, $quantity_formated, $quantity_before);
+                                // dd($sell_line);
+                            }
                             if ($product['unit_price_inc_tax'] > 0) {
                                 $this->productUtil->decreaseProductQuantity(
                                     $product['product_id'],
