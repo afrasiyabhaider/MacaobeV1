@@ -16,7 +16,12 @@
               {!! Form::open(['url' => action('ReportController@getStockReport'), 'method' => 'get', 'id' => 'product_sell_report_form' ]) !!}
                 <div class="col-md-3">
                     <div class="form-group">
-                    {!! Form::label('search_product', __('lang_v1.search_product') . ':') !!}
+
+                        <label>Puchasing Date</label>
+                        {!! Form::text('product_purchase_date_filter', null, ['placeholder' => __('lang_v1.select_a_date_range'), 'class' => 'form-control', 'id' => 'product_purchase_date_filter', 'readonly']); !!}
+                    </div>
+                    {{-- <div class="form-group">
+                        {!! Form::label('search_product', __('lang_v1.search_product') . ':') !!}
                         <div class="input-group">
                             <span class="input-group-addon">
                                 <i class="fa fa-search"></i>
@@ -24,7 +29,7 @@
                             <input type="hidden" value="" id="variation_id">
                             {!! Form::text('search_product', null, ['class' => 'form-control', 'id' => 'search_product', 'placeholder' => __('lang_v1.search_product_placeholder'), 'autofocus']); !!}
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
@@ -91,7 +96,9 @@
                                     <tr>
                                         <th>Image</th>
                                         <th>@lang('sale.product')</th>
+                                        <th>Size</th>
                                         <th>Refference</th>
+                                        <th>Purchase Date</th>
                                         {{-- <th>@lang('sale.customer_name')</th> --}}
                                         <th>Supplier</th>
                                         <th>@lang('sale.invoice_no')</th>
@@ -108,7 +115,7 @@
                                 </thead>
                                 <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="11">
+                                        <td colspan="13">
                                             <strong>@lang('sale.total'):</strong>
                                         </td>
                                         {{-- <td></td>
@@ -131,9 +138,10 @@
                                     <tr>
                                         <th>Image</th>
                                         <th>@lang('sale.product')</th>
+                                        <th>Purchase Date</th>
                                         <th>Reffernce</th>
-                                        <th>Barcode</th>
-                                        <th>@lang('messages.date')</th>
+                                        {{-- <th>Barcode</th>
+                                        <th>@lang('messages.date')</th> --}}
                                         <th>@lang('report.current_stock')</th>
                                         <th>@lang('report.total_unit_sold')</th>
                                         <th>@lang('sale.total')</th>
@@ -141,7 +149,7 @@
                                 </thead>
                                 <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="6"><strong>@lang('sale.total'):</strong></td>
+                                        <td colspan="5"><strong>@lang('sale.total'):</strong></td>
                                         <td id="footer_total_grouped_sold"></td>
                                         <td><span class="display_currency" id="footer_grouped_subtotal" data-currency_symbol ="true"></span></td>
                                     </tr>

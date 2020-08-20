@@ -691,6 +691,24 @@ $(document).ready(function() {
         $('#product_sr_date_filter').data('daterangepicker').setEndDate(moment());
     }
 
+    // Product Purchase Date
+    if ($('#product_purchase_date_filter').length == 1) {
+        $('#product_purchase_date_filter').daterangepicker(dateRangeSettings, function(start, end) {
+            $('#product_purchase_date_filter').val(
+                start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format)
+            );
+            product_sell_report.ajax.reload();
+            product_sell_grouped_report.ajax.reload();
+        });
+        $('#product_purchase_date_filter').on('cancel.daterangepicker', function(ev, picker) {
+            $('#product_purchase_date_filter').val('');
+            product_sell_report.ajax.reload();
+            product_sell_grouped_report.ajax.reload();
+        });
+        $('#product_purchase_date_filter').data('daterangepicker').setStartDate();
+        $('#product_purchase_date_filter').data('daterangepicker').setEndDate();
+    }
+
 
     product_sell_report = $('table#product_sell_report_table').DataTable({
         processing: true,
@@ -708,6 +726,14 @@ $(document).ready(function() {
             data: function(d) {
                 var start = '';
                 var end = '';
+                if ($('#product_purchase_date_filter').val()) {
+                    purchase_start = $('input#product_purchase_date_filter')
+                        .data('daterangepicker')
+                        .startDate.format('YYYY-MM-DD');
+                    purchase_end = $('input#product_purchase_date_filter')
+                        .data('daterangepicker')
+                        .endDate.format('YYYY-MM-DD');
+                }
                 if ($('#product_sr_date_filter').val()) {
                     start = $('input#product_sr_date_filter')
                         .data('daterangepicker')
@@ -716,6 +742,10 @@ $(document).ready(function() {
                         .data('daterangepicker')
                         .endDate.format('YYYY-MM-DD');
                 }
+
+                d.purchase_start_date = purchase_start;
+                d.purchase_end_date = purchase_end;
+
                 d.start_date = start;
                 d.end_date = end;
 
@@ -728,12 +758,15 @@ $(document).ready(function() {
         columns: [
             { data: 'image', name: 'products.image', searchable: false, orderable: false },
             { data: 'product_name', name: 'p.name' },
+            { data: 'size', name: 'size', searchable: false, orderable: false },
             { data: 'refference', name: 'p.refference' },
+            { data: 'product_updated_at', name: 'vlds.product_updated_at' },
+            // { data: 'purchase_date', name: 'purchase_date', searchable: false },
             // { data: 'customer', name: 'c.name' },
             { data: 'supplier_id', name: 'p.supplier_id' },
             { data: 'invoice_no', name: 't.invoice_no' },
             { data: 'transaction_date', name: 't.transaction_date' },
-            { data: 'current_stock', name: 'current_stock' },
+            { data: 'current_stock', name: 'current_stock', searchable: false, orderable: false },
             { data: 'original_amount', name: 'original_amount' },
             { data: 'unit_price', name: 'transaction_sell_lines.unit_price_before_discount' },
             { data: 'discount_amount', name: 'transaction_sell_lines.line_discount_amount' },
@@ -842,16 +875,17 @@ $(document).ready(function() {
                 d.end_date = end;
 
                 d.variation_id = $('#variation_id').val();
-                d.customer_id = $('select#customer_id').val();
+                d.supplier_id = $('select#supplier_id').val();
                 d.location_id = $('select#location_id').val();
             },
         },
         columns: [
             { data: 'image', name: 'products.image', searchable: false, orderable: false },
             { data: 'product_name', name: 'p.name' },
+            { data: 'product_updated_at', name: 'vlds.product_updated_at' },
             { data: 'refference', name: 'p.refference' },
-            { data: 'barcode', name: 'p.sku' },
-            { data: 'transaction_date', name: 't.transaction_date' },
+            // { data: 'barcode', name: 'p.sku' },
+            // { data: 'transaction_date', name: 't.transaction_date' },
             { data: 'current_stock', name: 'current_stock', searchable: false, orderable: false },
             { data: 'total_qty_sold', name: 'total_qty_sold', searchable: false },
             { data: 'subtotal', name: 'subtotal', searchable: false },

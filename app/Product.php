@@ -150,4 +150,8 @@ class Product extends Model
     {
         return $this->hasMany(SpecialCategoryProduct::class,'id','product_id');
     }
+    // public function variation_location_details()
+    // {
+    //     return $this->hasMany(VariationLocationDetails::class,'id','product_id');
+    // }
 }

@@ -2375,6 +2375,7 @@ class ReportController extends Controller
                 ->join('product_variations as pv', 'v.product_variation_id', '=', 'pv.id')
                 ->join('contacts as c', 't.contact_id', '=', 'c.id')
                 ->join('products as p', 'pv.product_id', '=', 'p.id')
+                ->leftjoin('variation_location_details as vlds', 'pv.product_id', '=', 'vlds.product_id')
                 // ->join('suppliers as s', 's.id','=','p.supplier_id')
                 ->leftjoin('tax_rates', 'transaction_sell_lines.tax_id', '=', 'tax_rates.id')
                 ->leftjoin('units as u', 'p.unit_id', '=', 'u.id')
@@ -2398,25 +2399,36 @@ class ReportController extends Controller
                     'transaction_sell_lines.unit_price_before_discount as unit_price',
                     'transaction_sell_lines.unit_price_inc_tax as unit_sale_price',
                     DB::raw("(SELECT SUM(vld.qty_available) FROM variation_location_details as vld WHERE vld.variation_id=v.id $vld_str) as current_stock"),
+                    'vlds.product_updated_at as product_updated_at',
                     'transaction_sell_lines.original_amount as original_amount',
                     DB::raw('(transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) as sell_qty'),
                     'transaction_sell_lines.line_discount_type as discount_type',
                     'transaction_sell_lines.line_discount_amount as discount_amount',
                     'transaction_sell_lines.item_tax',
+                    // "(SELECT vld.product_updated_at FROM variation_location_details as vld WHERE vld.variation_id=v.id $vld_str) as product_updated_at",
                     'tax_rates.name as tax',
                     'u.short_name as unit',
                     DB::raw('((transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) * transaction_sell_lines.unit_price_inc_tax) as subtotal')
                 )
-                ->orderBy('t.invoice_no','DESC')
+                ->orderBy('p.name','ASC')
+                // ->orderBy('t.invoice_no','DESC')
                 ->groupBy('transaction_sell_lines.id');
-
+            // dd($query->first());
             if (!empty($variation_id)) {
                 $query->where('transaction_sell_lines.variation_id', $variation_id);
             }
+            
             $start_date = $request->get('start_date');
             $end_date = $request->get('end_date');
             if (!empty($start_date) && !empty($end_date)) {
                 $query->whereBetween(DB::raw('date(transaction_date)'), [$start_date, $end_date]);
+            }
+
+            $purchase_start_date = $request->get('purchase_start_date');
+            $purchase_end_date = $request->get('purchase_end_date');
+
+            if (!empty($purchase_start_date) && !empty($purchase_end_date)) {
+                $query->whereBetween(DB::raw('date(vlds.product_updated_at)'), [$purchase_start_date, $purchase_end_date]);
             }
 
             $permitted_locations = auth()->user()->permitted_locations();
@@ -2448,6 +2460,12 @@ class ReportController extends Controller
 
                     return $product_name;
                 })
+                ->editColumn('product_updated_at',function($row){
+                    return Carbon::parse($row->product_updated_at)->format('d-M-Y H:i');
+                })
+                ->addColumn('size',function($row){
+                    return $row->product()->first()->sub_size()->first()['name'];
+                })
                  ->editColumn('invoice_no', function ($row) {
                      return '<a data-href="' . action('SellController@show', [$row->transaction_id])
                             . '" href="#" data-container=".view_modal" class="btn-modal">' . $row->invoice_no . '</a>';
@@ -2469,6 +2487,9 @@ class ReportController extends Controller
                          return '-';
                      }
                 })
+                // ->editColumn('purchase_date', function($row){
+                //     return Carbon::parse($row->purchase_date)->format('d-M-Y H:i');
+                // })
                 ->editColumn('transaction_date', function($row){
                     return Carbon::parse($row->transaction_date)->format('d-M-Y H:i');
                 })
@@ -2568,6 +2589,7 @@ class ReportController extends Controller
                 ->join('products as p', 'pv.product_id', '=', 'p.id')
                 // ->join('suppliers as s', 'p.supplier_id', '=', 's.id')
                 ->leftjoin('units as u', 'p.unit_id', '=', 'u.id')
+                ->leftjoin('variation_location_details as vlds', 'pv.product_id', '=', 'vlds.product_id')
                 ->where('t.business_id', $business_id)
                 ->where('t.type', 'sell')
                 ->where('t.status', 'final')
@@ -2577,6 +2599,7 @@ class ReportController extends Controller
                     'p.image as image',
                     'p.refference as refference',
                     'p.sku as barcode',
+                    'p.supplier_id as supplier',
                     'p.enable_stock',
                     'p.type as product_type',
                     'pv.name as product_variation',
@@ -2586,6 +2609,7 @@ class ReportController extends Controller
                     DB::raw('DATE_FORMAT(t.transaction_date, "%Y-%m-%d") as formated_date'),
                     DB::raw("(SELECT SUM(vld.qty_available) FROM variation_location_details as vld WHERE vld.variation_id=v.id $vld_str) as current_stock"),
                     DB::raw('SUM(transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) as total_qty_sold'),
+                    'vlds.product_updated_at as product_updated_at',
                     'u.short_name as unit',
                     DB::raw('SUM((transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) * transaction_sell_lines.unit_price_inc_tax) as subtotal')
                 )
@@ -2597,10 +2621,19 @@ class ReportController extends Controller
             if (!empty($variation_id)) {
                 $query->where('transaction_sell_lines.variation_id', $variation_id);
             }
+
+
             $start_date = $request->get('start_date');
             $end_date = $request->get('end_date');
             if (!empty($start_date) && !empty($end_date)) {
                 $query->whereBetween(DB::raw('date(transaction_date)'), [$start_date, $end_date]);
+            }
+
+            $purchase_start_date = $request->get('purchase_start_date');
+            $purchase_end_date = $request->get('purchase_end_date');
+
+            if (!empty($purchase_start_date) && !empty($purchase_end_date)) {
+                $query->whereBetween(DB::raw('date(vlds.product_updated_at)'), [$purchase_start_date, $purchase_end_date]);
             }
 
             $permitted_locations = auth()->user()->permitted_locations();
@@ -2612,9 +2645,9 @@ class ReportController extends Controller
                 $query->where('t.location_id', $location_id);
             }
 
-            $customer_id = $request->get('customer_id', null);
-            if (!empty($customer_id)) {
-                $query->where('t.contact_id', $customer_id);
+            $supplier_id = $request->get('supplier_id', null);
+            if (!empty($supplier_id)) {
+                $query->where('p.supplier_id', $supplier_id);
             }
 
             return Datatables::of($query)
@@ -2632,6 +2665,9 @@ class ReportController extends Controller
                 })
                 ->editColumn('image', function ($row) {
                     return '<div style="display: flex;"><img src="' . $row->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
+                })
+                ->editColumn('product_updated_at',function($row){
+                    return Carbon::parse($row->product_updated_at)->format('d-M-Y H:i');
                 })
                 ->editColumn('current_stock', function ($row) {
                     if ($row->enable_stock) {
