@@ -734,6 +734,7 @@ $(document).ready(function() {
                         .data('daterangepicker')
                         .endDate.format('YYYY-MM-DD');
                 }
+
                 if ($('#product_sr_date_filter').val()) {
                     start = $('input#product_sr_date_filter')
                         .data('daterangepicker')
@@ -758,22 +759,23 @@ $(document).ready(function() {
         columns: [
             { data: 'image', name: 'products.image', searchable: false, orderable: false },
             { data: 'product_name', name: 'p.name' },
-            { data: 'size', name: 'size', searchable: false, orderable: false },
             { data: 'refference', name: 'p.refference' },
-            { data: 'product_updated_at', name: 'vlds.product_updated_at' },
-            // { data: 'purchase_date', name: 'purchase_date', searchable: false },
-            // { data: 'customer', name: 'c.name' },
-            { data: 'supplier_id', name: 'p.supplier_id' },
-            { data: 'invoice_no', name: 't.invoice_no' },
-            { data: 'transaction_date', name: 't.transaction_date' },
+            { data: 'size', name: 'size', searchable: false, orderable: false },
             { data: 'current_stock', name: 'current_stock', searchable: false, orderable: false },
+            { data: 'sell_qty', name: 'transaction_sell_lines.quantity' },
+            { data: 'supplier_id', name: 'p.supplier_id' },
             { data: 'original_amount', name: 'original_amount' },
             { data: 'unit_price', name: 'transaction_sell_lines.unit_price_before_discount' },
-            { data: 'discount_amount', name: 'transaction_sell_lines.line_discount_amount' },
-            // { data: 'tax', name: 'tax_rates.name' },
             { data: 'unit_sale_price', name: 'transaction_sell_lines.unit_price_inc_tax' },
-            { data: 'sell_qty', name: 'transaction_sell_lines.quantity' },
+            { data: 'discount_amount', name: 'transaction_sell_lines.line_discount_amount' },
             { data: 'subtotal', name: 'subtotal', searchable: false },
+            { data: 'barcode', name: 'p.sku', searchable: false },
+            { data: 'transaction_date', name: 't.transaction_date' },
+            { data: 'product_updated_at', name: 'p.product_updated_at' },
+            { data: 'invoice_no', name: 't.invoice_no' },
+            // { data: 'purchase_date', name: 'purchase_date', searchable: false },
+            // { data: 'customer', name: 'c.name' },
+            // { data: 'tax', name: 'tax_rates.name' },
         ],
         fnDrawCallback: function(oSettings) {
             $('#footer_subtotal').text(
@@ -871,6 +873,17 @@ $(document).ready(function() {
                         .data('daterangepicker')
                         .endDate.format('YYYY-MM-DD');
                 }
+                if ($('#product_purchase_date_filter').val()) {
+                    purchase_start = $('input#product_purchase_date_filter')
+                        .data('daterangepicker')
+                        .startDate.format('YYYY-MM-DD');
+                    purchase_end = $('input#product_purchase_date_filter')
+                        .data('daterangepicker')
+                        .endDate.format('YYYY-MM-DD');
+                }
+                d.purchase_start_date = purchase_start;
+                d.purchase_end_date = purchase_end;
+
                 d.start_date = start;
                 d.end_date = end;
 
@@ -882,7 +895,7 @@ $(document).ready(function() {
         columns: [
             { data: 'image', name: 'products.image', searchable: false, orderable: false },
             { data: 'product_name', name: 'p.name' },
-            { data: 'product_updated_at', name: 'vlds.product_updated_at' },
+            // { data: 'product_updated_at', name: 'p.product_updated_at' },
             { data: 'refference', name: 'p.refference' },
             // { data: 'barcode', name: 'p.sku' },
             // { data: 'transaction_date', name: 't.transaction_date' },

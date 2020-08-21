@@ -57,7 +57,8 @@
                 <span >{{ $sell_line->unit_price_before_discount }}€</span>
             </td>
             <td>
-                <span class="display_currency" data-currency_symbol="true">{{ $sell_line->get_discount_amount() }}</span> @if($sell_line->line_discount_type == 'percentage') ({{$sell_line->line_discount_amount}}%) @endif
+                <span>{{ $sell_line->get_discount_amount() }} €</span> 
+                @if($sell_line->line_discount_type == 'percentage') ({{$sell_line->line_discount_amount}}%) @endif
             </td>
             <td>
                 <span >{{ $sell_line->item_tax }} €</span> 

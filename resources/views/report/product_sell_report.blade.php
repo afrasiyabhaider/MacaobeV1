@@ -98,24 +98,25 @@
                                         <th>@lang('sale.product')</th>
                                         <th>Size</th>
                                         <th>Refference</th>
-                                        <th>Purchase Date</th>
-                                        {{-- <th>@lang('sale.customer_name')</th> --}}
-                                        <th>Supplier</th>
-                                        <th>@lang('sale.invoice_no')</th>
-                                        <th>@lang('messages.date')</th>
                                         <th>Current Stock</th>
+                                        <th>Sold Quantity</th>
+                                        <th>Supplier</th>
                                         <th>Before Force Price</th>
                                         <th>@lang('sale.unit_price')</th>
-                                        <th>@lang('sale.discount')</th>
-                                        {{-- <th>@lang('sale.tax')</th> --}}
                                         <th>After Discount</th>
-                                        <th>@lang('sale.qty')</th>
+                                        <th>@lang('sale.discount')</th>
                                         <th>@lang('sale.total')</th>
+                                        <th>Barcode</th>
+                                        <th>@lang('messages.date')</th>
+                                        <th>Purchase Date</th>
+                                        {{-- <th>@lang('sale.customer_name')</th> --}}
+                                        <th>@lang('sale.invoice_no')</th>
+                                        {{-- <th>@lang('sale.tax')</th> --}}
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="13">
+                                        <td colspan="10">
                                             <strong>@lang('sale.total'):</strong>
                                         </td>
                                         {{-- <td></td>
@@ -124,6 +125,7 @@
                                         <td></td> --}}
                                         <td id="footer_total_sold"></td>
                                         <td><span class="display_currency" id="footer_subtotal" data-currency_symbol ="true"></span></td>
+                                        <td colspan="4"></td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -138,7 +140,7 @@
                                     <tr>
                                         <th>Image</th>
                                         <th>@lang('sale.product')</th>
-                                        <th>Purchase Date</th>
+                                        {{-- <th>Purchase Date</th> --}}
                                         <th>Reffernce</th>
                                         {{-- <th>Barcode</th>
                                         <th>@lang('messages.date')</th> --}}
@@ -149,7 +151,7 @@
                                 </thead>
                                 <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="5"><strong>@lang('sale.total'):</strong></td>
+                                        <td colspan="4"><strong>@lang('sale.total'):</strong></td>
                                         <td id="footer_total_grouped_sold"></td>
                                         <td><span class="display_currency" id="footer_grouped_subtotal" data-currency_symbol ="true"></span></td>
                                     </tr>

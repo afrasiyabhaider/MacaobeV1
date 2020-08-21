@@ -357,6 +357,9 @@ class ProductUtil extends Util
             // $variation_location_d->transfered_from = 5;
             $variation_location_d->save();
 
+            $product->product_updated_at = Carbon::now();
+            $product->save();
+
             // dd($this->num_uf($new_quantity, $number_format), $this->num_uf($old_quantity, $number_format),$new_quantity,$qty_difference,$variation_location_d);
             //TODO: Add quantity in products table
             // Product::where('id', $product_id)
@@ -408,6 +411,9 @@ class ProductUtil extends Util
             // $variation_location_d->transfered_from = 5;
             $variation_location_d->save();
 
+            $product->product_updated_at = Carbon::now();
+            $product->save();
+
             //TODO: Add quantity in products table
             // Product::where('id', $product_id)
             //     ->increment('total_qty_available', $qty_difference);
@@ -434,6 +440,7 @@ class ProductUtil extends Util
             $variation_location_d->location_id = $locations[$i];
             $variation_location_d->product_variation_id = $variation->product_variation_id;
             $variation_location_d->qty_available = 0;
+            $variation_location_d->product_updated_at = Carbon::now();
 
             $variation_location_d->save();
         }

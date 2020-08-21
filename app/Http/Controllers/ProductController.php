@@ -693,6 +693,7 @@ class ProductController extends Controller
             if (empty(trim($request->input('sku')))) {
                 $sku = $this->productUtil->generateProductSku($product->id);
                 $product->sku = $sku;
+                $product->product_updated_at = Carbon::now();
                 $product->save();
             }
 
@@ -1143,6 +1144,7 @@ class ProductController extends Controller
             $product->sub_size_id = $request->input('size');
             $product->sku = $request->input('sku');
             $product->description = $request->input('description');
+            $product->product_updated_at = Carbon::now();
 
             $product->save();
 
@@ -1260,6 +1262,7 @@ class ProductController extends Controller
             if (!empty($file_name)) {
                 $product->image = $file_name;
             }
+            $product->product_updated_at = Carbon::now();
 
             $product->save();
 
@@ -1405,6 +1408,8 @@ class ProductController extends Controller
             if (!empty($file_name)) {
                 $product->image = $file_name;
             }
+
+            $product->product_updated_at = Carbon::now();
 
             $product->save();
 
@@ -2161,6 +2166,7 @@ class ProductController extends Controller
             if (empty(trim($request->input('sku')))) {
                 $sku = $this->productUtil->generateProductSku($product->id);
                 $product->sku = $sku;
+                $product->product_updated_at = Carbon::now();
                 $product->save();
             }
 
@@ -2259,6 +2265,7 @@ class ProductController extends Controller
             if (empty(trim($request->input('sku')))) {
                 $sku = $this->productUtil->generateProductSku($product->id);
                 $product->sku = $sku;
+                $product->product_updated_at = Carbon::now();
                 $product->save();
             }
 
@@ -3101,6 +3108,9 @@ class ProductController extends Controller
                         $transfer_to_location->product_updated_at=Carbon::now();
                         $transfer_to_location->save();
 
+                        $product->product_updated_at=Carbon::now();
+                        $product->save();
+
                         //create transaction & purchase lines
                         DB::commit();
                     }
@@ -3404,6 +3414,7 @@ class ProductController extends Controller
                 if (isset($request->input('ref_description')[$i]) && !empty($request->input('ref_description')[$i])) {
                     $product->description = $request->input('ref_description')[$i];
                 }
+                $product->product_updated_at = Carbon::now();
 
                 $product->save();
 
