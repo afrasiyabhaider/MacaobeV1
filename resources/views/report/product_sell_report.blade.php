@@ -147,6 +147,7 @@
                                         <th>@lang('messages.date')</th> --}}
                                         <th>@lang('report.current_stock')</th>
                                         <th>@lang('report.total_unit_sold')</th>
+                                        <th>Sale Percentage</th>
                                         <th>@lang('sale.total')</th>
                                     </tr>
                                 </thead>
@@ -154,6 +155,7 @@
                                     <tr class="bg-gray font-17 footer-total text-center">
                                         <td colspan="4"><strong>@lang('sale.total'):</strong></td>
                                         <td id="footer_total_grouped_sold"></td>
+                                        <td></td>
                                         <td><span class="display_currency" id="footer_grouped_subtotal" data-currency_symbol ="true"></span></td>
                                     </tr>
                                 </tfoot>

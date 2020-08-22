@@ -2674,9 +2674,18 @@ class ReportController extends Controller
                     if ($row->enable_stock) {
                         return '<span data-is_quantity="true" class="display_currency current_stock" data-currency_symbol=false data-orig-value="' . (float) $row->current_stock . '" data-unit="' . $row->unit . '" >' . (float) $row->current_stock . '</span> ' . $row->unit;
                     } else {
-                        return '';
+                        return '-';
                     }
                 })
+                ->addColumn('sale_percentage',function($row){
+                    if($row->refference &&($row->total_qty_sold>0 || $row->current_stock > 0)){
+                        $percentage = ($row->total_qty_sold*100)/($row->total_qty_sold + $row->current_stock);
+    
+                        return $percentage.' %';
+                    }else{
+                        return '-';
+                    }
+                })  
                 ->editColumn('subtotal', function ($row) {
                     return '<span class="display_currency row_subtotal" data-currency_symbol = true data-orig-value="' . $row->subtotal . '">' . $row->subtotal . '</span>';
                 })

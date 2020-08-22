@@ -573,8 +573,9 @@ $(document).ready(function() {
             $('#product_pr_date_filter').val('');
             product_purchase_report.ajax.reload();
         });
-        $('#product_pr_date_filter').data('daterangepicker').setStartDate(moment());
-        $('#product_pr_date_filter').data('daterangepicker').setEndDate(moment());
+        $('#product_pr_date_filter').data('daterangepicker').setStartDate('08/01/2020');
+        $('#product_pr_date_filter').data('daterangepicker').setEndDate('08/31/2020');
+        // moment()
     }
     $(
         '#product_purchase_report_form #variation_id, #product_purchase_report_form #location_id, #product_purchase_report_form #supplier_id, #product_purchase_report_form #product_pr_date_filter'
@@ -623,6 +624,7 @@ $(document).ready(function() {
             { data: 'purchase_qty', name: 'purchase_lines.quantity' },
             // { data: 'quantity_adjusted', name: 'purchase_lines.quantity_adjusted' },
             { data: 'unit_purchase_price', name: 'purchase_lines.purchase_price_inc_tax' },
+            { data: 'available', name: 'available' },
             { data: 'subtotal', name: 'subtotal', searchable: false },
         ],
         fnDrawCallback: function(oSettings) {
@@ -901,6 +903,7 @@ $(document).ready(function() {
             // { data: 'transaction_date', name: 't.transaction_date' },
             { data: 'current_stock', name: 'current_stock', searchable: false, orderable: false },
             { data: 'total_qty_sold', name: 'total_qty_sold', searchable: false },
+            { data: 'sale_percentage', name: 'sale_percentage', searchable: false },
             { data: 'subtotal', name: 'subtotal', searchable: false },
         ],
         fnDrawCallback: function(oSettings) {
