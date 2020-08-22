@@ -2615,7 +2615,7 @@ class ReportController extends Controller
                     DB::raw('SUM((transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) * transaction_sell_lines.unit_price_inc_tax) as subtotal')
                 )
                 // ->groupBy('v.id')
-                ->orderBy('p.name','ASC')
+                ->orderBy('total_qty_sold','DESC')
                 ->groupBy('p.name');
                 // ->groupBy('formated_date');
 
@@ -2681,7 +2681,7 @@ class ReportController extends Controller
                     if($row->refference &&($row->total_qty_sold>0 || $row->current_stock > 0)){
                         $percentage = ($row->total_qty_sold*100)/($row->total_qty_sold + $row->current_stock);
     
-                        return $percentage.' %';
+                        return (int)$percentage.' %';
                     }else{
                         return '-';
                     }
