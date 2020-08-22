@@ -621,10 +621,10 @@ $(document).ready(function() {
             { data: 'location_name', name: 'bl.name' },
             { data: 'transaction_date', name: 'vld.product_updated_at' },
             { data: 'size', name: 's.name' },
-            { data: 'purchase_qty', name: 'purchase_lines.quantity' },
+            { data: 'purchase_price', name: 'purchase_price' },
             // { data: 'quantity_adjusted', name: 'purchase_lines.quantity_adjusted' },
             { data: 'unit_purchase_price', name: 'purchase_lines.purchase_price_inc_tax' },
-            { data: 'available', name: 'available' },
+            { data: 'purchase_qty', name: 'purchase_lines.quantity' },
             { data: 'subtotal', name: 'subtotal', searchable: false },
         ],
         fnDrawCallback: function(oSettings) {

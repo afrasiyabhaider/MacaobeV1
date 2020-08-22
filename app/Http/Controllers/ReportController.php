@@ -2140,7 +2140,10 @@ class ReportController extends Controller
                     'vld.product_updated_at as transaction_date',
                     'bl.name as location_name',
                     'purchase_lines.purchase_price_inc_tax as unit_purchase_price',
-                    DB::raw('(purchase_lines.quantity - purchase_lines.quantity_returned) as purchase_qty'),
+                    DB::raw('(SUM(vld.qty_available) - purchase_lines.quantity_returned) as purchase_qty'),
+                    DB::raw("(SELECT (SUM(vld.qty_available) -purchase_lines.quantity_returned) FROM variation_location_details as vld WHERE vld.variation_id=v.id $vld_str) as current_stock"),
+                    // DB::raw('(SUM(purchase_lines.quantity) - purchase_lines.quantity_returned) as purchase_qty'),
+                    'variations.default_purchase_price as purchase_price',
                     'purchase_lines.quantity_adjusted',
                     DB::raw('(purchase_lines.quantity* purchase_lines.purchase_price_inc_tax) as subtotal')
                 )
@@ -2214,6 +2217,9 @@ class ReportController extends Controller
                 ->editColumn('subtotal', function ($row) {
                     return '<span class="display_currency row_subtotal" data-currency_symbol=true data-orig-value="' . $row->subtotal . '">' . $row->subtotal . '</span>';
                 })
+                ->editColumn('purchase_price', function ($row) {
+                    return '<span class="display_currency" data-currency_symbol=true data-orig-value="' . $row->purchase_price . '">' . $row->purchase_price . '</span>';
+                })
                 ->editColumn('transaction_date', function ($row) {
                     return  Carbon::parse($row->transaction_date)->format('d-m-Y H:i');
                 })
@@ -2223,7 +2229,7 @@ class ReportController extends Controller
                 ->editColumn('unit_purchase_price', function ($row) {
                     return '<span class="display_currency" data-currency_symbol = true>' . $row->unit_purchase_price . '</span>';
                 })
-                ->rawColumns(['ref_no', 'unit_purchase_price', 'subtotal', 'purchase_qty', 'quantity_adjusted','image'])
+                ->rawColumns(['purchase_price','ref_no', 'unit_purchase_price', 'subtotal', 'purchase_qty', 'quantity_adjusted','image'])
                 ->make(true);
         }
 
@@ -2679,9 +2685,16 @@ class ReportController extends Controller
                 })
                 ->addColumn('sale_percentage',function($row){
                     if($row->refference &&($row->total_qty_sold>0 || $row->current_stock > 0)){
-                        $percentage = ($row->total_qty_sold*100)/($row->total_qty_sold + $row->current_stock);
-    
-                        return (int)$percentage.' %';
+                        $sum = $row->total_qty_sold + $row->current_stock;
+                        if($sum){
+                            $percentage = ($row->total_qty_sold*100)/$sum;
+        
+                            return (int)$percentage.' %';
+
+                        }else{
+        
+                            return '0 %';
+                        }
                     }else{
                         return '-';
                     }
