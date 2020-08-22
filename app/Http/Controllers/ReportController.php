@@ -2406,7 +2406,6 @@ class ReportController extends Controller
                     'transaction_sell_lines.line_discount_type as discount_type',
                     'transaction_sell_lines.line_discount_amount as discount_amount',
                     'transaction_sell_lines.item_tax',
-                    // "(SELECT vld.product_updated_at FROM variation_location_details as vld WHERE vld.variation_id=v.id $vld_str) as product_updated_at",
                     'tax_rates.name as tax',
                     'u.short_name as unit',
                     DB::raw('((transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) * transaction_sell_lines.unit_price_inc_tax) as subtotal')
@@ -2429,7 +2428,7 @@ class ReportController extends Controller
             $purchase_end_date = $request->get('purchase_end_date');
 
             if (!empty($purchase_start_date) && !empty($purchase_end_date)) {
-                $query->whereBetween(DB::raw('date(p.product_updated_at)'), [$purchase_start_date, $purchase_end_date]);
+                $query->whereBetween(DB::raw('date(product_updated_at)'), [$purchase_start_date, $purchase_end_date]);
             }
 
             $permitted_locations = auth()->user()->permitted_locations();
@@ -2488,9 +2487,9 @@ class ReportController extends Controller
                          return '-';
                      }
                 })
-                ->editColumn('product_updated_at', function($row){
-                    return Carbon::parse($row->product_updated_at)->format('d-M-Y H:i');
-                })
+                // ->editColumn('product_updated_at', function($row){
+                //     return Carbon::parse($row->product_updated_at)->format('d-M-Y H:i');
+                // })
                 ->editColumn('transaction_date', function($row){
                     return Carbon::parse($row->transaction_date)->format('d-M-Y H:i');
                 })
@@ -2586,11 +2585,11 @@ class ReportController extends Controller
                     '=',
                     'v.id'
                 )
+                // ->rightjoin('variation_location_details as vlds', 'v.id', '=', 'vlds.variation_id')
                 ->join('product_variations as pv', 'v.product_variation_id', '=', 'pv.id')
                 ->join('products as p', 'pv.product_id', '=', 'p.id')
                 // ->join('suppliers as s', 'p.supplier_id', '=', 's.id')
                 ->leftjoin('units as u', 'p.unit_id', '=', 'u.id')
-                // ->join('variation_location_details as vlds', 'pv.product_id', '=', 'vlds.product_id')
                 ->where('t.business_id', $business_id)
                 ->where('t.type', 'sell')
                 ->where('t.status', 'final')
@@ -2635,7 +2634,7 @@ class ReportController extends Controller
             $purchase_end_date = $request->get('purchase_end_date');
 
             if (!empty($purchase_start_date) && !empty($purchase_end_date)) {
-                $query->whereBetween(DB::raw('date(product_updated_at)'), [$purchase_start_date, $purchase_end_date]);
+                $query->whereBetween(DB::raw('date(p.product_updated_at)'), [$purchase_start_date, $purchase_end_date]);
             }
 
             $permitted_locations = auth()->user()->permitted_locations();

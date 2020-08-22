@@ -116,7 +116,7 @@
                                 </thead>
                                 <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="10">
+                                        <td colspan="5">
                                             <strong>@lang('sale.total'):</strong>
                                         </td>
                                         {{-- <td></td>
@@ -124,6 +124,7 @@
                                         <td id="footer_tax"></td>
                                         <td></td> --}}
                                         <td id="footer_total_sold"></td>
+                                        <td colspan="5"></td>
                                         <td><span class="display_currency" id="footer_subtotal" data-currency_symbol ="true"></span></td>
                                         <td colspan="4"></td>
                                     </tr>
