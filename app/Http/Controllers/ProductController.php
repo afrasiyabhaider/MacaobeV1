@@ -10,6 +10,7 @@ use App\Color;
 use App\Business;
 use App\BusinessLocation;
 use App\Category;
+use App\LocationTransferDetail;
 use App\Product;
 use App\ProductVariation;
 use App\PurchaseLine;
@@ -2850,12 +2851,12 @@ class ProductController extends Controller
                     }
                     $user_location_id = $request->input('current_location');
                 }
-                // dd($user_location_id);
                 $user_id = $request->session()->get('user.id');
-
+                
                 $selected_products = explode(',', $request->input('selected_products_bulkTransfer'));
                 $business_location_id = $request->input('bussiness_bulkTransfer');
                 $location_id = $business_location_id;
+                // dd($user_location_id,$location_id,$request->input());
                 // dd($selected_products);
                 foreach ($selected_products as $key => $objProduct) {
                     # code...
@@ -3110,6 +3111,23 @@ class ProductController extends Controller
 
                         $product->product_updated_at=Carbon::now();
                         $product->save();
+
+
+
+                    // New table for Purchase Report
+                    $location_transfer_detail = new LocationTransferDetail();
+                    $location_transfer_detail->variation_id = $objOldPurchaseLine->variation_id;
+                    $location_transfer_detail->product_id = $product->id;
+                    $location_transfer_detail->transfered_from = $user_location_id;
+                    // transfer to
+                    $location_transfer_detail->location_id = $location_id;
+
+                    $location_transfer_detail->product_variation_id = $transfer_to_location->product_variation_id;
+
+                    $location_transfer_detail->quantity = (float)$qtyForPurchaseLine;
+                    $location_transfer_detail->transfered_on = Carbon::now();
+
+                    $location_transfer_detail->save();
 
                         //create transaction & purchase lines
                         DB::commit();

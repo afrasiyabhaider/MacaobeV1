@@ -6,6 +6,7 @@ use App\Business;
 
 use App\BusinessLocation;
 use App\Discount;
+use App\LocationTransferDetail;
 use App\Product;
 use App\ProductRack;
 use App\ProductVariation;
@@ -403,6 +404,8 @@ class ProductUtil extends Util
                 $variation_location_d->qty_available = 0;
                 $variation_location_d->transfered_from = $transferFrom;
                 $variation_location_d->product_updated_at = Carbon::now();
+                
+                
             }
             
             $variation_location_d->qty_available += $qty_difference;
@@ -422,7 +425,7 @@ class ProductUtil extends Util
         return true;
     }
 
-    public function addProductFOrAllLocations($product_id, $variation_id)
+    public function addProductFOrAllLocations($product_id, $variation_id,$qty)
     {
 
         $product = Product::find($product_id);
@@ -433,6 +436,22 @@ class ProductUtil extends Util
                 ->first();
         $locations= BusinessLocation::whereNotIn('id',[1,2])->pluck('id');
         // dd($locations);
+
+        // New table for Purchase Report
+        $location_transfer_detail = new LocationTransferDetail();
+        $location_transfer_detail->variation_id = $variation->id;
+        $location_transfer_detail->product_id = $product_id;
+        $location_transfer_detail->location_id = 1;
+        $location_transfer_detail->transfered_from = 1;
+
+        $location_transfer_detail->product_variation_id = $variation->product_variation_id;
+
+        $location_transfer_detail->quantity = $qty;
+        $location_transfer_detail->transfered_on = Carbon::now();
+
+        $location_transfer_detail->save();
+
+
         for ($i=0; $i < count($locations); $i++) { 
             $variation_location_d = new VariationLocationDetails();
             $variation_location_d->variation_id = $variation->id;
@@ -443,6 +462,21 @@ class ProductUtil extends Util
             $variation_location_d->product_updated_at = Carbon::now();
 
             $variation_location_d->save();
+            
+            // New table for Purchase Report
+            $location_transfer_detail = new LocationTransferDetail();
+            $location_transfer_detail->variation_id = $variation->id;
+            $location_transfer_detail->product_id = $product_id;
+            $location_transfer_detail->location_id = $locations[$i];
+            $location_transfer_detail->transfered_from = 1;
+
+            $location_transfer_detail->product_variation_id = $variation->product_variation_id;
+
+            $location_transfer_detail->quantity = 0;
+            $location_transfer_detail->transfered_on = Carbon::now();
+
+            $location_transfer_detail->save();
+            
         }
     }
 
@@ -1112,7 +1146,7 @@ class ProductUtil extends Util
                     $purchase_lines[] = $purchase_line;
 
                     $this->updateProductQuantity($location_id, $product->id, $variation_id, $qty_formated);
-                    $this->addProductFOrAllLocations($product->id, $variation_id);
+                    $this->addProductFOrAllLocations($product->id, $variation_id,$qty);
                 }
                 //create transaction & purchase lines
                 if (!empty($purchase_lines)) {

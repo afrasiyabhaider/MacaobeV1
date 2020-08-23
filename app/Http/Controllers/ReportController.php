@@ -2122,7 +2122,8 @@ class ReportController extends Controller
                 ->join('suppliers as c', 'p.supplier_id', '=', 'c.id')
                 ->join('categories', 'p.category_id', '=', 'categories.id')
                 ->join('categories as sub_cat', 'p.sub_category_id', '=', 'sub_cat.id')
-                ->leftjoin('variation_location_details as vld', 'variations.id', '=', 'vld.variation_id')
+                ->join('location_transfer_details as vld', 'variations.id', '=', 'vld.variation_id')
+                // ->leftjoin('variation_location_details as vld', 'variations.id', '=', 'vld.variation_id')
                 ->join('product_variations as pv', 'variations.product_variation_id', '=', 'pv.id')
                 ->join('purchase_lines', 'p.id', '=', 'purchase_lines.product_id')
                 ->join('business_locations as bl', 'vld.location_id', '=', 'bl.id')
@@ -2137,18 +2138,18 @@ class ReportController extends Controller
                     's.name as size',
                     // 't.id as transaction_id',
                     'p.refference as ref_no',
-                    'vld.product_updated_at as transaction_date',
+                    'vld.transfered_on as transaction_date',
                     'bl.name as location_name',
                     'purchase_lines.purchase_price_inc_tax as unit_purchase_price',
-                    DB::raw('(SUM(vld.qty_available) - purchase_lines.quantity_returned) as purchase_qty'),
-                    DB::raw("(SELECT (SUM(vld.qty_available) -purchase_lines.quantity_returned) FROM variation_location_details as vld WHERE vld.variation_id=v.id $vld_str) as current_stock"),
+                    DB::raw('(purchase_lines.quantity - purchase_lines.quantity_returned) as purchase_qty'),
+                    // DB::raw("(SELECT (SUM(vld.qty_available) -purchase_lines.quantity_returned) FROM variation_location_details as vld WHERE vld.variation_id=v.id $vld_str) as current_stock"),
                     // DB::raw('(SUM(purchase_lines.quantity) - purchase_lines.quantity_returned) as purchase_qty'),
                     'variations.default_purchase_price as purchase_price',
                     'purchase_lines.quantity_adjusted',
-                    DB::raw('(purchase_lines.quantity* purchase_lines.purchase_price_inc_tax) as subtotal')
+                    DB::raw('(purchase_lines.quantity* variations.default_purchase_price) as subtotal')
                 )
                 // ->distinct('p.refference') 
-                ->orderBy('vld.product_updated_at','DESC')
+                ->orderBy('vld.transfered_on','DESC')
                 // ->distinct('ref_no')
                 // ->groupBy('p.refference');
                 ->groupBy('purchase_lines.product_id');
@@ -2161,9 +2162,9 @@ class ReportController extends Controller
             $end = $request->get('end_date');
             if (!empty($start) && !empty($end)) {
                 // dd($start,$end);
-                $query->whereDate('vld.product_updated_at', '>=', $start)
-                ->whereDate('vld.product_updated_at', '<=', $end);
-                // $query->whereBetween(DB::raw('date(transaction_date)'), [$start_date, $end_date]);
+                // $query->whereDate('vld.transfered_on', '>=', $start)
+                // ->whereDate('vld.transfered_on', '<=', $end);
+                $query->whereBetween(DB::raw('date(vld.transfered_on)'), [$start, $end]);
             }
 
             $permitted_locations = auth()->user()->permitted_locations();
