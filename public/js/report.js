@@ -609,7 +609,7 @@ $(document).ready(function() {
                 d.transfered_from = $('select#transfered_from').val();
             },
         },
-        pageLength: 100,
+        pageLength: -1,
         lengthMenu: [
             [20, 50, 70, 100, 300, 500, 1000, -1],
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
