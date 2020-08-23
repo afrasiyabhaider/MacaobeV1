@@ -2139,14 +2139,16 @@ class ReportController extends Controller
                     // 't.id as transaction_id',
                     'p.refference as ref_no',
                     'vld.transfered_on as transaction_date',
+                    'vld.transfered_from as transfered_from_id',
                     'bl.name as location_name',
                     'purchase_lines.purchase_price_inc_tax as unit_purchase_price',
-                    DB::raw('(purchase_lines.quantity - purchase_lines.quantity_returned) as purchase_qty'),
+                    DB::raw('(vld.quantity - purchase_lines.quantity_returned) as purchase_qty'),
+                    DB::raw("(SELECT bls.name FROM business_locations as bls WHERE vld.transfered_from=bls.id) as transfered_from"),
                     // DB::raw("(SELECT (SUM(vld.qty_available) -purchase_lines.quantity_returned) FROM variation_location_details as vld WHERE vld.variation_id=v.id $vld_str) as current_stock"),
                     // DB::raw('(SUM(purchase_lines.quantity) - purchase_lines.quantity_returned) as purchase_qty'),
                     'variations.default_purchase_price as purchase_price',
                     'purchase_lines.quantity_adjusted',
-                    DB::raw('(purchase_lines.quantity* variations.default_purchase_price) as subtotal')
+                    DB::raw('(vld.quantity* variations.default_purchase_price) as subtotal')
                 )
                 // ->distinct('p.refference') 
                 ->orderBy('vld.transfered_on','DESC')
@@ -2175,6 +2177,10 @@ class ReportController extends Controller
             $location_id = $request->get('location_id', null);
             if (!empty($location_id)) {
                 $query->where('vld.location_id', $location_id);
+            }
+            $transfered_from = $request->get('transfered_from', null);
+            if (!empty($transfered_from)) {
+                $query->where('vld.transfered_from', $transfered_from);
             }
 
             $supplier_id = $request->get('supplier_id', null);
@@ -2215,6 +2221,9 @@ class ReportController extends Controller
                 ->editColumn('quantity_adjusted', function ($row) {
                     return '<span data-is_quantity="true" class="display_currency quantity_adjusted" data-currency_symbol=false data-orig-value="' . (float) $row->quantity_adjusted . '" data-unit="' . $row->unit . '" >' . (float) $row->quantity_adjusted . '</span> ' . $row->unit;
                 })
+                // ->editColumn('transfered_from',function($row){
+                //     return $row->location_transfer_detail()->first();
+                // })
                 ->editColumn('subtotal', function ($row) {
                     return '<span class="display_currency row_subtotal" data-currency_symbol=true data-orig-value="' . $row->subtotal . '">' . $row->subtotal . '</span>';
                 })

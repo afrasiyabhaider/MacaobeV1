@@ -16,6 +16,15 @@
           {!! Form::open(['url' => action('ReportController@getStockReport'), 'method' => 'get', 'id' => 'product_purchase_report_form' ]) !!}
             <div class="col-md-3">
                 <div class="form-group">
+                    {!! Form::label('transfered_from', 'Transferd From'.':') !!}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-map-marker"></i>
+                        </span>
+                        {!! Form::select('transfered_from', $business_locations, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+                    </div>
+                </div>
+                {{-- <div class="form-group">
                 {!! Form::label('search_product', __('lang_v1.search_product') . ':') !!}
                     <div class="input-group">
                         <span class="input-group-addon">
@@ -24,7 +33,7 @@
                         <input type="hidden" value="" id="variation_id">
                         {!! Form::text('search_product', null, ['class' => 'form-control', 'id' => 'search_product', 'placeholder' => __('lang_v1.search_product_placeholder'), 'autofocus']); !!}
                     </div>
-                </div>
+                </div> --}}
             </div>
             <div class="col-md-3">
                 <div class="form-group">
@@ -71,8 +80,9 @@
                                 <th>@lang('sale.product')</th>
                                 <th>@lang('purchase.supplier')</th>
                                 <th>@lang('purchase.ref_no')</th>
-                                <th>Location</th>
-                                <th>@lang('messages.date')</th>
+                                <th>Transfered From</th>
+                                <th>Transfer Date</th>
+                                <th>Current Location</th>
                                 <th>Size</th>
                                 <th>Sale Price</th>
                                 <th>@lang('lang_v1.unit_perchase_price')</th>
@@ -83,7 +93,7 @@
                         </thead>
                         <tfoot>
                             <tr class="bg-gray font-17 footer-total text-center">
-                                <td colspan="7"><strong>@lang('sale.total'):</strong></td>
+                                <td colspan="8"><strong>@lang('sale.total'):</strong></td>
                                 <td></td>
                                 <td id="footer_total_adjusted"></td>
                                 <td id="footer_total_purchase"></td>

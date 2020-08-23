@@ -49,4 +49,9 @@ class Variation extends Model
     {
         return $this->hasMany(\App\VariationGroupPrice::class, 'variation_id');
     }
+    
+    public function location_transfer_detail()
+    {
+        return $this->hasOne(\App\LocationTransferDetail::class);
+    }
 }
