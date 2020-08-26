@@ -21,7 +21,7 @@
                         <span class="input-group-addon">
                             <i class="fa fa-map-marker"></i>
                         </span>
-                        {!! Form::select('transfered_from', $business_locations, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+                        {!! Form::select('transfered_from', $business_locations_all, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
                     </div>
                 </div>
                 {{-- <div class="form-group">
@@ -115,4 +115,7 @@
 
 @section('javascript')
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+    <script>
+        $("#transfered_from").val(1).trigger('change');
+    </script>
 @endsection

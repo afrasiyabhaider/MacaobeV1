@@ -438,18 +438,18 @@ class ProductUtil extends Util
         // dd($locations);
 
         // New table for Purchase Report
-        $location_transfer_detail = new LocationTransferDetail();
-        $location_transfer_detail->variation_id = $variation->id;
-        $location_transfer_detail->product_id = $product_id;
-        $location_transfer_detail->location_id = 1;
-        $location_transfer_detail->transfered_from = 1;
+        // $location_transfer_detail = new LocationTransferDetail();
+        // $location_transfer_detail->variation_id = $variation->id;
+        // $location_transfer_detail->product_id = $product_id;
+        // $location_transfer_detail->location_id = 1;
+        // $location_transfer_detail->transfered_from = 1;
 
-        $location_transfer_detail->product_variation_id = $variation->product_variation_id;
+        // $location_transfer_detail->product_variation_id = $variation->product_variation_id;
 
-        $location_transfer_detail->quantity = $qty;
-        $location_transfer_detail->transfered_on = Carbon::now();
+        // $location_transfer_detail->quantity = $qty;
+        // $location_transfer_detail->transfered_on = Carbon::now();
 
-        $location_transfer_detail->save();
+        // $location_transfer_detail->save();
 
 
         for ($i=0; $i < count($locations); $i++) { 

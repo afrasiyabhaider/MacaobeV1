@@ -2925,6 +2925,20 @@ class ProductController extends Controller
                             $after_transfer->update(['qty_available' => $new_qty]);
                             $after_transfer->update(['product_updated_at'=>Carbon::now()]);
                         }
+                        $location_transfer_detail = new LocationTransferDetail();
+                        $location_transfer_detail->variation_id = $objOldPurchaseLine->variation_id;
+                        $location_transfer_detail->product_id = $objOldPurchaseLine->product_id;
+                        $location_transfer_detail->transfered_from = $user_location_id;
+                        // transfer to
+                        $location_transfer_detail->location_id = $location_id;
+
+                        $location_transfer_detail->product_variation_id = $objOldPurchaseLine->variation_id;
+
+                        $location_transfer_detail->quantity = (float)$qtyForPurchaseLine;
+                        $location_transfer_detail->transfered_on = Carbon::now();
+
+                        $location_transfer_detail->save();
+
                         DB::commit();
                     } else {
                         DB::beginTransaction();
@@ -3114,22 +3128,23 @@ class ProductController extends Controller
 
 
 
-                    // New table for Purchase Report
-                    $location_transfer_detail = new LocationTransferDetail();
-                    $location_transfer_detail->variation_id = $objOldPurchaseLine->variation_id;
-                    $location_transfer_detail->product_id = $product->id;
-                    $location_transfer_detail->transfered_from = $user_location_id;
-                    // transfer to
-                    $location_transfer_detail->location_id = $location_id;
+                        // New table for Purchase Report
+                        $location_transfer_detail = new LocationTransferDetail();
+                        $location_transfer_detail->variation_id = $objOldPurchaseLine->variation_id;
+                        $location_transfer_detail->product_id = $product->id;
+                        $location_transfer_detail->transfered_from = $user_location_id;
+                        // transfer to
+                        $location_transfer_detail->location_id = $location_id;
 
-                    $location_transfer_detail->product_variation_id = $transfer_to_location->product_variation_id;
+                        $location_transfer_detail->product_variation_id = $transfer_to_location->product_variation_id;
 
-                    $location_transfer_detail->quantity = (float)$qtyForPurchaseLine;
-                    $location_transfer_detail->transfered_on = Carbon::now();
+                        $location_transfer_detail->quantity = (float)$qtyForPurchaseLine;
+                        $location_transfer_detail->transfered_on = Carbon::now();
 
-                    $location_transfer_detail->save();
+                        $location_transfer_detail->save();
 
                         //create transaction & purchase lines
+                        // dd($location_transfer_detail);
                         DB::commit();
                     }
                 }
