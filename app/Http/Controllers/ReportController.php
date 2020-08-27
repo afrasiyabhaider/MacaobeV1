@@ -1436,11 +1436,9 @@ class ReportController extends Controller
             ->labels($labels)
             ->elementLabel(__('report.total_unit_sold'));
 
-        $categories = Category::where('business_id', $business_id)
-            ->where('parent_id', 0)
-            ->pluck('name', 'id');
-        $brands = Brands::where('business_id', $business_id)
-            ->pluck('name', 'id');
+        $categories = Category::where('business_id', $business_id)->where('parent_id', 0)->pluck('name', 'id');
+
+        $brands = Brands::where('business_id', $business_id)->pluck('name', 'id');
 
         $suppliers = Supplier::forDropdown($business_id);
         $business_locations = BusinessLocation::forDropdown($business_id, true);
