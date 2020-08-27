@@ -805,12 +805,12 @@ class ProductUtil extends Util
                 $filters['purchse_end_date']
             ]);
         }else{
-            $start_week = Carbon::now()->addDays(-6);
-            $end_week = Carbon::now();
+            $start_year = Carbon::now()->startOfYear();
+            $now = Carbon::now();
 
             $query->whereBetween(DB::raw('date(p.product_updated_at)'), [
-                $start_week,
-                $end_week
+                $start_year,
+                $now
             ]);
         }
 
