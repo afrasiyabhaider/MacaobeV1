@@ -777,15 +777,40 @@ class ProductUtil extends Util
         if (!empty($filters['unit'])) {
             $query->where('p.unit_id', $filters['unit']);
         }
+        if (!empty($filters['supplier'])) {
+            $query->where('p.supplier_id', $filters['supplier']);
+        }
         if (!empty($filters['limit'])) {
             $query->limit($filters['limit']);
         } else {
-            $query->limit(5);
+            $query->limit(15);
         }
         if (!empty($filters['start_date']) && !empty($filters['end_date'])) {
             $query->whereBetween(DB::raw('date(transaction_date)'), [
                 $filters['start_date'],
                 $filters['end_date']
+            ]);
+        }else{
+            $start_week = Carbon::now()->addDays(-6);
+            $end_week = Carbon::now();
+
+            $query->whereBetween(DB::raw('date(transaction_date)'), [
+                $start_week,
+                $end_week
+            ]);
+        }
+        if (!empty($filters['purchase_start_date']) && !empty($filters['purchse_end_date'])) {
+            $query->whereBetween(DB::raw('date(p.product_updated_at)'), [
+                $filters['purchase_start_date'],
+                $filters['purchse_end_date']
+            ]);
+        }else{
+            $start_week = Carbon::now()->addDays(-6);
+            $end_week = Carbon::now();
+
+            $query->whereBetween(DB::raw('date(p.product_updated_at)'), [
+                $start_week,
+                $end_week
             ]);
         }
 

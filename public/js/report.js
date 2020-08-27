@@ -1,6 +1,12 @@
 $(document).ready(function() {
     //Purchase & Sell report
     //Date range as a button
+    $('#purchase_product_date_range').daterangepicker(dateRangeSettings, function(start, end) {
+        $('#purchase_product_date_range span').html(
+            start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format)
+        );
+        updatePurchaseSell();
+    });
     if ($('#purchase_sell_date_filter').length == 1) {
         $('#purchase_sell_date_filter').daterangepicker(dateRangeSettings, function(start, end) {
             $('#purchase_sell_date_filter span').html(
@@ -142,10 +148,14 @@ $(document).ready(function() {
     }
 
     if ($('#trending_product_date_range').length == 1) {
+        dateTo = moment().format('MM/DD/YYYY');
+        dateFrom = moment().subtract(6, 'd').format('MM/DD/YYYY');
         get_sub_categories();
         $('#trending_product_date_range').daterangepicker({
             ranges: ranges,
-            autoUpdateInput: false,
+            // autoUpdateInput: true,
+            startDate: dateFrom,
+            endDate: dateTo,
             locale: {
                 format: moment_date_format,
                 cancelLabel: LANG.clear,
@@ -156,12 +166,40 @@ $(document).ready(function() {
         $('#trending_product_date_range').on('apply.daterangepicker', function(ev, picker) {
             $(this).val(
                 picker.startDate.format(moment_date_format) +
-                ' ~ ' +
+                ' - ' +
                 picker.endDate.format(moment_date_format)
             );
         });
 
         $('#trending_product_date_range').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+        });
+    }
+    if ($('#purchase_product_date_range').length == 1) {
+        dateTo = moment().format('MM/DD/YYYY');
+        dateFrom = moment().subtract(6, 'd').format('MM/DD/YYYY');
+        get_sub_categories();
+        $('#purchase_product_date_range').daterangepicker({
+            ranges: ranges,
+            // autoUpdateInput: true,
+            // startDate: dateFrom,
+            // endDate: dateTo,
+            locale: {
+                format: moment_date_format,
+                cancelLabel: LANG.clear,
+                applyLabel: LANG.apply,
+                customRangeLabel: LANG.custom_range,
+            },
+        });
+        $('#purchase_product_date_range').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(
+                picker.startDate.format(moment_date_format) +
+                ' - ' +
+                picker.endDate.format(moment_date_format)
+            );
+        });
+
+        $('#purchase_product_date_range').on('cancel.daterangepicker', function(ev, picker) {
             $(this).val('');
         });
     }

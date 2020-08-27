@@ -1400,14 +1400,23 @@ class ReportController extends Controller
         }
 
         $business_id = $request->session()->get('user.business_id');
-        $filters = $request->only(['category', 'sub_category', 'brand', 'unit', 'limit', 'location_id']);
+        $filters = $request->only(['category', 'sub_category', 'brand', 'unit', 'limit', 'location_id','supplier']);
 
         $date_range = $request->input('date_range');
+        $purchase_date = $request->input('purchase_date');
 
         if (!empty($date_range)) {
-            $date_range_array = explode('~', $date_range);
+            $date_range_array = explode(' - ', $date_range);
+            // dd($date_range_array);
             $filters['start_date'] = $this->transactionUtil->uf_date(trim($date_range_array[0]));
             $filters['end_date'] = $this->transactionUtil->uf_date(trim($date_range_array[1]));
+        }
+
+        if (!empty($purchase_date)) {
+            $purchase_date_array = explode(' - ', $purchase_date);
+            // dd($date_range_array);
+            $filters['purchase_start_date'] = $this->transactionUtil->uf_date(trim($purchase_date_array[0]));
+            $filters['purchse_end_date'] = $this->transactionUtil->uf_date(trim($purchase_date_array[1]));
         }
 
         $products = $this->productUtil->getTrendingProducts($business_id, $filters);
@@ -1432,12 +1441,12 @@ class ReportController extends Controller
             ->pluck('name', 'id');
         $brands = Brands::where('business_id', $business_id)
             ->pluck('name', 'id');
-        $units = Unit::where('business_id', $business_id)
-            ->pluck('short_name', 'id');
+
+        $suppliers = Supplier::forDropdown($business_id);
         $business_locations = BusinessLocation::forDropdown($business_id, true);
 
         return view('report.trending_products')
-            ->with(compact('chart', 'categories', 'brands', 'units', 'business_locations'));
+            ->with(compact('chart', 'categories', 'brands', 'business_locations','suppliers'));
     }
 
     /**

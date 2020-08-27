@@ -38,14 +38,26 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
+                        {!! Form::label('supplier', __('product.supplier') . ':') !!}
+                        {!! Form::select('supplier', $suppliers, null, ['placeholder' => __('messages.all'), 'class' => 'form-control select2', 'style' => 'width:100%']); !!}
+                    </div>
+                </div>
+                {{-- <div class="col-md-3">
+                    <div class="form-group">
                         {!! Form::label('brand', __('product.brand') . ':') !!}
                         {!! Form::select('brand', $brands, null, ['placeholder' => __('messages.all'), 'class' => 'form-control select2', 'style' => 'width:100%']); !!}
                     </div>
-                </div>
-                <div class="col-md-3">
+                </div> --}}
+                {{-- <div class="col-md-3">
                     <div class="form-group">
                         {!! Form::label('unit', __('product.unit') . ':') !!}
                         {!! Form::select('unit', $units, null, ['placeholder' => __('messages.all'), 'class' => 'form-control select2', 'style' => 'width:100%']); !!}
+                    </div>
+                </div> --}}
+                <div class="col-md-3">
+                    <div class="form-group">
+                        {!! Form::label('purchase_product_date_range',__('Purchase Date') .  ':') !!}
+                        {!! Form::text('purchase_date', null, ['placeholder' => __('lang_v1.select_a_date_range'), 'class' => 'form-control', 'id' => 'purchase_product_date_range', 'readonly']); !!}
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -57,7 +69,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         {!! Form::label('limit', __('lang_v1.no_of_products') . ':') !!} @show_tooltip(__('tooltip.no_of_products_for_trending_products'))
-                        {!! Form::number('limit', 5, ['placeholder' => __('lang_v1.no_of_products'), 'class' => 'form-control', 'min' => 1]); !!}
+                        {!! Form::number('limit', 15, ['placeholder' => __('lang_v1.no_of_products'), 'class' => 'form-control', 'min' => 1]); !!}
                     </div>
                 </div>
                 <div class="col-sm-12">
