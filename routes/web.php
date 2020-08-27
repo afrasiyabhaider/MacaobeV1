@@ -389,6 +389,13 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('bookings/get-todays-bookings', 'Restaurant\BookingController@getTodaysBookings');
     Route::resource('bookings', 'Restaurant\BookingController');
 
+    /***
+     *  Data Migrating Routes
+     * 
+     ***/
+
+    Route::get('location-transfer-details/data','DataMigrationController@location_transfer_detail_data');
+
     // Website Routes
     Route::get('website/product/list', 'WebsiteController@index');
     Route::get('website/product/{id}/special_category', 'WebsiteController@specialCategoriesForm');
@@ -426,8 +433,8 @@ Route::get('config-cache', function () {
     \Artisan::call('config:cache');
     dd("Config Cached");
 });
-Route::get('optimize', function () {
-    \Artisan::call('optimize');
+Route::get('optimize-clear', function () {
+    \Artisan::call('optimize:clear');
     dd("Optimized");
 });
 Route::get('force-logout', function () {

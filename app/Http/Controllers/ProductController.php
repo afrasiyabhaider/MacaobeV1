@@ -1172,12 +1172,32 @@ class ProductController extends Controller
             } else {
                 $purchase_line->qty_available = $request->input('quantity');
             }
-
+            
             $purchase_line->save();
+
+            $message = 'Product Updated Successfully. ';
+            // Adding Product In Purchase Line
+            if ($request->input('new_quantity') && $purchase_line->location_id != 1) {
+                $location_transfer_detail = new LocationTransferDetail();
+                $location_transfer_detail->variation_id = $purchase_line->variation_id;
+                $location_transfer_detail->product_id = $purchase_line->product_id;
+                $location_transfer_detail->location_id = $purchase_line->location_id;
+                $location_transfer_detail->transfered_from = 1;
+
+                $location_transfer_detail->product_variation_id = $purchase_line->product_variation_id;
+
+                $location_transfer_detail->quantity = $purchase_line->quantity;
+                $location_transfer_detail->transfered_on = Carbon::now();
+
+                $location_transfer_detail->save();
+
+                $message .='Product added into Purchase Table as well for Location: '.$location_transfer_detail->location_id;
+            }
+
             DB::commit();
             $output = [
                 'success' => 1,
-                'msg' => __('product.product_updated_success')
+                'msg' => $message
             ];
         } catch (\Exception $e) {
             DB::rollBack();
