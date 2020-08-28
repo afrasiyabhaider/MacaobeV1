@@ -296,8 +296,8 @@
 
                 // $('#footer_tax').html(__sum_stock($('#product_sell_report_table'), 'tax', 'left'));
 
-                __currency_convert_recursively($('#trendig_product_sell_report_table'));
-                __currency_convert_recursively($('#top_subtotal'));
+                // __currency_convert_recursively($('#trendig_product_sell_report_table'));
+                // __currency_convert_recursively($('#top_subtotal'));
             },
         });
     </script>
