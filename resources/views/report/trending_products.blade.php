@@ -141,7 +141,7 @@
                             @foreach ($details as $key=>$detail)
                                 <tr>
                                     <td>
-                                        <div style="display: flex;"><img src="'{{$detail->image_url}}'" alt="Product image" class="product-thumbnail-small"></div>
+                                        <div style="display: flex;"><img src="{{$detail->image_url}}" alt="Product image" class="product-thumbnail-small"></div>
                                     </td>
                                     <td>
                                         @php
