@@ -13,6 +13,7 @@ use App\ProductVariation;
 use App\PurchaseLine;
 use App\TaxRate;
 use App\Transaction;
+use App\TransactionSellLine;
 use App\TransactionSellLinesPurchaseLines;
 use App\Unit;
 use App\Variation;
@@ -746,24 +747,30 @@ class ProductUtil extends Util
      */
     public function getTrendingProducts($business_id, $filters = [])
     {
-        $query = Transaction::join(
-            'transaction_sell_lines as tsl',
-            'transactions.id',
-            '=',
-            'tsl.transaction_id'
-        )
-            ->join('products as p', 'tsl.product_id', '=', 'p.id')
+        // $query = Transaction::join(
+        //         'transaction_sell_lines as tsl',
+        //         'transactions.id',
+        //         '=',
+        //         'tsl.transaction_id'
+        //     )
+        $query = TransactionSellLine::join(
+                'transactions as t',
+                'transaction_sell_lines.transaction_id',
+                '=',
+                't.id'
+            )
+            ->join('products as p', 'transaction_sell_lines.product_id', '=', 'p.id')
             ->leftjoin('units as u', 'u.id', '=', 'p.unit_id')
-            ->where('transactions.business_id', $business_id)
-            ->where('transactions.type', 'sell')
-            ->where('transactions.status', 'final');
+            ->where('t.business_id', $business_id)
+            ->where('t.type', 'sell')
+            ->where('t.status', 'final');
 
         $permitted_locations = auth()->user()->permitted_locations();
         if ($permitted_locations != 'all') {
-            $query->whereIn('transactions.location_id', $permitted_locations);
+            $query->whereIn('t.location_id', $permitted_locations);
         }
         if (!empty($filters['location_id'])) {
-            $query->where('transactions.location_id', $filters['location_id']);
+            $query->where('t.location_id', $filters['location_id']);
         }
         if (!empty($filters['category'])) {
             $query->where('p.category_id', $filters['category']);
@@ -786,7 +793,7 @@ class ProductUtil extends Util
             $query->limit(15);
         }
         if (!empty($filters['start_date']) && !empty($filters['end_date'])) {
-            $query->whereBetween(DB::raw('date(transaction_date)'), [
+            $query->whereBetween(DB::raw('date(t.transaction_date)'), [
                 $filters['start_date'],
                 $filters['end_date']
             ]);
@@ -794,7 +801,7 @@ class ProductUtil extends Util
             $start_week = Carbon::now()->addDays(-6);
             $end_week = Carbon::now();
 
-            $query->whereBetween(DB::raw('date(transaction_date)'), [
+            $query->whereBetween(DB::raw('date(t.transaction_date)'), [
                 $start_week,
                 $end_week
             ]);
@@ -825,11 +832,12 @@ class ProductUtil extends Util
         // $sell_return_query .= ')';
 
         $products = $query->select(
-            DB::raw("(SUM(tsl.quantity) - COALESCE(SUM(tsl.quantity_returned), 0)) as total_unit_sold"),
+            DB::raw("(SUM(transaction_sell_lines.quantity) - SUM(transaction_sell_lines.quantity_returned)) as total_unit_sold"),
             'p.name as product',
+            'p.id as product_id',
             'u.short_name as unit'
         )
-            ->groupBy('tsl.product_id')
+            ->groupBy('transaction_sell_lines.product_id')
             ->orderBy('total_unit_sold', 'desc')
             ->get();
         return $products;
