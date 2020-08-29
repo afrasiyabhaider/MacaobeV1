@@ -2811,6 +2811,7 @@ class ReportController extends Controller
                     'p.product_updated_at as product_updated_at',
                     'transaction_sell_lines.original_amount as original_amount',
                     DB::raw('(transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) as sell_qty'),
+                    DB::raw("(SELECT SUM(tsl.quantity) FROM transaction_sell_lines as tsl WHERE tsl.product_id = p.id) as total_sold"),
                     'transaction_sell_lines.line_discount_type as discount_type',
                     'transaction_sell_lines.line_discount_amount as discount_amount',
                     'transaction_sell_lines.item_tax',
@@ -2910,6 +2911,9 @@ class ReportController extends Controller
                 ->editColumn('subtotal', function ($row) {
                     return '<span class="display_currency row_subtotal" data-currency_symbol = true data-orig-value="' . $row->subtotal . '">' . $row->subtotal . '</span>';
                 })
+                ->editColumn('total_sold', function ($row) {
+                    return '<span  class="total_sold" data-currency_symbol=false data-orig-value="' . (int)$row->total_sold . '" data-unit="' . $row->unit . '" >' . (int) $row->total_sold . '</span> ' . $row->unit;
+                })
                 ->editColumn('unit_price', function ($row) {
                     return '<span class="display_currency" data-currency_symbol = true>' . $row->unit_price . '</span>';
                 })
@@ -2948,7 +2952,7 @@ class ReportController extends Controller
                         }
                     }
                 ])
-                ->rawColumns(['original_amount', 'refference', 'image', 'invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax', 'current_stock'])
+                ->rawColumns(['original_amount', 'refference', 'image', 'invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax', 'current_stock','total_sold'])
                 ->make(true);
         }
 
@@ -3017,6 +3021,7 @@ class ReportController extends Controller
                     DB::raw('DATE_FORMAT(t.transaction_date, "%Y-%m-%d") as formated_date'),
                     DB::raw("(SELECT SUM(vld.qty_available) FROM variation_location_details as vld WHERE vld.variation_id=v.id $vld_str) as current_stock"),
                     DB::raw('SUM(transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) as total_qty_sold'),
+                    DB::raw("(SELECT SUM(tsl.quantity) FROM transaction_sell_lines as tsl WHERE tsl.product_id = p.id) as total_sold"),
                     DB::raw('DATE_FORMAT(p.product_updated_at, "%Y-%m-%d %H:%i:%s") as product_updated_at'),
                     // 'p.product_updated_at as product_updated_at',
                     'u.short_name as unit',
@@ -3078,6 +3083,9 @@ class ReportController extends Controller
                 ->editColumn('product_updated_at', function ($row) {
                     return Carbon::parse($row->product_updated_at)->format('d-M-Y H:i');
                 })
+                ->editColumn('total_sold', function ($row) {
+                    return '<span  class="total_sold" data-currency_symbol=false data-orig-value="' . (int)$row->total_sold . '" data-unit="' . $row->unit . '" >' . (int) $row->total_sold . '</span> ' . $row->unit;
+                })
                 ->editColumn('current_stock', function ($row) {
                     if ($row->enable_stock) {
                         return '<span data-is_quantity="true" class="display_currency current_stock" data-currency_symbol=false data-orig-value="' . (float) $row->current_stock . '" data-unit="' . $row->unit . '" >' . (float) $row->current_stock . '</span> ' . $row->unit;
@@ -3112,7 +3120,7 @@ class ReportController extends Controller
                         }
                     }
                 ])
-                ->rawColumns(['image', 'current_stock', 'subtotal', 'total_qty_sold'])
+                ->rawColumns(['image','total_sold' ,'current_stock', 'subtotal', 'total_qty_sold'])
                 ->make(true);
         }
     }

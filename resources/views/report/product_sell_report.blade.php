@@ -98,6 +98,7 @@
                                         <th>@lang('sale.product')</th>
                                         <th>Size</th>
                                         <th>Refference</th>
+                                        <th>Toal Sold</th>
                                         <th>Current Stock</th>
                                         <th>Sold Quantity</th>
                                         <th>Supplier</th>
@@ -116,7 +117,7 @@
                                 </thead>
                                 <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="5">
+                                        <td colspan="6">
                                             <strong>@lang('sale.total'):</strong>
                                         </td>
                                         {{-- <td></td>
@@ -143,6 +144,7 @@
                                         <th>@lang('sale.product')</th>
                                         {{-- <th>Purchase Date</th> --}}
                                         <th>Reffernce</th>
+                                        <th>Total Sold</th>
                                         {{-- <th>Barcode</th>
                                         <th>@lang('messages.date')</th> --}}
                                         <th>@lang('report.current_stock')</th>
@@ -153,7 +155,7 @@
                                 </thead>
                                 <tfoot>
                                     <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="4"><strong>@lang('sale.total'):</strong></td>
+                                        <td colspan="5"><strong>@lang('sale.total'):</strong></td>
                                         <td id="footer_total_grouped_sold"></td>
                                         <td></td>
                                         <td><span class="display_currency" id="footer_grouped_subtotal" data-currency_symbol ="true"></span></td>
