@@ -1514,7 +1514,7 @@ class ReportController extends Controller
                 DB::raw("(SELECT SUM(vld.qty_available) FROM variation_location_details as vld WHERE vld.variation_id=transaction_sell_lines.variation_id $vld_str) as current_stock"),
                 'p.product_updated_at as product_updated_at',
                 'transaction_sell_lines.original_amount as original_amount',
-                DB::raw('(transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) as sell_qty'),
+                DB::raw('(SUM(transaction_sell_lines.quantity) - SUM(transaction_sell_lines.quantity_returned)) as sell_qty'),
                 'transaction_sell_lines.line_discount_type as discount_type',
                 'transaction_sell_lines.line_discount_amount as discount_amount',
                 'transaction_sell_lines.item_tax',
@@ -1522,7 +1522,8 @@ class ReportController extends Controller
                 'u.short_name as unit',
                 DB::raw('((transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) * transaction_sell_lines.unit_price_inc_tax) as subtotal')
             )
-            ->orderBy('sell_qty', 'DESC');
+            ->orderBy('sell_qty', 'DESC')
+            ->groupBy('p.sku');
             // ->orderBy('p.name', 'ASC')
             // ->orderBy('t.invoice_no','DESC')
             // ->groupBy('transaction_sell_lines.product_id');
