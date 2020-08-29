@@ -2,13 +2,14 @@
 <style type="text/css">
 	.pgBr{page-break-before: always;}
 	.barcode-img{
-		width: 90% !important;
-		margin-left: 5% !important;
+		width: 20% !important;
+		height: 100px !important;
+		margin-left: 50px !important;
 	}
 	.margin-top{
 		margin-top: 20px !important;
 		margin-right: 20px !important;
-		margin-left: 20px !important;
+		margin-left: 60px !important;
 	}
 </style>
 <div class="row">
@@ -20,12 +21,12 @@
 		<div class="col-xs-12">
 			{{-- Barcode --}}
 			<p>
-				<img class="center-block margin-top" src="data:image/png;base64,{{DNS1D::getBarcodePNG($receipt_details->invoice_no, 'C128', 4,40,array(55, 55, 55), false)}}">
+				<img class="center-block margin-top" src="data:image/png;base64,{{DNS1D::getBarcodePNG($receipt_details->invoice_no, 'C128', 2,40,array(55, 55, 55), false)}}">
 			</p>
 			@php
 				$barcodeArr = str_split($receipt_details->invoice_no, 1);
 			@endphp
-			<center class='barcodetc' style='word-spacing: 12px;font-size: 20px;font-weight: bold;'>
+			<center class='barcodetc' style='word-spacing: 5px;font-size: 20px;font-weight: bold;'>
 			    @foreach($barcodeArr As $b)
 					<span >{{$b}}</span>
 			    @endforeach
