@@ -110,8 +110,7 @@ $(document).ready(function() {
 
     __currency_convert_recursively($(document), $('input#p_symbol').length);
 
-    var buttons = [
-        {
+    var buttons = [{
             extend: 'copy',
             text: '<i class="fa fa-files-o" aria-hidden="true"></i> ' + LANG.copy,
             className: 'bg-info',
@@ -172,20 +171,20 @@ $(document).ready(function() {
     //Datables
     jQuery.extend($.fn.dataTable.defaults, {
         fixedHeader: true,
-        dom:
-            '<"row margin-bottom-12"<"col-sm-12"<"pull-left"l><"pull-right margin-left-10"B><"pull-right"fr>>>tip',
-        buttons: [
-            {
-                extend: 'collection',
-                text: '<i class="fa fa-list" aria-hidden="true"></i> &nbsp;' + LANG.action,
-                className: 'btn-info',
-                init: function(api, node, config) {
-                    $(node).removeClass('btn-default');
-                },
-                buttons: buttons,
+        dom: '<"row margin-bottom-12"<"col-sm-12"<"pull-left"l><"pull-right margin-left-10"B><"pull-right"fr>>>tip',
+        buttons: [{
+            extend: 'collection',
+            text: '<i class="fa fa-list" aria-hidden="true"></i> &nbsp;' + LANG.action,
+            className: 'btn-info',
+            init: function(api, node, config) {
+                $(node).removeClass('btn-default');
             },
+            buttons: buttons,
+        }, ],
+        aLengthMenu: [
+            [25, 50, 100, 200, 500, 1000, -1],
+            [25, 50, 100, 200, 500, 1000, LANG.all]
         ],
-        aLengthMenu: [[25, 50, 100, 200, 500, 1000, -1], [25, 50, 100, 200, 500, 1000, LANG.all]],
         iDisplayLength: 25,
         language: {
             search: LANG.search + ':',
@@ -262,15 +261,16 @@ var ranges = {};
 ranges[LANG.today] = [moment(), moment()];
 ranges[LANG.yesterday] = [moment().subtract(1, 'days'), moment().subtract(1, 'days')];
 ranges[LANG.last_7_days] = [moment().subtract(6, 'days'), moment()];
+ranges[LANG.last_15_days] = [moment().subtract(14, 'days'), moment()];
 ranges[LANG.last_30_days] = [moment().subtract(29, 'days'), moment()];
 ranges[LANG.this_month] = [moment().startOf('month'), moment().endOf('month')];
 ranges[LANG.last_month] = [
     moment()
-        .subtract(1, 'month')
-        .startOf('month'),
+    .subtract(1, 'month')
+    .startOf('month'),
     moment()
-        .subtract(1, 'month')
-        .endOf('month'),
+    .subtract(1, 'month')
+    .endOf('month'),
 ];
 ranges[LANG.this_financial_year] = [financial_year.start, financial_year.end];
 var dateRangeSettings = {

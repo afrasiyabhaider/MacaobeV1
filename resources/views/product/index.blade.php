@@ -191,6 +191,7 @@
                 } ],
                 // aaSorting: [14, 'desc'],
                 columns: [
+                        { data: 'DT_Row_Index',searchable:false,orderable:false},
                         { data: 'mass_delete',searchable:false,orderable:false},
                         { data: 'image', name: 'products.image',searchable:false,orderable:false  },
                         { data: 'product', name: 'products.name'  },

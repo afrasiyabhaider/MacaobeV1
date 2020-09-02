@@ -198,16 +198,16 @@
                     $('input#selected_products_bulkPrint_qty').val(print_qty);
                     $('input#printing_location_id').val($("#location_id").val());
                     $("#location_id").val(1);
-                    swal({
-                        title: LANG.sure,
-                        icon: "warning",
-                        buttons: true,
-                        dangerMode: true,
-                    }).then((willDelete) => {
-                        if (willDelete) {
+                    // swal({
+                    //     title: LANG.sure,
+                    //     icon: "warning",
+                    //     buttons: true,
+                    //     dangerMode: true,
+                    // }).then((willDelete) => {
+                    //     if (willDelete) {
                             $('form#bulkPrint_form').submit();
-                        }
-                    });
+                    //     }
+                    // });
                 } else{
                     $('input#selected_products_bulkPrint').val('');
                     swal('@lang("lang_v1.no_row_selected")');

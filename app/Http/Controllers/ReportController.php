@@ -2500,7 +2500,13 @@ class ReportController extends Controller
             if (!empty($location_id)) {
                 $vld_str = "AND vldd.location_id=$location_id";
             }
-
+            
+            $start = $request->get('start_date');
+            $end = $request->get('end_date');
+            if (!empty($start) && !empty($end)) {
+                $vld_str .= "AND Date(vldd.transfered_on)>='$start' AND Date(vldd.transfered_on)<='$end'";
+                // dd($vld_str,$start,$end);
+            }
             $query = $query = Variation::join('products as p', 'p.id', '=', 'variations.product_id')
                 ->join('units', 'p.unit_id', '=', 'units.id')
                 ->join('colors', 'p.color_id', '=', 'colors.id')
@@ -2508,7 +2514,7 @@ class ReportController extends Controller
                 ->leftjoin('suppliers as c', 'p.supplier_id', '=', 'c.id')
                 // ->join('categories', 'p.category_id', '=', 'categories.id')
                 // ->join('categories as sub_cat', 'p.sub_category_id', '=', 'sub_cat.id')
-                ->leftjoin('location_transfer_details as vld', 'variations.id', '=', 'vld.variation_id')
+                ->join('location_transfer_details as vld', 'variations.id', '=', 'vld.variation_id')
                 // ->leftjoin('variation_location_details as vld', 'variations.id', '=', 'vld.variation_id')
                 // ->join('product_variations as pv', 'variations.product_variation_id', '=', 'pv.id')
                 ->join('purchase_lines', 'p.id', '=', 'purchase_lines.product_id')
@@ -2530,7 +2536,8 @@ class ReportController extends Controller
                     'purchase_lines.purchase_price_inc_tax as unit_purchase_price',
                     // 'vld.quantity as purchase_qty',
                     DB::raw("(SELECT bls.name FROM business_locations as bls WHERE vld.transfered_from=bls.id) as transfered_from"),
-                    DB::raw("(SELECT SUM(vldd.quantity) FROM location_transfer_details as vldd WHERE vldd.product_id=p.id $vld_str) as purchase_qty"),
+                    // DB::raw("(SUM(vld.quantity)) as purchase_qty"),
+                    DB::raw("(SELECT SUM(vldd.quantity)  FROM location_transfer_details as vldd WHERE vldd.product_id=vld.product_id $vld_str) as purchase_qty"),
                     // DB::raw('(SUM(vld.quantity) - purchase_lines.quantity_returned) as purchase_qty'),
                     'variations.default_purchase_price as purchase_price',
                     'purchase_lines.quantity_adjusted',
@@ -2541,7 +2548,8 @@ class ReportController extends Controller
                 ->orderBy('vld.transfered_on', 'DESC')
                 // ->distinct('ref_no')
                 // ->groupBy('p.refference');
-                ->groupBy('purchase_lines.product_id');
+                ->groupBy('vld.product_id');
+                // ->groupBy('purchase_lines.product_id');
 
 
             if (!empty($variation_id)) {
@@ -2576,6 +2584,7 @@ class ReportController extends Controller
             }
 
             return Datatables::of($query)
+                ->addIndexColumn()
                 ->editColumn('product_name', function ($row) {
                     $product_name = $row->product_name;
                     if ($row->product_type == 'variable') {
@@ -2603,7 +2612,7 @@ class ReportController extends Controller
                     }
                 })
                 ->editColumn('purchase_qty', function ($row) {
-                    return '<span data-is_quantity="true" class=" purchase_qty" data-currency_symbol=false data-orig-value="' . (int) $row->purchase_qty . '" data-unit="' . $row->unit . '" >' . (int) $row->purchase_qty . '</span> ' . $row->unit;
+                    return '<span data-is_quantity="true" class=" purchase_qty" data-currency_symbol=false>' . (int) $row->purchase_qty . '</span> ' . $row->unit;
                 })
                 ->editColumn('quantity_adjusted', function ($row) {
                     return '<span data-is_quantity="true" class="display_currency quantity_adjusted" data-currency_symbol=false data-orig-value="' . (float) $row->quantity_adjusted . '" data-unit="' . $row->unit . '" >' . (float) $row->quantity_adjusted . '</span> ' . $row->unit;
@@ -2631,6 +2640,15 @@ class ReportController extends Controller
                 ->editColumn('unit_purchase_price', function ($row) {
                     return '<span class="display_currency" data-currency_symbol = true>' . $row->unit_purchase_price . '</span>';
                 })
+                ->setRowAttr([
+                    'data-href' => function ($row) {
+                        // if (auth()->user()->can("product.view")) {
+                            return  action('ProductController@view', [$row->product_id]);
+                        // } else {
+                        //     return '';
+                        // }
+                    }
+                ])
                 ->rawColumns(['purchase_price', 'ref_no', 'unit_purchase_price', 'subtotal', 'purchase_qty', 'quantity_adjusted', 'image'])
                 ->make(true);
         }

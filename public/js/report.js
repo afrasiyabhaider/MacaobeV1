@@ -92,8 +92,8 @@ $(document).ready(function() {
         },
         pageLength: 100,
         lengthMenu: [
-            [20, 50, 70, 100, 300, 500, 1000, -1],
-            [20, 50, 70, 100, 300, 500, 1000, 'All'],
+            [30, 40, 60, 80, 90, 100, 300, 500, 1000, -1],
+            [30, 40, 60, 80, 90, 100, 300, 500, 1000, 'All'],
         ],
         aaSorting: [2, 'asc'],
         columns: [
@@ -653,7 +653,7 @@ $(document).ready(function() {
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
         columns: [
-            { data: 'image', name: 'image', searchable: false },
+            { data: 'image', searchable: false },
             { data: 'product_name', name: 'p.name' },
             { data: 'supplier', name: 'c.name' },
             { data: 'ref_no', name: 'p.refference' },
@@ -664,7 +664,7 @@ $(document).ready(function() {
             // { data: 'quantity_adjusted', name: 'purchase_lines.quantity_adjusted' },
             { data: 'unit_purchase_price', name: 'purchase_lines.purchase_price_inc_tax' },
             { data: 'purchase_price', name: 'purchase_lines.purchase_price_inc_tax' },
-            { data: 'purchase_qty', name: 'vld.quantity' },
+            { data: 'purchase_qty', name: 'subtotal', searchable: false },
             { data: 'subtotal', name: 'subtotal', searchable: false },
         ],
         fnDrawCallback: function(oSettings) {

@@ -43,6 +43,7 @@
     <table class="table table-bordered table-striped ajax_view table-text-center" id="product_table">
         <thead>
             <tr>
+                <th>#</th>
                 <th>
                     <input type="checkbox" id="select-all-row">
                     Select All
