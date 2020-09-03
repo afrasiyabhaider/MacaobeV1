@@ -53,7 +53,12 @@
                         <span class="input-group-addon">
                             <i class="fa fa-map-marker"></i>
                         </span>
-                        {!! Form::select('location_id', $business_locations, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+                        @if (auth()->user()->permitted_locations() != 'all')
+                            {!! Form::select('location_id', $business_locations, null, ['class' => 'form-control select2', 'required']); !!}
+                            
+                        @else
+                            {!! Form::select('location_id', $business_locations, null, ['class' => 'form-control select2', 'placeholder' => __('messages.please_select'), 'required']); !!}
+                        @endif
                     </div>
                 </div>
             </div>

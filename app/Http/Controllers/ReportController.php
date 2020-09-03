@@ -2347,7 +2347,7 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function new_getproductPurchaseReport(Request $request)
+    public function getproductPurchaseReport(Request $request)
     {
         if (!auth()->user()->can('purchase_n_sell_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -2355,41 +2355,62 @@ class ReportController extends Controller
 
         $business_id = $request->session()->get('user.business_id');
         if ($request->ajax()) {
-            $query = $query = LocationTransferDetail::join('products as p', 'p.id', '=', 'location_transfer_details.product_id')
-                ->where('location_transfer_details.quantity', '>', 0)
-                ->join('variations', 'location_transfer_details.variation_id', 'variations.id')
-                ->join('suppliers as s', 'p.supplier_id', 's.id')
-                ->join('sizes as sz', 'p.sub_size_id', 'sz.id')
-                ->join('business_locations as bl', 'location_transfer_details.location_id', 'bl.id')
-                ->join('purchase_lines as pl', 'location_transfer_details.product_id', 'pl.product_id')
+            $variation_id = $request->get('variation_id', null);
+
+            $location_id = $request->get('location_id', null);
+
+            $vld_str = '';
+            if (!empty($location_id)) {
+                $vld_str = "AND vldd.location_id=$location_id";
+            }
+            
+            // $start = $request->get('start_date');
+            // $end = $request->get('end_date');
+            // if (!empty($start) && !empty($end)) {
+            //     $vld_str .= "AND Date(vldd.transfered_on)>='$start' AND Date(vldd.transfered_on)<='$end'";
+            //     // dd($vld_str,$start,$end);
+            // }
+            $query = $query = Variation::join('products as p', 'p.id', '=', 'variations.product_id')
+                ->join('units', 'p.unit_id', '=', 'units.id')
+                ->join('colors', 'p.color_id', '=', 'colors.id')
+                ->join('sizes as s', 'p.sub_size_id', '=', 's.id')
+                ->leftjoin('suppliers as c', 'p.supplier_id', '=', 'c.id')
+                ->join('location_transfer_details as vld', 'variations.id', '=', 'vld.variation_id')
+                ->join('purchase_lines', 'p.id', '=', 'purchase_lines.product_id')
+                ->join('business_locations as bl', 'vld.location_id', '=', 'bl.id')
                 ->select(
                     'p.id as product_id',
                     'p.name as product_name',
                     'p.image as image',
                     'p.type as product_type',
-                    's.name as supplier',
-                    'sz.name as size',
+                    'c.name as supplier',
+                    's.name as size',
                     // 't.id as transaction_id',
                     'p.refference as ref_no',
-                    'location_transfer_details.transfered_on as transaction_date',
-                    'location_transfer_details.transfered_from as transfered_from_id',
+                    'vld.transfered_on as transaction_date',
+                    'vld.transfered_from as transfered_from_id',
                     'bl.name as location_name',
-                    'pl.purchase_price_inc_tax as unit_purchase_price',
-                    'location_transfer_details.quantity as purchase_qty',
-                    DB::raw("(SELECT bls.name FROM business_locations as bls WHERE location_transfer_details.transfered_from=bls.id) as transfered_from"),
+                    'purchase_lines.purchase_price_inc_tax as unit_purchase_price',
+                    // 'vld.quantity as purchase_qty',
+                    DB::raw("(SELECT bls.name FROM business_locations as bls WHERE vld.transfered_from=bls.id) as transfered_from"),
+                    // DB::raw("(SUM(vld.quantity)) as purchase_qty"),
+                    DB::raw("(SELECT SUM(vldd.quantity)  FROM location_transfer_details as vldd WHERE vldd.product_id=vld.product_id $vld_str) as purchase_qty"),
+                    // DB::raw('(SUM(vld.quantity) - purchase_lines.quantity_returned) as purchase_qty'),
                     'variations.default_purchase_price as purchase_price',
-                    'pl.quantity_adjusted',
-                    DB::raw('(location_transfer_details.quantity* variations.default_purchase_price) as subtotal')
+                    'purchase_lines.quantity_adjusted',
+                    'variations.default_purchase_price as subtotal'
+                    // DB::raw('( SUM(vld.quantity) * variations.default_purchase_price) as subtotal')
                 )
                 // ->distinct('p.refference') 
-                ->orderBy('location_transfer_details.transfered_on', 'DESC')
+                ->orderBy('vld.transfered_on', 'DESC')
                 // ->distinct('ref_no')
                 // ->groupBy('p.refference');
-                ->groupBy('pl.product_id');
+                ->groupBy('vld.product_id');
+                // ->groupBy('purchase_lines.product_id');
 
 
             if (!empty($variation_id)) {
-                $query->where('pl.variation_id', $variation_id);
+                $query->where('purchase_lines.variation_id', $variation_id);
             }
             $start = $request->get('start_date');
             $end = $request->get('end_date');
@@ -2397,22 +2418,21 @@ class ReportController extends Controller
                 // dd($start,$end);
                 // $query->whereDate('vld.transfered_on', '>=', $start)
                 // ->whereDate('vld.transfered_on', '<=', $end);
-                $query->whereBetween(DB::raw('date(location_transfer_details.transfered_on)'), [$start, $end]);
+                $query->whereBetween(DB::raw('date(vld.transfered_on)'), [$start, $end]);
             }
 
             $permitted_locations = auth()->user()->permitted_locations();
             if ($permitted_locations != 'all') {
-                $query->whereIn('location_transfer_details.location_id', $permitted_locations);
+                $query->whereIn('vld.location_id', $permitted_locations);
             }
 
             $location_id = $request->get('location_id', null);
             if (!empty($location_id)) {
-                $query->where('location_transfer_details.location_id', $location_id);
+                $query->where('vld.location_id', $location_id);
             }
-
             $transfered_from = $request->get('transfered_from', null);
             if (!empty($transfered_from)) {
-                $query->where('location_transfer_details.transfered_from', $transfered_from);
+                $query->where('vld.transfered_from', $transfered_from);
             }
 
             $supplier_id = $request->get('supplier_id', null);
@@ -2420,9 +2440,8 @@ class ReportController extends Controller
                 $query->where('p.supplier_id', $supplier_id);
             }
 
-            // dd($query->get()->count());
-
             return Datatables::of($query)
+                ->addIndexColumn()
                 ->editColumn('product_name', function ($row) {
                     $product_name = $row->product_name;
                     if ($row->product_type == 'variable') {
@@ -2450,7 +2469,7 @@ class ReportController extends Controller
                     }
                 })
                 ->editColumn('purchase_qty', function ($row) {
-                    return '<span data-is_quantity="true" class=" purchase_qty" data-currency_symbol=false data-orig-value="' . (int) $row->purchase_qty . '" data-unit="' . $row->unit . '" >' . (int) $row->purchase_qty . '</span> ' . $row->unit;
+                    return '<span data-is_quantity="true" class=" purchase_qty" data-currency_symbol=false>' . (int) $row->purchase_qty . '</span> ' . $row->unit;
                 })
                 ->editColumn('quantity_adjusted', function ($row) {
                     return '<span data-is_quantity="true" class="display_currency quantity_adjusted" data-currency_symbol=false data-orig-value="' . (float) $row->quantity_adjusted . '" data-unit="' . $row->unit . '" >' . (float) $row->quantity_adjusted . '</span> ' . $row->unit;
@@ -2459,7 +2478,7 @@ class ReportController extends Controller
                 //     return $row->location_transfer_detail()->first();
                 // })
                 ->editColumn('subtotal', function ($row) {
-                    return '<span class="display_currency row_subtotal" data-currency_symbol=true data-orig-value="' . $row->subtotal . '">' . $row->subtotal . '</span>';
+                    return '<span class="display_currency row_subtotal" data-currency_symbol=true data-orig-value="' . $row->purchase_qty * $row->subtotal . '">' . $row->purchase_qty * $row->subtotal . '</span>';
                 })
                 ->editColumn('purchase_price', function ($row) {
                     return '<span class="display_currency" data-currency_symbol=true data-orig-value="' . $row->purchase_price . '">' . $row->purchase_price . '</span>';
@@ -2468,23 +2487,38 @@ class ReportController extends Controller
                     return  Carbon::parse($row->transaction_date)->format('d-m-Y H:i');
                 })
                 ->editColumn('location_name', function ($row) {
-                    return  $row->location_name;
+                    $location_id = request()->get('location_id', null);
+                    if ($location_id) {
+                        return  $row->location_name;
+                    } else {
+                        return 'All Locations';
+                    }
                 })
                 ->editColumn('unit_purchase_price', function ($row) {
                     return '<span class="display_currency" data-currency_symbol = true>' . $row->unit_purchase_price . '</span>';
                 })
+                ->setRowAttr([
+                    'data-href' => function ($row) {
+                        // if (auth()->user()->can("product.view")) {
+                            return  action('ProductController@view', [$row->product_id]);
+                        // } else {
+                        //     return '';
+                        // }
+                    }
+                ])
                 ->rawColumns(['purchase_price', 'ref_no', 'unit_purchase_price', 'subtotal', 'purchase_qty', 'quantity_adjusted', 'image'])
                 ->make(true);
         }
 
-        $business_locations = BusinessLocation::forDropdown($business_id);
+        $business_locations = BusinessLocation::notMainForDropdown($business_id);
+        $business_locations_all = BusinessLocation::forDropdown($business_id);
         $suppliers = Supplier::forDropdown($business_id);
         // $suppliers = Contact::suppliersDropdown($business_id);
 
         return view('report.product_purchase_report')
-            ->with(compact('business_locations', 'suppliers'));
+            ->with(compact('business_locations', 'suppliers', 'business_locations_all'));
     }
-    public function getproductPurchaseReport(Request $request)
+    public function working_getproductPurchaseReport(Request $request)
     {
         if (!auth()->user()->can('purchase_n_sell_report.view')) {
             abort(403, 'Unauthorized action.');
@@ -2501,12 +2535,12 @@ class ReportController extends Controller
                 $vld_str = "AND vldd.location_id=$location_id";
             }
             
-            $start = $request->get('start_date');
-            $end = $request->get('end_date');
-            if (!empty($start) && !empty($end)) {
-                $vld_str .= "AND Date(vldd.transfered_on)>='$start' AND Date(vldd.transfered_on)<='$end'";
-                // dd($vld_str,$start,$end);
-            }
+            // $start = $request->get('start_date');
+            // $end = $request->get('end_date');
+            // if (!empty($start) && !empty($end)) {
+            //     $vld_str .= "AND Date(vldd.transfered_on)>='$start' AND Date(vldd.transfered_on)<='$end'";
+            //     // dd($vld_str,$start,$end);
+            // }
             $query = $query = Variation::join('products as p', 'p.id', '=', 'variations.product_id')
                 ->join('units', 'p.unit_id', '=', 'units.id')
                 ->join('colors', 'p.color_id', '=', 'colors.id')
