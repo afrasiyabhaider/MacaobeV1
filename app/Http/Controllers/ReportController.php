@@ -2361,15 +2361,15 @@ class ReportController extends Controller
 
             $vld_str = '';
             if (!empty($location_id)) {
-                $vld_str = "AND vldd.location_id=$location_id";
+                $vld_str .= "AND vldd.location_id=$location_id ";
             }
             
-            // $start = $request->get('start_date');
-            // $end = $request->get('end_date');
-            // if (!empty($start) && !empty($end)) {
-            //     $vld_str .= "AND Date(vldd.transfered_on)>='$start' AND Date(vldd.transfered_on)<='$end'";
-            //     // dd($vld_str,$start,$end);
-            // }
+            $start = $request->get('start_date');
+            $end = $request->get('end_date');
+            if (!empty($start) && !empty($end)) {
+                $vld_str .= "AND Date(vldd.transfered_on)>='$start' AND Date(vldd.transfered_on)<='$end'";
+                // dd($vld_str,$start,$end);
+            }
             $query = $query = Variation::join('products as p', 'p.id', '=', 'variations.product_id')
                 ->join('units', 'p.unit_id', '=', 'units.id')
                 ->join('colors', 'p.color_id', '=', 'colors.id')
@@ -2394,7 +2394,7 @@ class ReportController extends Controller
                     // 'vld.quantity as purchase_qty',
                     DB::raw("(SELECT bls.name FROM business_locations as bls WHERE vld.transfered_from=bls.id) as transfered_from"),
                     // DB::raw("(SUM(vld.quantity)) as purchase_qty"),
-                    DB::raw("(SELECT SUM(vldd.quantity)  FROM location_transfer_details as vldd WHERE vldd.product_id=vld.product_id $vld_str) as purchase_qty"),
+                    DB::raw("(SELECT SUM(vldd.quantity)  FROM location_transfer_details as vldd WHERE vldd.product_id=p.id $vld_str) as purchase_qty"),
                     // DB::raw('(SUM(vld.quantity) - purchase_lines.quantity_returned) as purchase_qty'),
                     'variations.default_purchase_price as purchase_price',
                     'purchase_lines.quantity_adjusted',
@@ -2403,7 +2403,7 @@ class ReportController extends Controller
                 )
                 // ->distinct('p.refference') 
                 ->orderBy('vld.transfered_on', 'DESC')
-                // ->distinct('ref_no')
+                ->distinct('ref_no')
                 // ->groupBy('p.refference');
                 ->groupBy('vld.product_id');
                 // ->groupBy('purchase_lines.product_id');
@@ -2440,6 +2440,7 @@ class ReportController extends Controller
                 $query->where('p.supplier_id', $supplier_id);
             }
 
+            // dd($query->toSql());
             return Datatables::of($query)
                 ->addIndexColumn()
                 ->editColumn('product_name', function ($row) {
@@ -2447,7 +2448,7 @@ class ReportController extends Controller
                     if ($row->product_type == 'variable') {
                         $product_name .= ' - ' . $row->product_variation . ' - ' . $row->variation_name;
                     }
-
+  
                     return $product_name;
                 })
                 ->editColumn('ref_no', function ($row) {
@@ -2469,7 +2470,7 @@ class ReportController extends Controller
                     }
                 })
                 ->editColumn('purchase_qty', function ($row) {
-                    return '<span data-is_quantity="true" class=" purchase_qty" data-currency_symbol=false>' . (int) $row->purchase_qty . '</span> ' . $row->unit;
+                    return '<span data-is_quantity="true" class="display_currency quantity_adjusted" data-currency_symbol=false data-orig-value="' . (float) $row->purchase_qty . '" data-unit="' . $row->unit . '" >' . (float) $row->purchase_qty . '</span> '.$row->unit;
                 })
                 ->editColumn('quantity_adjusted', function ($row) {
                     return '<span data-is_quantity="true" class="display_currency quantity_adjusted" data-currency_symbol=false data-orig-value="' . (float) $row->quantity_adjusted . '" data-unit="' . $row->unit . '" >' . (float) $row->quantity_adjusted . '</span> ' . $row->unit;
