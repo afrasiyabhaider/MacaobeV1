@@ -1182,6 +1182,7 @@ class ProductController extends Controller
                 $location_transfer_detail = new LocationTransferDetail();
                 $location_transfer_detail->variation_id = $purchase_line->variation_id;
                 $location_transfer_detail->product_id = $purchase_line->product_id;
+                $location_transfer_detail->product_refference = $product->refference;
                 $location_transfer_detail->location_id = $purchase_line->location_id;
                 $location_transfer_detail->transfered_from = 1;
 
@@ -2946,9 +2947,12 @@ class ProductController extends Controller
                             $after_transfer->update(['qty_available' => $new_qty]);
                             $after_transfer->update(['product_updated_at'=>Carbon::now()]);
                         }
+                        $ref = Product::find($objOldPurchaseLine->product_id)->refference;
+                        
                         $location_transfer_detail = new LocationTransferDetail();
                         $location_transfer_detail->variation_id = $objOldPurchaseLine->variation_id;
                         $location_transfer_detail->product_id = $objOldPurchaseLine->product_id;
+                        $location_transfer_detail->product_refference = $ref;
                         $location_transfer_detail->transfered_from = $user_location_id;
                         // transfer to
                         $location_transfer_detail->location_id = $location_id;
@@ -3150,9 +3154,12 @@ class ProductController extends Controller
 
 
                         // New table for Purchase Report
+                        $ref = Product::find($objOldPurchaseLine->product_id)->refference;
+                        
                         $location_transfer_detail = new LocationTransferDetail();
                         $location_transfer_detail->variation_id = $objOldPurchaseLine->variation_id;
                         $location_transfer_detail->product_id = $product->id;
+                        $location_transfer_detail->product_refference = $ref;
                         $location_transfer_detail->transfered_from = $user_location_id;
                         // transfer to
                         $location_transfer_detail->location_id = $location_id;

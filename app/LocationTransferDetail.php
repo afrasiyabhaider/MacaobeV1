@@ -21,4 +21,9 @@ class LocationTransferDetail extends Model
     {
         return $this->hasOne(\App\BusinessLocation::class, 'transfered_from');
     }
+
+    public function product()
+    {
+        return $this->hasMany(App\Product::class,'product_id');
+    }
 }

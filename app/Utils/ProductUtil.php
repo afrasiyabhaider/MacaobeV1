@@ -465,9 +465,11 @@ class ProductUtil extends Util
             $variation_location_d->save();
             
             // New table for Purchase Report
+            $ref = Product::find($product_id)->refference;
             $location_transfer_detail = new LocationTransferDetail();
             $location_transfer_detail->variation_id = $variation->id;
             $location_transfer_detail->product_id = $product_id;
+            $location_transfer_detail->product_refference = $ref;
             $location_transfer_detail->location_id = $locations[$i];
             $location_transfer_detail->transfered_from = 1;
 
