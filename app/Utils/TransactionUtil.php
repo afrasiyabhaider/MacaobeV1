@@ -492,6 +492,7 @@ class TransactionUtil extends Util
                 $this->editPaymentLine($payment, $transaction, $uf_data);
             } else {
                 $payment_amount = $uf_data ? $this->num_uf($payment['amount']) : $payment['amount'];
+                // dd($payments);
                 //If amount is 0 then skip.
                 // if ($payment_amount != 0) {
                 if (true) {

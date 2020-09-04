@@ -405,7 +405,6 @@ class SellReturnController extends Controller
                 } else {
                     $sell_return->update($sell_return_data);
                 }
-
                 //Update payment status
                 $this->transactionUtil->updatePaymentStatus($sell_return->id, $sell_return->final_total);
 

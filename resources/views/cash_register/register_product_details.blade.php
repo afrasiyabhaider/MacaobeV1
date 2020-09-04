@@ -29,10 +29,11 @@
           </td>
           <td>
             <span class="display_currency" data-currency_symbol="true">
-              {{$detail->total_amount}}
+              {{$detail->final_total}}
             </span>
+          
             @php
-              $total_amount += $detail->total_amount;
+              $total_amount += $detail->final_total;
             @endphp
           </td>
         </tr>

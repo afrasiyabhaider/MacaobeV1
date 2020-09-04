@@ -218,7 +218,8 @@ class CashRegisterController extends Controller
 
         $card_id = $payment_methods->where('method','card')->unique('created_at')->pluck('transaction_id');
         // $card = $query->sum('final_total');
-        $card = TransactionSellLine::whereIn('transaction_id',$card_id)->get()->sum('unit_price');
+        $card = Transaction::whereIn('id',$card_id)->get()->sum('final_total');
+        // $card = TransactionSellLine::whereIn('transaction_id',$card_id)->get()->sum('unit_price');
         // $card = $payment_methods->where('method','card')->unique('created_at')->sum('amount');
 
         // $cash_in_hand = CashRegisterTransaction::where('transaction_type','initial')->where('amount','>',0)->orderBy('id','DESC')->first()->amount;

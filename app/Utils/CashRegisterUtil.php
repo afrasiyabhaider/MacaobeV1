@@ -307,7 +307,8 @@ class CashRegisterUtil extends Util
                 ->select(
                     'B.name as brand_name',
                     DB::raw('SUM(TSL.quantity) as total_quantity'),
-                    DB::raw('SUM(TSL.unit_price_inc_tax*TSL.quantity) as total_amount')
+                    DB::raw('SUM(TSL.unit_price_inc_tax*TSL.quantity) as total_amount'),
+                    DB::raw('SUM(transactions.final_total) as final_total')
                 )
                 ->orderByRaw('CASE WHEN brand_name IS NULL THEN 2 ELSE 1 END, brand_name')
                 ->get();
