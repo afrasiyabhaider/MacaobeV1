@@ -123,7 +123,7 @@
     <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
     <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
     <script>
-        $("#transfered_from").val(1).trigger('change');
+        // $("#transfered_from").val(1).trigger('change');
         $(document).on('shown.bs.modal', 'div.view_product_modal, div.view_modal', function(){
             __currency_convert_recursively($(this));
         });
