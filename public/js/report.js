@@ -660,7 +660,7 @@ $(document).ready(function() {
             { data: 'transfered_from', name: 'vld.transfered_from' },
             { data: 'transaction_date', name: 'vld.transfered_on' },
             { data: 'location_name', name: 'bl.name' },
-            { data: 'size', name: 's.name' },
+            // { data: 'size', name: 's.name' },
             // { data: 'quantity_adjusted', name: 'purchase_lines.quantity_adjusted' },
             { data: 'unit_purchase_price', name: 'purchase_lines.purchase_price_inc_tax' },
             { data: 'purchase_price', name: 'purchase_lines.purchase_price_inc_tax' },

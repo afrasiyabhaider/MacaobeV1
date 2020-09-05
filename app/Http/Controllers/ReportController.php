@@ -840,7 +840,13 @@ class ReportController extends Controller
                     return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $total_transfered . '" data-unit="' . $row->unit . '" >' . $total_transfered . '</span> ' . $row->unit;
                 })
                 ->editColumn('location_name', function ($row) {
-                    return '<span max="' . $row->location_id . '" id="location_' . $row->product_id . '">' . $row->location_name . '</span> ';
+                    // return '<span max="' . $row->location_id . '" id="location_' . $row->product_id . '">' . $row->location_name . '</span> ';
+                    $location_id = request()->get('location_id', null);
+                    if ($location_id) {
+                        return  $row->location_name;
+                    } else {
+                        return 'All Locations';
+                    }
                 })
                 ->editColumn('total_adjusted', function ($row) {
                     $total_adjusted = 0;
@@ -2373,7 +2379,7 @@ class ReportController extends Controller
             $query = $query = Variation::join('products as p', 'p.id', '=', 'variations.product_id')
                 ->join('units', 'p.unit_id', '=', 'units.id')
                 ->join('colors', 'p.color_id', '=', 'colors.id')
-                ->join('sizes as s', 'p.sub_size_id', '=', 's.id')
+                // ->join('sizes as s', 'p.sub_size_id', '=', 's.id')
                 ->leftjoin('suppliers as c', 'p.supplier_id', '=', 'c.id')
                 ->join('location_transfer_details as vld', 'variations.id', '=', 'vld.variation_id')
                 ->join('purchase_lines', 'p.id', '=', 'purchase_lines.product_id')
@@ -2384,7 +2390,7 @@ class ReportController extends Controller
                     'p.image as image',
                     'p.type as product_type',
                     'c.name as supplier',
-                    's.name as size',
+                    // 's.name as size',
                     // 't.id as transaction_id',
                     'p.refference as ref_no',
                     'vld.transfered_on as transaction_date',
@@ -2394,7 +2400,7 @@ class ReportController extends Controller
                     // 'vld.quantity as purchase_qty',
                     DB::raw("(SELECT bls.name FROM business_locations as bls WHERE vld.transfered_from=bls.id) as transfered_from"),
                     // DB::raw("(SUM(vld.quantity)) as purchase_qty"),
-                    DB::raw("(SELECT SUM(vldd.quantity)  FROM location_transfer_details as vldd WHERE vldd.product_id=p.id $vld_str) as purchase_qty"),
+                    DB::raw("(SELECT SUM(vldd.quantity)  FROM location_transfer_details as vldd WHERE vldd.product_refference=p.refference $vld_str) as purchase_qty"),
                     // DB::raw('(SUM(vld.quantity) - purchase_lines.quantity_returned) as purchase_qty'),
                     'variations.default_purchase_price as purchase_price',
                     'purchase_lines.quantity_adjusted',
@@ -2405,7 +2411,7 @@ class ReportController extends Controller
                 ->orderBy('vld.transfered_on', 'DESC')
                 ->distinct('ref_no')
                 // ->groupBy('p.refference');
-                ->groupBy('vld.product_id');
+                ->groupBy('vld.product_refference');
                 // ->groupBy('purchase_lines.product_id');
 
 

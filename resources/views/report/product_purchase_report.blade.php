@@ -88,7 +88,7 @@
                                 <th>Transfered From</th>
                                 <th>Transfer Date</th>
                                 <th>Current Location</th>
-                                <th>Size</th>
+                                {{-- <th>Size</th> --}}
                                 <th>Sale Price</th>
                                 <th>@lang('lang_v1.unit_perchase_price')</th>
                                 {{-- <th>@lang('lang_v1.total_unit_adjusted')</th> --}}
@@ -98,7 +98,7 @@
                         </thead>
                         <tfoot>
                             <tr class="bg-gray font-17 footer-total text-center">
-                                <td colspan="9"><strong>@lang('sale.total'):</strong></td>
+                                <td colspan="8"><strong>@lang('sale.total'):</strong></td>
                                 <td></td>
                                 <td id="footer_total_adjusted"></td>
                                 {{-- <td id="footer_total_purchase"></td> --}}
