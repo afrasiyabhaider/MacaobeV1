@@ -273,7 +273,7 @@
 						@if($payment['method_name'] == 'gift_card' || $payment['method'] == 'coupon') 
 						{{-- <tr> --}}
 							<td>{{$payment['method']}} <br/> 
-								<img  src="data:image/png;base64,{{DNS1D::getBarcodePNG($payment['barcode'], 'C128', 2,30,array(39, 48, 54), true)}}"></td>
+								<img class="center-block margin-top" src="data:image/png;base64,{{DNS1D::getBarcodePNG($payment['barcode'], 'C128', 2,40,array(55, 55, 55), true)}}"></td>
 							{{-- <td>{{$payment['amount']}}</td> --}}
 							<!--<td>{{$payment['date']}}</td>-->
 						{{-- </tr> --}}
@@ -410,7 +410,7 @@
 	<div class="row">
 		<div class="col-xs-12">
 			{{-- Barcode --}}
-			<img src="data:image/png;base64,{{DNS1D::getBarcodePNG($receipt_details->invoice_no, 'C128', 2,30,array(39, 48, 54), true)}}">
+			<img class="center-block margin-top" src="data:image/png;base64,{{DNS1D::getBarcodePNG($receipt_details->invoice_no, 'C128', 'C128', 2,40,array(55, 55, 55), true)}}">
 		</div>
 	</div>
 @endif
@@ -431,7 +431,7 @@
 <div class="row pgBr">
 				<div class="col-xs-12 text-center pgBr">
 					<p><h1> DETAILS</h1></p>
-					<img class="barcode-img" src="data:image/png;base64,{{DNS1D::getBarcodePNG($payment['coupon']['barcode'], 'C128', 2,30,array(39, 48, 54), true)}}">
+					<img class="barcode-img center-block margin-top" src="data:image/png;base64,{{DNS1D::getBarcodePNG($payment['coupon']['barcode'], 'C128', 2,40,array(55, 55, 55), true)}}">
 					<br/>
 					<h1>
 						Value : {{$payment['coupon']['amount']}} €
@@ -448,7 +448,7 @@
 				        <div class="col-xs-12 text-center pgBr">
 							<p><h1> Gift Card Details</h1></p>
 							<p>
-								<img  class="center-block margin-top" src="data:image/png;base64,{{DNS1D::getBarcodePNG($obj['barcode'], 'C128', 4,40,array(55,55,55), false)}}">
+								<img class="center-block margin-top" class="center-block margin-top" src="data:image/png;base64,{{DNS1D::getBarcodePNG($obj['barcode'], 'C128', 2,40,array(55, 55, 55), false)}}">
 							</p>
 							@php
                 			 $barcodeArr = str_split($obj['barcode'], 1);
@@ -478,7 +478,7 @@
 				        <div class="col-xs-12 text-center pgBr">
 							<p><h1> Coupon Details</h1></p>
 							<p>
-								<img class="center-block margin-top margin-left-10 margin-r-5" src="data:image/png;base64,{{DNS1D::getBarcodePNG($obj['barcode'], 'C128', 4,40,array(55,55,55), false)}}">
+								<img class="center-block margin-top margin-left-10 margin-r-5" src="data:image/png;base64,{{DNS1D::getBarcodePNG($obj['barcode'], 'C128', 2,40,array(55, 55, 55), false)}}">
 							</p>
 						@php
                 			 $barcodeArr = str_split($obj['barcode'], 1);
