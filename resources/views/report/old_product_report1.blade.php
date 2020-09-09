@@ -56,6 +56,7 @@
                                    <th>Available Stock</th>
                                    <th>Total Sold</th>
                                    <th>Sizes</th>
+                                   <th>Total</th>
                                    <th>Transferred</th>
                               </tr>
                          </thead>
@@ -89,11 +90,12 @@
         aaSorting: [2, 'asc'],
         columns: [
             { data: 'image', sortable: false, searchable: false },
-            { data: 'name', name: 'p.name' },
-            { data: 'refference', name: 'refference' },
-            { data: 'current_stock', name: 'current_stock' },
+            { data: 'name', name: 'products.name' },
+            { data: 'num_of_refference', name: 'num_of_refference' },
+            { data: 'quantity_available', name: 'quantity_available' },
             { data: 'total_sold', name: 'total_sold' },
-            { data: 'sizes', name: 'sizes' },
+            { data: 'num_of_sub_sizes', name: 'num_of_sub_sizes' },
+            { data: 'total', name: 'total' },
             { data: 'transfered', name: 'transfered' },
         ],
     });

@@ -396,6 +396,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
 
     Route::get('location-transfer-details/data','DataMigrationController@location_transfer_detail_data');
     Route::get('location-transfer-details/product_data','DataMigrationController@location_transfer_detail_product_data');
+    Route::get('transaction_sell_lines/product_data','DataMigrationController@transaction_sell_lines_product_data');
 
     // Website Routes
     Route::get('website/product/list', 'WebsiteController@index');
@@ -412,7 +413,7 @@ Route::get('migrate-fresh', function () {
 });
 Route::get('migrate', function () {
     \Artisan::call('migrate');
-    dd("Table Migrated");
+    dd("Migration Completed");
 });
 Route::get('permission-reset', function () {
     \Artisan::call('permission:cache-reset');

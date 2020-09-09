@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\LocationTransferDetail;
 use App\Product;
+use App\TransactionSellLine;
 use App\VariationLocationDetails;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -53,6 +54,35 @@ class DataMigrationController extends Controller
             DB::beginTransaction();
 
             $ltd = LocationTransferDetail::get();
+            foreach ($ltd as $key => $value) {
+                $ref = Product::find($value->product_id)->refference;
+
+                if ($ref != null) {
+                    $value->product_refference = $ref;
+                }else{
+                    $value->product_refference = null;
+                }
+                $value->save();
+            }
+
+            DB::commit();
+            dd('Record Saved');
+        } catch (\Exception $ex) {
+            DB::rollback();
+            dd('Error Occured : '.$ex->getMessage().' in File: '.$ex->getFile().' on Line: '.$ex->getLine());
+        }
+    }
+
+    /**
+     *  Add Refference in transaction_sell_lines
+     * 
+     **/
+    public function transaction_sell_lines_product_data()
+    {
+        try {
+            DB::beginTransaction();
+
+            $ltd = TransactionSellLine::get();
             foreach ($ltd as $key => $value) {
                 $ref = Product::find($value->product_id)->refference;
 

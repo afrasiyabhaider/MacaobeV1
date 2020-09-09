@@ -26,6 +26,7 @@ use App\TransactionSellLinesPurchaseLines;
 
 use App\Variation;
 use App\VariationLocationDetails;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 class TransactionUtil extends Util
@@ -205,9 +206,10 @@ class TransactionUtil extends Util
                             } else {
                                 if (!empty($product['modifier_price'][$key])) {
                                     $this_price = $uf_data ? $this->num_uf($product['modifier_price'][$key]) : $product['modifier_price'][$key];
-                                    
+                                    $ref = Product::find($product['modifier_set_id'][$key])->refference;
                                     $modifiers_formatted[] = new TransactionSellLine([
                                         'product_id' => $product['modifier_set_id'][$key],
+                                        'product_refference' => $ref,
                                         'variation_id' => $value,
                                         'quantity' => 1,
                                         'unit_price_before_discount' => $this_price,
@@ -249,8 +251,10 @@ class TransactionUtil extends Util
                 $uf_item_tax = $uf_data ? $this->num_uf($product['item_tax']) : $product['item_tax'];
                 $uf_unit_price_inc_tax = $uf_data ? $this->num_uf($product['unit_price_inc_tax']) : $product['unit_price_inc_tax'];
                 // dd($uf_unit_price_inc_tax);
+                $ref = Product::find($product['product_id'])->refference;
                 $line = [
                     'product_id' => $product['product_id'],
+                    'product_refference' => $ref,
                     'variation_id' => $product['variation_id'],
                     'quantity' =>  $uf_quantity * $multiplier,
                     'unit_price_before_discount' => $unit_price_before_discount,
@@ -287,8 +291,10 @@ class TransactionUtil extends Util
                             if (!empty($product['modifier_price'][$key])) {
                                 $this_price = $uf_data ? $this->num_uf($product['modifier_price'][$key]) : $product['modifier_price'][$key];
                                 // dd($this_price);
+                                $ref = Product::find($product['modifier_set_id'][$key])->refference;
                                 $sell_line_modifiers[] = [
                                     'product_id' => $product['modifier_set_id'][$key],
+                                    'product_refference' => $ref,
                                     'variation_id' => $value,
                                     'quantity' => 1,
                                     'unit_price_before_discount' => $this_price,
@@ -387,8 +393,10 @@ class TransactionUtil extends Util
         if($product['variation_id'] == 'r1310'){
             $product['variation_id'] = 1310;
         }
+        $ref = Product::find($product['product_id'])->refference;
         $sell_line->fill([
             'product_id' => $product['product_id'],
+            'product_refference' => $ref,
             'variation_id' => $product['variation_id'],
             'quantity' => $this->num_uf($product['quantity']) * $multiplier,
             'unit_price_before_discount' => $unit_price_before_discount,
@@ -484,9 +492,13 @@ class TransactionUtil extends Util
         }
         $c = 0;
         $totalAmountByRows = 0;
+        // dd($payments);
+        $cash = true;
+        $card = true;
         foreach ($payments as $payment) {
             //Check if transaction_sell_lines_id is set.
             // dd("Hello on 472");
+            // dd($payment);
             if (!empty($payment['payment_id'])) {
                 $edit_ids[] = $payment['payment_id'];
                 $this->editPaymentLine($payment, $transaction, $uf_data);
@@ -504,30 +516,61 @@ class TransactionUtil extends Util
                     //Generate reference number
                     $payment_ref_no = $this->generateReferenceNumber($prefix_type, $ref_count, $business_id);
 
-
-                    $payment_data = [
-                        'amount' => $payment_amount,
-                        'method' => $payment['method'],
-                        'business_id' => $transaction->business_id,
-                        'is_return' => isset($payment['is_return']) ? $payment['is_return'] : 0,
-                        'gift_card' => $payment['gift_card'],
-                        'coupon' => $payment['coupon'],
-                        'bonus_points' => $payment['bonus_points'],
-                        'card_transaction_number' => $payment['card_transaction_number'],
-                        'card_number' => $payment['card_number'],
-                        'card_type' => $payment['card_type'],
-                        'card_holder_name' => $payment['card_holder_name'],
-                        'card_month' => $payment['card_month'],
-                        'card_security' => $payment['card_security'],
-                        'cheque_number' => $payment['cheque_number'],
-                        'bank_account_number' => $payment['bank_account_number'],
-                        'note' => $payment['note'],
-                        'paid_on' => !empty($payment['paid_on']) ? $payment['paid_on'] : \Carbon::now()->toDateTimeString(),
-                        'created_by' => empty($user_id) ? auth()->user()->id : $user_id,
-                        'payment_for' => $transaction->contact_id,
-                        'payment_ref_no' => $payment_ref_no,
-                        'account_id' => !empty($payment['account_id']) ? $payment['account_id'] : null
-                    ];
+                    if($payment['method'] == 'cash'){
+                        
+                        $payment_data = [
+                            'amount' => $payment_amount,
+                            'method' => 'cash',
+                            'business_id' => $transaction->business_id,
+                            'is_return' => isset($payment['is_return']) ? $payment['is_return'] : 0,
+                            'gift_card' => $payment['gift_card'],
+                            'coupon' => $payment['coupon'],
+                            'bonus_points' => $payment['bonus_points'],
+                            'card_transaction_number' => $payment['card_transaction_number'],
+                            'card_number' => $payment['card_number'],
+                            'card_type' => $payment['card_type'],
+                            'card_holder_name' => $payment['card_holder_name'],
+                            'card_month' => $payment['card_month'],
+                            'card_security' => $payment['card_security'],
+                            'cheque_number' => $payment['cheque_number'],
+                            'bank_account_number' => $payment['bank_account_number'],
+                            'note' => $payment['note'],
+                            'paid_on' => !empty($payment['paid_on']) ? $payment['paid_on'] : \Carbon::now()->toDateTimeString(),
+                            'created_by' => empty($user_id) ? auth()->user()->id : $user_id,
+                            'payment_for' => $transaction->contact_id,
+                            'payment_ref_no' => $payment_ref_no,
+                            'account_id' => !empty($payment['account_id']) ? $payment['account_id'] : null
+                        ];
+                        $payments_formatted[] = new TransactionPayment($payment_data);
+                        $cash = false;
+                    }
+                    if($payment['method'] == 'card'){
+                        $payment_data = [
+                            'amount' => $payment_amount,
+                            'method' => 'card',
+                            'business_id' => $transaction->business_id,
+                            'is_return' => isset($payment['is_return']) ? $payment['is_return'] : 0,
+                            'gift_card' => $payment['gift_card'],
+                            'coupon' => $payment['coupon'],
+                            'bonus_points' => $payment['bonus_points'],
+                            'card_transaction_number' => $payment['card_transaction_number'],
+                            'card_number' => 1122334455,
+                            'card_type' => 'Master/Visa',
+                            'card_holder_name' => 'Customer',
+                            'card_month' => \Carbon::now()->format('M'),
+                            'card_security' => 3344,
+                            'cheque_number' => $payment['cheque_number'],
+                            'bank_account_number' => $payment['bank_account_number'],
+                            'note' => $payment['note'],
+                            'paid_on' => !empty($payment['paid_on']) ? $payment['paid_on'] : \Carbon::now()->toDateTimeString(),
+                            'created_by' => empty($user_id) ? auth()->user()->id : $user_id,
+                            'payment_for' => $transaction->contact_id,
+                            'payment_ref_no' => $payment_ref_no,
+                            'account_id' => !empty($payment['account_id']) ? $payment['account_id'] : null
+                        ];
+                        $payments_formatted[] = new TransactionPayment($payment_data);
+                        $card = false;
+                    }
                     if ($payment['method'] == 'custom_pay_1') {
                         $payment_data['transaction_no'] = $payment['transaction_no_1'];
                     } elseif ($payment['method'] == 'custom_pay_2') {
@@ -661,7 +704,9 @@ class TransactionUtil extends Util
                         Contact::where($dataWhere)->update($dataUpdate);
                     }
 
-                    $payments_formatted[] = new TransactionPayment($payment_data);
+                    if($cash && $card){
+                        $payments_formatted[] = new TransactionPayment($payment_data);
+                    }
 
                     $account_transactions[$c] = [];
 

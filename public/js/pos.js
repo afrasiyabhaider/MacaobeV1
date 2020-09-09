@@ -640,6 +640,9 @@ $(document).ready(function() {
     $(document).on('change', '.payment-amount', function() {
         calculate_balance_due();
     });
+    $(document).on('keyup', '.payment-amount', function() {
+        calculate_balance_due();
+    });
     var c = null;
     //Update discount
     $('button#posEditDiscountModalUpdate').click(function() {
@@ -1297,11 +1300,13 @@ function calculate_billing_details(price_total) {
     // alert(total_payable + '     ' + curr_exchange_rate);
     $('span#total_payable').text(__currency_trans_from_en(shown_total, false));
 
-    $('span.total_payable_span').text(__currency_trans_from_en(total_payable, true));
+    $('span.total_payable_span').text(total_payable);
+    // $('span.total_payable_span').text(__currency_trans_from_en(total_payable, true));
 
     //Check if edit form then don't update price.
     if ($('form#edit_pos_sell_form').length == 0) {
-        __write_number($('.payment-amount').first(), total_payable);
+        $('.payment-amount').val(total_payable);
+        // __write_number($('.payment-amount').first(), total_payable);
     }
 
     $(document).trigger('invoice_total_calculated');
@@ -1344,7 +1349,8 @@ function calculate_balance_due() {
         .find('.payment-amount')
         .each(function() {
             if (parseFloat($(this).val())) {
-                total_paying += __read_number($(this));
+                total_paying += parseFloat($(this).val());
+                // total_paying += __read_number($(this));
             }
         });
     var bal_due = total_payable - total_paying;
@@ -1361,7 +1367,7 @@ function calculate_balance_due() {
         $('span.change_return_span').text(__currency_trans_from_en(0, true));
         change_return = 0;
     }
-
+    // console.log('Total Paying: ' + total_paying);
     __write_number($('input#total_paying_input'), total_paying);
     $('span.total_paying').text(__currency_trans_from_en(total_paying, true));
 
