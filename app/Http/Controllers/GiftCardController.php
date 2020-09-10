@@ -838,6 +838,7 @@ coupon ki 3 month expire date
             $objVariationLocationDetails['product_id'] = $objProduct->id;
             $objVariationLocationDetails['product_variation_id'] = $product_variation->id;
             $objVariationLocationDetails['variation_id'] = $objVariations->id;
+            $objVariationLocationDetails['product_refference'] = $objProduct->refference;
 
             $objVariationsLocation = VariationLocationDetails::create($objVariationLocationDetails);
             //------ PRODUCT Creation Ends

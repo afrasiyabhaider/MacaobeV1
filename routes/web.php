@@ -397,6 +397,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('location-transfer-details/data','DataMigrationController@location_transfer_detail_data');
     Route::get('location-transfer-details/product_data','DataMigrationController@location_transfer_detail_product_data');
     Route::get('transaction_sell_lines/product_data','DataMigrationController@transaction_sell_lines_product_data');
+    Route::get('variation_location_details/product_data','DataMigrationController@variation_location_details_product_data');
 
     // Website Routes
     Route::get('website/product/list', 'WebsiteController@index');

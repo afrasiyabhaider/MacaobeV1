@@ -347,6 +347,7 @@ class ProductUtil extends Util
                 $variation_location_d = new VariationLocationDetails();
                 $variation_location_d->variation_id = $variation->id;
                 $variation_location_d->product_id = $product_id;
+                $variation_location_d->product_refference = $product->refference;
                 $variation_location_d->location_id = $location_id;
                 $variation_location_d->product_variation_id = $variation->product_variation_id;
                 $variation_location_d->qty_available = 0;
@@ -400,6 +401,7 @@ class ProductUtil extends Util
                 $variation_location_d = new VariationLocationDetails();
                 $variation_location_d->variation_id = $variation->id;
                 $variation_location_d->product_id = $product_id;
+                $variation_location_d->product_refference = $product->refference;
                 $variation_location_d->location_id = $location_id;
                 $variation_location_d->product_variation_id = $variation->product_variation_id;
                 $variation_location_d->qty_available = 0;
@@ -456,6 +458,7 @@ class ProductUtil extends Util
         for ($i=0; $i < count($locations); $i++) { 
             $variation_location_d = new VariationLocationDetails();
             $variation_location_d->variation_id = $variation->id;
+            $variation_location_d->product_refference = $product->refference;
             $variation_location_d->product_id = $product_id;
             $variation_location_d->location_id = $locations[$i];
             $variation_location_d->product_variation_id = $variation->product_variation_id;

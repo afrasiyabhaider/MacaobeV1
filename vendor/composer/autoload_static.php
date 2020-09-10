@@ -735,6 +735,7 @@ class ComposerStaticInitd25fe27e03ec6c501754f7b68aafaf3d
         'AddPrinterRelatedFieldsToBusinessLocationsTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_25_172439_add_printer_related_fields_to_business_locations_table.php',
         'AddProductDescriptionColumnToProductsTable' => __DIR__ . '/../..' . '/database/migrations/2018_12_03_185546_add_product_description_column_to_products_table.php',
         'AddProductRacksTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_17_160845_add_product_racks_table.php',
+        'AddProductRefferenceColumnInVariationLocationDetails' => __DIR__ . '/../..' . '/database/migrations/2020_09_10_172936_add_product_refference_column_in_variation_location_details.php',
         'AddPurchaseLineIdToStockAdjustmentLineTable' => __DIR__ . '/../..' . '/database/migrations/2018_05_29_121714_add_purchase_line_id_to_stock_adjustment_line_table.php',
         'AddQtyReturnedColumnToTransactionSellLinesPurchaseLinesTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_03_104918_add_qty_returned_column_to_transaction_sell_lines_purchase_lines_table.php',
         'AddQuantityReturnedColumnToPurchaseLinesTable' => __DIR__ . '/../..' . '/database/migrations/2018_09_27_131154_add_quantity_returned_column_to_purchase_lines_table.php',

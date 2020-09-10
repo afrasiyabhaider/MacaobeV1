@@ -101,4 +101,32 @@ class DataMigrationController extends Controller
             dd('Error Occured : '.$ex->getMessage().' in File: '.$ex->getFile().' on Line: '.$ex->getLine());
         }
     }
+    /**
+     *  Add Refference in transaction_sell_lines
+     * 
+     **/
+    public function variation_location_details_product_data()
+    {
+        try {
+            DB::beginTransaction();
+
+            $ltd = VariationLocationDetails::get();
+            foreach ($ltd as $key => $value) {
+                $ref = Product::find($value->product_id)->refference;
+
+                if ($ref != null) {
+                    $value->product_refference = $ref;
+                }else{
+                    $value->product_refference = null;
+                }
+                $value->save();
+            }
+
+            DB::commit();
+            dd('Record Saved');
+        } catch (\Exception $ex) {
+            DB::rollback();
+            dd('Error Occured : '.$ex->getMessage().' in File: '.$ex->getFile().' on Line: '.$ex->getLine());
+        }
+    }
 }

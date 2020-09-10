@@ -3234,9 +3234,10 @@ class ReportController extends Controller
                     't.id as transaction_id',
                     't.transaction_date as transaction_date',
                     DB::raw('DATE_FORMAT(t.transaction_date, "%Y-%m-%d") as formated_date'),
-                    DB::raw("(SELECT SUM(vld.qty_available) FROM variation_location_details as vld WHERE vld.variation_id=v.id $vld_str) as current_stock"),
+                    DB::raw("(SELECT SUM(vld.qty_available) FROM variation_location_details as vld WHERE vld.product_refference=p.refference $vld_str) as current_stock"),
+                    // DB::raw("(SELECT SUM(vld.qty_available) FROM variation_location_details as vld WHERE vld.variation_id=v.id $vld_str) as current_stock"),
                     DB::raw('SUM(transaction_sell_lines.quantity - transaction_sell_lines.quantity_returned) as total_qty_sold'),
-                    DB::raw("(SELECT SUM(tsl.quantity) FROM transaction_sell_lines as tsl WHERE tsl.product_id = p.id) as total_sold"),
+                    DB::raw("(SELECT SUM(tsl.quantity) FROM transaction_sell_lines as tsl WHERE tsl.product_refference = p.refference) as total_sold"),
                     DB::raw('DATE_FORMAT(p.product_updated_at, "%Y-%m-%d %H:%i:%s") as product_updated_at'),
                     // 'p.product_updated_at as product_updated_at',
                     'u.short_name as unit',
@@ -3244,7 +3245,7 @@ class ReportController extends Controller
                 )
                 // ->groupBy('v.id')
                 ->orderBy('total_qty_sold', 'DESC')
-                ->groupBy('p.name');
+                ->groupBy('transaction_sell_lines.product_refference');
             // ->groupBy('formated_date');
 
             if (!empty($variation_id)) {

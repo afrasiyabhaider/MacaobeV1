@@ -31,11 +31,13 @@
         </thead>
         <tfoot>
             <tr class="bg-gray font-17 text-center footer-total">
-                <td colspan="3"><strong>@lang('sale.total'):</strong></td>
+                <td colspan="13"><strong>@lang('sale.total'):</strong></td>
                 <td id="footer_total_stock"></td>
                 <td id="footer_total_sold"></td>
                 <td id="footer_total_transfered"></td>
                 <td id="footer_total_adjusted"></td>
+                <td></td>
+                <td></td>
             </tr>
         </tfoot>
     </table>
