@@ -45,7 +45,7 @@ class CashRegisterUtil extends Util
         $payments_formatted = [];
         foreach ($payments as $payment) {
             $payments_formatted[] = new CashRegisterTransaction([
-                    'amount' => (isset($payment['is_return']) && $payment['is_return'] == 1) ? (-1*$this->num_uf($payment['amount'])) : $this->num_uf($payment['amount']),
+                    'amount' => (isset($payment['is_return']) && $payment['is_return'] == 1) ? (-1*$this->num_uf($payment['amount'])) : (float)$payment['amount'],
                     'pay_method' => $payment['method'],
                     'type' => 'credit',
                     'transaction_type' => 'sell',
@@ -341,6 +341,19 @@ class CashRegisterUtil extends Util
         $register =  CashRegister::where('location_id', $location_id)
                                 ->where('statusss', 'open')
                                 ->first();
+
+        return $register;
+    }
+    /**
+     * Retrieves the currently opened cash register for the user
+     *
+     * @param $int user_id
+     *
+     * @return obj
+     */
+    public function getCashRegister($id)
+    {
+        $register =  CashRegister::find($id);
 
         return $register;
     }

@@ -198,8 +198,9 @@
           </table>
         </div>
       </div>
-
-      @include('cash_register.register_product_details')
+      @if (!isset($show_detail))
+        @include('cash_register.register_product_details')
+      @endif
       @include('cash_register.register_recent_transaction')
       
       <div class="row">

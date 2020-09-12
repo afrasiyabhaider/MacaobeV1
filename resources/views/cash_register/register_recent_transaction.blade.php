@@ -27,8 +27,10 @@ title="Customer: {{optional($transaction->contact)->name}}
 				<td class="no-print">
 					{{ $loop->iteration}}.
 				</td>
-				<td class="no-print">
-					{{ $transaction->invoice_no }} ({{optional($transaction->contact)->name}})
+				<td class="no-print" >
+                         <a data-href="{{action('SellController@show', [$transaction->id])}}" href="#" data-container=".view_modal" class="btn-modal">
+                              {{ $transaction->invoice_no }} ({{optional($transaction->contact)->name}})
+                         </a>
 				</td>
 				<td class="display_currency no-print">
                          {{ $transaction->final_total }}

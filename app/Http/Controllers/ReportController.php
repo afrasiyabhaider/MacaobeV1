@@ -1976,6 +1976,121 @@ class ReportController extends Controller
         //Return the details in ajax call
         if ($request->ajax()) {
             $registers = CashRegister::join(
+                'cash_register_transactions as ct',
+                'ct.cash_register_id',
+                '=',
+                'cash_registers.id'
+            )   
+            ->join(
+                'business_locations as bl',
+                'bl.id',
+                '=',
+                'cash_registers.location_id'
+            )
+            ->join(
+                'transaction_sell_lines as t',
+                't.transaction_id',
+                '=',
+                'ct.transaction_id'
+            )
+            ->select(
+                'cash_registers.id as register_id', 
+                'cash_registers.created_at as created_at', 
+                'cash_registers.location_id as location_id',    
+                'bl.name as location_name',    
+                'cash_registers.statusss as status',    
+                DB::raw("SUM(IF(ct.pay_method = 'cash', amount, 0)) as cash"),
+                DB::raw("SUM(IF(ct.pay_method = 'card', amount, 0)) as card"),
+                DB::raw("SUM(IF(ct.pay_method = 'gift_card', amount, 0)) as gift_card"),
+                DB::raw("SUM(IF(ct.pay_method = 'coupon', amount, 0)) as coupon"),
+                DB::raw("SUM(IF(t.discounted_amount > 0, discounted_amount, 0)) as discounted_amount"),
+                // DB::raw('(SELECT SUM(cts.amount) FROM cash_register_transactions as cts WHERE cts.cash_register_id=cash_registers.id AND cts.pay_method="cash") as cash_payment')
+            )
+            ->orderBy('created_at','DESC')
+            ->groupBy('register_id');
+
+            // dd($registers->first());
+            
+
+            if (!empty($request->input('user_id'))) {
+                $registers->where('cash_registers.user_id', $request->input('user_id'));
+            }
+            
+            if (!empty($request->input('location_id'))) {
+                $registers->where('cash_registers.location_id', $request->input('location_id'));
+            }
+
+            $start_date = $request->get('start_date');
+            $end_date = $request->get('end_date');
+
+            if (!empty($start_date) && !empty($end_date)) {
+                $registers->whereBetween(DB::raw('date(cash_registers.created_at)'), [$start_date, $end_date]);
+            }
+
+            if (!empty($request->input('status'))) {
+                $registers->where('cash_registers.status', $request->input('status'));
+            }
+            return Datatables::of($registers)
+                ->editColumn('cash', function ($row) {
+                    return '<span class="display_currency" data-currency_symbol="true">' .
+                    $row->cash . '</span>';
+                })
+                ->editColumn('card', function ($row) {
+                    return '<span class="display_currency" data-currency_symbol="true">' .
+                    $row->card . '</span>';
+                })
+                ->editColumn('gift_card', function ($row) {
+                    return '<span class="display_currency" data-currency_symbol="true">' .
+                    $row->gift_card . '</span>';
+                })
+                ->editColumn('coupon', function ($row) {
+                    return '<span class="display_currency" data-currency_symbol="true">' .
+                    $row->coupon . '</span>';
+                })
+                ->editColumn('discounted_amount', function ($row) {
+                    return '<span class="display_currency" data-currency_symbol="true">' .
+                    $row->discounted_amount . '</span>';
+                })
+                ->editColumn('created_at', function ($row) {
+                    return Carbon::parse($row->created_at)->format('d-M-Y H:i A');
+                    // return $this->productUtil->format_date($row->created_at, true);
+                })
+                // ->editColumn('closing_amount', function ($row) {
+                //     if ($row->status == 'close') {
+                //         return '<span class="display_currency" data-currency_symbol="true">' .
+                //             $row->closing_amount . '</span>';
+                //     } else {
+                //         return '';
+                //     }
+                // })
+                ->addColumn('action', '<button type="button" data-href="{{action(\'CashRegisterController@show\', [$register_id])}}" class="btn btn-xs btn-info btn-modal" 
+                    data-container=".view_register"><i class="fa fa-external-link" aria-hidden="true"></i> @lang("messages.view")</button>')
+                ->rawColumns(['action', 'cash', 'card', 'gift_card', 'coupon', 'discounted_amount'])
+                ->make(true);
+        }
+
+        $users = User::forDropdown($business_id, false);
+        $business = BusinessLocation::forDropdown($business_id);
+
+        
+        return view('report.register_report')
+            ->with(compact('users','business'));
+    }
+    /**
+     * Shows Old register report of a business
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getold_RegisterReport(Request $request)
+    {
+        if (!auth()->user()->can('register_report.view')) {
+            abort(403, 'Unauthorized action.');
+        }
+        $business_id = $request->session()->get('user.business_id');
+
+        //Return the details in ajax call
+        if ($request->ajax()) {
+            $registers = CashRegister::join(
                 'users as u',
                 'u.id',
                 '=',

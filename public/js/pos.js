@@ -1300,8 +1300,8 @@ function calculate_billing_details(price_total) {
     // alert(total_payable + '     ' + curr_exchange_rate);
     $('span#total_payable').text(__currency_trans_from_en(shown_total, false));
 
-    $('span.total_payable_span').text(total_payable);
-    // $('span.total_payable_span').text(__currency_trans_from_en(total_payable, true));
+    // $('span.total_payable_span').text(total_payable);
+    $('span.total_payable_span').text(__currency_trans_from_en(total_payable, true));
 
     //Check if edit form then don't update price.
     if ($('form#edit_pos_sell_form').length == 0) {
