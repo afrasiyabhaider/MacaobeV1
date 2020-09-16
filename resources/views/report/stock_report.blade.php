@@ -268,8 +268,8 @@
                 var selected_rows_qty = [];
                 var i = 0;
                 $('.row-select:checked').each(function () {
-                    var selectedQty = $("#printing_qty_"+$(this).val()).val();
-                    var selectedMaxQty = $("#printing_qty_"+$(this).val()).attr('max');
+                    var selectedQty = $("#stock_qty_"+$(this).val()).val();
+                    var selectedMaxQty = $("#stock_qty_"+$(this).val()).attr('max');
                     var selectedLocation= $("#location_"+$(this).val()).text();
                     var selectedLocationId= $("#location_"+$(this).val()).attr("max");
                     if(parseInt(selectedQty) <= parseInt(selectedMaxQty))

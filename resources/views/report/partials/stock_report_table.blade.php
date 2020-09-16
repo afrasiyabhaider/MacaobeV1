@@ -1,5 +1,3 @@
-
-    
 <div class="table-responsive">
     <table class="table table-bordered ajax_view table-striped" id="stock_report_table">
         <thead>
@@ -7,6 +5,9 @@
                 <th>
                     <input type="checkbox" id="select-all-row">
                     All
+                </th>
+                <th>
+                    Printing
                 </th>
                 <th>Image</th>
                 <th>SKU</th>
@@ -31,7 +32,7 @@
         </thead>
         <tfoot>
             <tr class="bg-gray font-17 text-center footer-total">
-                <td colspan="13"><strong>@lang('sale.total'):</strong></td>
+                <td colspan="14"><strong>@lang('sale.total'):</strong></td>
                 <td id="footer_total_stock"></td>
                 <td id="footer_total_sold"></td>
                 <td id="footer_total_transfered"></td>

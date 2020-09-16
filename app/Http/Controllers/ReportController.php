@@ -606,7 +606,7 @@ class ReportController extends Controller
                 $query->whereDate('products.updated_at', '>=', $from_date)->whereDate('products.updated_at', '<=', $to_date);
             }
 
-            
+
             return DataTables::of($query)
                 ->editColumn('image', function ($row) {
                     return '<div style="display: flex;"><img src="' . $row->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
@@ -643,7 +643,7 @@ class ReportController extends Controller
 
                     return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $transfered . '" data-unit="Pcs" >' . $transfered . '</span> Pcs';
                 })
-                ->rawColumns(['image','quantity_sold', 'quantity_available', 'total_sold', 'transfered'])
+                ->rawColumns(['image', 'quantity_sold', 'quantity_available', 'total_sold', 'transfered'])
                 ->make(true);
         }
         $business_id = $request->session()->get('user.business_id');
@@ -716,9 +716,9 @@ class ReportController extends Controller
                 DB::raw("SUM(pl.quantity_sold)+SUM(vld.qty_available) as total"),
                 DB::raw("COUNT(vld.id) as transfered"),
             )
-            ->orderBy('products.updated_at')
-            ->groupBy('products.refference')
-            ->get();
+                ->orderBy('products.updated_at')
+                ->groupBy('products.refference')
+                ->get();
             return DataTables::of($data)
                 ->editColumn('image', function ($row) {
                     return '<div style="display: flex;"><img src="' . $row->image_url . '" alt="Product image" class="product-thumbnail-small"></div>';
@@ -755,7 +755,7 @@ class ReportController extends Controller
 
                     return '<span data-is_quantity="true" class="display_currency total_transfered" data-currency_symbol=false data-orig-value="' . $transfered . '" data-unit="Pcs" >' . $transfered . '</span> Pcs';
                 })
-                ->rawColumns(['image','quantity_sold', 'quantity_available', 'total_sold', 'transfered'])
+                ->rawColumns(['image', 'quantity_sold', 'quantity_available', 'total_sold', 'transfered'])
                 ->make(true);
         }
         $business_id = $request->session()->get('user.business_id');
@@ -907,6 +907,7 @@ class ReportController extends Controller
                 'variations.sell_price_inc_tax as unit_price',
                 'pv.name as product_variation',
                 'vld.product_updated_at as product_date',
+                'vld.printing_qty as printing_qty',
                 'variations.name as variation_name',
                 'vld.updated_at',
                 // 'vld.qty_available as current_stock'
@@ -918,8 +919,11 @@ class ReportController extends Controller
 
             return DataTables::of($products)
                 ->addColumn('mass_delete', function ($row) {
-                    return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '"> <input type="number" class="row-print-qty form-control disabled" value="' . number_format($row->current_stock) . '" max="' . number_format($row->current_stock) . '" style="width:70px;" id="printing_qty_' . $row->product_id . '">';
+                    return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '"> <input type="number" class="row-print-qty form-control disabled" value="' . number_format($row->current_stock) . '" max="' . number_format($row->current_stock) . '" style="width:70px;" id="stock_qty_' . $row->product_id . '">';
                     // return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '"><input type="number" class="row-qty form-control" value="' . number_format($row->current_stock) . '" max="' . number_format($row->current_stock) . '" style="width:70px;" id="qty_' . $row->product_id . '">';
+                })
+                ->editColumn('printing_qty', function ($row) {
+                    return  'Print: <input type="number" class="row-print-qty form-control" value="' . number_format($row->printing_qty) . '" max="' . number_format($row->printing_qty) . '" style="width:70px;" id="printing_qty_' . $row->product_id . '">';
                 })
                 // ->addColumn('color_id', function ($row) {
                 //     // return  $row->first()->product()->first()->color()->first()->name;
@@ -1095,7 +1099,7 @@ class ReportController extends Controller
                 //     }
                 // ])
                 // ->removeColumn('id')
-                ->rawColumns(['mass_delete', 'unit_price', 'total_transfered', 'location_name', 'total_sold', 'total_adjusted', 'stock', 'actions', 'image'])
+                ->rawColumns(['mass_delete', 'printing_qty', 'unit_price', 'total_transfered', 'location_name', 'total_sold', 'total_adjusted', 'stock', 'actions', 'image'])
                 ->make(true);
         }
 
@@ -1609,13 +1613,13 @@ class ReportController extends Controller
         $business_locations = BusinessLocation::forDropdown($business_id, true);
 
         // dd($this->trendingProductDetail($request));
-        $details = $this->trendingProductDetail($request,$product_id);
+        $details = $this->trendingProductDetail($request, $product_id);
 
         return view('report.trending_products')
-            ->with(compact('chart', 'categories', 'brands', 'business_locations', 'suppliers','details'));
+            ->with(compact('chart', 'categories', 'brands', 'business_locations', 'suppliers', 'details'));
     }
 
-    public function trendingProductDetail(Request $request,$product_id)
+    public function trendingProductDetail(Request $request, $product_id)
     {
         $business_id = $request->session()->get('user.business_id');
         $variation_id = $request->get('variation_id', null);
@@ -1627,7 +1631,7 @@ class ReportController extends Controller
             $vld_str = "AND vld.location_id=$location_id";
         }
 
-    
+
         $query = TransactionSellLine::join(
             'transactions as t',
             'transaction_sell_lines.transaction_id',
@@ -1652,7 +1656,7 @@ class ReportController extends Controller
             ->where('t.business_id', $business_id)
             ->where('t.type', 'sell')
             ->where('t.status', 'final')
-            ->whereIn('p.id',$product_id)
+            ->whereIn('p.id', $product_id)
             ->select(
                 'p.id as product_id',
                 'p.name as product_name',
@@ -1685,17 +1689,17 @@ class ReportController extends Controller
             )
             ->orderBy('sell_qty', 'DESC')
             ->groupBy('p.sku');
-            // ->orderBy('p.name', 'ASC')
-            // ->orderBy('t.invoice_no','DESC')
-            // ->groupBy('transaction_sell_lines.product_id');
-            // ->groupBy('transaction_sell_lines.id');
+        // ->orderBy('p.name', 'ASC')
+        // ->orderBy('t.invoice_no','DESC')
+        // ->groupBy('transaction_sell_lines.product_id');
+        // ->groupBy('transaction_sell_lines.id');
         // dd($query->first());
         if (!empty($variation_id)) {
             $query->where('transaction_sell_lines.variation_id', $variation_id);
         }
 
         $date_range = $request->input('date_range');
-        
+
         if (!empty($date_range)) {
             $date_range_array = explode(' - ', $date_range);
             // dd($date_range_array);
@@ -1705,12 +1709,12 @@ class ReportController extends Controller
             if (!empty($start_date) && !empty($end_date)) {
                 $query->whereBetween(DB::raw('date(t.transaction_date)'), [$start_date, $end_date]);
             }
-        }else{
+        } else {
             $start_week = Carbon::now()->addDays(-6);
             $end_week = Carbon::now();
             $query->whereBetween(DB::raw('date(t.transaction_date)'), [$start_week, $end_week]);
         }
-        
+
         $purchase_date = $request->input('purchase_date');
         if (!empty($purchase_date)) {
             $purchase_date_array = explode(' - ', $purchase_date);
@@ -1721,7 +1725,7 @@ class ReportController extends Controller
             if (!empty($purchase_start_date) && !empty($purchase_end_date)) {
                 $query->whereBetween(DB::raw('date(product_updated_at)'), [$purchase_start_date, $purchase_end_date]);
             }
-        }else{
+        } else {
             $start_year = Carbon::now()->startOfYear();
             $now = Carbon::now();
 
@@ -1981,62 +1985,62 @@ class ReportController extends Controller
                 '=',
                 'cash_registers.id'
             )
-            ->join(
-                'business_locations as bl',
-                'bl.id',
-                '=',
-                'cash_registers.location_id'
-            )
-            ->join(
-                'transaction_sell_lines as tsl',
-                'tsl.transaction_id',
-                '=',
-                'ct.transaction_id'
-            )
-            ->join(
-                'transaction_payments as tp',
-                'tp.transaction_id',
-                '=',
-                'ct.transaction_id'
-            )
-            ->join(
-                'transactions as t',
-                't.id',
-                '=',
-                'ct.transaction_id'
-            )
-            ->select( 
-                'cash_registers.id as register_id', 
-                'cash_registers.created_at as created_at', 
-                'cash_registers.location_id as location_id',    
-                'bl.name as location_name',    
-                'cash_registers.statusss as status',    
-                // DB::raw("SUM(IF(ct.pay_method = 'cash' AND ct.amount > 0, ct.amount, 0)) as cash"),
-                // DB::raw("SUM(IF(tp.method = 'cash' ,tp.amount, 0)) as cash"),
-                DB::raw("SUM(IF(tp.method = 'cash' AND ct.amount > 0,t.final_total, 0)) as cash"),
-                DB::raw("SUM(IF(tp.method = 'card' AND ct.amount > 0,t.final_total, 0)) as card"),
-                DB::raw("SUM(IF(tp.is_convert = 'gift_card' AND ct.amount > 0, t.final_total, 0)) as gift_card"),
-                DB::raw("SUM(IF(tp.is_convert = 'coupon' AND ct.amount > 0, t.final_total, 0)) as coupon"),
-                // DB::raw("SUM(IF(ct.pay_method = 'gift_card', amount, 0)) as gift_card"),
-                // DB::raw("SUM(IF(ct.pay_method = 'coupon', amount, 0)) as coupon"),
-                DB::raw("SUM(IF(ct.amount > 0, discounted_amount, 0)) as discounted_amount"),
-                DB::raw("COUNT(DISTINCT(ct.transaction_id)) as invoices"),
-                // DB::raw("(SELECT COUNT(tr.invoice_no) FROM transactions as tr WHERE tr.id=t.transaction_id) as invoice"),
-                DB::raw("SUM(IF(ct.amount > 0, tsl.quantity, 0)) as items"),
-                // DB::raw("SUM(tsl.quantity) as items"),
-                // DB::raw("SUM(IF(DISTINCT(ct.transaction_id), t.quanity, 0)) as items"),
-                // DB::raw('(SELECT SUM(cts.amount) FROM cash_register_transactions as cts WHERE cts.cash_register_id=cash_registers.id AND cts.pay_method="cash") as cash_payment')
-            )
-            ->orderBy('created_at','DESC')
-            ->groupBy('register_id');
+                ->join(
+                    'business_locations as bl',
+                    'bl.id',
+                    '=',
+                    'cash_registers.location_id'
+                )
+                ->join(
+                    'transaction_sell_lines as tsl',
+                    'tsl.transaction_id',
+                    '=',
+                    'ct.transaction_id'
+                )
+                ->join(
+                    'transaction_payments as tp',
+                    'tp.transaction_id',
+                    '=',
+                    'ct.transaction_id'
+                )
+                ->join(
+                    'transactions as t',
+                    't.id',
+                    '=',
+                    'ct.transaction_id'
+                )
+                ->select(
+                    'cash_registers.id as register_id',
+                    'cash_registers.created_at as created_at',
+                    'cash_registers.location_id as location_id',
+                    'bl.name as location_name',
+                    'cash_registers.statusss as status',
+                    // DB::raw("SUM(IF(ct.pay_method = 'cash' AND ct.amount > 0, ct.amount, 0)) as cash"),
+                    // DB::raw("SUM(IF(tp.method = 'cash' ,tp.amount, 0)) as cash"),
+                    DB::raw("SUM(IF(tp.method = 'cash' AND ct.amount > 0,t.final_total, 0)) as cash"),
+                    DB::raw("SUM(IF(tp.method = 'card' AND ct.amount > 0,t.final_total, 0)) as card"),
+                    DB::raw("SUM(IF(tp.is_convert = 'gift_card' AND ct.amount > 0, t.final_total, 0)) as gift_card"),
+                    DB::raw("SUM(IF(tp.is_convert = 'coupon' AND ct.amount > 0, t.final_total, 0)) as coupon"),
+                    // DB::raw("SUM(IF(ct.pay_method = 'gift_card', amount, 0)) as gift_card"),
+                    // DB::raw("SUM(IF(ct.pay_method = 'coupon', amount, 0)) as coupon"),
+                    DB::raw("SUM(IF(ct.amount > 0, discounted_amount, 0)) as discounted_amount"),
+                    DB::raw("COUNT(DISTINCT(ct.transaction_id)) as invoices"),
+                    // DB::raw("(SELECT COUNT(tr.invoice_no) FROM transactions as tr WHERE tr.id=t.transaction_id) as invoice"),
+                    DB::raw("SUM(IF(ct.amount > 0, tsl.quantity, 0)) as items"),
+                    // DB::raw("SUM(tsl.quantity) as items"),
+                    // DB::raw("SUM(IF(DISTINCT(ct.transaction_id), t.quanity, 0)) as items"),
+                    // DB::raw('(SELECT SUM(cts.amount) FROM cash_register_transactions as cts WHERE cts.cash_register_id=cash_registers.id AND cts.pay_method="cash") as cash_payment')
+                )
+                ->orderBy('created_at', 'DESC')
+                ->groupBy('register_id');
 
             // dd($registers->get()[195], $registers->get()[196], $registers->get()[197]);
-            
+
 
             if (!empty($request->input('user_id'))) {
                 $registers->where('cash_registers.user_id', $request->input('user_id'));
             }
-            
+
             if (!empty($request->input('location_id'))) {
                 $registers->where('cash_registers.location_id', $request->input('location_id'));
             }
@@ -2055,32 +2059,32 @@ class ReportController extends Controller
                 ->editColumn('cash', function ($row) {
                     $cash = $row->cash - $row->card - $row->coupon - $row->gift_card;
                     return '<span class="display_currency cash_amount" data-currency_symbol="true"  data-orig-value="' . $cash . '">' .
-                    $cash . '</span>';
+                        $cash . '</span>';
                 })
                 ->editColumn('card', function ($row) {
                     return '<span class="display_currency card_amount" data-currency_symbol="true"  data-orig-value="' . $row->card . '">' .
-                    $row->card . '</span>';
+                        $row->card . '</span>';
                 })
                 ->editColumn('gift_card', function ($row) {
                     return '<span class="display_currency giftcard_amount" data-currency_symbol="true" data-orig-value="' . $row->gift_card . '">' .
-                    $row->gift_card . '</span>';
+                        $row->gift_card . '</span>';
                 })
                 ->editColumn('coupon', function ($row) {
                     return '<span class="display_currency coupon_amount" data-currency_symbol="true" data-orig-value="' . $row->coupon . '">' .
-                    $row->coupon . '</span>';
+                        $row->coupon . '</span>';
                 })
                 ->editColumn('discounted_amount', function ($row) {
-                    return '<span class="display_currency discounted_amount" data-currency_symbol="true" data-orig-value="' . $row->discounted_amount . '">' .$row->discounted_amount . '</span>';
+                    return '<span class="display_currency discounted_amount" data-currency_symbol="true" data-orig-value="' . $row->discounted_amount . '">' . $row->discounted_amount . '</span>';
                 })
                 ->addColumn('total_amount', function ($row) {
-                    $total = $row->cash+$row->card+$row->gift_card+$row->coupon+$row->discounted_amount;
-                    return '<span class="display_currency total_amount" data-currency_symbol="true" data-orig-value="' . $total . '">' .$total . '</span>';
+                    $total = $row->cash + $row->card + $row->gift_card + $row->coupon + $row->discounted_amount;
+                    return '<span class="display_currency total_amount" data-currency_symbol="true" data-orig-value="' . $total . '">' . $total . '</span>';
                 })
                 ->editColumn('invoices', function ($row) {
-                    return '<span class="display_currency invoices" data-currency_symbol="false" data-orig-value="' . $row->invoices . '">' .$row->invoices . '</span>';
+                    return '<span class="display_currency invoices" data-currency_symbol="false" data-orig-value="' . $row->invoices . '">' . $row->invoices . '</span>';
                 })
                 ->editColumn('items', function ($row) {
-                    return '<span class="display_currency items" data-currency_symbol="false" data-orig-value="' . $row->items . '">' .$row->items . '</span>';
+                    return '<span class="display_currency items" data-currency_symbol="false" data-orig-value="' . $row->items . '">' . $row->items . '</span>';
                 })
                 ->editColumn('created_at', function ($row) {
                     return Carbon::parse($row->created_at)->format('d-M-Y H:i A');
@@ -2096,16 +2100,16 @@ class ReportController extends Controller
                 // })
                 ->addColumn('action', '<button type="button" data-href="{{action(\'CashRegisterController@show\', [$register_id])}}" class="btn btn-xs btn-info btn-modal" 
                     data-container=".view_register"><i class="fa fa-external-link" aria-hidden="true"></i> @lang("messages.view")</button>')
-                ->rawColumns(['action', 'cash', 'card', 'gift_card', 'coupon', 'discounted_amount','total_amount','invoices','items'])
+                ->rawColumns(['action', 'cash', 'card', 'gift_card', 'coupon', 'discounted_amount', 'total_amount', 'invoices', 'items'])
                 ->make(true);
         }
 
         $users = User::forDropdown($business_id, false);
         $business = BusinessLocation::forDropdown($business_id);
 
-        
+
         return view('report.register_report')
-            ->with(compact('users','business'));
+            ->with(compact('users', 'business'));
     }
     /**
      * Shows Old register report of a business
@@ -2670,7 +2674,7 @@ class ReportController extends Controller
             if (!empty($location_id)) {
                 $vld_str .= "AND vldd.location_id=$location_id ";
             }
-            
+
             $start = $request->get('start_date');
             $end = $request->get('end_date');
             if (!empty($start) && !empty($end)) {
@@ -2713,7 +2717,7 @@ class ReportController extends Controller
                 ->distinct('ref_no')
                 // ->groupBy('p.refference');
                 ->groupBy('vld.product_refference');
-                // ->groupBy('purchase_lines.product_id');
+            // ->groupBy('purchase_lines.product_id');
 
 
             if (!empty($variation_id)) {
@@ -2755,7 +2759,7 @@ class ReportController extends Controller
                     if ($row->product_type == 'variable') {
                         $product_name .= ' - ' . $row->product_variation . ' - ' . $row->variation_name;
                     }
-  
+
                     return $product_name;
                 })
                 ->editColumn('ref_no', function ($row) {
@@ -2777,7 +2781,7 @@ class ReportController extends Controller
                     }
                 })
                 ->editColumn('purchase_qty', function ($row) {
-                    return '<span data-is_quantity="true" class="display_currency quantity_adjusted" data-currency_symbol=false data-orig-value="' . (float) $row->purchase_qty . '" data-unit="' . $row->unit . '" >' . (float) $row->purchase_qty . '</span> '.$row->unit;
+                    return '<span data-is_quantity="true" class="display_currency quantity_adjusted" data-currency_symbol=false data-orig-value="' . (float) $row->purchase_qty . '" data-unit="' . $row->unit . '" >' . (float) $row->purchase_qty . '</span> ' . $row->unit;
                 })
                 ->editColumn('quantity_adjusted', function ($row) {
                     return '<span data-is_quantity="true" class="display_currency quantity_adjusted" data-currency_symbol=false data-orig-value="' . (float) $row->quantity_adjusted . '" data-unit="' . $row->unit . '" >' . (float) $row->quantity_adjusted . '</span> ' . $row->unit;
@@ -2808,7 +2812,7 @@ class ReportController extends Controller
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         // if (auth()->user()->can("product.view")) {
-                            return  action('ProductController@view', [$row->product_id]);
+                        return  action('ProductController@view', [$row->product_id]);
                         // } else {
                         //     return '';
                         // }
@@ -2842,7 +2846,7 @@ class ReportController extends Controller
             if (!empty($location_id)) {
                 $vld_str = "AND vldd.location_id=$location_id";
             }
-            
+
             // $start = $request->get('start_date');
             // $end = $request->get('end_date');
             // if (!empty($start) && !empty($end)) {
@@ -2891,7 +2895,7 @@ class ReportController extends Controller
                 // ->distinct('ref_no')
                 // ->groupBy('p.refference');
                 ->groupBy('vld.product_id');
-                // ->groupBy('purchase_lines.product_id');
+            // ->groupBy('purchase_lines.product_id');
 
 
             if (!empty($variation_id)) {
@@ -2985,7 +2989,7 @@ class ReportController extends Controller
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         // if (auth()->user()->can("product.view")) {
-                            return  action('ProductController@view', [$row->product_id]);
+                        return  action('ProductController@view', [$row->product_id]);
                         // } else {
                         //     return '';
                         // }
@@ -3313,7 +3317,7 @@ class ReportController extends Controller
                         }
                     }
                 ])
-                ->rawColumns(['original_amount', 'refference', 'image', 'invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax', 'current_stock','total_sold'])
+                ->rawColumns(['original_amount', 'refference', 'image', 'invoice_no', 'unit_sale_price', 'subtotal', 'sell_qty', 'discount_amount', 'unit_price', 'tax', 'current_stock', 'total_sold'])
                 ->make(true);
         }
 
@@ -3482,7 +3486,7 @@ class ReportController extends Controller
                         }
                     }
                 ])
-                ->rawColumns(['image','total_sold' ,'current_stock', 'subtotal', 'total_qty_sold'])
+                ->rawColumns(['image', 'total_sold', 'current_stock', 'subtotal', 'total_qty_sold'])
                 ->make(true);
         }
     }

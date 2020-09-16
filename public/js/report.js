@@ -27,23 +27,49 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: '/reports/customer-supplier',
-        columnDefs: [
-            { targets: [5], orderable: false, searchable: false },
-            { targets: [1, 2, 3, 4], searchable: false },
+        columnDefs: [{
+                targets: [5],
+                orderable: false,
+                searchable: false
+            },
+            {
+                targets: [1, 2, 3, 4],
+                searchable: false
+            },
         ],
         pageLength: 100,
         lengthMenu: [
             [20, 50, 70, 100, 300, 500, 1000, -1],
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
-        columns: [
-            { data: 'name', name: 'name' },
-            { data: 'total_purchase', name: 'total_purchase' },
-            { data: 'total_purchase_return', name: 'total_purchase_return' },
-            { data: 'total_invoice', name: 'total_invoice' },
-            { data: 'total_sell_return', name: 'total_sell_return' },
-            { data: 'opening_balance_due', name: 'opening_balance_due' },
-            { data: 'due', name: 'due' },
+        columns: [{
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'total_purchase',
+                name: 'total_purchase'
+            },
+            {
+                data: 'total_purchase_return',
+                name: 'total_purchase_return'
+            },
+            {
+                data: 'total_invoice',
+                name: 'total_invoice'
+            },
+            {
+                data: 'total_sell_return',
+                name: 'total_sell_return'
+            },
+            {
+                data: 'opening_balance_due',
+                name: 'opening_balance_due'
+            },
+            {
+                data: 'due',
+                name: 'due'
+            },
         ],
         fnDrawCallback: function(oSettings) {
             var total_purchase = sum_table_col($('#supplier_report_tbl'), 'total_purchase');
@@ -96,26 +122,93 @@ $(document).ready(function() {
             [30, 40, 60, 80, 90, 100, 300, 500, 1000, 'All'],
         ],
         aaSorting: [2, 'asc'],
-        columns: [
-            { data: 'mass_delete', orderable: false, searchable: false },
-            { data: 'image', orderable: false, searchable: false },
-            { data: 'sku', name: 'variations.sub_sku' },
-            { data: 'product', name: 'p.name' },
-            { data: 'refference', name: 'p.refference' },
-            { data: 'location_name', name: 'bl.name' },
-            { data: 'actions', name: 'actions', searchable: false, orderable: false },
-            { data: 'unit_price', name: 'variations.sell_price_inc_tax' },
-            { data: 'color_name', name: 'colors.name' },
-            { data: 'category_name', name: 'categories.name' },
-            { data: 'sub_category_name', name: 'sub_cat.name' },
-            { data: 'size_name', name: 'sizes.name' },
-            { data: 'sale_percent' },
-            { data: 'stock', name: 'stock', searchable: false },
-            { data: 'total_sold', name: 'total_sold', searchable: false },
-            { data: 'total_transfered', name: 'total_transfered', searchable: false },
-            { data: 'supplier_name', name: 'suppliers.name' },
-            { data: 'product_date', name: 'vld.product_updated_at' },
-            { data: 'description', name: 'p.description' },
+        columns: [{
+                data: 'mass_delete',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'printing_qty',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'image',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'sku',
+                name: 'variations.sub_sku'
+            },
+            {
+                data: 'product',
+                name: 'p.name'
+            },
+            {
+                data: 'refference',
+                name: 'p.refference'
+            },
+            {
+                data: 'location_name',
+                name: 'bl.name'
+            },
+            {
+                data: 'actions',
+                name: 'actions',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'unit_price',
+                name: 'variations.sell_price_inc_tax'
+            },
+            {
+                data: 'color_name',
+                name: 'colors.name'
+            },
+            {
+                data: 'category_name',
+                name: 'categories.name'
+            },
+            {
+                data: 'sub_category_name',
+                name: 'sub_cat.name'
+            },
+            {
+                data: 'size_name',
+                name: 'sizes.name'
+            },
+            {
+                data: 'sale_percent'
+            },
+            {
+                data: 'stock',
+                name: 'stock',
+                searchable: false
+            },
+            {
+                data: 'total_sold',
+                name: 'total_sold',
+                searchable: false
+            },
+            {
+                data: 'total_transfered',
+                name: 'total_transfered',
+                searchable: false
+            },
+            {
+                data: 'supplier_name',
+                name: 'suppliers.name'
+            },
+            {
+                data: 'product_date',
+                name: 'vld.product_updated_at'
+            },
+            {
+                data: 'description',
+                name: 'p.description'
+            },
             // { data: 'updated_at', name: 'updated_at' },
             // { data: 'total_adjusted', name: 'total_adjusted', searchable: false },
         ],
@@ -297,19 +390,51 @@ $(document).ready(function() {
             [20, 50, 70, 100, 300, 500, 1000, -1],
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
-        columns: [
-            { data: 'action', name: 'action' },
-            { data: 'location_name', name: 'location_name' },
-            { data: 'created_at', name: 'created_at' },
+        columns: [{
+                data: 'action',
+                name: 'action'
+            },
+            {
+                data: 'location_name',
+                name: 'location_name'
+            },
+            {
+                data: 'created_at',
+                name: 'created_at'
+            },
             // { data: 'status', name: 'status' },
-            { data: 'items', name: 'items' },
-            { data: 'invoices', name: 'invoices' },
-            { data: 'cash', name: 'cash' },
-            { data: 'card', name: 'card' },
-            { data: 'gift_card', name: 'gift_card' },
-            { data: 'coupon', name: 'coupon' },
-            { data: 'discounted_amount', name: 'discounted_amount' },
-            { data: 'total_amount', name: 'total_amount' },
+            {
+                data: 'items',
+                name: 'items'
+            },
+            {
+                data: 'invoices',
+                name: 'invoices'
+            },
+            {
+                data: 'cash',
+                name: 'cash'
+            },
+            {
+                data: 'card',
+                name: 'card'
+            },
+            {
+                data: 'gift_card',
+                name: 'gift_card'
+            },
+            {
+                data: 'coupon',
+                name: 'coupon'
+            },
+            {
+                data: 'discounted_amount',
+                name: 'discounted_amount'
+            },
+            {
+                data: 'total_amount',
+                name: 'total_amount'
+            },
         ],
         fnDrawCallback: function(oSettings) {
             __currency_convert_recursively($('#register_report_table'));
@@ -414,15 +539,38 @@ $(document).ready(function() {
                     (d.end_date = end);
                 },
             },
-            columns: [
-                { data: 'transaction_date', name: 'transaction_date' },
-                { data: 'invoice_no', name: 'invoice_no' },
-                { data: 'name', name: 'contacts.name' },
-                { data: 'business_location', name: 'bl.name' },
-                { data: 'payment_status', name: 'payment_status' },
-                { data: 'final_total', name: 'final_total' },
-                { data: 'total_paid', name: 'total_paid' },
-                { data: 'total_remaining', name: 'total_remaining' },
+            columns: [{
+                    data: 'transaction_date',
+                    name: 'transaction_date'
+                },
+                {
+                    data: 'invoice_no',
+                    name: 'invoice_no'
+                },
+                {
+                    data: 'name',
+                    name: 'contacts.name'
+                },
+                {
+                    data: 'business_location',
+                    name: 'bl.name'
+                },
+                {
+                    data: 'payment_status',
+                    name: 'payment_status'
+                },
+                {
+                    data: 'final_total',
+                    name: 'final_total'
+                },
+                {
+                    data: 'total_paid',
+                    name: 'total_paid'
+                },
+                {
+                    data: 'total_remaining',
+                    name: 'total_remaining'
+                },
             ],
             columnDefs: [{
                 searchable: false,
@@ -482,15 +630,38 @@ $(document).ready(function() {
                 orderable: false,
                 searchable: false,
             }, ],
-            columns: [
-                { data: 'transaction_date', name: 'transaction_date' },
-                { data: 'ref_no', name: 'ref_no' },
-                { data: 'category', name: 'ec.name' },
-                { data: 'location_name', name: 'bl.name' },
-                { data: 'payment_status', name: 'payment_status' },
-                { data: 'final_total', name: 'final_total' },
-                { data: 'expense_for', name: 'expense_for' },
-                { data: 'additional_notes', name: 'additional_notes' },
+            columns: [{
+                    data: 'transaction_date',
+                    name: 'transaction_date'
+                },
+                {
+                    data: 'ref_no',
+                    name: 'ref_no'
+                },
+                {
+                    data: 'category',
+                    name: 'ec.name'
+                },
+                {
+                    data: 'location_name',
+                    name: 'bl.name'
+                },
+                {
+                    data: 'payment_status',
+                    name: 'payment_status'
+                },
+                {
+                    data: 'final_total',
+                    name: 'final_total'
+                },
+                {
+                    data: 'expense_for',
+                    name: 'expense_for'
+                },
+                {
+                    data: 'additional_notes',
+                    name: 'additional_notes'
+                },
             ],
             fnDrawCallback: function(oSettings) {
                 var expense_total = sum_table_col($('#sr_expenses_report'), 'final-total');
@@ -530,15 +701,38 @@ $(document).ready(function() {
                 [20, 50, 70, 100, 300, 500, 1000, -1],
                 [20, 50, 70, 100, 300, 500, 1000, 'All'],
             ],
-            columns: [
-                { data: 'transaction_date', name: 'transaction_date' },
-                { data: 'invoice_no', name: 'invoice_no' },
-                { data: 'name', name: 'contacts.name' },
-                { data: 'business_location', name: 'bl.name' },
-                { data: 'payment_status', name: 'payment_status' },
-                { data: 'final_total', name: 'final_total' },
-                { data: 'total_paid', name: 'total_paid' },
-                { data: 'total_remaining', name: 'total_remaining' },
+            columns: [{
+                    data: 'transaction_date',
+                    name: 'transaction_date'
+                },
+                {
+                    data: 'invoice_no',
+                    name: 'invoice_no'
+                },
+                {
+                    data: 'name',
+                    name: 'contacts.name'
+                },
+                {
+                    data: 'business_location',
+                    name: 'bl.name'
+                },
+                {
+                    data: 'payment_status',
+                    name: 'payment_status'
+                },
+                {
+                    data: 'final_total',
+                    name: 'final_total'
+                },
+                {
+                    data: 'total_paid',
+                    name: 'total_paid'
+                },
+                {
+                    data: 'total_remaining',
+                    name: 'total_remaining'
+                },
             ],
             columnDefs: [{
                 searchable: false,
@@ -597,15 +791,36 @@ $(document).ready(function() {
             [20, 50, 70, 100, 300, 500, 1000, -1],
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
-        columns: [
-            { data: 'product', name: 'p.name' },
-            { data: 'sku', name: 'p.sku' },
+        columns: [{
+                data: 'product',
+                name: 'p.name'
+            },
+            {
+                data: 'sku',
+                name: 'p.sku'
+            },
             // { data: 'ref_no', name: 't.ref_no' },
-            { data: 'location', name: 'l.name' },
-            { data: 'stock_left', name: 'stock_left', searchable: false },
-            { data: 'lot_number', name: 'lot_number' },
-            { data: 'exp_date', name: 'exp_date' },
-            { data: 'mfg_date', name: 'mfg_date' },
+            {
+                data: 'location',
+                name: 'l.name'
+            },
+            {
+                data: 'stock_left',
+                name: 'stock_left',
+                searchable: false
+            },
+            {
+                data: 'lot_number',
+                name: 'lot_number'
+            },
+            {
+                data: 'exp_date',
+                name: 'exp_date'
+            },
+            {
+                data: 'mfg_date',
+                name: 'mfg_date'
+            },
             // { data: 'edit', name: 'edit' },
         ],
         fnDrawCallback: function(oSettings) {
@@ -725,20 +940,54 @@ $(document).ready(function() {
             [20, 50, 70, 100, 300, 500, 1000, -1],
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
-        columns: [
-            { data: 'image', searchable: false },
-            { data: 'product_name', name: 'p.name' },
-            { data: 'supplier', name: 'c.name' },
-            { data: 'ref_no', name: 'p.refference' },
-            { data: 'transfered_from', name: 'vld.transfered_from' },
-            { data: 'transaction_date', name: 'vld.transfered_on' },
-            { data: 'location_name', name: 'bl.name' },
+        columns: [{
+                data: 'image',
+                searchable: false
+            },
+            {
+                data: 'product_name',
+                name: 'p.name'
+            },
+            {
+                data: 'supplier',
+                name: 'c.name'
+            },
+            {
+                data: 'ref_no',
+                name: 'p.refference'
+            },
+            {
+                data: 'transfered_from',
+                name: 'vld.transfered_from'
+            },
+            {
+                data: 'transaction_date',
+                name: 'vld.transfered_on'
+            },
+            {
+                data: 'location_name',
+                name: 'bl.name'
+            },
             // { data: 'size', name: 's.name' },
             // { data: 'quantity_adjusted', name: 'purchase_lines.quantity_adjusted' },
-            { data: 'unit_purchase_price', name: 'purchase_lines.purchase_price_inc_tax' },
-            { data: 'purchase_price', name: 'purchase_lines.purchase_price_inc_tax' },
-            { data: 'purchase_qty', name: 'subtotal', searchable: false },
-            { data: 'subtotal', name: 'subtotal', searchable: false },
+            {
+                data: 'unit_purchase_price',
+                name: 'purchase_lines.purchase_price_inc_tax'
+            },
+            {
+                data: 'purchase_price',
+                name: 'purchase_lines.purchase_price_inc_tax'
+            },
+            {
+                data: 'purchase_qty',
+                name: 'subtotal',
+                searchable: false
+            },
+            {
+                data: 'subtotal',
+                name: 'subtotal',
+                searchable: false
+            },
         ],
         fnDrawCallback: function(oSettings) {
             $('#footer_subtotal').text(
@@ -767,7 +1016,10 @@ $(document).ready(function() {
                         response(
                             $.map(data, function(v, i) {
                                 if (v.variation_id) {
-                                    return { label: v.text, value: v.variation_id };
+                                    return {
+                                        label: v.text,
+                                        value: v.variation_id
+                                    };
                                 }
                                 return false;
                             })
@@ -871,24 +1123,79 @@ $(document).ready(function() {
                 d.location_id = $('select#location_id').val();
             },
         },
-        columns: [
-            { data: 'image', name: 'products.image', searchable: false, orderable: false },
-            { data: 'product_name', name: 'p.name' },
-            { data: 'refference', name: 'p.refference' },
-            { data: 'size', name: 'size', searchable: false, orderable: false },
+        columns: [{
+                data: 'image',
+                name: 'products.image',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'product_name',
+                name: 'p.name'
+            },
+            {
+                data: 'refference',
+                name: 'p.refference'
+            },
+            {
+                data: 'size',
+                name: 'size',
+                searchable: false,
+                orderable: false
+            },
             // { data: 'total_sold', searchable: false, orderable: false },
-            { data: 'current_stock', name: 'current_stock', searchable: false, orderable: false },
-            { data: 'sell_qty', name: 'transaction_sell_lines.quantity' },
-            { data: 'supplier_id', name: 'p.supplier_id' },
-            { data: 'original_amount', name: 'original_amount' },
-            { data: 'unit_price', name: 'transaction_sell_lines.unit_price_before_discount' },
-            { data: 'unit_sale_price', name: 'transaction_sell_lines.unit_price_inc_tax' },
-            { data: 'discount_amount', name: 'transaction_sell_lines.line_discount_amount' },
-            { data: 'subtotal', name: 'subtotal', searchable: false },
-            { data: 'barcode', name: 'p.sku', searchable: false },
-            { data: 'transaction_date', name: 't.transaction_date' },
-            { data: 'product_updated_at', name: 'p.product_updated_at' },
-            { data: 'invoice_no', name: 't.invoice_no' },
+            {
+                data: 'current_stock',
+                name: 'current_stock',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'sell_qty',
+                name: 'transaction_sell_lines.quantity'
+            },
+            {
+                data: 'supplier_id',
+                name: 'p.supplier_id'
+            },
+            {
+                data: 'original_amount',
+                name: 'original_amount'
+            },
+            {
+                data: 'unit_price',
+                name: 'transaction_sell_lines.unit_price_before_discount'
+            },
+            {
+                data: 'unit_sale_price',
+                name: 'transaction_sell_lines.unit_price_inc_tax'
+            },
+            {
+                data: 'discount_amount',
+                name: 'transaction_sell_lines.line_discount_amount'
+            },
+            {
+                data: 'subtotal',
+                name: 'subtotal',
+                searchable: false
+            },
+            {
+                data: 'barcode',
+                name: 'p.sku',
+                searchable: false
+            },
+            {
+                data: 'transaction_date',
+                name: 't.transaction_date'
+            },
+            {
+                data: 'product_updated_at',
+                name: 'p.product_updated_at'
+            },
+            {
+                data: 'invoice_no',
+                name: 't.invoice_no'
+            },
             // { data: 'purchase_date', name: 'purchase_date', searchable: false },
             // { data: 'customer', name: 'c.name' },
             // { data: 'tax', name: 'tax_rates.name' },
@@ -1008,18 +1315,45 @@ $(document).ready(function() {
                 d.location_id = $('select#location_id').val();
             },
         },
-        columns: [
-            { data: 'image', name: 'products.image', searchable: false, orderable: false },
-            { data: 'product_name', name: 'p.name' },
+        columns: [{
+                data: 'image',
+                name: 'products.image',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'product_name',
+                name: 'p.name'
+            },
             // { data: 'product_updated_at', name: 'p.product_updated_at' },
-            { data: 'refference', name: 'p.refference' },
+            {
+                data: 'refference',
+                name: 'p.refference'
+            },
             // { data: 'total_sold', searchable: false, orderable: false },
             // { data: 'barcode', name: 'p.sku' },
             // { data: 'transaction_date', name: 't.transaction_date' },
-            { data: 'current_stock', name: 'current_stock', searchable: false, orderable: false },
-            { data: 'total_qty_sold', name: 'total_qty_sold', searchable: false },
-            { data: 'sale_percentage', name: 'sale_percentage', searchable: false },
-            { data: 'subtotal', name: 'subtotal', searchable: false },
+            {
+                data: 'current_stock',
+                name: 'current_stock',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'total_qty_sold',
+                name: 'total_qty_sold',
+                searchable: false
+            },
+            {
+                data: 'sale_percentage',
+                name: 'sale_percentage',
+                searchable: false
+            },
+            {
+                data: 'subtotal',
+                name: 'subtotal',
+                searchable: false
+            },
         ],
         fnDrawCallback: function(oSettings) {
             $('#footer_grouped_subtotal').text(
@@ -1091,14 +1425,37 @@ $(document).ready(function() {
             [20, 50, 70, 100, 300, 500, 1000, -1],
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
-        columns: [
-            { data: 'sub_sku', name: 'v.sub_sku' },
-            { data: 'product', name: 'products.name' },
-            { data: 'lot_number', name: 'pl.lot_number' },
-            { data: 'exp_date', name: 'pl.exp_date' },
-            { data: 'stock', name: 'stock', searchable: false },
-            { data: 'total_sold', name: 'total_sold', searchable: false },
-            { data: 'total_adjusted', name: 'total_adjusted', searchable: false },
+        columns: [{
+                data: 'sub_sku',
+                name: 'v.sub_sku'
+            },
+            {
+                data: 'product',
+                name: 'products.name'
+            },
+            {
+                data: 'lot_number',
+                name: 'pl.lot_number'
+            },
+            {
+                data: 'exp_date',
+                name: 'pl.exp_date'
+            },
+            {
+                data: 'stock',
+                name: 'stock',
+                searchable: false
+            },
+            {
+                data: 'total_sold',
+                name: 'total_sold',
+                searchable: false
+            },
+            {
+                data: 'total_adjusted',
+                name: 'total_adjusted',
+                searchable: false
+            },
         ],
 
         fnDrawCallback: function(oSettings) {
@@ -1154,13 +1511,36 @@ $(document).ready(function() {
                 data: null,
                 defaultContent: '',
             },
-            { data: 'payment_ref_no', name: 'payment_ref_no' },
-            { data: 'paid_on', name: 'paid_on' },
-            { data: 'amount', name: 'transaction_payments.amount' },
-            { data: 'supplier', orderable: false, searchable: false },
-            { data: 'method', name: 'method' },
-            { data: 'ref_no', name: 't.ref_no' },
-            { data: 'action', orderable: false, searchable: false },
+            {
+                data: 'payment_ref_no',
+                name: 'payment_ref_no'
+            },
+            {
+                data: 'paid_on',
+                name: 'paid_on'
+            },
+            {
+                data: 'amount',
+                name: 'transaction_payments.amount'
+            },
+            {
+                data: 'supplier',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'method',
+                name: 'method'
+            },
+            {
+                data: 'ref_no',
+                name: 't.ref_no'
+            },
+            {
+                data: 'action',
+                orderable: false,
+                searchable: false
+            },
         ],
         fnDrawCallback: function(oSettings) {
             var total_amount = sum_table_col($('#purchase_payment_report_table'), 'paid-amount');
@@ -1264,13 +1644,36 @@ $(document).ready(function() {
                 data: null,
                 defaultContent: '',
             },
-            { data: 'payment_ref_no', name: 'payment_ref_no' },
-            { data: 'paid_on', name: 'paid_on' },
-            { data: 'amount', name: 'transaction_payments.amount' },
-            { data: 'customer', orderable: false, searchable: false },
-            { data: 'method', name: 'method' },
-            { data: 'invoice_no', name: 't.invoice_no' },
-            { data: 'action', orderable: false, searchable: false },
+            {
+                data: 'payment_ref_no',
+                name: 'payment_ref_no'
+            },
+            {
+                data: 'paid_on',
+                name: 'paid_on'
+            },
+            {
+                data: 'amount',
+                name: 'transaction_payments.amount'
+            },
+            {
+                data: 'customer',
+                orderable: false,
+                searchable: false
+            },
+            {
+                data: 'method',
+                name: 'method'
+            },
+            {
+                data: 'invoice_no',
+                name: 't.invoice_no'
+            },
+            {
+                data: 'action',
+                orderable: false,
+                searchable: false
+            },
         ],
         fnDrawCallback: function(oSettings) {
             var total_amount = sum_table_col($('#sell_payment_report_table'), 'paid-amount');
@@ -1343,7 +1746,11 @@ function updatePurchaseSell() {
     var end = $('#purchase_sell_date_filter').data('daterangepicker').endDate.format('YYYY-MM-DD');
     var location_id = $('#purchase_sell_location_filter').val();
 
-    var data = { start_date: start, end_date: end, location_id: location_id };
+    var data = {
+        start_date: start,
+        end_date: end,
+        location_id: location_id
+    };
 
     var loader = __fa_awesome();
     $('.total_purchase').html(loader);
@@ -1408,7 +1815,11 @@ function updateTaxReport() {
     var start = $('#tax_report_date_filter').data('daterangepicker').startDate.format('YYYY-MM-DD');
     var end = $('#tax_report_date_filter').data('daterangepicker').endDate.format('YYYY-MM-DD');
     var location_id = $('#tax_report_location_filter').val();
-    var data = { start_date: start, end_date: end, location_id: location_id };
+    var data = {
+        start_date: start,
+        end_date: end,
+        location_id: location_id
+    };
 
     var loader = '<i class="fa fa-refresh fa-spin fa-fw margin-bottom"></i>';
     $('.input_tax').html(loader);
@@ -1439,7 +1850,11 @@ function updateStockAdjustmentReport() {
         .data('daterangepicker')
         .endDate.format('YYYY-MM-DD');
 
-    var data = { start_date: start, end_date: end, location_id: location_id };
+    var data = {
+        start_date: start,
+        end_date: end,
+        location_id: location_id
+    };
 
     var loader = __fa_awesome();
     $('.total_amount').html(loader);
@@ -1600,7 +2015,11 @@ function updateProfitLoss() {
     var end = $('#profit_loss_date_filter').data('daterangepicker').endDate.format('YYYY-MM-DD');
     var location_id = $('#profit_loss_location_filter').val();
 
-    var data = { start_date: start, end_date: end, location_id: location_id };
+    var data = {
+        start_date: start,
+        end_date: end,
+        location_id: location_id
+    };
 
     var loader = __fa_awesome();
     $(

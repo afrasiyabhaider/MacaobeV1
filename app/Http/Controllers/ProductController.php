@@ -264,11 +264,11 @@ class ProductController extends Controller
                     return $row->created_at;
                 })
                 ->editColumn('type', '@lang("lang_v1." . $type)')
-                ->editColumn('purchase_price', function($row){
-                    if(auth()->user()->getRoleNameAttribute() != 'Admin' && auth()->user()->getRoleNameAttribute() != 'admin lalouviere' && auth()->user()->getRoleNameAttribute() != '	
-                    ADMIN DOUAIRE' && auth()->user()->getRoleNameAttribute() != 'ADMIN BELLE ILE'){
+                ->editColumn('purchase_price', function ($row) {
+                    if (auth()->user()->getRoleNameAttribute() != 'Admin' && auth()->user()->getRoleNameAttribute() != 'admin lalouviere' && auth()->user()->getRoleNameAttribute() != '	
+                    ADMIN DOUAIRE' && auth()->user()->getRoleNameAttribute() != 'ADMIN BELLE ILE') {
                         return '-';
-                    }else{
+                    } else {
                         return $row->purchase_price;
                         // return '<span class="display_currency" data-currency_symbol="true">{{$row->purchase_price}}</span>';
                     }
@@ -290,7 +290,7 @@ class ProductController extends Controller
                         }
                     }
                 ])
-                ->rawColumns(['action','purchase_price' ,'image', 'mass_delete', 'product', 'price'])
+                ->rawColumns(['action', 'purchase_price', 'image', 'mass_delete', 'product', 'price'])
                 ->make(true);
         }
 
@@ -505,12 +505,12 @@ class ProductController extends Controller
                     return $row->created_at;
                 })
                 ->editColumn('type', '@lang("lang_v1." . $type)')
-                ->editColumn('purchase_price', function($row){
+                ->editColumn('purchase_price', function ($row) {
 
-                    if(auth()->user()->getRoleNameAttribute() != 'Admin' && auth()->user()->getRoleNameAttribute() != 'admin lalouviere' && auth()->user()->getRoleNameAttribute() != '	
-                    ADMIN DOUAIRE' && auth()->user()->getRoleNameAttribute() != 'ADMIN BELLE ILE'){
+                    if (auth()->user()->getRoleNameAttribute() != 'Admin' && auth()->user()->getRoleNameAttribute() != 'admin lalouviere' && auth()->user()->getRoleNameAttribute() != '	
+                    ADMIN DOUAIRE' && auth()->user()->getRoleNameAttribute() != 'ADMIN BELLE ILE') {
                         return '-';
-                    }else{
+                    } else {
                         return $row->purchase_price;
                         // return '<span class="display_currency" data-currency_symbol="true">{{$purchase_price}}</span>';
                     }
@@ -520,8 +520,7 @@ class ProductController extends Controller
                         return  '<input type="checkbox" class="row-select" value="' . $row->id . '"><input type="number" class="row-qty form-control" value="' . number_format($row->current_stock) . '" max="' . number_format($row->current_stock) . '" style="width:70px;" id="qty_' . $row->id . '">';
                 })
                 ->addColumn('printing_qty', function ($row) {
-                    if (number_format($row->current_stock) > 0)
-                        return  'Print: <input type="number" class="row-print-qty form-control disabled" value="' . $row->printing_qty . '" max="' . $row->printing_qty . '" style="width:70px;" id="printing_qty_' . $row->id . '">';
+                    return  'Print: <input type="number" class="row-print-qty form-control disabled" value="' . $row->printing_qty . '" max="' . $row->printing_qty . '" style="width:70px;" id="printing_qty_' . $row->id . '">';
                 })
                 ->editColumn('current_stock', '@if($enable_stock == 1) {{@number_format($current_stock)}} @else -- @endif {{$unit}}')
                 ->addColumn(
@@ -537,7 +536,7 @@ class ProductController extends Controller
                 //         }
                 //     }
                 // ])
-                ->rawColumns(['printing_qty', 'purchase_price' ,'action', 'image', 'mass_delete', 'product', 'price'])
+                ->rawColumns(['printing_qty', 'purchase_price', 'action', 'image', 'mass_delete', 'product', 'price'])
                 ->make(true);
         }
 
@@ -1165,7 +1164,7 @@ class ProductController extends Controller
             }
             session()->put('location_id', $location);
             $purchase_line = VariationLocationDetails::where('product_id', '=', $request->input('product_id'))->where('location_id', $request->input('location_id'))->first();
-            
+
             if ($request->input('new_quantity')) {
                 $purchase_line->qty_available = $request->input('quantity') + $request->input('new_quantity');
                 $purchase_line->printing_qty = $request->input('new_quantity');
@@ -1173,7 +1172,7 @@ class ProductController extends Controller
             } else {
                 $purchase_line->qty_available = $request->input('quantity');
             }
-            
+
             $purchase_line->save();
 
             $message = 'Product Updated Successfully. ';
@@ -1193,7 +1192,7 @@ class ProductController extends Controller
 
                 $location_transfer_detail->save();
 
-                $message .='Product added into Purchase Table as well for Location: '.$location_transfer_detail->location_id;
+                $message .= 'Product added into Purchase Table as well for Location: ' . $location_transfer_detail->location_id;
             }
 
             DB::commit();
@@ -2648,9 +2647,9 @@ class ProductController extends Controller
                     $productQty = $arr[1];
 
                     $pro = Product::find($productId);
-                    $vld = VariationLocationDetails::where('product_id',$productId)->first()->printing_qty;
+                    $vld = VariationLocationDetails::where('product_id', $productId)->first()->printing_qty;
 
-                    for($i=0; $i<$productQty; $i++){
+                    for ($i = 0; $i < $productQty; $i++) {
                         $product[] = [
                             'name' => $pro->name,
                             'size' => $pro->sub_size()->first()->name,
@@ -2699,7 +2698,7 @@ class ProductController extends Controller
             if (!empty($request->input('selected_products_bulkPrint'))) {
                 $business_location = $request->input('printing_location_id');
                 $location = 'All Location';
-                if($business_location){
+                if ($business_location) {
                     $location = BusinessLocation::find($business_location)->name;
                 }
                 $business_id = $request->session()->get('user.business_id');
@@ -2707,7 +2706,7 @@ class ProductController extends Controller
                 $selected_products = explode(',', $request->input('selected_products_bulkPrint'));
                 $selected_products_qty = explode(',', $request->input('selected_products_bulkPrint_qty'));
 
-                for($i=0 ; $i < count($selected_products); $i++){
+                for ($i = 0; $i < count($selected_products); $i++) {
                     $pro = Product::find($selected_products[$i]);
                     $product[] = [
                         'id' => $pro->id,
@@ -2724,7 +2723,7 @@ class ProductController extends Controller
                         'count' => $selected_products_qty[$i],
                     ];
                 }
-               
+
                 $s_products = collect($selected_products);
                 $qtys = $s_products->combine($selected_products_qty);
 
@@ -2733,11 +2732,11 @@ class ProductController extends Controller
                 // dd($location);
                 // $print_qtys = $qtys->sortKeys()->values()->toArray();
                 // $print_qtys = $qtys->sortKeysDesc()->values()->toArray();
-                
+
                 // dd($qtys,$s_products,$selected_products_qty,$print_qtys,$product->pluck('id'));
 
                 return view('product.massBulkPrint')
-                    ->with(compact('product','print_qtys','location'));
+                    ->with(compact('product', 'print_qtys', 'location'));
             }
 
             $output = [
@@ -2766,7 +2765,7 @@ class ProductController extends Controller
             if (!empty($request->input('selected_products_bulkPrint'))) {
                 $business_location = $request->input('printing_location_id');
                 $location = 'All Location';
-                if($business_location){
+                if ($business_location) {
                     $location = BusinessLocation::find($business_location)->name;
                 }
                 $business_id = $request->session()->get('user.business_id');
@@ -2817,7 +2816,7 @@ class ProductController extends Controller
                     )->groupBy('products.id')
                     // ->orderBy('products.id','ASC')
                     // ->orderBy('products.refference','ASC')
-                    ->orderBy('vld.product_updated_at','DESC')
+                    ->orderBy('vld.product_updated_at', 'DESC')
                     ->get();
 
                 // Below code is to arrange desired qtys as per products
@@ -2828,11 +2827,11 @@ class ProductController extends Controller
                 // dd($location);
                 // $print_qtys = $qtys->sortKeys()->values()->toArray();
                 // $print_qtys = $qtys->sortKeysDesc()->values()->toArray();
-                
-                dd($qtys,$s_products,$selected_products_qty,$print_qtys,$product->pluck('id'));
+
+                dd($qtys, $s_products, $selected_products_qty, $print_qtys, $product->pluck('id'));
 
                 return view('product.massBulkPrint')
-                    ->with(compact('product','print_qtys','location'));
+                    ->with(compact('product', 'print_qtys', 'location'));
             }
 
             $output = [
@@ -2852,7 +2851,7 @@ class ProductController extends Controller
         die();
         // return redirect()->back()->with(['status' => $output]);
     }
-    
+
     public function massTransfer(Request $request)
     {
         if (!auth()->user()->can('product.update')) {
@@ -2863,8 +2862,8 @@ class ProductController extends Controller
             if (!empty($request->input('selected_products_bulkTransfer'))) {
                 $business_id = $request->session()->get('user.business_id');
                 $user_location_id = $request->session()->get('user.business_location_id');
-                if($request->input('current_location')){
-                    if($request->input('current_location') == 0){
+                if ($request->input('current_location')) {
+                    if ($request->input('current_location') == 0) {
                         $output = [
                             'success' => 0,
                             'msg' => "All Location is Invalid Select Valid Location"
@@ -2874,7 +2873,7 @@ class ProductController extends Controller
                     $user_location_id = $request->input('current_location');
                 }
                 $user_id = $request->session()->get('user.id');
-                
+
                 $selected_products = explode(',', $request->input('selected_products_bulkTransfer'));
                 $business_location_id = $request->input('bussiness_bulkTransfer');
                 $location_id = $business_location_id;
@@ -2910,7 +2909,7 @@ class ProductController extends Controller
                             $objTransaction = \App\Transaction::where("id", $objPurchaseLine->transaction_id)->update(['location_id' => $business_location_id]);
 
                             $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objPurchaseLine->variation_id)->where("product_id", $productId)->update(['location_id' => $business_location_id]);
-                        } elseif(!empty($objOldPurchaseLine)) {
+                        } elseif (!empty($objOldPurchaseLine)) {
                             // dd($arr,$location_id);
                             // PL with new bussiness location id 
                             $objNewPurchaseLine = $objOldPurchaseLine;
@@ -2928,27 +2927,27 @@ class ProductController extends Controller
 
                             //Update Variation_location_details Qty Remaining 
                             $old_qty_of_product = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $objOldPurchaseLine->product_id);
-                            
+
                             // $new_transfer_Qty = $old_qty_of_product->first()->qty_available + $productQty;
 
                             // dd($new_transfer_Qty);
                             // $old_qty_of_product->update(['qty_available' => $new_transfer_Qty]);
                             $old_qty_of_product->update(['qty_available' => $LeftQty]);
-                            
+
                             // dd($user_location_id,$LeftQty,$oldPurchaseLine);
 
                             // Commented below for checking
                             $after_transfer = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objNewPurchaseLine->variation_id)->where("product_id", $objNewPurchaseLine->product_id);
 
                             $before_transfer_qty = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objNewPurchaseLine->variation_id)->where("product_id", $objNewPurchaseLine->product_id)->first()->qty_available;
-                            
-                            $new_qty = $before_transfer_qty + $productQty; 
+
+                            $new_qty = $before_transfer_qty + $productQty;
 
                             $after_transfer->update(['qty_available' => $new_qty]);
-                            $after_transfer->update(['product_updated_at'=>Carbon::now()]);
+                            $after_transfer->update(['product_updated_at' => Carbon::now()]);
                         }
                         $ref = Product::find($objOldPurchaseLine->product_id)->refference;
-                        
+
                         $location_transfer_detail = new LocationTransferDetail();
                         $location_transfer_detail->variation_id = $objOldPurchaseLine->variation_id;
                         $location_transfer_detail->product_id = $objOldPurchaseLine->product_id;
@@ -2976,8 +2975,10 @@ class ProductController extends Controller
 
                         // dd($objOrignalPurchaseLine);
 
-                        $objOrignalPurchaseLine = PurchaseLine::where("transaction_id", 
-                        $objOrignalPurchaseLine->transaction_id)->where("product_id", $objOrignalPurchaseLine->product_id)->first();
+                        $objOrignalPurchaseLine = PurchaseLine::where(
+                            "transaction_id",
+                            $objOrignalPurchaseLine->transaction_id
+                        )->where("product_id", $objOrignalPurchaseLine->product_id)->first();
 
                         $objOldPurchaseLine = PurchaseLine::join('transactions as t', 't.id', '=', 'purchase_lines.transaction_id')->where("t.location_id", $business_location_id)->where("purchase_lines.product_id", $productId)->first();
 
@@ -3032,7 +3033,7 @@ class ProductController extends Controller
                             // }
                         } else {
                             if ($qty_remaining != 0) {
-                            //create newly added purchase lines
+                                //create newly added purchase lines
                                 $purchase_line = new PurchaseLine();
                                 $purchase_line->product_id = $product->id;
                                 $purchase_line->variation_id = $k;
@@ -3079,7 +3080,7 @@ class ProductController extends Controller
                             // dd((float)$old_available_qty->qty_available,$location_id);
                             // $old_available_qty = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $product->id)->first();
                             $qtyForPurchaseLine = (float)$productQty;
-                            
+
                             // dd($location_id,$old_available_qty->qty_available,$qtyForPurchaseLine,$LeftQty);
 
                             $transaction = \App\Transaction::where('type', 'opening_stock')
@@ -3138,24 +3139,24 @@ class ProductController extends Controller
                          * 
                          **/
                         $oldPurchaseLine = VariationLocationDetails::where("location_id", $user_location_id)->where("variation_id", $objOrignalPurchaseLine->variation_id)->where("product_id", $product->id)->update(['qty_available' => $LeftQty]);
-                        
+
                         $transfer_to_location = VariationLocationDetails::where("location_id", $business_location_id)->where("variation_id", $objOldPurchaseLine->variation_id)->where("product_id", $product->id)->first();
                         $new_qty = (float)$transfer_to_location->qty_available + (float)$qtyForPurchaseLine;
-                        
+
                         // dd($transfer_to_location,(float)$transfer_to_location->qty_available,(float)$qtyForPurchaseLine,$new_qty);
 
                         $transfer_to_location->qty_available = $new_qty;
-                        $transfer_to_location->product_updated_at=Carbon::now();
+                        $transfer_to_location->product_updated_at = Carbon::now();
                         $transfer_to_location->save();
 
-                        $product->product_updated_at=Carbon::now();
+                        $product->product_updated_at = Carbon::now();
                         $product->save();
 
 
 
                         // New table for Purchase Report
                         $ref = Product::find($objOldPurchaseLine->product_id)->refference;
-                        
+
                         $location_transfer_detail = new LocationTransferDetail();
                         $location_transfer_detail->variation_id = $objOldPurchaseLine->variation_id;
                         $location_transfer_detail->product_id = $product->id;
