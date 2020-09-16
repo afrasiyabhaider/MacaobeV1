@@ -1980,7 +1980,7 @@ class ReportController extends Controller
                 'ct.cash_register_id',
                 '=',
                 'cash_registers.id'
-            )   
+            )
             ->join(
                 'business_locations as bl',
                 'bl.id',
@@ -1988,28 +1988,49 @@ class ReportController extends Controller
                 'cash_registers.location_id'
             )
             ->join(
-                'transaction_sell_lines as t',
-                't.transaction_id',
+                'transaction_sell_lines as tsl',
+                'tsl.transaction_id',
                 '=',
                 'ct.transaction_id'
             )
-            ->select(
+            ->join(
+                'transaction_payments as tp',
+                'tp.transaction_id',
+                '=',
+                'ct.transaction_id'
+            )
+            ->join(
+                'transactions as t',
+                't.id',
+                '=',
+                'ct.transaction_id'
+            )
+            ->select( 
                 'cash_registers.id as register_id', 
                 'cash_registers.created_at as created_at', 
                 'cash_registers.location_id as location_id',    
                 'bl.name as location_name',    
                 'cash_registers.statusss as status',    
-                DB::raw("SUM(IF(ct.pay_method = 'cash', amount, 0)) as cash"),
-                DB::raw("SUM(IF(ct.pay_method = 'card', amount, 0)) as card"),
-                DB::raw("SUM(IF(ct.pay_method = 'gift_card', amount, 0)) as gift_card"),
-                DB::raw("SUM(IF(ct.pay_method = 'coupon', amount, 0)) as coupon"),
-                DB::raw("SUM(IF(t.discounted_amount > 0, discounted_amount, 0)) as discounted_amount"),
+                // DB::raw("SUM(IF(ct.pay_method = 'cash' AND ct.amount > 0, ct.amount, 0)) as cash"),
+                // DB::raw("SUM(IF(tp.method = 'cash' ,tp.amount, 0)) as cash"),
+                DB::raw("SUM(IF(tp.method = 'cash' AND ct.amount > 0,t.final_total, 0)) as cash"),
+                DB::raw("SUM(IF(tp.method = 'card' AND ct.amount > 0,t.final_total, 0)) as card"),
+                DB::raw("SUM(IF(tp.is_convert = 'gift_card' AND ct.amount > 0, t.final_total, 0)) as gift_card"),
+                DB::raw("SUM(IF(tp.is_convert = 'coupon' AND ct.amount > 0, t.final_total, 0)) as coupon"),
+                // DB::raw("SUM(IF(ct.pay_method = 'gift_card', amount, 0)) as gift_card"),
+                // DB::raw("SUM(IF(ct.pay_method = 'coupon', amount, 0)) as coupon"),
+                DB::raw("SUM(IF(ct.amount > 0, discounted_amount, 0)) as discounted_amount"),
+                DB::raw("COUNT(DISTINCT(ct.transaction_id)) as invoices"),
+                // DB::raw("(SELECT COUNT(tr.invoice_no) FROM transactions as tr WHERE tr.id=t.transaction_id) as invoice"),
+                DB::raw("SUM(IF(ct.amount > 0, tsl.quantity, 0)) as items"),
+                // DB::raw("SUM(tsl.quantity) as items"),
+                // DB::raw("SUM(IF(DISTINCT(ct.transaction_id), t.quanity, 0)) as items"),
                 // DB::raw('(SELECT SUM(cts.amount) FROM cash_register_transactions as cts WHERE cts.cash_register_id=cash_registers.id AND cts.pay_method="cash") as cash_payment')
             )
             ->orderBy('created_at','DESC')
             ->groupBy('register_id');
 
-            // dd($registers->first());
+            // dd($registers->get()[195], $registers->get()[196], $registers->get()[197]);
             
 
             if (!empty($request->input('user_id'))) {
@@ -2032,24 +2053,34 @@ class ReportController extends Controller
             }
             return Datatables::of($registers)
                 ->editColumn('cash', function ($row) {
-                    return '<span class="display_currency" data-currency_symbol="true">' .
-                    $row->cash . '</span>';
+                    $cash = $row->cash - $row->card - $row->coupon - $row->gift_card;
+                    return '<span class="display_currency cash_amount" data-currency_symbol="true"  data-orig-value="' . $cash . '">' .
+                    $cash . '</span>';
                 })
                 ->editColumn('card', function ($row) {
-                    return '<span class="display_currency" data-currency_symbol="true">' .
+                    return '<span class="display_currency card_amount" data-currency_symbol="true"  data-orig-value="' . $row->card . '">' .
                     $row->card . '</span>';
                 })
                 ->editColumn('gift_card', function ($row) {
-                    return '<span class="display_currency" data-currency_symbol="true">' .
+                    return '<span class="display_currency giftcard_amount" data-currency_symbol="true" data-orig-value="' . $row->gift_card . '">' .
                     $row->gift_card . '</span>';
                 })
                 ->editColumn('coupon', function ($row) {
-                    return '<span class="display_currency" data-currency_symbol="true">' .
+                    return '<span class="display_currency coupon_amount" data-currency_symbol="true" data-orig-value="' . $row->coupon . '">' .
                     $row->coupon . '</span>';
                 })
                 ->editColumn('discounted_amount', function ($row) {
-                    return '<span class="display_currency" data-currency_symbol="true">' .
-                    $row->discounted_amount . '</span>';
+                    return '<span class="display_currency discounted_amount" data-currency_symbol="true" data-orig-value="' . $row->discounted_amount . '">' .$row->discounted_amount . '</span>';
+                })
+                ->addColumn('total_amount', function ($row) {
+                    $total = $row->cash+$row->card+$row->gift_card+$row->coupon+$row->discounted_amount;
+                    return '<span class="display_currency total_amount" data-currency_symbol="true" data-orig-value="' . $total . '">' .$total . '</span>';
+                })
+                ->editColumn('invoices', function ($row) {
+                    return '<span class="display_currency invoices" data-currency_symbol="false" data-orig-value="' . $row->invoices . '">' .$row->invoices . '</span>';
+                })
+                ->editColumn('items', function ($row) {
+                    return '<span class="display_currency items" data-currency_symbol="false" data-orig-value="' . $row->items . '">' .$row->items . '</span>';
                 })
                 ->editColumn('created_at', function ($row) {
                     return Carbon::parse($row->created_at)->format('d-M-Y H:i A');
@@ -2065,7 +2096,7 @@ class ReportController extends Controller
                 // })
                 ->addColumn('action', '<button type="button" data-href="{{action(\'CashRegisterController@show\', [$register_id])}}" class="btn btn-xs btn-info btn-modal" 
                     data-container=".view_register"><i class="fa fa-external-link" aria-hidden="true"></i> @lang("messages.view")</button>')
-                ->rawColumns(['action', 'cash', 'card', 'gift_card', 'coupon', 'discounted_amount'])
+                ->rawColumns(['action', 'cash', 'card', 'gift_card', 'coupon', 'discounted_amount','total_amount','invoices','items'])
                 ->make(true);
         }
 

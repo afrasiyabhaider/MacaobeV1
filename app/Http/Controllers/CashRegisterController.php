@@ -195,8 +195,16 @@ class CashRegisterController extends Controller
         
         $payment_methods = TransactionPayment::whereIn('transaction_id',$transaction_ids)->get();
 
-        $gift_card = $payment_methods->where('method','gift_card')->sum('amount');
-        $coupon = $payment_methods->where('method','coupon')->sum('amount');
+        // $gift_card = $payment_methods->where('method','gift_card')->sum('amount');
+
+        $giftcard_method = TransactionPayment::whereIn('transaction_id',$transaction_ids)->where('is_convert','gift_card')->pluck('transaction_id');
+
+        $gift_card = Transaction::whereIn('id',$giftcard_method)->sum('final_total');
+        
+        $coupon_method = TransactionPayment::whereIn('transaction_id',$transaction_ids)->where('is_convert','coupon')->pluck('transaction_id');
+        
+        $coupon = Transaction::whereIn('id',$coupon_method)->sum('final_total');
+        // $coupon = $payment_method->where('method','coupon')->sum('amount');
         // dd($coupon);
 
         $card_id = $payment_methods->where('method','card')->unique('created_at')->pluck('transaction_id');
@@ -329,8 +337,15 @@ class CashRegisterController extends Controller
         
         $payment_methods = TransactionPayment::whereIn('transaction_id',$transaction_ids)->get();
 
-        $gift_card = $payment_methods->where('method','gift_card')->sum('amount');
-        $coupon = $payment_methods->where('method','coupon')->sum('amount');
+        $giftcard_method = TransactionPayment::whereIn('transaction_id',$transaction_ids)->where('is_convert','gift_card')->pluck('transaction_id');
+
+        $gift_card = Transaction::whereIn('id',$giftcard_method)->sum('final_total');
+        // $gift_card = $payment_methods->where('method','gift_card')->sum('amount');
+
+        $coupon_method = TransactionPayment::whereIn('transaction_id',$transaction_ids)->where('is_convert','coupon')->pluck('transaction_id');
+        
+        $coupon = Transaction::whereIn('id',$coupon_method)->sum('final_total');
+        // $coupon = $payment_methods->where('method','coupon')->sum('amount');
         // dd($coupon);
 
         $card_id = $payment_methods->where('method','card')->unique('created_at')->pluck('transaction_id');

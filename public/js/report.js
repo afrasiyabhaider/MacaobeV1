@@ -292,24 +292,51 @@ $(document).ready(function() {
             },
         },
         // columnDefs: [{ targets: [6], orderable: false, searchable: false }],
-        pageLength: 100,
+        pageLength: -1,
         lengthMenu: [
             [20, 50, 70, 100, 300, 500, 1000, -1],
             [20, 50, 70, 100, 300, 500, 1000, 'All'],
         ],
         columns: [
+            { data: 'action', name: 'action' },
             { data: 'location_name', name: 'location_name' },
             { data: 'created_at', name: 'created_at' },
             // { data: 'status', name: 'status' },
+            { data: 'items', name: 'items' },
+            { data: 'invoices', name: 'invoices' },
             { data: 'cash', name: 'cash' },
             { data: 'card', name: 'card' },
             { data: 'gift_card', name: 'gift_card' },
             { data: 'coupon', name: 'coupon' },
             { data: 'discounted_amount', name: 'discounted_amount' },
-            { data: 'action', name: 'action' },
+            { data: 'total_amount', name: 'total_amount' },
         ],
         fnDrawCallback: function(oSettings) {
             __currency_convert_recursively($('#register_report_table'));
+            $('#total_amount').text(
+                sum_table_col($('#register_report_table'), 'total_amount')
+            );
+            $('#total_cash').text(
+                sum_table_col($('#register_report_table'), 'cash_amount')
+            );
+            $('#total_card').text(
+                sum_table_col($('#register_report_table'), 'card_amount')
+            );
+            $('#total_coupon').text(
+                sum_table_col($('#register_report_table'), 'coupon_amount')
+            );
+            $('#total_gift_card').text(
+                sum_table_col($('#register_report_table'), 'giftcard_amount')
+            );
+            $('#total_discount').text(
+                sum_table_col($('#register_report_table'), 'discounted_amount')
+            );
+            $('#total_invoices').text(
+                sum_table_col($('#register_report_table'), 'invoices')
+            );
+            $('#total_items').text(
+                sum_table_col($('#register_report_table'), 'items')
+            );
         },
     });
     $('.view_register').on('shown.bs.modal', function() {

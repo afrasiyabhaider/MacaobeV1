@@ -516,7 +516,6 @@ class TransactionUtil extends Util
                     $ref_count = $this->setAndGetReferenceCount($prefix_type, $business_id);
                     //Generate reference number
                     $payment_ref_no = $this->generateReferenceNumber($prefix_type, $ref_count, $business_id);
-
                     if($payment['method'] == 'cash'){
                         
                         $payment_data = [
@@ -633,6 +632,7 @@ class TransactionUtil extends Util
                                 $query->orWhere($key, $value);
                             }
                         })->update($dataUpdate);
+                        $payment_data['is_convert'] = 'gift_card';
                     } else if ($payment['method'] == "coupon") {
                         $getCoupon = $payment['coupon'];
                         $attributes = ['name' => $getCoupon, 'barcode' => $getCoupon];
