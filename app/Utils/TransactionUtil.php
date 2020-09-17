@@ -190,7 +190,7 @@ class TransactionUtil extends Util
                 // dd("Hello");
 
                 $edit_ids[] = $product['transaction_sell_lines_id'];
-                if($product["sell_line_note"] != "return"){
+                if ($product["sell_line_note"] != "return") {
                     $this->editSellLine($product, $location_id, $status_before, $multiplier);
                 }
 
@@ -198,7 +198,7 @@ class TransactionUtil extends Util
                 if ($this->isModuleEnabled('modifiers')) {
                     if (!empty($product['modifier'])) {
                         // dd("Hey");
-                        
+
                         foreach ($product['modifier'] as $key => $value) {
                             if (!empty($product['modifier_sell_line_id'][$key])) {
                                 //Dont delete modifier sell line if exists
@@ -238,16 +238,16 @@ class TransactionUtil extends Util
                         $unit_price = $unit_price_before_discount - $discount_amount;
                     } elseif ($product['line_discount_type'] == 'percentage') {
                         $unit_price = ((100 - $discount_amount) * $unit_price_before_discount) / 100;
-                        $discounted_amount = $unit_price_before_discount-$unit_price; 
+                        $discounted_amount = $unit_price_before_discount - $unit_price;
                     }
                 }
                 // dd($this->num_f($unit_price_before_discount));
 
                 $unit_price = ($product['un_discount'] != 0) ? $unit_price = $unit_price - $product['un_discount'] : $unit_price;
 
-                
+
                 $uf_quantity = $uf_data ? $this->num_uf($product['quantity']) : $product['quantity'];
-                
+
                 $uf_item_tax = $uf_data ? $this->num_uf($product['item_tax']) : $product['item_tax'];
                 $uf_unit_price_inc_tax = $uf_data ? $this->num_uf($product['unit_price_inc_tax']) : $product['unit_price_inc_tax'];
                 // dd($uf_unit_price_inc_tax);
@@ -304,17 +304,17 @@ class TransactionUtil extends Util
                             }
                         }
                     }
-                    
+
                     $modifiers_array[] = $sell_line_modifiers;
                 }
-                
+
                 $lines_formatted[] = new TransactionSellLine($line);
                 // dd("Hello");
             }
             $i++;
         }
         // dd("Hello");
-        
+
         if (!is_object($transaction)) {
             $transaction = Transaction::findOrFail($transaction);
         }
@@ -324,7 +324,7 @@ class TransactionUtil extends Util
             $deleted_lines = TransactionSellLine::where('transaction_id', $transaction->id)->whereNotIn('id', $edit_ids)->select('id')->get()->toArray();
             $this->deleteSellLines($deleted_lines, $location_id);
         }
-        
+
         if (!empty($lines_formatted)) {
             $transaction->sell_lines()->saveMany($lines_formatted);
             //Add corresponding modifier sell lines if exists
@@ -339,7 +339,7 @@ class TransactionUtil extends Util
                 }
             }
         }
-        
+
         if (!empty($modifiers_formatted)) {
             $transaction->sell_lines()->saveMany($modifiers_formatted);
         }
@@ -368,8 +368,8 @@ class TransactionUtil extends Util
             $difference = $sell_line->quantity - ($this->num_uf($product['quantity']) * $multiplier);
             $this->adjustQuantity($location_id, $product['product_id'], $product['variation_id'], $difference);
         }
-        
-        if($sell_line->unit_price_inc_tax){
+
+        if ($sell_line->unit_price_inc_tax) {
 
             $unit_price_before_discount = $sell_line->unit_price_inc_tax / $multiplier;
             // $unit_price_before_discount = $this->num_uf($sell_line->unit_price_inc_tax) / $multiplier;
@@ -387,10 +387,10 @@ class TransactionUtil extends Util
         // $iid = parse_int() $product['product_id'] ;
         // dd($iid);
         //Update sell lines.
-        if($product['product_id'] == 'r1337'){
+        if ($product['product_id'] == 'r1337') {
             $product['product_id'] = 1337;
         }
-        if($product['variation_id'] == 'r1310'){
+        if ($product['variation_id'] == 'r1310') {
             $product['variation_id'] = 1310;
         }
         $ref = Product::find($product['product_id'])->refference;
@@ -516,8 +516,8 @@ class TransactionUtil extends Util
                     $ref_count = $this->setAndGetReferenceCount($prefix_type, $business_id);
                     //Generate reference number
                     $payment_ref_no = $this->generateReferenceNumber($prefix_type, $ref_count, $business_id);
-                    if($payment['method'] == 'cash'){
-                        
+                    if ($payment['method'] == 'cash') {
+
                         $payment_data = [
                             'amount' => $payment_amount,
                             'method' => 'cash',
@@ -544,7 +544,7 @@ class TransactionUtil extends Util
                         $payments_formatted[] = new TransactionPayment($payment_data);
                         $cash = false;
                     }
-                    if($payment['method'] == 'card'){
+                    if ($payment['method'] == 'card') {
                         $payment_data = [
                             'amount' => $payment_amount,
                             'method' => 'card',
@@ -686,8 +686,8 @@ class TransactionUtil extends Util
                                 "isUsed" => "0"
                             );
                             $objNewCoupon = Coupon::create($crCoupon);
-                            $payment_data['is_convert'] = 'coupon';
                         }
+                        $payment_data['is_convert'] = 'coupon';
                         Coupon::where('coupons.id', $objCoupon->id)->update($dataUpdate);
                     } else if ($payment['method'] == "bonus_points") {
                         $objContact = Contact::where('business_id', $transaction->business_id)->where("id", $transaction->contact_id)->first();
@@ -705,7 +705,7 @@ class TransactionUtil extends Util
                         Contact::where($dataWhere)->update($dataUpdate);
                     }
 
-                    if($cash && $card){
+                    if ($cash && $card) {
                         $payments_formatted[] = new TransactionPayment($payment_data);
                     }
 
@@ -1555,11 +1555,11 @@ class TransactionUtil extends Util
             $line_array['line_discount'] = method_exists($line, 'get_discount_amount') ? $this->num_f($line->get_discount_amount(), false, $business_details) : 0;
             if ($line->line_discount_type == 'percentage') {
                 // $line_array['line_discount'] = $line->line_discount_amount;
-                $line_array['line_discount'] .= ' '.(int)$line->line_discount_amount. '%';
+                $line_array['line_discount'] .= ' ' . (int)$line->line_discount_amount . '%';
                 // $line_array['line_discount'] .= ' (' . $this->num_f($line->line_discount_amount, false, $business_details) . '%)';
             }
 
-            $line_array['sub_total_price'] = $this->num_f((($line->unit_price_inc_tax * $line->quantity) - (method_exists($line, 'get_discount_amount') ? $line->get_discount_amount() : 0)) , false, $business_details);
+            $line_array['sub_total_price'] = $this->num_f((($line->unit_price_inc_tax * $line->quantity) - (method_exists($line, 'get_discount_amount') ? $line->get_discount_amount() : 0)), false, $business_details);
 
             if ($il->show_brand == 1) {
                 $line_array['brand'] = !empty($brand->name) ? $brand->name : '';
@@ -2287,11 +2287,11 @@ class TransactionUtil extends Util
     public function getTotalPaid($transaction_id)
     {
         $total_paid = TransactionPayment::where('transaction_id', $transaction_id)
-                ->select(DB::raw('SUM(IF( is_return = 0, amount, amount*-1))as total_paid'))
-                ->first()->total_paid;
+            ->select(DB::raw('SUM(IF( is_return = 0, amount, amount*-1))as total_paid'))
+            ->first()->total_paid;
         $amount = Transaction::find($transaction_id)->final_total;
 
-        if(($amount+$amount) != $total_paid){
+        if (($amount + $amount) != $total_paid) {
             return $total_paid;
         }
         return $amount;
@@ -3384,13 +3384,13 @@ class TransactionUtil extends Util
      */
     public function updateQuantitySoldFromSellLine($sell_line, $new_quantity, $old_quantity)
     {
-        
+
         $qty_difference = $this->num_uf($new_quantity) - $this->num_uf($old_quantity);
 
         // dd($qty_difference);
-        
+
         if (true) {
-        // if ($qty_difference != 0) {
+            // if ($qty_difference != 0) {
             $qty_left_to_update = $qty_difference;
             $sell_line_purchase_lines = TransactionSellLinesPurchaseLines::where('sell_line_id', $sell_line->id)->get();
 
@@ -3407,17 +3407,16 @@ class TransactionUtil extends Util
                         // dd($tslpl);
                         // dd($tslpl->purchase_line_id);
                         if ($qty_left_to_update <= $tspl_qty_left_to_return) {
-                            if($purchase_line){
+                            if ($purchase_line) {
                                 $purchase_line->quantity_sold -= $qty_left_to_update;
                                 $purchase_line->save();
-
                             }
 
                             $tslpl->qty_returned += $qty_left_to_update;
                             $tslpl->save();
                             break;
                         } else {
-                            if($purchase_line){
+                            if ($purchase_line) {
                                 $purchase_line->quantity_sold -= $tspl_qty_left_to_return;
                                 $purchase_line->save();
                             }
@@ -3453,9 +3452,9 @@ class TransactionUtil extends Util
     }
     public function Old_updateQuantitySoldFromSellLine($sell_line, $new_quantity, $old_quantity)
     {
-        
+
         $qty_difference = $this->num_uf($new_quantity) - $this->num_uf($old_quantity);
-        
+
         if ($qty_difference != 0) {
             $qty_left_to_update = $qty_difference;
             $sell_line_purchase_lines = TransactionSellLinesPurchaseLines::where('sell_line_id', $sell_line->id)->get();
