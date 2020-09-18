@@ -923,7 +923,12 @@ class ReportController extends Controller
                     // return  '<input type="checkbox" class="row-select" value="' . $row->product_id . '"><input type="number" class="row-qty form-control" value="' . number_format($row->current_stock) . '" max="' . number_format($row->current_stock) . '" style="width:70px;" id="qty_' . $row->product_id . '">';
                 })
                 ->editColumn('printing_qty', function ($row) {
-                    return  'Print: <input type="number" class="row-print-qty form-control" value="' . number_format($row->printing_qty) . '" max="' . number_format($row->printing_qty) . '" style="width:70px;" id="printing_qty_' . $row->product_id . '">';
+                    if ($row->printing_qty < 1) {
+                        $qty = $row->current_stock;
+                    } else {
+                        $qty = $row->printing_qty;
+                    }
+                    return  'Print: <input type="number" class="row-print-qty form-control" value="' . number_format($qty) . '" max="' . number_format($qty) . '" style="width:70px;" id="printing_qty_' . $row->product_id . '">';
                 })
                 // ->addColumn('color_id', function ($row) {
                 //     // return  $row->first()->product()->first()->color()->first()->name;
