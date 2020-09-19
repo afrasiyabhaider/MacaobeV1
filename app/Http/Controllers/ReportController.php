@@ -4468,4 +4468,238 @@ class ReportController extends Controller
         return $datatable->rawColumns($row_columns)
             ->make(true);
     }
+
+
+    /**
+     * Daily Sales
+     * 
+     **/
+    public function dailySales(Request $request)
+    {
+        $business_id = request()->session()->get('user.business_id');
+
+        if (request()->ajax()) {
+            $query = Transaction::join('transaction_payments as tp', 'tp.transaction_id', '=', 'transactions.id')
+                ->where('transactions.type', 'sell')
+                ->join('business_locations as bl', 'bl.id', '=', 'transactions.location_id')
+                ->join('transaction_sell_lines as tsl', 'tsl.transaction_id', '=', 'transactions.id');
+
+
+            if (!empty($request->get('location_id'))) {
+                $query->where('transactions.location_id', $request->input('location_id'));
+            }
+
+            $start_date = $request->get('start_date');
+            $end_date = $request->get('end_date');
+
+            if (!empty($start_date) && !empty($end_date)) {
+                $query->whereBetween(DB::raw('date(transactions.created_at)'), [$start_date, $end_date]);
+            }
+
+            $query->select(
+                'transactions.location_id as location_id',
+                'bl.name as location_name',
+                'transactions.created_at as transaction_date',
+
+                // DB::raw('DATE_FORMAT(transactions.created_at,"%d %m %y") as date'),
+                // AND tp.is_convert!="coupon" AND tp.is_convert="gift_card"
+
+                DB::raw("DATE_FORMAT(transactions.created_at, '%Y-%m-%d')as date"),
+
+                // DB::raw('SUM(IF(tp.method="cash" AND tp.is_return=0,transactions.final_total,0)) as cash'),
+                DB::raw('SUM(IF(tp.method="cash" AND tp.is_return=0,transactions.final_total,0)) as cash'),
+
+                DB::raw('SUM(IF(tp.method="card" AND tp.is_return=0 ,transactions.final_total,0)) as card'),
+
+                DB::raw('SUM(IF(tp.is_convert="coupon",transactions.final_total,0)) as coupon'),
+
+                DB::raw('SUM(IF(tp.is_convert="gift_card",transactions.final_total,0)) as gift_card'),
+
+                DB::raw('SUM(tsl.discounted_amount/2) as discount'),
+
+                // DB::raw('COUNT(IF(tp.is_return=0 ,tp.id,0)) as invoices'),
+                DB::raw("COUNT(DISTINCT(tp.transaction_id)) as invoices"),
+
+                DB::raw('SUM(tsl.quantity/2) as items'),
+
+                // DB::raw("(SELECT COUNT(tr.invoice_no) FROM transactions as tr WHERE tr.id=t.transaction_id) as invoice"),
+                // DB::raw("SUM(IF(DISTINCT(tp.transaction_id), tsl.quantity, 0)) as items"),
+            )
+                ->orderBy('transactions.created_at', 'DESC')
+                ->groupBy(DB::raw("DATE_FORMAT(transactions.created_at, '%Y-%m-%d')"));
+
+            return Datatables::of($query)
+                ->addColumn('total', function ($row) {
+                    $total = ($row->cash - $row->coupon) + $row->card + $row->coupon + $row->gift_card;
+
+                    return '<span class="display_currency total_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
+                        $total . '</span>';
+                })
+                ->editColumn('discount', function ($row) {
+                    return
+                        '<span class="display_currency discounted_amount" data-currency_symbol="true" data-orig-value="' . $row->discount . '">' . $row->discount . '</span>';
+                })
+                ->editColumn('location_name', function ($row) {
+                    if (!empty(request()->get('location_id'))) {
+                        return $row->location_name;
+                    } else {
+                        return 'All Locations';
+                    }
+                })
+                ->editColumn('card', function ($row) {
+                    return '<span class="display_currency card_amount" data-currency_symbol="true"  data-orig-value="' . $row->card . '">' .
+                        $row->card . '</span>';
+                })
+                ->editColumn('cash', function ($row) {
+                    $total = $row->cash - $row->coupon - $row->gift_card;
+
+                    return '<span class="display_currency cash_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
+                        $total . '</span>';
+                })
+                ->editColumn('coupon', function ($row) {
+                    $total = $row->coupon;
+
+                    return '<span class="display_currency coupon_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
+                        $total . '</span>';
+                })
+                ->editColumn('gift_card', function ($row) {
+                    $total = $row->gift_card;
+
+                    return '<span class="display_currency giftcard_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
+                        $total . '</span>';
+                })
+                ->editColumn('items', function ($row) {
+                    return '<span class=" items" data-currency_symbol="false"  data-orig-value="' . (int)$row->items . '">' .
+                        (int)$row->items . '</span>';
+                })
+                ->editColumn('invoices', function ($row) {
+                    return '<span class=" invoices" data-currency_symbol="false"  data-orig-value="' . (int)$row->invoices . '">' .
+                        (int)$row->invoices . '</span>';
+                })
+                ->editColumn('date', function ($row) {
+                    return  Carbon::parse($row->date)->format('d-M-Y');
+                })
+                ->rawColumns(['cash', 'card', 'coupon', 'total', 'gift_card', 'discount', 'invoices', 'items'])
+                ->make(true);
+        }
+
+        $business = BusinessLocation::forDropdown($business_id, true);
+        return view('report.daily_sales', compact('business'));
+    }
+    /**
+     * Daily Sales
+     * 
+     **/
+    public function monthlySales(Request $request)
+    {
+        $business_id = request()->session()->get('user.business_id');
+
+        if (request()->ajax()) {
+            $query = Transaction::join('transaction_payments as tp', 'tp.transaction_id', '=', 'transactions.id')
+                ->where('transactions.type', 'sell')
+                ->join('business_locations as bl', 'bl.id', '=', 'transactions.location_id')
+                ->join('transaction_sell_lines as tsl', 'tsl.transaction_id', '=', 'transactions.id');
+
+
+            if (!empty($request->get('location_id'))) {
+                $query->where('transactions.location_id', $request->input('location_id'));
+            }
+
+            $start_date = $request->get('start_date');
+            $end_date = $request->get('end_date');
+
+            if (!empty($start_date) && !empty($end_date)) {
+                $query->whereBetween(DB::raw('date(transactions.created_at)'), [$start_date, $end_date]);
+            }
+
+            $query->select(
+                'transactions.location_id as location_id',
+                'bl.name as location_name',
+                'transactions.created_at as transaction_date',
+
+                // DB::raw('DATE_FORMAT(transactions.created_at,"%d %m %y") as date'),
+                // AND tp.is_convert!="coupon" AND tp.is_convert="gift_card"
+
+                DB::raw("DATE_FORMAT(transactions.created_at, '%Y-%m')as date"),
+
+                // DB::raw('SUM(IF(tp.method="cash" AND tp.is_return=0,transactions.final_total,0)) as cash'),
+                DB::raw('SUM(IF(tp.method="cash" AND tp.is_return=0,transactions.final_total,0)) as cash'),
+
+                DB::raw('SUM(IF(tp.method="card" AND tp.is_return=0 ,transactions.final_total,0)) as card'),
+
+                DB::raw('SUM(IF(tp.is_convert="coupon",transactions.final_total,0)) as coupon'),
+
+                DB::raw('SUM(IF(tp.is_convert="gift_card",transactions.final_total,0)) as gift_card'),
+
+                DB::raw('SUM(tsl.discounted_amount/2) as discount'),
+
+                // DB::raw('COUNT(IF(tp.is_return=0 ,tp.id,0)) as invoices'),
+                DB::raw("COUNT(DISTINCT(tp.transaction_id)) as invoices"),
+
+                DB::raw('SUM(tsl.quantity/2) as items'),
+
+                // DB::raw("(SELECT COUNT(tr.invoice_no) FROM transactions as tr WHERE tr.id=t.transaction_id) as invoice"),
+                // DB::raw("SUM(IF(DISTINCT(tp.transaction_id), tsl.quantity, 0)) as items"),
+            )
+                ->orderBy('transactions.created_at', 'DESC')
+                ->groupBy(DB::raw("DATE_FORMAT(transactions.created_at, '%Y-%m')"));
+
+            return Datatables::of($query)
+                ->addColumn('total', function ($row) {
+                    $total = ($row->cash - $row->coupon) + $row->card + $row->coupon + $row->gift_card;
+
+                    return '<span class="display_currency total_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
+                        $total . '</span>';
+                })
+                ->editColumn('discount', function ($row) {
+                    return
+                        '<span class="display_currency discounted_amount" data-currency_symbol="true" data-orig-value="' . $row->discount . '">' . $row->discount . '</span>';
+                })
+                ->editColumn('location_name', function ($row) {
+                    if (!empty(request()->get('location_id'))) {
+                        return $row->location_name;
+                    } else {
+                        return 'All Locations';
+                    }
+                })
+                ->editColumn('card', function ($row) {
+                    return '<span class="display_currency card_amount" data-currency_symbol="true"  data-orig-value="' . $row->card . '">' .
+                        $row->card . '</span>';
+                })
+                ->editColumn('cash', function ($row) {
+                    $total = $row->cash - $row->coupon - $row->gift_card;
+
+                    return '<span class="display_currency cash_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
+                        $total . '</span>';
+                })
+                ->editColumn('coupon', function ($row) {
+                    $total = $row->coupon;
+
+                    return '<span class="display_currency coupon_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
+                        $total . '</span>';
+                })
+                ->editColumn('gift_card', function ($row) {
+                    $total = $row->gift_card;
+
+                    return '<span class="display_currency giftcard_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
+                        $total . '</span>';
+                })
+                ->editColumn('items', function ($row) {
+                    return '<span class=" items" data-currency_symbol="false"  data-orig-value="' . (int)$row->items . '">' .
+                        (int)$row->items . '</span>';
+                })
+                ->editColumn('invoices', function ($row) {
+                    return '<span class=" invoices" data-currency_symbol="false"  data-orig-value="' . (int)$row->invoices . '">' .
+                        (int)$row->invoices . '</span>';
+                })
+                ->editColumn('date', function ($row) {
+                    return  Carbon::parse($row->date)->format('M-Y');
+                })
+                ->rawColumns(['cash', 'card', 'coupon', 'total', 'gift_card', 'discount', 'invoices', 'items'])
+                ->make(true);
+        }
+
+        $business = BusinessLocation::forDropdown($business_id, true);
+        return view('report.monthly_sales', compact('business'));
+    }
 }

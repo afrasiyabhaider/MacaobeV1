@@ -151,7 +151,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::resource('purchases', 'PurchaseController');
 
     Route::get('/toggle-subscription/{id}', 'SellPosController@toggleRecurringInvoices');
-    
+
     // Route::get('/pos/{id}', 'SellPosController@destroy');
 
     Route::get('/sells/subscriptions', 'SellPosController@listSubscriptions');
@@ -241,6 +241,8 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('/reports/product-stock-details', 'ReportController@productStockDetails');
     Route::get('/reports/adjust-product-stock', 'ReportController@adjustProductStock');
     Route::get('/reports/get-profit/{by?}', 'ReportController@getProfit');
+    Route::get('/daily/sales', 'ReportController@dailySales');
+    Route::get('/monthly/sales', 'ReportController@monthlySales');
 
     //Business Location Settings...
     Route::prefix('business-location/{location_id}')->name('location.')->group(function () {
@@ -313,7 +315,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::resource('sell-return', 'SellReturnController');
     Route::get('sell-return/get-product-row', 'SellReturnController@getProductRow');
     Route::get('/sell-return/add/{id}', 'SellReturnController@addWithId');
-    
+
     Route::get('sell-return/invoice/{transaction_id}', 'SellReturnController@getInvoiceData');
 
     Route::get('/sell-return/print/{id}', 'SellReturnController@printInvoice');
@@ -394,10 +396,10 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
      * 
      ***/
 
-    Route::get('location-transfer-details/data','DataMigrationController@location_transfer_detail_data');
-    Route::get('location-transfer-details/product_data','DataMigrationController@location_transfer_detail_product_data');
-    Route::get('transaction_sell_lines/product_data','DataMigrationController@transaction_sell_lines_product_data');
-    Route::get('variation_location_details/product_data','DataMigrationController@variation_location_details_product_data');
+    Route::get('location-transfer-details/data', 'DataMigrationController@location_transfer_detail_data');
+    Route::get('location-transfer-details/product_data', 'DataMigrationController@location_transfer_detail_product_data');
+    Route::get('transaction_sell_lines/product_data', 'DataMigrationController@transaction_sell_lines_product_data');
+    Route::get('variation_location_details/product_data', 'DataMigrationController@variation_location_details_product_data');
 
     // Website Routes
     Route::get('website/product/list', 'WebsiteController@index');
