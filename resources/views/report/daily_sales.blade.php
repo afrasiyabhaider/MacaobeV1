@@ -49,11 +49,11 @@
                <h4>Total Gift Card: <span class="display_currency" data-currency_symbol="false"
                          id="total_gift_card"></span>
                     €</h4>
-               <h4>Total Discount: <span class="display_currency" data-currency_symbol="false"
-                         id="total_discount"></span> €
+               {{-- <h4>Total Discount: <span class="display_currency" data-currency_symbol="false"
+                         id="total_discount"></span> € --}}
                </h4>
-               <h4>Total Items: <span class="display_currency" data-currency_symbol="false" id="total_items"></span>
-               </h4>
+               {{-- <h4>Total Items: <span class="display_currency" data-currency_symbol="false" id="total_items"></span>
+               </h4> --}}
                <h4>Total Invoices: <span class="display_currency" data-currency_symbol="false"
                          id="total_invoices"></span>
                </h4>
@@ -66,13 +66,13 @@
                               <tr>
                                    <th>Location Name</th>
                                    <th>Date</th>
-                                   <th>Items</th>
+                                   {{-- <th>Items</th> --}}
                                    <th>Invoices</th>
                                    <th>Cash</th>
                                    <th>Card</th>
                                    <th>Gift Card</th>
                                    <th>Coupon</th>
-                                   <th>Discounted Amount</th>
+                                   {{-- <th>Discounted Amount</th> --}}
                                    <th>Total</th>
                               </tr>
                          </thead>
@@ -204,10 +204,10 @@
                name: 'date'
                },
                // { data: 'status', name: 'status' },
-               {
-               data: 'items',
-               name: 'items'
-               },
+               // {
+               // data: 'items',
+               // name: 'items'
+               // },
                {
                data: 'invoices',
                name: 'invoices'
@@ -228,10 +228,10 @@
                data: 'coupon',
                name: 'coupon'
                },
-               {
-               data: 'discount',
-               name: 'discount'
-               },
+               // {
+               // data: 'discount',
+               // name: 'discount'
+               // },
                {
                data: 'total',
                name: 'total'
@@ -254,15 +254,15 @@
                $('#total_gift_card').text(
                sum_table_col($('#daily_sale_report_table'), 'giftcard_amount')
                );
-               $('#total_discount').text(
-               sum_table_col($('#daily_sale_report_table'), 'discounted_amount')
-               );
+               // $('#total_discount').text(
+               // sum_table_col($('#daily_sale_report_table'), 'discounted_amount')
+               // );
                $('#total_invoices').text(
                sum_table_col($('#daily_sale_report_table'), 'invoices')
                );
-               $('#total_items').text(
-               sum_table_col($('#daily_sale_report_table'), 'items')
-               );
+               // $('#total_items').text(
+               // sum_table_col($('#daily_sale_report_table'), 'items')
+               // );
           },
      });
 

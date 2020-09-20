@@ -47,8 +47,10 @@ class SellController extends Controller
         $this->moduleUtil = $moduleUtil;
         $this->productUtil = $productUtil;
 
-        $this->dummyPaymentLine = ['method' => 'cash', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
-        'is_return' => 0, 'transaction_no' => ''];
+        $this->dummyPaymentLine = [
+            'method' => 'cash', 'amount' => 0, 'note' => '', 'card_transaction_number' => '', 'card_number' => '', 'card_type' => '', 'card_holder_name' => '', 'card_month' => '', 'card_year' => '', 'card_security' => '', 'cheque_number' => '', 'bank_account_number' => '',
+            'is_return' => 0, 'transaction_no' => ''
+        ];
     }
 
     /**
@@ -67,11 +69,10 @@ class SellController extends Controller
         if (request()->ajax()) {
             $with = [];
             $CheckStatus = "final";
-            if (!empty(request()->input('payment_status'))) { 
-                if(request()->input('payment_status') == "hide")
-                {  
+            if (!empty(request()->input('payment_status'))) {
+                if (request()->input('payment_status') == "hide") {
                     $CheckStatus = "hide";
-                } 
+                }
             }
 
             $sells = Transaction::leftJoin('contacts', 'transactions.contact_id', '=', 'contacts.id')
@@ -127,13 +128,11 @@ class SellController extends Controller
                     $sells->where('transactions.created_by', $created_by);
                 }
             }
- 
-             if (!empty(request()->input('payment_status'))) { 
-                if(request()->input('payment_status') == "hide")
-                { 
-                //   $sells->where('transactions.status', request()->input('payment_status'));
-                } else
-                {
+
+            if (!empty(request()->input('payment_status'))) {
+                if (request()->input('payment_status') == "hide") {
+                    //   $sells->where('transactions.status', request()->input('payment_status'));
+                } else {
                     $sells->where('transactions.payment_status', request()->input('payment_status'));
                 }
             }
@@ -154,7 +153,7 @@ class SellController extends Controller
                 $start = request()->start_date;
                 $end =  request()->end_date;
                 $sells->whereDate('transactions.transaction_date', '>=', $start)
-                            ->whereDate('transactions.transaction_date', '<=', $end);
+                    ->whereDate('transactions.transaction_date', '<=', $end);
             }
 
             //Check is_direct sell
@@ -213,9 +212,9 @@ class SellController extends Controller
                 }
 
                 $sales = $sells->where('transactions.is_suspend', 1)
-                            ->with($with)
-                            ->addSelect('transactions.is_suspend', 'transactions.res_table_id', 'transactions.res_waiter_id', 'transactions.additional_notes')
-                            ->get();
+                    ->with($with)
+                    ->addSelect('transactions.is_suspend', 'transactions.res_table_id', 'transactions.res_waiter_id', 'transactions.additional_notes')
+                    ->get();
 
                 return view('sale_pos.partials.suspended_sales_modal')->with(compact('sales', 'is_tables_enabled', 'is_service_staff_enabled'));
             }
@@ -235,11 +234,11 @@ class SellController extends Controller
                         $html = '<div class="btn-group">
                                     <button type="button" class="btn btn-info dropdown-toggle btn-xs" 
                                         data-toggle="dropdown" aria-expanded="false">' .
-                                        __("messages.actions") .
-                                        '<span class="caret"></span><span class="sr-only">Toggle Dropdown
+                            __("messages.actions") .
+                            '<span class="caret"></span><span class="sr-only">Toggle Dropdown
                                         </span>
                                     </button>
-                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">' ;
+                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">';
 
                         if (auth()->user()->can("sell.view") || auth()->user()->can("direct_sell.access")) {
                             $html .= '<li><a href="#" data-href="' . action("SellController@showThis", [$row->id]) . '" class="btn-modal" data-container=".view_modal"><i class="fa fa-external-link" aria-hidden="true"></i> ' . __("messages.view") . '</a></li>';
@@ -257,8 +256,7 @@ class SellController extends Controller
 
                         if (auth()->user()->can("direct_sell.delete")) {
                             $userId = request()->session()->get('user.id');
-                            if($userId == "1")
-                            {
+                            if ($userId == "1") {
                                 // TStatus
                                 $html .= '<li><a href="' . action('SellPosController@hide', [$row->id]) . '" class="delete-sale"><i class="fa fa-trash"></i> Hide </a></li>';
                                 $html .= '<li><a href="' . action('SellPosController@unhide', [$row->id]) . '" class="delete-sale"><i class="fa fa-trash"></i> UnHide</a></li>';
@@ -286,16 +284,14 @@ class SellController extends Controller
                         }
 
                         if (auth()->user()->can("send_notification")) {
-                            $html .= '<li><a href="#" data-href="' . action('NotificationController@getTemplate', ["transaction_id" => $row->id,"template_for" => "new_sale"]) . '" class="btn-modal" data-container=".view_modal"><i class="fa fa-envelope" aria-hidden="true"></i>' . __("lang_v1.new_sale_notification") . '</a></li>';
+                            $html .= '<li><a href="#" data-href="' . action('NotificationController@getTemplate', ["transaction_id" => $row->id, "template_for" => "new_sale"]) . '" class="btn-modal" data-container=".view_modal"><i class="fa fa-envelope" aria-hidden="true"></i>' . __("lang_v1.new_sale_notification") . '</a></li>';
                         }
                         $userId = request()->session()->get('user.id');
-                        if($userId == "1")
-                        {
+                        if ($userId == "1") {
                             $html .= '</ul>
-                            <br/> <span><input type="checkbox" title="Hide Status"   class="     checkbox check" name="check[]" id="'.$row->id.'" value="'.$row->id.'"  >  
+                            <br/> <span><input type="checkbox" title="Hide Status"   class="     checkbox check" name="check[]" id="' . $row->id . '" value="' . $row->id . '"  >  
                             </div>';
-                        }else
-                        {
+                        } else {
                             $html .= '</ul> 
                             </div>';
                         }
@@ -342,46 +338,47 @@ class SellController extends Controller
                 )
                 ->addColumn('total_remaining', function ($row) {
                     $total_remaining =  $row->final_total - $row->total_paid;
-                    $total_remaining_html = '<strong>' . __('lang_v1.sell_due') .':</strong> <span class="display_currency payment_due" data-currency_symbol="true" data-orig-value="' . $total_remaining . '">' . $total_remaining . '</span>';
+                    $total_remaining_html = '<strong>' . __('lang_v1.sell_due') . ':</strong> <span class="display_currency payment_due" data-currency_symbol="true" data-orig-value="' . $total_remaining . '">' . $total_remaining . '</span>';
 
                     if (!empty($row->return_exists)) {
                         $return_due = $row->amount_return - $row->return_paid;
-                        $total_remaining_html .= '<br><strong>' . __('lang_v1.sell_return_due') .':</strong> <a href="' . action("TransactionPaymentController@show", [$row->return_transaction_id]) . '" class="view_purchase_return_payment_modal no-print"><span class="display_currency sell_return_due" data-currency_symbol="true" data-orig-value="' . $return_due . '">' . $return_due . '</span></a><span class="display_currency print_section" data-currency_symbol="true">' . $return_due . '</span>';
+                        $total_remaining_html .= '<br><strong>' . __('lang_v1.sell_return_due') . ':</strong> <a href="' . action("TransactionPaymentController@show", [$row->return_transaction_id]) . '" class="view_purchase_return_payment_modal no-print"><span class="display_currency sell_return_due" data-currency_symbol="true" data-orig-value="' . $return_due . '">' . $return_due . '</span></a><span class="display_currency print_section" data-currency_symbol="true">' . $return_due . '</span>';
                     }
                     return $total_remaining_html;
                 })
-                 ->editColumn('invoice_no', function ($row) {
-                     $invoice_no = $row->invoice_no;
-                     if (!empty($row->woocommerce_order_id)) {
-                         $invoice_no .= ' <i class="fa fa-wordpress text-primary no-print" title="' . __('lang_v1.synced_from_woocommerce') . '"></i>';
-                     }
-                     if (!empty($row->return_exists)) {
-                         $invoice_no .= ' &nbsp;<small class="label bg-red label-round no-print" title="' . __('lang_v1.some_qty_returned_from_sell') .'"><i class="fa fa-undo"></i></small>';
-                     }
+                ->editColumn('invoice_no', function ($row) {
+                    $invoice_no = $row->invoice_no;
+                    if (!empty($row->woocommerce_order_id)) {
+                        $invoice_no .= ' <i class="fa fa-wordpress text-primary no-print" title="' . __('lang_v1.synced_from_woocommerce') . '"></i>';
+                    }
+                    if (!empty($row->return_exists)) {
+                        $invoice_no .= ' &nbsp;<small class="label bg-red label-round no-print" title="' . __('lang_v1.some_qty_returned_from_sell') . '"><i class="fa fa-undo"></i></small>';
+                    }
 
-                     if (!empty($row->is_recurring)) {
-                         $invoice_no .= ' &nbsp;<small class="label bg-red label-round no-print" title="' . __('lang_v1.subscribed_invoice') .'"><i class="fa fa-recycle"></i></small>';
-                     }
+                    if (!empty($row->is_recurring)) {
+                        $invoice_no .= ' &nbsp;<small class="label bg-red label-round no-print" title="' . __('lang_v1.subscribed_invoice') . '"><i class="fa fa-recycle"></i></small>';
+                    }
 
-                     if (!empty($row->recur_parent_id)) {
-                         $invoice_no .= ' &nbsp;<small class="label bg-info label-round no-print" title="' . __('lang_v1.subscription_invoice') .'"><i class="fa fa-recycle"></i></small>';
-                     }
+                    if (!empty($row->recur_parent_id)) {
+                        $invoice_no .= ' &nbsp;<small class="label bg-info label-round no-print" title="' . __('lang_v1.subscription_invoice') . '"><i class="fa fa-recycle"></i></small>';
+                    }
 
-                     return $invoice_no;
-                 })
+                    return $invoice_no;
+                })
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can("sell.view")) {
-                            return  action('SellController@show', [$row->id]) ;
+                            return  action('SellController@show', [$row->id]);
                         } else {
                             return '';
                         }
-                    }]);
+                    }
+                ]);
 
             $rawColumns = ['final_total', 'action', 'total_paid', 'total_remaining', 'payment_status', 'invoice_no', 'discount_amount', 'tax_amount', 'total_before_tax'];
-                
+
             return $datatable->rawColumns($rawColumns)
-                      ->make(true);
+                ->make(true);
         }
 
         $business_locations = BusinessLocation::forDropdown($business_id, false);
@@ -411,7 +408,7 @@ class SellController extends Controller
         }
 
         $walk_in_customer = $this->contactUtil->getWalkInCustomer($business_id);
-        
+
         $business_details = $this->businessUtil->getDetails($business_id);
         $taxes = TaxRate::forBusinessDropdown($business_id, true, true);
 
@@ -502,13 +499,13 @@ class SellController extends Controller
 
         $business_id = request()->session()->get('user.business_id');
         $taxes = TaxRate::where('business_id', $business_id)
-                            ->pluck('name', 'id');
+            ->pluck('name', 'id');
         $sell = Transaction::where('business_id', $business_id)
-                    ->where('id', $id)
-                    ->with(['contact', 'sell_lines' => function ($q) {
-                        $q->whereNull('parent_sell_line_id');
-                    },'sell_lines.product', 'sell_lines.product.unit', 'sell_lines.variations', 'sell_lines.variations.product_variation', 'payment_lines', 'sell_lines.modifiers', 'sell_lines.lot_details', 'tax', 'sell_lines.sub_unit', 'table', 'service_staff', 'sell_lines.service_staff'])
-                    ->first();
+            ->where('id', $id)
+            ->with(['contact', 'sell_lines' => function ($q) {
+                $q->whereNull('parent_sell_line_id');
+            }, 'sell_lines.product', 'sell_lines.product.unit', 'sell_lines.variations', 'sell_lines.variations.product_variation', 'payment_lines', 'sell_lines.modifiers', 'sell_lines.lot_details', 'tax', 'sell_lines.sub_unit', 'table', 'service_staff', 'sell_lines.service_staff'])
+            ->first();
 
         foreach ($sell->sell_lines as $key => $value) {
             if (!empty($value->sub_unit_id)) {
@@ -534,22 +531,22 @@ class SellController extends Controller
         return view('sale_pos.show')
             ->with(compact('taxes', 'sell', 'payment_types', 'order_taxes', 'pos_settings'));
     }
-    
+
     public function showThis($id)
-    { 
+    {
         if (!auth()->user()->can('sell.view') && !auth()->user()->can('direct_sell.access')) {
             abort(403, 'Unauthorized action.');
         }
 
         $business_id = request()->session()->get('user.business_id');
         $taxes = TaxRate::where('business_id', $business_id)
-                            ->pluck('name', 'id');
+            ->pluck('name', 'id');
         $sell = Transaction::where('business_id', $business_id)
-                    ->where('id', $id)
-                    ->with(['contact', 'sell_lines' => function ($q) {
-                        $q->whereNull('parent_sell_line_id');
-                    },'sell_lines.product', 'sell_lines.product.unit', 'sell_lines.variations', 'sell_lines.variations.product_variation', 'payment_lines', 'sell_lines.modifiers', 'sell_lines.lot_details', 'tax', 'sell_lines.sub_unit', 'table', 'service_staff', 'sell_lines.service_staff'])
-                    ->first();
+            ->where('id', $id)
+            ->with(['contact', 'sell_lines' => function ($q) {
+                $q->whereNull('parent_sell_line_id');
+            }, 'sell_lines.product', 'sell_lines.product.unit', 'sell_lines.variations', 'sell_lines.variations.product_variation', 'payment_lines', 'sell_lines.modifiers', 'sell_lines.lot_details', 'tax', 'sell_lines.sub_unit', 'table', 'service_staff', 'sell_lines.service_staff'])
+            ->first();
 
         foreach ($sell->sell_lines as $key => $value) {
             if (!empty($value->sub_unit_id)) {
@@ -592,84 +589,87 @@ class SellController extends Controller
         $edit_days = request()->session()->get('business.transaction_edit_days');
         if (!$this->transactionUtil->canBeEdited($id, $edit_days)) {
             return back()
-                ->with('status', ['success' => 0,
-                    'msg' => __('messages.transaction_edit_not_allowed', ['days' => $edit_days])]);
+                ->with('status', [
+                    'success' => 0,
+                    'msg' => __('messages.transaction_edit_not_allowed', ['days' => $edit_days])
+                ]);
         }
 
         //Check if return exist then not allowed
         if ($this->transactionUtil->isReturnExist($id)) {
-            return back()->with('status', ['success' => 0,
-                    'msg' => __('lang_v1.return_exist')]);
+            return back()->with('status', [
+                'success' => 0,
+                'msg' => __('lang_v1.return_exist')
+            ]);
         }
-        
+
         $business_id = request()->session()->get('user.business_id');
-        
+
         $business_details = $this->businessUtil->getDetails($business_id);
         $taxes = TaxRate::forBusinessDropdown($business_id, true, true);
 
         $transaction = Transaction::where('business_id', $business_id)
-                            ->where('type', 'sell')
-                            ->findorfail($id);
+            ->where('type', 'sell')
+            ->findorfail($id);
 
         $location_id = $transaction->location_id;
         $location_printer_type = BusinessLocation::find($location_id)->receipt_printer_type;
 
-        $sell_details = TransactionSellLine::
-                        join(
-                            'products AS p',
-                            'transaction_sell_lines.product_id',
-                            '=',
-                            'p.id'
-                        )
-                        ->join(
-                            'variations AS variations',
-                            'transaction_sell_lines.variation_id',
-                            '=',
-                            'variations.id'
-                        )
-                        ->join(
-                            'product_variations AS pv',
-                            'variations.product_variation_id',
-                            '=',
-                            'pv.id'
-                        )
-                        ->leftjoin('variation_location_details AS vld', function ($join) use ($location_id) {
-                            $join->on('variations.id', '=', 'vld.variation_id')
-                                ->where('vld.location_id', '=', $location_id);
-                        })
-                        ->leftjoin('units', 'units.id', '=', 'p.unit_id')
-                        ->where('transaction_sell_lines.transaction_id', $id)
-                        ->select(
-                            DB::raw("IF(pv.is_dummy = 0, CONCAT(p.name, ' (', pv.name, ':',variations.name, ')'), p.name) AS product_name"),
-                            'p.id as product_id',
-                            'p.enable_stock',
-                            'p.name as product_actual_name',
-                            'pv.name as product_variation_name',
-                            'pv.is_dummy as is_dummy',
-                            'variations.name as variation_name',
-                            'variations.sub_sku',
-                            'p.barcode_type',
-                            'p.enable_sr_no',
-                            'variations.id as variation_id',
-                            'units.short_name as unit',
-                            'units.allow_decimal as unit_allow_decimal',
-                            'transaction_sell_lines.tax_id as tax_id',
-                            'transaction_sell_lines.item_tax as item_tax',
-                            'transaction_sell_lines.unit_price as default_sell_price',
-                            'transaction_sell_lines.unit_price_inc_tax as sell_price_inc_tax',
-                            'transaction_sell_lines.unit_price_before_discount as unit_price_before_discount',
-                            'transaction_sell_lines.id as transaction_sell_lines_id',
-                            'transaction_sell_lines.quantity as quantity_ordered',
-                            'transaction_sell_lines.sell_line_note as sell_line_note',
-                            'transaction_sell_lines.lot_no_line_id',
-                            'transaction_sell_lines.line_discount_type',
-                            'transaction_sell_lines.line_discount_amount',
-                            'transaction_sell_lines.res_service_staff_id',
-                            'units.id as unit_id',
-                            'transaction_sell_lines.sub_unit_id',
-                            DB::raw('vld.qty_available + transaction_sell_lines.quantity AS qty_available')
-                        )
-                        ->get();
+        $sell_details = TransactionSellLine::join(
+            'products AS p',
+            'transaction_sell_lines.product_id',
+            '=',
+            'p.id'
+        )
+            ->join(
+                'variations AS variations',
+                'transaction_sell_lines.variation_id',
+                '=',
+                'variations.id'
+            )
+            ->join(
+                'product_variations AS pv',
+                'variations.product_variation_id',
+                '=',
+                'pv.id'
+            )
+            ->leftjoin('variation_location_details AS vld', function ($join) use ($location_id) {
+                $join->on('variations.id', '=', 'vld.variation_id')
+                    ->where('vld.location_id', '=', $location_id);
+            })
+            ->leftjoin('units', 'units.id', '=', 'p.unit_id')
+            ->where('transaction_sell_lines.transaction_id', $id)
+            ->select(
+                DB::raw("IF(pv.is_dummy = 0, CONCAT(p.name, ' (', pv.name, ':',variations.name, ')'), p.name) AS product_name"),
+                'p.id as product_id',
+                'p.enable_stock',
+                'p.name as product_actual_name',
+                'pv.name as product_variation_name',
+                'pv.is_dummy as is_dummy',
+                'variations.name as variation_name',
+                'variations.sub_sku',
+                'p.barcode_type',
+                'p.enable_sr_no',
+                'variations.id as variation_id',
+                'units.short_name as unit',
+                'units.allow_decimal as unit_allow_decimal',
+                'transaction_sell_lines.tax_id as tax_id',
+                'transaction_sell_lines.item_tax as item_tax',
+                'transaction_sell_lines.unit_price as default_sell_price',
+                'transaction_sell_lines.unit_price_inc_tax as sell_price_inc_tax',
+                'transaction_sell_lines.unit_price_before_discount as unit_price_before_discount',
+                'transaction_sell_lines.id as transaction_sell_lines_id',
+                'transaction_sell_lines.quantity as quantity_ordered',
+                'transaction_sell_lines.sell_line_note as sell_line_note',
+                'transaction_sell_lines.lot_no_line_id',
+                'transaction_sell_lines.line_discount_type',
+                'transaction_sell_lines.line_discount_amount',
+                'transaction_sell_lines.res_service_staff_id',
+                'units.id as unit_id',
+                'transaction_sell_lines.sub_unit_id',
+                DB::raw('vld.qty_available + transaction_sell_lines.quantity AS qty_available')
+            )
+            ->get();
         if (!empty($sell_details)) {
             foreach ($sell_details as $key => $value) {
                 if ($transaction->status != 'final') {
@@ -677,7 +677,7 @@ class SellController extends Controller
                     $sell_details[$key]->qty_available = $actual_qty_avlbl;
                     $value->qty_available = $actual_qty_avlbl;
                 }
-                    
+
                 $sell_details[$key]->formatted_qty_available = $this->transactionUtil->num_f($value->qty_available);
                 $lot_numbers = [];
                 if (request()->session()->get('business.enable_lot_number') == 1) {
@@ -825,12 +825,12 @@ class SellController extends Controller
             if ($permitted_locations != 'all') {
                 $sells->whereIn('transactions.location_id', $permitted_locations);
             }
-                
+
             if (!empty(request()->start_date) && !empty(request()->end_date)) {
                 $start = request()->start_date;
                 $end =  request()->end_date;
                 $sells->whereDate('transaction_date', '>=', $start)
-                            ->whereDate('transaction_date', '<=', $end);
+                    ->whereDate('transaction_date', '<=', $end);
             }
             $sells->groupBy('transactions.id');
 
@@ -856,11 +856,12 @@ class SellController extends Controller
                 ->setRowAttr([
                     'data-href' => function ($row) {
                         if (auth()->user()->can("sell.view")) {
-                            return  action('SellController@show', [$row->id]) ;
+                            return  action('SellController@show', [$row->id]);
                         } else {
                             return '';
                         }
-                    }])
+                    }
+                ])
                 ->rawColumns(['action', 'invoice_no', 'transaction_date'])
                 ->make(true);
         }
@@ -883,8 +884,8 @@ class SellController extends Controller
             $user_id = request()->session()->get('user.id');
 
             $transaction = Transaction::where('business_id', $business_id)
-                            ->where('type', 'sell')
-                            ->findorfail($id);
+                ->where('type', 'sell')
+                ->findorfail($id);
             $duplicate_transaction_data = [];
             foreach ($transaction->toArray() as $key => $value) {
                 if (!in_array($key, ['id', 'created_at', 'updated_at'])) {
@@ -920,16 +921,18 @@ class SellController extends Controller
 
             DB::commit();
 
-            $output = ['success' => 0,
-                            'msg' => trans("lang_v1.duplicate_sell_created_successfully")
-                        ];
+            $output = [
+                'success' => 0,
+                'msg' => trans("lang_v1.duplicate_sell_created_successfully")
+            ];
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => trans("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => trans("messages.something_went_wrong")
+            ];
         }
 
         if (!empty($duplicate_transaction)) {

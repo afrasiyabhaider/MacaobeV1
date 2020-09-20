@@ -392,12 +392,12 @@
                 Daily Sales
               </a></li>
             @endcan
-            {{-- @can('sell.view')
+            @can('sell.view')
             <li class="{{ $request->segment(1) == 'monthly' && $request->segment(3) == null ? 'active' : '' }}"><a
                 href="{{action('ReportController@monthlySales')}}"><i class="fa fa-calendar"></i>
                 Monthly Sales
               </a></li>
-            @endcan --}}
+            @endcan
         {{-- @can('direct_sell.access')
                 <li class="{{ $request->segment(1) == 'sells' && $request->segment(2) == 'create' ? 'active' : '' }}"><a
           href="{{action('SellController@create')}}"><i class="fa fa-plus-circle"></i>@lang('sale.add_sale')</a>
