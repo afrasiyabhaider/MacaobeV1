@@ -4560,7 +4560,7 @@ class ReportController extends Controller
             // dd($query->get());
             return Datatables::of($query)
                 ->addColumn('total', function ($row) {
-                    $total = $row->cash + $row->card;
+                    $total = $row->cash;
                     // $total = ($row->cash - $row->coupon) + $row->card + $row->coupon + $row->gift_card;
 
                     return '<span class="display_currency total_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
@@ -4582,7 +4582,7 @@ class ReportController extends Controller
                         $row->card . '</span>';
                 })
                 ->editColumn('cash', function ($row) {
-                    $total = $row-> cash - $row->card;
+                    $total = $row->cash - $row->card;
 
                     return '<span class="display_currency cash_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
                         $total . '</span>';
@@ -4693,7 +4693,7 @@ class ReportController extends Controller
             // dd($query->get());
             return Datatables::of($query)
                 ->addColumn('total', function ($row) {
-                    $total = $row->cash + $row->card;
+                    $total = $row->cash;
                     // $total = ($row->cash - $row->coupon) + $row->card + $row->coupon + $row->gift_card;
 
                     return '<span class="display_currency total_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
