@@ -4493,6 +4493,7 @@ class ReportController extends Controller
                 )
                 ->where('transactions.business_id', $business_id)
                 ->where('transactions.type', 'sell')
+                ->where('transactions.status', '!=', 'hide')
                 // ->leftJoin(
                 //     'transaction_sell_lines as tsl',
                 //     'transactions.id',
@@ -4648,6 +4649,7 @@ class ReportController extends Controller
                 // )
                 ->where('transactions.business_id', $business_id)
                 ->where('transactions.type', 'sell')
+                ->where('transactions.status', '!=', 'hide')
                 ->select(
                     'transactions.id',
                     // DB::raw('COUNT(transactions.invoice_no) as items'),
