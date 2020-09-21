@@ -73,7 +73,10 @@
                                    <th>Gift Card</th>
                                    <th>Coupon</th>
                                    {{-- <th>Discounted Amount</th> --}}
-                                   <th>Total</th>
+                                   <th>
+                                        Total
+                                        <small>(TVS Inclu)</small>
+                                   </th>
                               </tr>
                          </thead>
                     </table>
