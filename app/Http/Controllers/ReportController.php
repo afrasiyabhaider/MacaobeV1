@@ -4584,7 +4584,9 @@ class ReportController extends Controller
                 })
                 ->editColumn('cash', function ($row) {
                     $total = $row->cash - $row->card;
-
+                    if ($total < 0) {
+                        $total = $total * -1;
+                    }
                     return '<span class="display_currency cash_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
                         $total . '</span>';
                 })
@@ -4718,6 +4720,9 @@ class ReportController extends Controller
                 })
                 ->editColumn('cash', function ($row) {
                     $total = $row->cash - $row->card;
+                    if ($total < 0) {
+                        $total = $total * -1;
+                    }
 
                     return '<span class="display_currency cash_amount" data-currency_symbol="true"  data-orig-value="' . $total . '">' .
                         $total . '</span>';
