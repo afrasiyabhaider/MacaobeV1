@@ -75,7 +75,7 @@
                                    {{-- <th>Discounted Amount</th> --}}
                                    <th>
                                         Total
-                                        <small>(TVS Inclu)</small>
+                                        <small>(TVA Inclu)</small>
                                    </th>
                               </tr>
                          </thead>
