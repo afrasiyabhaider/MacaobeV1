@@ -424,7 +424,7 @@ class SellPosController extends Controller
                         ->with('status', $output);
                 }
             }
-            
+
             $input['is_quotation'] = 0;
             //status is send as quotation from Add sales screen.
             if ($input['status'] == 'quotation') {
@@ -433,7 +433,7 @@ class SellPosController extends Controller
             }
 
             if (!empty($input['products'])) {
-                
+
                 $business_id = $request->session()->get('user.business_id');
 
                 //Check if subscribed or not, then check for users quota
@@ -553,7 +553,7 @@ class SellPosController extends Controller
                 if ($update_transaction) {
                     $transaction->save();
                 }
-                
+
 
                 //Check for final and do some processing.
                 if ($input['status'] == 'final') {
@@ -582,7 +582,7 @@ class SellPosController extends Controller
 
                     //Update payment status
                     $this->transactionUtil->updatePaymentStatus($transaction->id, $transaction->final_total);
-                    
+
                     //Allocate the quantity from purchase and add mapping of
                     //purchase & sell lines in
                     //transaction_sell_lines_purchase_lines table
@@ -600,13 +600,13 @@ class SellPosController extends Controller
                     //Auto send notification
                     $this->notificationUtil->autoSendNotification($business_id, 'new_sale', $transaction, $transaction->contact);
                 }
-                
+
                 //Set Module fields
                 if (!empty($input['has_module_data'])) {
                     $this->moduleUtil->getModuleData('after_sale_saved', ['transaction' => $transaction, 'input' => $input]);
                 }
 
-                
+
                 Media::uploadMedia($business_id, $transaction, $request, 'documents');
 
                 DB::commit();
@@ -647,7 +647,7 @@ class SellPosController extends Controller
             DB::rollBack();
 
             \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
-            dd($e->getMessage().' in File: '.$e->getFile().' on Line: '.$e->getLine());
+            dd($e->getMessage() . ' in File: ' . $e->getFile() . ' on Line: ' . $e->getLine());
             $msg = trans("messages.something_went_wrong Here . " . $e->getMessage());
 
             if (get_class($e) == \App\Exceptions\PurchaseSellMismatch::class) {
@@ -863,7 +863,7 @@ class SellPosController extends Controller
 
         $shortcuts = json_decode($business_details->keyboard_shortcuts, true);
         $pos_settings = empty($business_details->pos_settings) ? $this->businessUtil->defaultPosSettings() : json_decode($business_details->pos_settings, true);
-        
+
 
         $commsn_agnt_setting = $business_details->sales_cmsn_agnt;
         $commission_agent = [];
@@ -1127,7 +1127,7 @@ class SellPosController extends Controller
                                 $decrease_qty = $decrease_qty * $product['base_unit_multiplier'];
                             }
                             // dd($product);
-                            if($product['sell_line_note'] == 'return'){
+                            if ($product['sell_line_note'] == 'return') {
                                 $sell_line = TransactionSellLine::find($product['transaction_sell_lines_id']);
                                 // return $sell_line;
 
@@ -1143,21 +1143,21 @@ class SellPosController extends Controller
                                 // $quantity_before = $this->transactionUtil->num_f($sell_line->quantity_returned);
 
                                 $quantity_formated = $quantity;
-        
+
                                 $sell_line->quantity_returned = $quantity;
                                 $sell_line->save();
-        
+
                                 $sell = Transaction::where('business_id', $business_id)
-                                ->with(['sell_lines', 'sell_lines.sub_unit'])
-                                ->findOrFail($sell_line->transaction_id);
+                                    ->with(['sell_lines', 'sell_lines.sub_unit'])
+                                    ->findOrFail($sell_line->transaction_id);
 
                                 // dd($sell_line, $quantity_formated, $quantity_before);
 
                                 //Check if any sell return exists for the sale
                                 $sell_return = Transaction::where('business_id', $business_id)
-                                        ->where('type', 'sell_return')
-                                        ->where('return_parent_id', $sell->id)
-                                        ->first();
+                                    ->where('type', 'sell_return')
+                                    ->where('return_parent_id', $sell->id)
+                                    ->first();
 
                                 //update quantity sold in corresponding purchase lines
                                 $this->transactionUtil->updateQuantitySoldFromSellLine($sell_line, $quantity_formated, $quantity_before);
@@ -2298,10 +2298,10 @@ class SellPosController extends Controller
         // dd($transaction_status);
 
         $query = Transaction::where('business_id', $business_id)
-                            // ->where('transactions.created_by', $user_id)
-                            ->where('transactions.location_id', $location_id)
-                            ->where('transactions.type', 'sell')
-                            ->where('is_direct_sale', 0);
+            // ->where('transactions.created_by', $user_id)
+            ->where('transactions.location_id', $location_id)
+            ->where('transactions.type', 'sell')
+            ->where('is_direct_sale', 0);
 
         if ($transaction_status == 'final') {
             if (!empty($register->id)) {
@@ -2326,13 +2326,13 @@ class SellPosController extends Controller
             ->with(['contact'])
             // ->limit(10)
             ->get();
-            // dd($transactions->first()->sell_lines()->pluck('quantity'));
-            // dd($transactions->sum('final_total'));
-            // dd($transactions->first(),$transactions->first()->payment_lines()->first());
-            // dd($transactions->first()->cash_register_payments()->first()->cash_register()->first()->user()->first());
-            // dd($transactions->first()->cash_register_payments()->first()->cash_register()->first());
-            // dd($transactions->first()->cash_register_payments()->first()->pay_method);
-            // dd($transactions);
+        // dd($transactions->first()->sell_lines()->pluck('quantity'));
+        // dd($transactions->sum('final_total'));
+        // dd($transactions->first(),$transactions->first()->payment_lines()->first());
+        // dd($transactions->first()->cash_register_payments()->first()->cash_register()->first()->user()->first());
+        // dd($transactions->first()->cash_register_payments()->first()->cash_register()->first());
+        // dd($transactions->first()->cash_register_payments()->first()->pay_method);
+        // dd($transactions);
         return view('sale_pos.partials.recent_transactions')
             ->with(compact('transactions'));
     }
@@ -2471,6 +2471,7 @@ class SellPosController extends Controller
                 'products.name',
                 'products.type',
                 'products.enable_stock',
+                'products.sub_size_id',
                 'variations.id as variation_id',
                 'variations.name as variation',
                 'VLD.qty_available',
@@ -2480,15 +2481,22 @@ class SellPosController extends Controller
                 'products.sku',
                 'products.image',
                 'products.color_id',
-                'products.sub_size_id'
+                'products.sub_size_id',
+                'products.updated_at as created_at'
             )
                 ->where("p_type", "product")
-                ->groupBy('variations.id')
-                // ->orderBy('VLD.product_updated_at', 'DESC')
-                ->orderBy('products.name', 'asc')
-                ->paginate(50);
+                ->where("products.sub_size_id", '!=', 'null')
+                // ->orderBy('created_at', 'DESC')
+                ->groupBy('products.id')
+                // ->groupBy('variations.id')
+                ->orderBy('VLD.product_updated_at', 'DESC')
+                // ->orderBy('products.name', 'asc')
+                ->latest()
+                ->limit(50)
+                ->get();
+            // ->paginate(50);
 
-                // dd($products->first());
+            // dd($products[2]);
 
 
             return view('sale_pos.partials.product_list')->with(compact('products'));
@@ -2665,7 +2673,7 @@ class SellPosController extends Controller
      *  Get Product Details for products/edit.blade.php with location
      * 
      */
-    public function getBulkProductLocationDetails($variation_id,$location_id)
+    public function getBulkProductLocationDetails($variation_id, $location_id)
     {
         $business_id = request()->session()->get('user.business_id');
 
@@ -2683,7 +2691,7 @@ class SellPosController extends Controller
             $sub_size = $product->sub_size()->first();
             $purchase_lines = $product->purchase_lines()->first();
             $color = $product->color()->first();
-            $VariationLocationDetail = $product->variation_location_details()->where('location_id',$location_id)->first();
+            $VariationLocationDetail = $product->variation_location_details()->where('location_id', $location_id)->first();
             // dd($color);
             if ($sub_category) {
                 $category = Category::find($sub_category->parent_id);

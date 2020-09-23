@@ -31,20 +31,20 @@ class Category extends Model
     public static function catAndSubCategories($business_id)
     {
         $categories = Category::where('business_id', $business_id)
-                        ->where('parent_id', 0)
-                        ->orderBy('name', 'asc')
-                        ->get()
-                        ->toArray();
+            ->where('parent_id', 0)
+            ->orderBy('name', 'asc')
+            ->get()
+            ->toArray();
 
         if (empty($categories)) {
             return [];
         }
 
         $sub_categories = Category::where('business_id', $business_id)
-                            ->where('parent_id', '!=', 0)
-                            ->orderBy('name', 'asc')
-                            ->get()
-                            ->toArray();
+            ->where('parent_id', '!=', 0)
+            ->orderBy('name', 'asc')
+            ->get()
+            ->toArray();
         $sub_cat_by_parent = [];
 
         if (!empty($sub_categories)) {
@@ -69,8 +69,8 @@ class Category extends Model
     public static function forDropdown($business_id)
     {
         $categories = Category::where('business_id', $business_id)
-                            ->where('parent_id', 0)
-                            ->pluck('name', 'id');
+            ->where('parent_id', 0)
+            ->pluck('name', 'id');
         $categories->prepend('All Categories');
         return $categories;
     }
