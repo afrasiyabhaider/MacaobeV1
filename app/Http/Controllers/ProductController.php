@@ -3275,6 +3275,7 @@ class ProductController extends Controller
             ->orderBy('name', 'Asc')
             ->pluck('name', 'id');
 
+        $dd_sizes = Size::forDropdown($business_id);
         $sizes = Size::where('business_id', $business_id)
             ->where('parent_id', 0)
             ->select('name', 'id')->get();
@@ -3364,7 +3365,7 @@ class ProductController extends Controller
         $module_form_parts = $this->moduleUtil->getModuleData('product_form_part');
 
         return view('product.bulkAdd')
-            ->with(compact('categories', 'suppliers', 'noRefferenceProducts', 'brands', 'refferenceCount', 'pnc', 'suppliers', 'sizes', 'sub_sizes', 'colors', 'units', 'taxes', 'barcode_types', 'default_profit_percent', 'tax_attributes', 'barcode_default', 'business_locations', 'duplicate_product', 'sub_categories', 'rack_details', 'selling_price_group_count', 'module_form_parts'));
+            ->with(compact('categories', 'suppliers', 'noRefferenceProducts', 'brands', 'refferenceCount', 'pnc', 'suppliers', 'sizes', 'sub_sizes', 'colors', 'units', 'taxes', 'barcode_types', 'default_profit_percent', 'tax_attributes', 'barcode_default', 'business_locations', 'duplicate_product', 'sub_categories', 'rack_details', 'selling_price_group_count', 'module_form_parts','dd_sizes'));
     }
 
     public function bulkAddStore(Request $request)

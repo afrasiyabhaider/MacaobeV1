@@ -3,45 +3,44 @@
 
 @section('content')
 <style type="text/css">
-  .border-color
-  {
-    border-color : red;
-  }
-  .custom-form-control
-  {
-    border-radius: 0;
-    box-shadow: none;
-    border-color: #d2d6de;
-    display: block;
-    width: 86px;
-    height: 28px;
-    padding: 0px 3px;
-    line-height: 1.42857143;
-    color: #555;
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-  }
+	.border-color {
+		border-color: red;
+	}
+
+	.custom-form-control {
+		border-radius: 0;
+		box-shadow: none;
+		border-color: #d2d6de;
+		display: block;
+		width: 86px;
+		height: 28px;
+		padding: 0px 3px;
+		line-height: 1.42857143;
+		color: #555;
+		background-color: #fff;
+		background-image: none;
+		border: 1px solid #ccc;
+	}
 </style>
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <div class="row">
-	    <div class="col-sm-6">
-		    <h3>
-			    @lang('product.add_new_product') 
-		    </h3>
-	    </div>
-	    @php
-		   $id = App\Product::first()->id;
-	    @endphp
+	<div class="row">
+		<div class="col-sm-6">
+			<h3>
+				@lang('product.add_new_product')
+			</h3>
+		</div>
+		@php
+		$id = App\Product::first()->id;
+		@endphp
 		<div class="col-sm-6">
 			<a href="{{url('/products/'.$id.'/edit')}}" class="btn btn-info ml-5" target="__blank">
 				Update Product
 				<i class="fa fa-edit"></i>
 			</a>
 		</div>
-   </div>
-    <!-- <ol class="breadcrumb">
+	</div>
+	<!-- <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
         <li class="active">Here</li>
     </ol> -->
@@ -49,10 +48,10 @@
 
 <!-- Main content -->
 <section class="content">
-{!! Form::open(['url' => action('ProductController@bulkAddStore'), 'method' => 'post', 
-    'id' => 'product_add_form','class' => 'product_form', 'files' => true ]) !!}
-   <div class="row">
-	   <div class="col-md-12">
+	{!! Form::open(['url' => action('ProductController@bulkAddStore'), 'method' => 'post',
+	'id' => 'product_add_form','class' => 'product_form', 'files' => true ]) !!}
+	<div class="row">
+		<div class="col-md-12">
 			@component('components.widget', ['class' => 'box-primary'])
 			<div class="row">
 				<div class="col-sm-12">
@@ -63,19 +62,22 @@
 				<div class="col-sm-4">
 					<div class="form-group">
 						{!! Form::label('name', __('product.product_name') . ': *') !!}
-						{!! Form::text('name', !empty($duplicate_product->name) ? $duplicate_product->name : null, ['class' => 'req form-control', 'disabled' ,'required',
+						{!! Form::text('name', !empty($duplicate_product->name) ? $duplicate_product->name : null,
+						['class' => 'req form-control', 'disabled' ,'required',
 						'placeholder' => __('product.product_name')]); !!}
 					</div>
 				</div>
 				{{-- <div class="clearfix"></div> --}}
-				
+
 				<div class="col-sm-4">
 					<div class="form-group">
-						{!! 
-						Form::label('refference', __('product.refference') . ':') 
-						!!} 
+						{!!
+						Form::label('refference', __('product.refference') . ':')
+						!!}
 						@show_tooltip(__('tooltip.sku'))
-						{!! Form::text('refference', null, ['id'=>'refference_id','class' => 'req form-control disabled','placeholder' => "Refference",'disabled' => 'true', 'required' => 'true','autofocus']); !!}
+						{!! Form::text('refference', null, ['id'=>'refference_id','class' => 'req form-control
+						disabled','placeholder' => "Refference",'disabled' => 'true', 'required' =>
+						'true','autofocus']); !!}
 						<input type="hidden" value="noValue" id="temp_reff">
 					</div>
 				</div>
@@ -85,171 +87,275 @@
 					<div class="form-group">
 						{!! Form::label('supplier_id', __('product.supplier') . ':') !!}
 						<div class="input-group">
-						{!! Form::select('supplier_id', $suppliers, !empty($duplicate_product->supplier_id) ? $duplicate_product->supplier_id : null, ['placeholder' => __('messages.please_select'), 'class' => 'req form-control select2', 'required' => 'true', 'onchange' => 'getSupplierDetails()']); !!}
-						<span class="input-group-btn">
-							<button type="button" @if(!auth()->user()->can('supplier.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('SupplierController@create', ['quick_add' => true])}}" title="@lang('supplier.add_brand')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
-						</span>
+							{!! Form::select('supplier_id', $suppliers, !empty($duplicate_product->supplier_id) ?
+							$duplicate_product->supplier_id : null, ['placeholder' =>
+							__('messages.please_select'), 'class' => 'req form-control select2', 'required' =>
+							'true', 'onchange' => 'getSupplierDetails()']); !!}
+							<span class="input-group-btn">
+								<button type="button" @if(!auth()->user()->can('supplier.create')) disabled
+									@endif class="btn btn-default bg-white btn-flat btn-modal"
+									data-href="{{action('SupplierController@create', ['quick_add' => true])}}"
+									title="@lang('supplier.add_brand')" data-container=".view_modal"><i
+										class="fa fa-plus-circle text-primary fa-lg"></i></button>
+							</span>
 						</div>
 					</div>
-					</div>
-					<div class="col-sm-4 @if(!session('business.enable_category')) hide @endif">
+				</div>
+				<div class="col-sm-4 @if(!session('business.enable_category')) hide @endif">
 					<div class="form-group">
 						{!! Form::label('category_id', __('product.category') . ':') !!}
 						<div class="input-group">
-						{!! Form::select('category_id', $categories, !empty($duplicate_product->category_id) ? $duplicate_product->category_id: null, ['placeholder' => __('messages.please_select'), 'class' => 'req form-control select2', 'required' => 'true']); !!}
-						<span class="input-group-btn">
-							<button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('CategoryController@createCategory', ['quick_add' => true])}}" title="@lang('brand.add_brand')" data-container=".view_modal">
-							<i class="fa fa-plus-circle text-primary fa-lg"></i>
-							</button>
-						</span>
+							{!! Form::select('category_id', $categories,2,['placeholder' =>
+							__('messages.please_select'), 'class' => 'req form-control select2', 'required' =>
+							'true']); !!}
+							{{-- <select class="form-control select2 req">
+								<optgroup>
+									<option value="0">
+										Please Select Category
+									</option>
+									@foreach($duplicate_product as $item)
+										<option value="{{$item->category_id}}">
+										{{$item->category_id}}
+										</option>
+									@endforeach
+								</optgroup>
+							</select> --}}
+							<span class="input-group-btn">
+								<button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif
+									class="btn btn-default bg-white btn-flat btn-modal"
+									data-href="{{action('CategoryController@createCategory', ['quick_add' => true])}}"
+									title="@lang('brand.add_brand')" data-container=".view_modal">
+									<i class="fa fa-plus-circle text-primary fa-lg"></i>
+								</button>
+							</span>
 						</div>
 					</div>
-					</div>
+				</div>
 
-					<div class="col-sm-4 @if(!(session('business.enable_category') && session('business.enable_sub_category'))) hide @endif">
+				<div
+					class="col-sm-4 @if(!(session('business.enable_category') && session('business.enable_sub_category'))) hide @endif">
 					<div class="form-group">
 						{!! Form::label('sub_category_id', __('product.sub_category') . ':') !!}
 						<div class="input-group">
-						{!! Form::select('sub_category_id', $sub_categories, !empty($duplicate_product->sub_category_id) ? $duplicate_product->sub_category_id : null, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2']); !!}
-						<span class="input-group-btn">
-							<button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal mt-2" data-href="{{action('CategoryController@createSubCategory', ['quick_add' => true])}}" title="@lang('brand.add_brand')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
-						</span>
+							{!! Form::select('sub_category_id', $sub_categories,
+							!empty($duplicate_product->sub_category_id) ? $duplicate_product->sub_category_id :
+							null, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2']); !!}
+							<span class="input-group-btn">
+								<button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif
+									class="btn btn-default bg-white btn-flat btn-modal mt-2"
+									data-href="{{action('CategoryController@createSubCategory', ['quick_add' => true])}}"
+									title="@lang('brand.add_brand')" data-container=".view_modal"><i
+										class="fa fa-plus-circle text-primary fa-lg"></i></button>
+							</span>
 						</div>
 					</div>
-					</div>
+				</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-4">
 					<div class="form-group">
 						<label>Barcode</label>
-						<input type="text" id="sku" name="sku" class="form-control opt" placeholder="Enter custom barcode minimum 9 Numbers" min="9">
+						<input type="text" id="sku" name="sku" class="form-control opt"
+							placeholder="Enter custom barcode minimum 9 Numbers" min="9">
 					</div>
 				</div>
 				<div class="col-sm-4">
 					<div class="form-group">
 						<label>Description</label>
-						<input type="text" id="ref_description" name="ref_description" class="form-control opt" placeholder="Enter description" min="9">
+						<input type="text" id="ref_description" name="ref_description" class="form-control opt"
+							placeholder="Enter description" min="9">
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						{!! Form::label('color_id', __('product.color') . ':') !!}
+						<div class="input-group">
+							{!! Form::select('color_idc', $colors, null, ['placeholder' =>
+							__('messages.please_select'), 'class' => 'req form-control select2','id' => 'color_idc',
+							'required' => 'true']); !!}
+							<span class="input-group-btn">
+								<button type="button" @if(!auth()->user()->can('color.create')) disabled @endif
+									class="btn btn-default bg-white btn-flat btn-modal"
+									data-href="{{action('ColorController@create', ['quick_add' => true])}}"
+									title="@lang('color.add_brand')" data-container=".view_modal"><i
+										class="fa fa-plus-circle text-primary fa-lg"></i></button>
+							</span>
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-4  ">
 					<div class="form-group">
-						{!! 
-						Form::label('unit_price', __('product.unit') . ' Price:*') 
+						{!!
+						Form::label('unit_price', __('product.unit') . ' Price:*')
 						!!}
-						<input name="unit_price" required="true" type="text" class="req  form-control col-12" placeholder="Unit Price" id="unit_price" autofocus="true" onchange="changeUnitPrice(this);">
+						<input name="unit_price" required="true" type="text" class="req  form-control col-12"
+							placeholder="Unit Price" id="unit_price" autofocus="true"
+							onchange="changeUnitPrice(this);">
 					</div>
 				</div>
-				
+
 				<div class="col-sm-4">
 					<div class="form-group">
-						{!! Form::label('custom_price', __('product.sale_price') . ':') !!} 
+						{!! Form::label('custom_price', __('product.sale_price') . ':') !!}
 						{!! Form::text('custom_price', null, ['class' => 'req form-control',
-						'placeholder' => __('product.sale_price'), 'required' => 'true', 'onChange' => "DittoThis(this,'single_dsp');", 'required' => 'true']); !!}
+						'placeholder' => __('product.sale_price'), 'required' => 'true', 'onChange' =>
+						"DittoThis(this,'single_dsp');", 'required' => 'true']); !!}
 					</div>
 				</div>
 				<div class="col-sm-4">
 					<div class="form-group">
 						{!! Form::label('image', __('lang_v1.product_image') . ':') !!}
 						{!! Form::file('image', ['id' => 'upload_image', 'accept' => 'image/*']); !!}
-						<small><span class="help-block">@lang('purchase.max_file_size', ['size' => (config('constants.document_size_limit') / 1000000)]) <br> @lang('lang_v1.aspect_ratio_should_be_1_1')</span></small>
+						<small><span class="help-block">@lang('purchase.max_file_size', ['size' =>
+								(config('constants.document_size_limit') / 1000000)]) <br>
+								@lang('lang_v1.aspect_ratio_should_be_1_1')</span></small>
 					</div>
 				</div>
 			</div>
 			<div class="row">
-					<div class="hide col-sm-3 @if(!session('business.enable_brand')) hide @endif">
+				<div class="hide col-sm-3 @if(!session('business.enable_brand')) hide @endif">
 					<div class="form-group">
 						{!! Form::label('brand_id', __('product.brand') . ':') !!}
 						<div class="input-group">
-						{!! Form::select('brand_id', $brands, !empty($duplicate_product->brand_id) ? $duplicate_product->brand_id : null, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2']); !!}
-						<span class="input-group-btn">
-							<button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('BrandController@create', ['quick_add' => true])}}" title="@lang('brand.add_brand')" data-container=".view_modal">
-								<i class="fa fa-plus-circle text-primary fa-lg"></i>
-							</button>
-						</span>
+							{!! Form::select('brand_id', $brands, !empty($duplicate_product->brand_id) ?
+							$duplicate_product->brand_id : null, ['placeholder' => __('messages.please_select'),
+							'class' => 'form-control select2']); !!}
+							<span class="input-group-btn">
+								<button type="button" @if(!auth()->user()->can('brand.create')) disabled @endif
+									class="btn btn-default bg-white btn-flat btn-modal"
+									data-href="{{action('BrandController@create', ['quick_add' => true])}}"
+									title="@lang('brand.add_brand')" data-container=".view_modal">
+									<i class="fa fa-plus-circle text-primary fa-lg"></i>
+								</button>
+							</span>
 						</div>
-					</div> 
 					</div>
-					
-					<div class="col-sm-3 hide">
-					<div class="form-group">
-						{!! Form::label('name_id',  ' Id :*') !!}
-						{!! Form::text('name_id', 0, ['class' => 'req form-control', 'required', 'placeholder' => __('product.product_name')]); !!}
-					</div>
-					</div>
+				</div>
 
-					<div class="col-sm-3 hide">
+				<div class="col-sm-3 hide">
+					<div class="form-group">
+						{!! Form::label('name_id', ' Id :*') !!}
+						{!! Form::text('name_id', 0, ['class' => 'req form-control', 'required', 'placeholder' =>
+						__('product.product_name')]); !!}
+					</div>
+				</div>
+
+				<div class="col-sm-3 hide">
 					<div class="form-group">
 						{!! Form::label('sku', __('product.sku') . ':') !!} @show_tooltip(__('tooltip.sku'))
 						{!! Form::text('auto_sku', null, ['class' => 'form-control',
 						'placeholder' => "Auto Generated", 'readonly' => 'true']); !!}
 					</div>
-					</div>
-					<div class="clearfix"></div>
-					<div style="margin-top:50px">
-						<div class="col-xs-4">
-							{{-- This is only for alternative of offset --}}
-						</div>
-						<div class="col-sm-2">
-							<div class="form-group">
-								{{-- {!! Form::label('size_id', __('product.size') . ':') !!} --}}
-								<div class="input-group">
-								
-								<span class="input-group-btn">
-								<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" onclick="$('#btnClose').focus();console.log('done');"><i class="fa fa-plus-circle"></i> Choose Size</button>
-
-								</span>
-								</div>
+				</div>
+			</div>
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group">
+							{!! Form::label('chooseSize',"Sizes" . ':') !!}
+							<div class="input-group">
+								{!! Form::select('chooseSize', $dd_sizes, null, ['placeholder' =>
+								__('messages.please_select'), 'class' => 'req form-control select2','id' => 'chooseSize',
+								'required' => 'true']); !!}
 							</div>
 						</div>
-						<div class="col-sm-2">
-							<div class="form-group">
-								
-								<div class="input-group">
-								
+					</div>
+				</div>
+				<div class="row" id="sizeArea">
+					<div class="col-md-12 table">
+						<div class="col-md-4"><b>Size</b></div>
+						<div class="col-md-4"><b>Sub-Size</b></div>
+						<div class="col-md-3"><b>Qty</b></div>
+						<div class="col-md-1"><b>X</b></div>
+					</div>
+				</div>
+				<div class="row" style="margin-top:50px">
+					<div class="col-sm-4">
+					</div>
+					<div class="col-sm-4">
+						<button type="button" class="btn btn-danger" onclick="clearAll(1);" data-dismiss="modal">Clear</button>
+							<button type="button" class="btn btn-success" onclick="addAnother(); getSupplierDetails();"
+								data-dismiss="modal">Add This</button>
+					</div>
+
+				</div>
+				<div class="clearfix"></div>
+				<div style="margin-top:50px">
+					<div class="col-xs-4">
+						{{-- This is only for alternative of offset --}}
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+							{{-- {!! Form::label('size_id', __('product.size') . ':') !!} --}}
+							<div class="input-group">
+
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+										data-target="#myModal"
+										onclick="$('#btnClose').focus();console.log('done');"><i
+											class="fa fa-plus-circle"></i> Choose Size</button>
+
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<div class="form-group">
+
+							<div class="input-group">
+
 								<span class="input-group-btn">
 									{{-- <button type="button" onclick="openPrintProducts();" class="btn btn-success btn-lg" ><i class="fa fa-print"></i> Print Products</button>
 
 									</span> --}}
-								</div>
 							</div>
 						</div>
-					</div>  
-					<!-- data-toggle="modal" data-target="#myModal" -->
-				
-
-					<div class="clearfix"></div>
-				
-					<div class="col-sm-4 hide">
-					<div class="form-group">
-						{!! Form::label('barcode_type', __('product.barcode_type') . ':*') !!}
-						{!! Form::select('barcode_type', $barcode_types, !empty($duplicate_product->barcode_type) ? $duplicate_product->barcode_type : $barcode_default, ['class' => 'form-control select2']); !!}
-					</div>
-					</div>
-					<div class="col-sm-4 hide">
-					<div class="form-group">
-					<br>
-						<label>
-						{!! Form::checkbox('enable_stock', 1, !empty($duplicate_product) ? $duplicate_product->enable_stock : true, ['class' => 'input-icheck', 'id' => 'enable_stock']); !!} <strong>@lang('product.manage_stock')</strong>
-						</label>@show_tooltip(__('tooltip.enable_stock')) <p class="help-block"><i>@lang('product.enable_stock_help')</i></p>
-					</div>
-					</div>
-					<div class="col-sm-4 hide @if(!empty($duplicate_product) && $duplicate_product->enable_stock == 0) hide @endif" id="alert_quantity_div">
-					<div class="form-group">
-						{!! Form::label('alert_quantity',  __('product.alert_quantity') . ':*') !!} @show_tooltip(__('tooltip.alert_quantity'))
-						{!! Form::number('alert_quantity', !empty($duplicate_product->alert_quantity) ? $duplicate_product->alert_quantity : null , ['class' => 'form-control',
-						'placeholder' => __('product.alert_quantity'), 'min' => '0']); !!}
-					</div>
-					</div>
-					<div class="clearfix"></div>
-					<div class="col-sm-8 hide">
-					<div class="form-group">
-						{!! Form::label('product_description', __('lang_v1.product_description') . ':') !!}
-						{!! Form::textarea('product_description', !empty($duplicate_product->product_description) ? $duplicate_product->product_description : null, ['class' => 'form-control']); !!}
-					</div>
 					</div>
 				</div>
+				<!-- data-toggle="modal" data-target="#myModal" -->
+
+
+				<div class="clearfix"></div>
+
+				<div class="col-sm-4 hide">
+					<div class="form-group">
+						{!! Form::label('barcode_type', __('product.barcode_type') . ':*') !!}
+						{!! Form::select('barcode_type', $barcode_types, !empty($duplicate_product->barcode_type)
+						? $duplicate_product->barcode_type : $barcode_default, ['class' => 'form-control
+						select2']); !!}
+					</div>
+				</div>
+				<div class="col-sm-4 hide">
+					<div class="form-group">
+						<br>
+						<label>
+							{!! Form::checkbox('enable_stock', 1, !empty($duplicate_product) ?
+							$duplicate_product->enable_stock : true, ['class' => 'input-icheck', 'id' =>
+							'enable_stock']); !!} <strong>@lang('product.manage_stock')</strong>
+						</label>@show_tooltip(__('tooltip.enable_stock')) <p class="help-block">
+							<i>@lang('product.enable_stock_help')</i></p>
+					</div>
+				</div>
+				<div class="col-sm-4 hide @if(!empty($duplicate_product) && $duplicate_product->enable_stock == 0) hide @endif"
+					id="alert_quantity_div">
+					<div class="form-group">
+						{!! Form::label('alert_quantity', __('product.alert_quantity') . ':*') !!}
+						@show_tooltip(__('tooltip.alert_quantity'))
+						{!! Form::number('alert_quantity', !empty($duplicate_product->alert_quantity) ?
+						$duplicate_product->alert_quantity : null , ['class' => 'form-control',
+						'placeholder' => __('product.alert_quantity'), 'min' => '0']); !!}
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<div class="col-sm-8 hide">
+					<div class="form-group">
+						{!! Form::label('product_description', __('lang_v1.product_description') . ':') !!}
+						{!! Form::textarea('product_description', !empty($duplicate_product->product_description)
+						? $duplicate_product->product_description : null, ['class' => 'form-control']); !!}
+					</div>
+				</div>
+			</div>
 			@endcomponent
 		</div>
 		{{-- Right Sidebar --}}
@@ -276,206 +382,238 @@
 						<option value="all">@lang('lang_v1.all_category')</option>
 						@foreach($noRefferenceProducts as $noRefference)
 							<option value="{{$noRefference['id']}}">
-								{{$noRefference['name']}}
-							</option>
-						@endforeach
-						@foreach($noRefferenceProducts as $category)
-							@if(!empty($category['sub_categories']))
-								<optgroup label="{{$category['name']}}">
-									@foreach($category['sub_categories'] as $sc)
-										<i class="fa fa-minus"></i> <option value="{{$sc['id']}}">{{$sc['name']}}</option>
-									@endforeach
-								</optgroup>
-							@endif
-						@endforeach
-					</select>
-				@endif
+		{{$noRefference['name']}}
+		</option>
+		@endforeach
+		@foreach($noRefferenceProducts as $category)
+		@if(!empty($category['sub_categories']))
+		<optgroup label="{{$category['name']}}">
+			@foreach($category['sub_categories'] as $sc)
+			<i class="fa fa-minus"></i>
+			<option value="{{$sc['id']}}">{{$sc['name']}}</option>
+			@endforeach
+		</optgroup>
+		@endif
+		@endforeach
+		</select>
+		@endif
 
-				@if(!empty($suppliers))
-					&nbsp;
-					 <select class="select2" id="supplier" style="width:45% !important">
-						<option value="all">All Suppliers</option>
-						@foreach($suppliers as $key=>$noRefference)
-							<option value="{{$key}}">
-								{{$noRefference}}
-							</option>
-						@endforeach
-					</select>
-				@endif
+		@if(!empty($suppliers))
+		&nbsp;
+		<select class="select2" id="supplier" style="width:45% !important">
+			<option value="all">All Suppliers</option>
+			@foreach($suppliers as $key=>$noRefference)
+			<option value="{{$key}}">
+				{{$noRefference}}
+			</option>
+			@endforeach
+		</select>
+		@endif
 
-				
 
-				<div class="box-tools pull-right">
-					<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-				</div>
 
-				<!-- /.box-tools -->
-				</div>
-				<!-- /.box-header -->
-				<input type="hidden" id="suggestion_page" value="1">
-				<div class="box-body">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="eq-height-row" id="product_list_body"></div>
-						</div>
-						<div class="col-md-12 text-center" id="suggestion_page_loader" style="display: none;">
-							<i class="fa fa-spinner fa-spin fa-2x"></i>
-						</div>
-					</div>
-				</div>
-				<!-- /.box-body -->
+		<div class="box-tools pull-right">
+			<button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+					class="fa fa-minus"></i></button>
+		</div>
+
+		<!-- /.box-tools -->
+	</div>
+	<!-- /.box-header -->
+	<input type="hidden" id="suggestion_page" value="1">
+	<div class="box-body">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="eq-height-row" id="product_list_body"></div>
 			</div>
-			@include('sale_pos.partials.product_list_box')
-		</div> --}}
-   </div>
+			<div class="col-md-12 text-center" id="suggestion_page_loader" style="display: none;">
+				<i class="fa fa-spinner fa-spin fa-2x"></i>
+			</div>
+		</div>
+	</div>
+	<!-- /.box-body -->
+	</div>
+	@include('sale_pos.partials.product_list_box')
+	</div> --}}
+	{{-- </div> --}}
 
-    <div class="hide">
+	<div class="hide">
 		@component('components.widget', ['class' => 'box-primary'])
-			<div class="row">
+		<div class="row">
 			@if(session('business.enable_product_expiry'))
 
-				@if(session('business.expiry_type') == 'add_expiry')
-				@php
-					$expiry_period = 12;
-					$hide = true;
-				@endphp
-				@else
-				@php
-					$expiry_period = null;
-					$hide = false;
-				@endphp
-				@endif
+			@if(session('business.expiry_type') == 'add_expiry')
+			@php
+			$expiry_period = 12;
+			$hide = true;
+			@endphp
+			@else
+			@php
+			$expiry_period = null;
+			$hide = false;
+			@endphp
+			@endif
 			<div class="col-sm-4 @if($hide) hide @endif">
 				<div class="form-group">
-				<div class="multi-input">
-					{!! Form::label('expiry_period', __('product.expires_in') . ':') !!}<br>
-					{!! Form::text('expiry_period', !empty($duplicate_product->expiry_period) ? @num_format($duplicate_product->expiry_period) : $expiry_period, ['class' => 'form-control pull-left input_number',
-					'placeholder' => __('product.expiry_period'), 'style' => 'width:60%;']); !!}
-					{!! Form::select('expiry_period_type', ['months'=>__('product.months'), 'days'=>__('product.days'), '' =>__('product.not_applicable') ], !empty($duplicate_product->expiry_period_type) ? $duplicate_product->expiry_period_type : 'months', ['class' => 'form-control select2 pull-left', 'style' => 'width:40%;', 'id' => 'expiry_period_type']); !!}
-				</div>
+					<div class="multi-input">
+						{!! Form::label('expiry_period', __('product.expires_in') . ':') !!}<br>
+						{!! Form::text('expiry_period', !empty($duplicate_product->expiry_period) ?
+						@num_format($duplicate_product->expiry_period) : $expiry_period, ['class' => 'form-control
+						pull-left input_number',
+						'placeholder' => __('product.expiry_period'), 'style' => 'width:60%;']); !!}
+						{!! Form::select('expiry_period_type', ['months'=>__('product.months'),
+						'days'=>__('product.days'), '' =>__('product.not_applicable') ],
+						!empty($duplicate_product->expiry_period_type) ? $duplicate_product->expiry_period_type :
+						'months', ['class' => 'form-control select2 pull-left', 'style' => 'width:40%;', 'id' =>
+						'expiry_period_type']); !!}
+					</div>
 				</div>
 			</div>
 			@endif
 
 			<div class="col-sm-4">
-			<div class="form-group">
-			<br>
-				<label>
-				{!! Form::checkbox('enable_sr_no', 1, !(empty($duplicate_product)) ? $duplicate_product->enable_sr_no : false, ['class' => 'input-icheck']); !!} <strong>@lang('lang_v1.enable_imei_or_sr_no')</strong>
-				</label> @show_tooltip(__('lang_v1.tooltip_sr_no'))
-			</div>
+				<div class="form-group">
+					<br>
+					<label>
+						{!! Form::checkbox('enable_sr_no', 1, !(empty($duplicate_product)) ?
+						$duplicate_product->enable_sr_no : false, ['class' => 'input-icheck']); !!}
+						<strong>@lang('lang_v1.enable_imei_or_sr_no')</strong>
+					</label> @show_tooltip(__('lang_v1.tooltip_sr_no'))
+				</div>
 			</div>
 
 			<div class="clearfix"></div>
 
 			<!-- Rack, Row & position number -->
-			@if(session('business.enable_racks') || session('business.enable_row') || session('business.enable_position'))
+			@if(session('business.enable_racks') || session('business.enable_row') ||
+			session('business.enable_position'))
 			<div class="col-md-12">
 				<h4>@lang('lang_v1.rack_details'):
-				@show_tooltip(__('lang_v1.tooltip_rack_details'))
+					@show_tooltip(__('lang_v1.tooltip_rack_details'))
 				</h4>
 			</div>
 			@foreach($business_locations as $id => $location)
-				<div class="col-sm-3">
+			<div class="col-sm-3">
 				<div class="form-group">
-					{!! Form::label('rack_' . $id,  $location . ':') !!}
-					
+					{!! Form::label('rack_' . $id, $location . ':') !!}
+
 					@if(session('business.enable_racks'))
-					{!! Form::text('product_racks[' . $id . '][rack]', !empty($rack_details[$id]['rack']) ? $rack_details[$id]['rack'] : null, ['class' => 'form-control', 'id' => 'rack_' . $id, 
-						'placeholder' => __('lang_v1.rack')]); !!}
+					{!! Form::text('product_racks[' . $id . '][rack]', !empty($rack_details[$id]['rack']) ?
+					$rack_details[$id]['rack'] : null, ['class' => 'form-control', 'id' => 'rack_' . $id,
+					'placeholder' => __('lang_v1.rack')]); !!}
 					@endif
 
 					@if(session('business.enable_row'))
-					{!! Form::text('product_racks[' . $id . '][row]', !empty($rack_details[$id]['row']) ? $rack_details[$id]['row'] : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.row')]); !!}
+					{!! Form::text('product_racks[' . $id . '][row]', !empty($rack_details[$id]['row']) ?
+					$rack_details[$id]['row'] : null, ['class' => 'form-control', 'placeholder' =>
+					__('lang_v1.row')]); !!}
 					@endif
-					
+
 					@if(session('business.enable_position'))
-					{!! Form::text('product_racks[' . $id . '][position]', !empty($rack_details[$id]['position']) ? $rack_details[$id]['position'] : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.position')]); !!}
+					{!! Form::text('product_racks[' . $id . '][position]', !empty($rack_details[$id]['position']) ?
+					$rack_details[$id]['position'] : null, ['class' => 'form-control', 'placeholder' =>
+					__('lang_v1.position')]); !!}
 					@endif
 				</div>
-				</div>
+			</div>
 			@endforeach
 			@endif
-			
+
 			<div class="col-sm-4">
-			<div class="form-group">
-				{!! Form::label('weight',  __('lang_v1.weight') . ':') !!}
-				{!! Form::text('weight', !empty($duplicate_product->weight) ? $duplicate_product->weight : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.weight')]); !!}
-			</div>
+				<div class="form-group">
+					{!! Form::label('weight', __('lang_v1.weight') . ':') !!}
+					{!! Form::text('weight', !empty($duplicate_product->weight) ? $duplicate_product->weight :
+					null, ['class' => 'form-control', 'placeholder' => __('lang_v1.weight')]); !!}
+				</div>
 			</div>
 			<!--custom fields-->
 			<div class="clearfix"></div>
 			<div class="col-sm-3">
-			<div class="form-group">
-				{!! Form::label('product_custom_field1',  __('lang_v1.product_custom_field1') . ':') !!}
-				{!! Form::text('product_custom_field1', !empty($duplicate_product->product_custom_field1) ? $duplicate_product->product_custom_field1 : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.product_custom_field1')]); !!}
-			</div>
-			</div>
-
-			<div class="col-sm-3">
-			<div class="form-group">
-				{!! Form::label('product_custom_field2',  __('lang_v1.product_custom_field2') . ':') !!}
-				{!! Form::text('product_custom_field2', !empty($duplicate_product->product_custom_field2) ? $duplicate_product->product_custom_field2 : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.product_custom_field2')]); !!}
-			</div>
+				<div class="form-group">
+					{!! Form::label('product_custom_field1', __('lang_v1.product_custom_field1') . ':') !!}
+					{!! Form::text('product_custom_field1', !empty($duplicate_product->product_custom_field1) ?
+					$duplicate_product->product_custom_field1 : null, ['class' => 'form-control', 'placeholder' =>
+					__('lang_v1.product_custom_field1')]); !!}
+				</div>
 			</div>
 
 			<div class="col-sm-3">
-			<div class="form-group">
-				{!! Form::label('product_custom_field3',  __('lang_v1.product_custom_field3') . ':') !!}
-				{!! Form::text('product_custom_field3', !empty($duplicate_product->product_custom_field3) ? $duplicate_product->product_custom_field3 : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.product_custom_field3')]); !!}
-			</div>
+				<div class="form-group">
+					{!! Form::label('product_custom_field2', __('lang_v1.product_custom_field2') . ':') !!}
+					{!! Form::text('product_custom_field2', !empty($duplicate_product->product_custom_field2) ?
+					$duplicate_product->product_custom_field2 : null, ['class' => 'form-control', 'placeholder' =>
+					__('lang_v1.product_custom_field2')]); !!}
+				</div>
 			</div>
 
 			<div class="col-sm-3">
-			<div class="form-group">
-				{!! Form::label('product_custom_field4',  __('lang_v1.product_custom_field4') . ':') !!}
-				{!! Form::text('product_custom_field4', !empty($duplicate_product->product_custom_field4) ? $duplicate_product->product_custom_field4 : null, ['class' => 'form-control', 'placeholder' => __('lang_v1.product_custom_field4')]); !!}
+				<div class="form-group">
+					{!! Form::label('product_custom_field3', __('lang_v1.product_custom_field3') . ':') !!}
+					{!! Form::text('product_custom_field3', !empty($duplicate_product->product_custom_field3) ?
+					$duplicate_product->product_custom_field3 : null, ['class' => 'form-control', 'placeholder' =>
+					__('lang_v1.product_custom_field3')]); !!}
+				</div>
 			</div>
+
+			<div class="col-sm-3">
+				<div class="form-group">
+					{!! Form::label('product_custom_field4', __('lang_v1.product_custom_field4') . ':') !!}
+					{!! Form::text('product_custom_field4', !empty($duplicate_product->product_custom_field4) ?
+					$duplicate_product->product_custom_field4 : null, ['class' => 'form-control', 'placeholder' =>
+					__('lang_v1.product_custom_field4')]); !!}
+				</div>
 			</div>
 			<!--custom fields-->
 			<div class="clearfix"></div>
 			@include('layouts.partials.module_form_part')
-			</div>
+		</div>
 		@endcomponent
-    </div>
-    <div class="hide">
+	</div>
+	<div class="hide">
 		@component('components.widget', ['class' => 'box-primary'])
-			<div class="row">
+		<div class="row">
 
 			<div class="col-sm-4 @if(!session('business.enable_price_tax')) hide @endif">
-			<div class="form-group">
-				{!! Form::label('tax', __('product.applicable_tax') . ':') !!}
-				{!! Form::select('tax', $taxes, !empty($duplicate_product->tax) ? $duplicate_product->tax : null, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2'], $tax_attributes); !!}
-			</div>
+				<div class="form-group">
+					{!! Form::label('tax', __('product.applicable_tax') . ':') !!}
+					{!! Form::select('tax', $taxes, !empty($duplicate_product->tax) ? $duplicate_product->tax :
+					null, ['placeholder' => __('messages.please_select'), 'class' => 'form-control select2'],
+					$tax_attributes); !!}
+				</div>
 			</div>
 
 			<div class="col-sm-4 @if(!session('business.enable_price_tax')) hide @endif">
-			<div class="form-group">
-				{!! Form::label('tax_type', __('product.selling_price_tax_type') . ':*') !!}
-				{!! Form::select('tax_type', ['inclusive' => __('product.inclusive'), 'exclusive' => __('product.exclusive')], !empty($duplicate_product->tax_type) ? $duplicate_product->tax_type : 'exclusive',
-				['class' => 'form-control select2']); !!}
-			</div>
+				<div class="form-group">
+					{!! Form::label('tax_type', __('product.selling_price_tax_type') . ':*') !!}
+					{!! Form::select('tax_type', ['inclusive' => __('product.inclusive'), 'exclusive' =>
+					__('product.exclusive')], !empty($duplicate_product->tax_type) ? $duplicate_product->tax_type :
+					'exclusive',
+					['class' => 'form-control select2']); !!}
+				</div>
 			</div>
 
 			<div class="clearfix"></div>
 
 			<div class="col-sm-4">
-			<div class="form-group">
-				{!! Form::label('type', __('product.product_type') . ':*') !!} @show_tooltip(__('tooltip.product_type'))
-				{!! Form::select('type', ['single' => __('lang_v1.single'), 'variable' => __('lang_v1.variable')], !empty($duplicate_product->type) ? $duplicate_product->type : null, ['class' => 'form-control select2', 'data-action' => !empty($duplicate_product) ? 'duplicate' : 'add', 'data-product_id' => !empty($duplicate_product) ? $duplicate_product->id : '0']); !!}
-			</div>
+				<div class="form-group">
+					{!! Form::label('type', __('product.product_type') . ':*') !!}
+					@show_tooltip(__('tooltip.product_type'))
+					{!! Form::select('type', ['single' => __('lang_v1.single'), 'variable' =>
+					__('lang_v1.variable')], !empty($duplicate_product->type) ? $duplicate_product->type : null,
+					['class' => 'form-control select2', 'data-action' => !empty($duplicate_product) ? 'duplicate' :
+					'add', 'data-product_id' => !empty($duplicate_product) ? $duplicate_product->id : '0']); !!}
+				</div>
 			</div>
 
 			<div class="form-group col-sm-11 col-sm-offset-1" id="product_form_part"></div>
 
 			<input type="hidden" id="variation_counter" value="1">
-			<input type="hidden" id="default_profit_percent" 
-			value="{{ $default_profit_percent }}">
+			<input type="hidden" id="default_profit_percent" value="{{ $default_profit_percent }}">
 
-			</div>
+		</div>
 		@endcomponent
-    </div>
-    <div class="row">
+	</div>
+	<div class="row">
 		<div class="col-sm-12">
 			<input type="hidden" name="submit_type" id="submit_type">
 			<div class="text-center row">
@@ -485,7 +623,7 @@
 					<button type="button" class="btn btn-success col-12" onclick="addThis();">
 						<i class="fa fa-save"></i>
 						@lang('messages.save')</button>
-					<button type="submit"  class="btn btn-primary hide" id="btnSubmit">
+					<button type="submit" class="btn btn-primary hide" id="btnSubmit">
 						<i class="fa fa-save"></i>
 						@lang('messages.save')
 					</button>
@@ -493,104 +631,113 @@
 			</div>
 		</div>
 	</div>
-  <hr/>
-  <div class="row box box-primary" id="c"> 
-      <div class="col-md-12">
-          <div class="col-md-1"><b>No</b></div>
-          {{-- <div class="col-md-1"><b>Supplier</b></div> --}}
-          <div class="col-md-1 hide"><b>Barcode</b></div>
-          <div class="col-md-1 hide"><b>Description</b></div>
-          <div class="col-md-1"><b>Name</b></div>
-          <div class="col-md-1"><b>Refference</b></div>
-          <div class="col-md-1"><b>Supplier</b></div>
-          <div class="col-md-1"><b>Category</b></div>
-          <div class="col-md-1"><b>SubCategory</b></div>
-          {{-- <div class="col-md-1"><b>Unit</b></div> --}}
-          <div class="col-md-1 hide"><b>Unit Price</b></div>
-          <div class="col-md-1"><b>Sale Price</b></div>
-          <div class="col-md-1"><b>Color</b></div>
-          <div class="col-md-1"><b>Qty</b></div>
-          <div class="col-md-1"><b>Size</b></div>
-          <div class="col-md-1"><b>Image</b></div>
-          <div class="col-md-1"><b>Action</b></div>
-      </div>
-    </div>
-    <div class="row box box-primary" id="bulk_product_home"> 
-      
+	<hr />
+	<div class="row box box-primary" id="c">
+		<div class="col-md-12">
+			<div class="col-md-1"><b>No</b></div>
+			{{-- <div class="col-md-1"><b>Supplier</b></div> --}}
+			<div class="col-md-1 hide"><b>Barcode</b></div>
+			<div class="col-md-1 hide"><b>Description</b></div>
+			<div class="col-md-1"><b>Name</b></div>
+			<div class="col-md-1"><b>Refference</b></div>
+			<div class="col-md-1"><b>Supplier</b></div>
+			<div class="col-md-1"><b>Category</b></div>
+			<div class="col-md-1"><b>SubCategory</b></div>
+			{{-- <div class="col-md-1"><b>Unit</b></div> --}}
+			<div class="col-md-1 hide"><b>Unit Price</b></div>
+			<div class="col-md-1"><b>Sale Price</b></div>
+			<div class="col-md-1"><b>Color</b></div>
+			<div class="col-md-1"><b>Qty</b></div>
+			<div class="col-md-1"><b>Size</b></div>
+			<div class="col-md-1"><b>Image</b></div>
+			<div class="col-md-1"><b>Action</b></div>
+		</div>
 	</div>
-	
-{!! Form::close() !!}
-  
+	<div class="row box box-primary" id="bulk_product_home">
+
+	</div>
+
+	{!! Form::close() !!}
+
 </section>
 <!-- /.content -->
 <!-- quick product modal -->
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+	<div class="modal-dialog">
 
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" id="btnClose">&times;</button>
-        <h4 class="modal-title">Choose Size</h4>
-	  </div>
-	  <div class="row" style="margin: 10px;">
-			<div class="col-md-12">
-				@foreach($sizes as $id => $objSize)
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" id="btnClose">&times;</button>
+				<h4 class="modal-title">Choose Size</h4>
+			</div>
+			<div class="row" style="margin: 10px;">
+				<div class="col-md-12">
+					@foreach($sizes as $id => $objSize)
 					<div class="col-sm-4">
-						<input type="radio" id="btnSize_{{$objSize->id}}" name="chooseSize" class="" value="{{$objSize->id}}">
+						<input type="radio" id="btnSize_{{$objSize->id}}" name="chooseSize_old" class=""
+							value="{{$objSize->id}}">
 						{{-- onclick="getSizes({{$objSize->id}})" --}}
-						<label class="custom-control-label" for="btnSize_{{$objSize->id}}">{{$objSize->name}} </label>
+						<label class="custom-control-label" for="btnSize_{{$objSize->id}}">{{$objSize->name}}
+						</label>
 					</div>
-				@endforeach
-			</div> 
-        </div>
-      <div class="col-sm-12 @if(!session('business.enable_brand')) hide @endif">
-          <div class="form-group">
-            {!! Form::label('color_id', __('product.color') . ':') !!}
-            <div class="input-group">
-              {!! Form::select('color_idc', $colors,  null, ['placeholder' => __('messages.please_select'), 'class' => 'req form-control','id' => 'color_idc', 'required' => 'true']); !!}
-            <span class="input-group-btn">
-                <button type="button" @if(!auth()->user()->can('color.create')) disabled @endif class="btn btn-default bg-white btn-flat btn-modal" data-href="{{action('ColorController@create', ['quick_add' => true])}}" title="@lang('color.add_brand')" data-container=".view_modal"><i class="fa fa-plus-circle text-primary fa-lg"></i></button>
-              </span>
-            </div>
-          </div>
-        </div>
-        {{-- <div class="row" style="margin: 10px;">
+					@endforeach
+				</div>
+			</div>
+			<div class="col-sm-12 @if(!session('business.enable_brand')) hide @endif">
+				<div class="form-group">
+					{!! Form::label('color_id', __('product.color') . ':') !!}
+					<div class="input-group">
+						{!! Form::select('color_idc', $colors, null, ['placeholder' =>
+						__('messages.please_select'), 'class' => ' form-control','id' => 'color_idc_old']); !!}
+						<span class="input-group-btn">
+							<button type="button" @if(!auth()->user()->can('color.create')) disabled @endif
+								class="btn btn-default bg-white btn-flat btn-modal"
+								data-href="{{action('ColorController@create', ['quick_add' => true])}}"
+								title="@lang('color.add_brand')" data-container=".view_modal"><i
+									class="fa fa-plus-circle text-primary fa-lg"></i></button>
+						</span>
+					</div>
+				</div>
+			</div>
+			{{-- <div class="row" style="margin: 10px;">
 			<div class="col-md-12">
 				@foreach($sizes as $id => $objSize)
-					<button type="button" class="col-md-4 btn btn-md btn-danger" id="btnSize_{{$objSize->id}}" onclick="getSizes({{$objSize->id}})">{{$objSize->name}}</button>
-				@endforeach
-			</div> 
-        </div> --}}
-        <div class="row" id="sizeArea">
-          <div class="col-md-12">
-            <div class="col-md-4"><b>Size</b></div>
-            <div class="col-md-4"><b>Sub-Size</b></div>
-            <div class="col-md-3"><b>Qty</b></div>
-            <div class="col-md-1"><b>X</b></div>
-          </div>
-        </div>
-      <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-danger text-left " style="float: left;" onclick="AddSize();" >+</button> -->
-        <button type="button" class="btn btn-danger" onclick="clearAll(1);" data-dismiss="modal">Clear</button>
-        <button type="button" class="btn btn-success" onclick="addAnother(); getSupplierDetails();" data-dismiss="modal">Add This</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
+					<button type="button" class="col-md-4 btn btn-md btn-danger" id="btnSize_{{$objSize->id}}"
+			onclick="getSizes({{$objSize->id}})">{{$objSize->name}}</button>
+			@endforeach
+		</div>
+	</div> --}}
+	<div class="row" id="sizeArea_old">
+		<div class="col-md-12">
+			<div class="col-md-4"><b>Size</b></div>
+			<div class="col-md-4"><b>Sub-Size</b></div>
+			<div class="col-md-3"><b>Qty</b></div>
+			<div class="col-md-1"><b>X</b></div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<!-- <button type="button" class="btn btn-danger text-left " style="float: left;" onclick="AddSize();" >+</button> -->
+		<button type="button" class="btn btn-danger" onclick="clearAll(1);" data-dismiss="modal">Clear</button>
+		<button type="button" class="btn btn-success" onclick="addAnother(); getSupplierDetails();"
+			data-dismiss="modal">Add This</button>
+		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	</div>
+</div>
 
-  </div>
-</div> 
+</div>
+</div>
 
- 
+
 @endsection
 
 @section('javascript')
-  @php $asset_v = env('APP_VERSION'); @endphp
-  <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
-  {{-- Prevent Reload --}}
-  <script type="text/javascript">
-     $(document).ready(function (){
+@php $asset_v = env('APP_VERSION'); @endphp
+<script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script>
+{{-- Prevent Reload --}}
+<script type="text/javascript">
+	$(document).ready(function (){
 		 /**
 		 * editPnc(x) will randomly get product name and id from DB 
 		 *
@@ -605,6 +752,14 @@
 		   $("#unit_price").focus();
 		// $("#refference_id").focus();
 
+
+		$("#category_id").val(2).change();
+
+		setTimeout(function(){
+			$("#sub_category_id").val(38).change();
+			$("#color_idc").val(14).change();
+		},1000);
+		
     });
 
     //     window.onbeforeunload = function() {
@@ -634,9 +789,9 @@
 			return(false);
 		}
      }
-     $("#sub_category_id").change(function () {
-    	// $("#refference_id").focus();
-     });
+     // $("#sub_category_id").change(function () {
+    	// // $("#refference_id").focus();
+     // });
      function changeUnitPrice(obj)
      {
 		//  console.log(obj.value);
@@ -661,11 +816,12 @@
      {
       obj.defaultValue = obj.value;
      }
-	$("#color_idc").change(function(){
-		var chooseSizeRadio = $("input[name='chooseSize']").is(':checked')
+	$("#chooseSize").change(function(){
+		var chooseSizeRadio = $("select[name='chooseSize']").val();
+		// console.log(chooseSizeRadio);
 		if(chooseSizeRadio){
 			// console.log($("input[name='chooseSize']:checked").val());
-			sizeId = $("input[name='chooseSize']:checked").val();
+			sizeId = chooseSizeRadio;
 			name = sizeId;
 		}else{
 			alert("Please Select Size First "); 
@@ -678,6 +834,7 @@
 			success:function(data){
 				if(data.success)
 				{ 
+					// console.log(data);
 					var obj = data.msg;
 					size_idtext = $("#btnSize_"+sizeId).html();
 					
@@ -701,11 +858,60 @@
 					alert(" "+data.msg);
 					$("#amount_"+rowIndex).val(0).change();
 					$("#note_"+rowIndex).val('');
-			ResetFields(rowIndex);
+					ResetFields(rowIndex);
 				}
 			}
 		});
 	});
+	/**
+	*  OLD Colors Adding
+	* 
+	**/
+	// $("#color_idc").change(function(){
+	// 	var chooseSizeRadio = $("input[name='chooseSize']").is(':checked')
+	// 	if(chooseSizeRadio){
+	// 		// console.log($("input[name='chooseSize']:checked").val());
+	// 		sizeId = $("input[name='chooseSize']:checked").val();
+	// 		name = sizeId;
+	// 	}else{
+	// 		alert("Please Select Size First "); 
+	// 		return(false);
+	// 	}
+	// 	var html = $("#sizeArea").html(); 
+	// 	$.ajax({
+	// 		type:'GET',
+	// 		url:'/sizes/getSubSize/'+name, 
+	// 		success:function(data){
+	// 			if(data.success)
+	// 			{ 
+	// 				var obj = data.msg;
+	// 				size_idtext = $("#btnSize_"+sizeId).html();
+					
+	// 				for (i = 0  ; i < obj.length; i++) {
+	// 				rowSize++ ;
+	// 				html += "<div class=' col-md-12' id='sizeRow_"+rowSize+"'> ";
+	// 				html += "<div class=' col-md-2'><select tab-index='-1' class='form-control' readonly><option value='"+sizeId+"'>"+size_idtext+"</option></select></div>";
+	// 				html += "<div class=' col-md-2'><select tab-index='-1'class='form-control'  readonly><option value='"+obj[i]['id']+"'>"+obj[i]['name']+"</option></select></div>";
+
+	// 				html += "<div class=' col-md-2'><select tab-index='-1' onchange='setColorWithSize("+i+");' class='form-control' form='product_add_form'  readonly required id='color_id_"+i+"'> <option selected='selected' value='"+$("#color_idc option:selected").val()+"'>"+$("#color_idc option:selected").text()+"</option></select></div>";
+
+	// 				html += "<div class=' col-md-3'><input tab-index='"+(0)+"' onChange='setValue(this);' type='number' data-size='"+sizeId+"' data-size-name='"+size_idtext+"' data-size-sub='"+obj[i]['id']+"' data-size-sub-name='"+obj[i]['name']+"' data-color='"+$("#color_idc option:selected").val()+"' data-color-name='"+$("#color_idc option:selected").text()+"' class='form-control sizeQty'  value='1'  id='datasize_"+i+"'/></div>";
+
+	// 				html += "<div class=' col-md-1'><button tab-index=-1 onclick='removeSize("+rowSize+")' class='btn btn-sm btn-danger'>X</button></div>";
+	// 				html += "</div>";
+	// 				}
+	// 				$("#sizeArea").html(html);
+
+	// 			}else
+	// 			{
+	// 				alert(" "+data.msg);
+	// 				$("#amount_"+rowIndex).val(0).change();
+	// 				$("#note_"+rowIndex).val('');
+	// 		ResetFields(rowIndex);
+	// 			}
+	// 		}
+	// 	});
+	// });
      function getSizes(sizeId)
      {
       if($("#color_idc").val() == "")
@@ -762,12 +968,12 @@
            url:'/sizes/getSupplierDetails/'+name, 
            success:function(data){
             $("#temp_reff").val(data); 
-		  console.log("Supp-Reff-Count : "+reffCount);
-		  console.log("Supp-Data : "+data);
+		//   console.log("Supp-Reff-Count : "+reffCount);
+		//   console.log("Supp-Data : "+data);
             var n = reffCount;
             var result = (pad+n).slice(-pad.length);
-            console.log('Refference-N : '+n);
-            console.log('Refference-Result : '+result);
+          //   console.log('Refference-N : '+n);
+          //   console.log('Refference-Result : '+result);
             $("#refference_id").val(data+result );
             //
                 
@@ -1205,5 +1411,5 @@
 		}
 	}
 
-	</script>
+</script>
 @endsection
