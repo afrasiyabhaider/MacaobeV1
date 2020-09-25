@@ -1052,7 +1052,7 @@
       $(".sizeQty").val("0");
       countSize = 0;
       $("#sizeArea").empty();
-      var fieldsArr = ["supplier_id", "brand_id",  "name","upload_image","unit_price","ref_description","sku"];
+      var fieldsArr = ["supplier_id", "brand_id",  "name","upload_image","unit_price","ref_description","sku","chooseSize"];
      //  var notIncludeArr = ["single_dpp", "single_dpp_inc_tax", "single_dsp", "single_dsp_inc_tax", "profit_percent","upload_image"];
       var ignoreArr = ["supplier_id", "brand_id", "category_id", "name", "unit_price","custom_price","single_dpp", "single_dpp_inc_tax", "single_dsp", "single_dsp_inc_tax", "profit_percent","upload_image","refference_id"];
 

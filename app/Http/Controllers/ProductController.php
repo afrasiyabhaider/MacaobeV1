@@ -3275,7 +3275,8 @@ class ProductController extends Controller
             ->orderBy('name', 'Asc')
             ->pluck('name', 'id');
 
-        $dd_sizes = Size::forDropdown($business_id);
+        $dd_sizes = Size::where('parent_id',0)->pluck('name','id');
+        // dd($dd_sizes);
         $sizes = Size::where('business_id', $business_id)
             ->where('parent_id', 0)
             ->select('name', 'id')->get();
