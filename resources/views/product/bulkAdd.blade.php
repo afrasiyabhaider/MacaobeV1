@@ -816,7 +816,7 @@
      {
       obj.defaultValue = obj.value;
      }
-	$("#chooseSize").change(function(){
+	$("#chooseSize, #color_idc").change(function(){
 		var chooseSizeRadio = $("select[name='chooseSize']").val();
 		// console.log(chooseSizeRadio);
 		if(chooseSizeRadio){

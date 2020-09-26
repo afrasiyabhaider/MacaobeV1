@@ -2943,6 +2943,7 @@ class ProductController extends Controller
 
                             $new_qty = $before_transfer_qty + $productQty;
 
+                            $after_transfer->update(['location_print_qty' => $productQty]);
                             $after_transfer->update(['qty_available' => $new_qty]);
                             $after_transfer->update(['product_updated_at' => Carbon::now()]);
                         }
@@ -2959,6 +2960,7 @@ class ProductController extends Controller
                         $location_transfer_detail->product_variation_id = $objOldPurchaseLine->variation_id;
 
                         $location_transfer_detail->quantity = (float)$qtyForPurchaseLine;
+                        
                         $location_transfer_detail->transfered_on = Carbon::now();
 
                         $location_transfer_detail->save();
@@ -3146,6 +3148,7 @@ class ProductController extends Controller
                         // dd($transfer_to_location,(float)$transfer_to_location->qty_available,(float)$qtyForPurchaseLine,$new_qty);
 
                         $transfer_to_location->qty_available = $new_qty;
+                        $transfer_to_location->location_print_qty =$productQty;
                         $transfer_to_location->product_updated_at = Carbon::now();
                         $transfer_to_location->save();
 

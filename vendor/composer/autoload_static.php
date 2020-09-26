@@ -671,6 +671,7 @@ class ComposerStaticInitd25fe27e03ec6c501754f7b68aafaf3d
         'AddBusinessSettingsOptions' => __DIR__ . '/../..' . '/database/migrations/2018_03_19_113601_add_business_settings_options.php',
         'AddChangesForSrNumberInProductsAndSaleLinesTable' => __DIR__ . '/../..' . '/database/migrations/2018_03_29_115502_add_changes_for_sr_number_in_products_and_sale_lines_table.php',
         'AddChangesToInvoiceLayoutsTable' => __DIR__ . '/../..' . '/database/migrations/2018_04_03_122709_add_changes_to_invoice_layouts_table.php',
+        'AddColumnInVariationLocationDetail' => __DIR__ . '/../..' . '/database/migrations/2020_09_26_213519_add_column_in_variation_location_detail.php',
         'AddColumnProductRefferenceInTransactionSellLinesTable' => __DIR__ . '/../..' . '/database/migrations/2020_09_09_155210_add_column_product_refference_in_transaction_sell_lines_table.php',
         'AddColumnsForVariableProductModifications' => __DIR__ . '/../..' . '/database/migrations/2018_10_22_114441_add_columns_for_variable_product_modifications.php',
         'AddCommissionAgentToTransactionsTable' => __DIR__ . '/../..' . '/database/migrations/2018_02_26_134500_add_commission_agent_to_transactions_table.php',

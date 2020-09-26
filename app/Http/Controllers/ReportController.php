@@ -907,7 +907,7 @@ class ReportController extends Controller
                 'variations.sell_price_inc_tax as unit_price',
                 'pv.name as product_variation',
                 'vld.product_updated_at as product_date',
-                'vld.printing_qty as printing_qty',
+                'vld.location_print_qty as printing_qty',
                 'variations.name as variation_name',
                 'vld.updated_at',
                 // 'vld.qty_available as current_stock'

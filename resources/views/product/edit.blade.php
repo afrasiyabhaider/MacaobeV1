@@ -517,6 +517,7 @@
      }
      $("#sub_category_id").change(function () {
 		// $("#refference_id").focus();
+        $("#print_qty_id").focus();
      });
      function changeUnitPrice(obj)
      {
@@ -644,10 +645,13 @@
               // console.log('Refference : '+data+result);
               $("#refference_id").val("");
               $("#refference_id").val(data+result);
+              $("#print_qty_id").focus();
             //
                 
            }
         });
+
+        $("#print_qty_id").focus();
      }
      function getSupplierDetailsOnload(id)
      {
@@ -664,6 +668,7 @@
                 
            }
         });
+        $("#print_qty_id").focus();
      }
      function updateRefference()
      { 
