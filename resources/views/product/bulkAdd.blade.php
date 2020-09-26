@@ -824,8 +824,12 @@
 			sizeId = chooseSizeRadio;
 			name = sizeId;
 		}else{
-			alert("Please Select Size First "); 
-			return(false);
+			if($("#color_idc").val() == 14){
+				return(false);
+			}else{
+				alert("Please Select Size First "); 
+				return(false);
+			}
 		}
 		var html = $("#sizeArea").html(); 
 		$.ajax({
