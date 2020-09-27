@@ -4,6 +4,20 @@
 		margin-left: 5px;
 	}
 </style>
+<div>
+	<div class="panel-body bg-gray">
+		<div class="col-sm-8"></div>
+		<div class="col-sm-4">
+			<label>Amount Given:</label>
+			<input type="number" min="1" name="change" id="change_amount" class="form-control" placeholder="Amount Given" onkeyup="clacuateChange(this);">
+			<br>
+			<h4 class="text-success">
+				<label>Change: </label>
+				<span id="change_text"></span>
+			</h4>
+		</div>
+	</div>
+</div>
 <div class="row">
 	<div class="col-sm-12">
 		<div class="panel panel-default">

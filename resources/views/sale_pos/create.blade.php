@@ -383,6 +383,15 @@
 			//return;
 		};
 	});
+	function clacuateChange(id){
+		var amount = $('#'+$(id).attr('id')).val();
+		if(__read_number($('#final_total_input')) < 1){
+			alert('Payable is too Low');
+			return 0;
+		}
+		var calc =  parseFloat(amount - __read_number($('#final_total_input')));
+		$('#change_text').html(__currency_trans_from_en(calc,true));
+	}
 	function ResetFields(index)
 	{
 		$("#amount_"+index).removeAttr("max");
