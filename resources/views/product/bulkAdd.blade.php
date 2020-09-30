@@ -274,13 +274,14 @@
 				</div>
 			</div>
 		<div class="">
-				<div class="row" id="sizeArea">
+				<div class="row">
 					<div class="col-md-12 bg-primary p-sm-2">
 						<div class="col-md-4"><b>Size</b></div>
 						<div class="col-md-4"><b>Color</b></div>
 						<div class="col-md-3"><b>Qty</b></div>
 						<div class="col-md-1"><b>X</b></div>
 					</div>
+					<div id="sizeArea"></div>
 				</div>
 				<div class="row hide" style="margin-top:50px">
 					<div class="col-sm-4">
