@@ -187,7 +187,7 @@
         <div class="col-sm-4"></div>
         
       </div>
-      <div class="row" style="margin-top: 30px">
+      <div class="row">
         <div class="col-sm-4">
           {{-- <input name="custom_price" required="true" type="text" class="req form-control col-12" value="{{$product->color()->first()->name}}"
           id="unit_price" onchange="DittoThis(this,'single_dsp')"> --}}
@@ -245,6 +245,13 @@
               </optgroup>
             </select>
         </div>
+        <div class="col-sm-4">
+          <button type="submit" class="btn btn-success col-12 fa-2x" style="width:150px;padding:10px;font-size:20px;margin-top: 20px;"
+            id="btnSubmit">
+            <i class="fa fa-save"></i>
+            @lang('messages.update')
+          </button>
+        </div>
       </div>
       <div class="row" style="margin-top: 30px">
         <div class="col-sm-12">
@@ -256,11 +263,11 @@
               Add New Product
               </a> --}}
               {{-- onclick="addThis();" --}}
-              <button type="submit" class="btn btn-success col-12 fa-2x" style="width:150px;padding:10px;font-size:20px"
+              {{-- <button type="submit" class="btn btn-success col-12 fa-2x" style="width:150px;padding:10px;font-size:20px"
                 id="btnSubmit">
                 <i class="fa fa-save"></i>
                 @lang('messages.update')
-              </button>
+              </button> --}}
             </div>
           </div>
         </div>

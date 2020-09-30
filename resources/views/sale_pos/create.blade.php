@@ -382,6 +382,7 @@
 			//if we return nothing here (just calling return;) then there will be no pop-up question at all
 			//return;
 		};
+		$('#change_text').html(__currency_trans_from_en(0.00,true))
 	});
 	function clacuateChange(id){
 		var amount = $('#'+$(id).attr('id')).val();

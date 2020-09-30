@@ -445,6 +445,7 @@ $(document).ready(function() {
         }
 
         $('#modal_payment').modal('show');
+        $('#change_text').html(__currency_trans_from_en(0.00, true))
     });
 
     $('#modal_payment').on('shown.bs.modal', function() {
@@ -483,6 +484,7 @@ $(document).ready(function() {
         } else {
             pos_form_obj.submit(); //Submitting form
         }
+        $('#change_text').html(__currency_trans_from_en(0.00, true))
     });
 
     $('div#card_details_modal').on('shown.bs.modal', function(e) {
