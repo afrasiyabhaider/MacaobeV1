@@ -3,6 +3,9 @@
         <thead>
             <tr>
                 <th>
+                    #
+                </th>
+                <th>
                     <input type="checkbox" id="select-all-row">
                     All
                 </th>
@@ -32,7 +35,7 @@
         </thead>
         <tfoot>
             <tr class="bg-gray font-17 text-center footer-total">
-                <td colspan="14"><strong>@lang('sale.total'):</strong></td>
+                <td colspan="15"><strong>@lang('sale.total'):</strong></td>
                 <td id="footer_total_stock"></td>
                 <td id="footer_total_sold"></td>
                 <td id="footer_total_transfered"></td>

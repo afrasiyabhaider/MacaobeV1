@@ -5,7 +5,7 @@
 	}
 </style>
 <div>
-	<div class="panel-body bg-gray">
+	{{-- <div class="panel-body bg-gray ">
 		<div class="col-sm-8"></div>
 		<div class="col-sm-4">
 			<label>Amount Given:</label>
@@ -16,7 +16,7 @@
 				<span id="change_text"></span>
 			</h4>
 		</div>
-	</div>
+	</div> --}}
 </div>
 <div class="row">
 	<div class="col-sm-12">
@@ -33,13 +33,29 @@
 								<span class="total_quantity">0</span>
 							</div>
 
-							<div class="col-sm-2 col-xs-3 d-inline-table">
+							<div class="col-sm-4 col-xs-4 d-inline-table ">
+								<b>Amount Given:</b> 
+								<br/>
+								<input type="number" min="1" name="change" id="change_amount" class="form-control" placeholder="Amount Given"
+									onkeyup="clacuateChange(this);">
+							</div>
+							<div class="col-1">
+							</div>
+							<div class="col-sm-3 col-xs-3 d-inline-table text-center">
+								<b>Change: </b>
+								<br>
+								<h4 class="text-success lead text-bold">
+									<span id="change_text"></span>
+								</h4>
+							</div>
+
+							<div class="col-sm-2 col-xs-3 d-inline-table hide">
 								<b>@lang('sale.total'):</b> 
 								<br/>
 								<span class="price_total">0</span>
 							</div>
 
-							<div class="col-sm-2 col-xs-6 d-inline-table">
+							<div class="col-sm-2 col-xs-6 d-inline-table hide">
 
 								<span class="@if($pos_settings['disable_discount'] != 0) hide @endif">
 
@@ -54,7 +70,7 @@
 								</span>
 							</div>
 
-							<div class="col-sm-2 col-xs-6 d-inline-table">
+							<div class="col-sm-2 col-xs-6 d-inline-table hide ">
 
 								<span class="@if($pos_settings['disable_order_tax'] != 0) hide @endif">
 
@@ -81,7 +97,7 @@
 							</div>
 							
 							<!-- shipping -->
-							<div class="col-sm-2 col-xs-6 d-inline-table">
+							<div class="col-sm-2 col-xs-6 d-inline-table hide">
 
 								<span class="@if($pos_settings['disable_discount'] != 0) hide @endif">
 
@@ -103,11 +119,11 @@
 								<input type="hidden" name="final_total" 
 									id="final_total_input" value=0>
 								<span id="total_payable" class="text-success lead text-bold">0</span>
-								@if(empty($edit))
+								{{-- @if(empty($edit))
 									<button type="button" class="btn btn-danger btn-flat btn-xs pull-right" id="pos-cancel">@lang('sale.cancel')</button>
 								@else
 									<button type="button" class="btn btn-danger btn-flat hide btn-xs pull-right" id="pos-delete">@lang('messages.delete')</button>
-								@endif
+								@endif --}}
 							</div>
 						</td>
 					</tr>
@@ -123,12 +139,7 @@
 								<button type="button" class=" hide btn btn-info btn-sm pull-left cust-pad" onClick="openUnkown();">
 									Unknown
 								</button>
-								<button type="button" class="btn bg-maroon btn-sm pull-left cust-pad" title="@lang('gift.title')" onclick="openGiftCard()">
-									<div class="text-center">
-										<i class="fa fa-check" aria-hidden="true"></i>
-										<b>@lang('gift.title')</b>
-									</div>
-								</button>
+								
 								@if(empty($pos_settings['disable_suspend']))
 								{{-- pos-express-finalize --}}
 									<button type="button" 
@@ -150,15 +161,31 @@
 										<b>@lang('lang_v1.checkout_multi_pay')</b>
 									</div>
 								</button>
+
+								@if(empty($edit))
+								<button type="button" class="btn btn-danger btn-sm pull-left cust-pad" id="pos-cancel">@lang('sale.cancel')</button>
+								@else
+								<button type="button" class="btn btn-danger btn-sm pull-left cust-pad" id="pos-delete">@lang('messages.delete')</button>
+								@endif
 							</div>
-							<div class="col-sm-3 col-xs-12 col-2px-padding">
+							<div class="col-sm-2 col-xs-12 col-2px-padding">
+								<button type="button" class="btn btn-info btn-block btn-flat btn-lg bg-maroon btn-lg pull-left pos-express-btn pos-express-finalize" title="@lang('gift.title')"
+									onclick="openGiftCard()">
+									<div class="text-center">
+										<i class="fa fa-check" aria-hidden="true"></i>
+										<b style="font-size: 16px">@lang('gift.title')</b>
+									</div>
+								</button>
+							</div>
+							<div class="col-sm-2 col-xs-12 col-2px-padding">
 								<button type="button" class="btn btn-info btn-block btn-flat btn-lg no-print @if($pos_settings['disable_express_checkout'] != 0) hide @endif pos-express-btn pos-express-finalize"  id="pos-save-card-external">
 								{{-- data-pay_method="card"  --}}
 									<i class="fa fa-credit-card"></i>
 									Card
 								</button>
+
 							</div>
-							<div class="col-sm-3 col-xs-12 col-2px-padding">
+							<div class="col-sm-2 col-xs-12 col-2px-padding">
 								<button type="button" class="btn btn-success btn-block btn-flat btn-lg no-print @if($pos_settings['disable_express_checkout'] != 0) hide @endif pos-express-btn pos-express-finalize"
 								data-pay_method="cash"
 								title="@lang('tooltip.express_checkout')">
@@ -167,6 +194,7 @@
 										<b>@lang('lang_v1.express_checkout_cash')</b>
 									</div>
 								</button>
+
 							</div>
 
 							<div class="div-overlay pos-processing"></div>

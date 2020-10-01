@@ -75,7 +75,7 @@
         </thead>
         <tfoot>
             <tr>
-                <td colspan="11">
+                <td colspan="12">
                 <div style="display: flex; width: 100%;">
                     @can('product.delete')
                         {!! Form::open(['url' => action('ProductController@massDestroy'), 'method' => 'post', 'id' => 'mass_delete_form' ]) !!}

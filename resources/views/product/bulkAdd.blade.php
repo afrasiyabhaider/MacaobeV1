@@ -273,9 +273,9 @@
 							@lang('lang_v1.aspect_ratio_should_be_1_1')</span></small>
 				</div>
 			</div>
-		<div class="">
+		<div>
 				<div class="row">
-					<div class="col-md-12 bg-primary p-sm-2">
+					<div class="col-md-12 bg-primary p-sm-2 text-center">
 						<div class="col-md-4"><b>Size</b></div>
 						<div class="col-md-4"><b>Color</b></div>
 						<div class="col-md-3"><b>Qty</b></div>
@@ -882,6 +882,8 @@
 				}
 			}
 		});
+
+		$("#chooseSize").val("").change();
 	});
 	/**
 	*  OLD Colors Adding

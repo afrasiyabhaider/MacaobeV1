@@ -215,12 +215,17 @@
                     "searchable": false
                 } ],
                 // aaSorting: [3, 'asc'],
-                pageLength: 100,
+               pageLength: 100,
                 lengthMenu: [
-                    [20, 50, 70, 100, 300, 500, 1000, -1],
-                    [20, 50, 70, 100, 300, 500, 1000, 'All'],
+                    [30, 40, 60, 80, 90, 100, 300, 500, 1000, -1],
+                    [30, 40, 60, 80, 90, 100, 300, 500, 1000, 'All'],
                 ],
                 columns: [
+                        {
+                        data: 'DT_Row_Index',
+                        searchable: false,
+                        orderable: false
+                        },
                         { data: 'mass_delete'},
                         { data: 'printing_qty'},
                         { data: 'image', name: 'products.image'  },

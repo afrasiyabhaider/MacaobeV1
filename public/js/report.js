@@ -123,6 +123,11 @@ $(document).ready(function() {
         ],
         aaSorting: [2, 'asc'],
         columns: [{
+                data: 'DT_Row_Index',
+                searchable: false,
+                orderable: false
+            },
+            {
                 data: 'mass_delete',
                 orderable: false,
                 searchable: false

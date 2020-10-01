@@ -431,6 +431,7 @@ class ProductController extends Controller
 
 
             return Datatables::of($products)
+                ->addIndexColumn()
                 ->addColumn(
                     'action',
                     function ($row) use ($selling_price_group_count) {
