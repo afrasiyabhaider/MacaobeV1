@@ -1056,6 +1056,7 @@
       });
       
       $("#btnSubmit").click();
+      $("#product_add_form").submit();
 
 	 $("#unit_price").focus();
     }
