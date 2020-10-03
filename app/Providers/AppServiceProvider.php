@@ -118,6 +118,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->registerCommands();
+
+        date_default_timezone_set('Europe/Madrid');
     }
 
     /**

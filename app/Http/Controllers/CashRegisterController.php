@@ -360,7 +360,7 @@ class CashRegisterController extends Controller
 
         // dd($cash_in_hand);
 
-        // dd($register_details);
+        dd($register_details);
         return view('cash_register.register_details')
             ->with(compact('register_details', 'details', 'transactions', 'discount', 'gift_card', 'coupon', 'card', 'cash', 'cash_in_hand', 'forced_prices'));
     }

@@ -106,8 +106,8 @@ class LoginController extends Controller
         if (!empty($register)) {
             $open_date = Carbon::parse($register->created_at)->format('d-m-Y');
             $current = Carbon::now()->format('d-m-Y');
+            // dd($register, $open_date, $current);
             if ($open_date != $current) {
-                // dd($register);
                 $cashRegisterUtil = new CashRegisterUtil();
                 $total_sale = $cashRegisterUtil->getRegisterDetails($location_id)->total_sale;
                 $register->closing_amount = $total_sale;
