@@ -1482,16 +1482,16 @@ class ReportController extends Controller
                 })
                 ->removeColumn('enable_stock')
                 ->removeColumn('unit')
-                // ->setRowAttr([
-                //     'data-href' => function ($row) {
-                //         if (auth()->user()->can("product.view")) {
-                //             return  action('ProductController@view', [$row->product()->first()->id]);
-                //         } else {
-                //             return '';
-                //         }
-                //     }
-                // ])
-                // ->removeColumn('id')
+                ->setRowAttr([
+                    'data-href' => function ($row) {
+                        if (auth()->user()->can("product.view")) {
+                            return  action('ProductController@view', [$row->product()->first()->id]);
+                        } else {
+                            return '';
+                        }
+                    }
+                ])
+                ->removeColumn('id')
                 ->rawColumns(['mass_delete', 'printing_qty', 'unit_price', 'total_transfered', 'location_name', 'total_sold', 'total_adjusted', 'stock', 'actions', 'image'])
                 ->make(true);
         }
