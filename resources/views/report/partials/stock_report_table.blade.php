@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-bordered ajax_view table-striped" id="stock_report_table">
+    <table class="table table-bordered ajax_view table-striped dataTable" id="stock_report_table">
         <thead>
             <tr>
                 <th>
@@ -23,13 +23,13 @@
                 <th>Category</th>
                 <th>Sub-Category</th>
                 <th>Size</th>
+                <th>Description</th>
                 <th>Sale Percentage</th>
                 <th>@lang('report.current_stock')</th>
                 <th>Total Sold</th>
                 <th>Total Transfered</th>
                 <th>Supplier</th>
                 <th>Transfered On</th>
-                <th>Description</th>
                 {{-- <th>@lang('lang_v1.total_unit_adjusted')</th> --}}
             </tr>
         </thead>

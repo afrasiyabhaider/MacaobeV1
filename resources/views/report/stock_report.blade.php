@@ -7,11 +7,12 @@
 <section class="content-header">
     <h1>{{ __('report.stock_report')}}</h1>
 </section>
-<div class="modal fade in" tabindex="-1" role="dialog" id="unknownDiscountModal" >
+<div class="modal fade in" tabindex="-1" role="dialog" id="unknownDiscountModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button"  id="closeThis" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">Ã—</span></button>
+                <button type="button" id="closeThis" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">Ã—</span></button>
                 <h4 class="modal-title">SELECT BUSSINESS</h4>
             </div>
             <div class="modal-body">
@@ -20,26 +21,28 @@
                         <div class="form-group">
                             {!! Form::label('category_id', 'Business :') !!}
                             @foreach ($business_locations as $key=>$value)
-                                {{-- @if ($key != 1 && $value != "Main Shop") --}}
-                                    @php
-                                        $newBusiness_locations[$key] = $value;
-                                    @endphp
-                                {{-- @endif --}}
+                            {{-- @if ($key != 1 && $value != "Main Shop") --}}
+                            @php
+                            $newBusiness_locations[$key] = $value;
+                            @endphp
+                            {{-- @endif --}}
                             @endforeach
                             {{-- {{dd(collect($newBusiness_locations))}} --}}
                             {{-- <select name="category_id" id="transferBusiness" class="form-control select2" style="width:100%">
                                 <optgroup>
                                     <option value="all">{{__('lang_v1.all')}}</option>
-                                    @foreach ($business_locations as $key=>$item)
-                                        @if ($key != 1 && $item != "Main Shop")
-                                            <option value="{{$key}}">
-                                                {{$item}}
-                                            </option>
-                                        @endif
-                                    @endforeach
-                                </optgroup>
+                            @foreach ($business_locations as $key=>$item)
+                            @if ($key != 1 && $item != "Main Shop")
+                            <option value="{{$key}}">
+                                {{$item}}
+                            </option>
+                            @endif
+                            @endforeach
+                            </optgroup>
                             </select> --}}
-                            {!! Form::select('category_id', collect($newBusiness_locations), null, ['class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'transferBussiness', 'placeholder' => __('lang_v1.all')]); !!}
+                            {!! Form::select('category_id', collect($newBusiness_locations), null, ['class' =>
+                            'form-control select2', 'style' => 'width:100%', 'id' => 'transferBussiness', 'placeholder'
+                            => __('lang_v1.all')]); !!}
                         </div>
                     </div>
                 </div>
@@ -57,86 +60,123 @@
         <div class="col-md-12">
             {{-- @dd($business_locations) --}}
             @component('components.filters', ['title' => __('report.filters')])
-              {!! Form::open(['url' => action('ReportController@getStockReport'), 'method' => 'get', 'id' => 'stock_report_filter_form' ]) !!}
-                <div class="col-md-3">
-                    <div class="form-group">
-                        {!! Form::label('location_id',  __('purchase.business_location') . ':') !!}
-                        {!! Form::select('location_id', $business_locations, null, ['class' => 'form-control select2', 'style' => 'width:100%']); !!}
-                    </div>
+            {!! Form::open(['url' => action('ReportController@getStockReport'), 'method' => 'get', 'id' =>
+            'stock_report_filter_form' ]) !!}
+            <div class="col-md-3">
+                <div class="form-group">
+                    {!! Form::label('location_id', __('purchase.business_location') . ':') !!}
+                    {!! Form::select('location_id', $business_locations, null, ['class' => 'form-control select2',
+                    'style' => 'width:100%']); !!}
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        {!! Form::label('category_id', __('category.category') . ':') !!}
-                        {!! Form::select('category', $categories, null, ['placeholder' => __('messages.all'), 'class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'category_id']); !!}
-                    </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    {!! Form::label('category_id', __('category.category') . ':') !!}
+                    {!! Form::select('category', $categories, null, ['placeholder' => __('messages.all'), 'class' =>
+                    'form-control select2', 'style' => 'width:100%', 'id' => 'category_id']); !!}
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        {!! Form::label('sub_category_id', __('product.sub_category') . ':') !!}
-                        {!! Form::select('sub_category', array(), null, ['placeholder' => __('messages.all'), 'class' => 'form-control select2', 'style' => 'width:100%', 'id' => 'sub_category_id']); !!}
-                    </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    {!! Form::label('sub_category_id', __('product.sub_category') . ':') !!}
+                    {!! Form::select('sub_category', array(), null, ['placeholder' => __('messages.all'), 'class' =>
+                    'form-control select2', 'style' => 'width:100%', 'id' => 'sub_category_id']); !!}
                 </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        {!! Form::label('suppliers', 'Suppliers :') !!}
-                        {!! Form::select('suppliers', $suppliers, null, ['placeholder' => __('messages.all'), 'class' => 'form-control select2', 'style' => 'width:100%']); !!}
-                    </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    {!! Form::label('suppliers', 'Suppliers :') !!}
+                    {!! Form::select('suppliers', $suppliers, null, ['placeholder' => __('messages.all'), 'class' =>
+                    'form-control select2', 'style' => 'width:100%']); !!}
                 </div>
-                {{-- <div class="col-md-3">
+            </div>
+            {{-- <div class="col-md-3">
                     <div class="form-group">
                         {!! Form::label('unit',__('product.unit') . ':') !!}
                         {!! Form::select('unit', $units, null, ['placeholder' => __('messages.all'), 'class' => 'form-control select2', 'style' => 'width:100%']); !!}
                     </div>
                 </div> --}}
-                <div class="row" id="location_filter">
-                    <div class="form-group col-md-3">
-                        {!! Form::label('from_date',   ' From Date:') !!}
-                        <input type="date" name="product_list_from_date" value="{{date('Y-m-d')}}" id="product_list_from_date" class="form-control">
-                    </div>
-                    <div class="form-group col-md-3">
-                        {!! Form::label('to_date',   ' To Date:') !!}
-                        <input type="date" name="product_list_to_date" id="product_list_to_date" value="" class="form-control">
-                    </div> 
+            <div class="row" id="location_filter">
+                <div class="form-group col-md-3">
+                    {!! Form::label('from_date', ' From Date:') !!}
+                    <input type="date" name="product_list_from_date" value="{{date('Y-m-d')}}"
+                        id="product_list_from_date" class="form-control">
                 </div>
-                {!! Form::close() !!}
+                <div class="form-group col-md-3">
+                    {!! Form::label('to_date', ' To Date:') !!}
+                    <input type="date" name="product_list_to_date" id="product_list_to_date" value=""
+                        class="form-control">
+                </div>
+            </div>
+            {!! Form::close() !!}
             @endcomponent
         </div>
     </div>
-    
-    @component('components.widget', ['class' => 'box-primary'])
-    <div class="row">
-        <div class="col-12">
-            {!! Form::open(['url' => action('ProductController@massBulkPrint'), 'method' => 'post', 'id' => 'bulkPrint_form' ]) !!}
-                    {{-- {!! Form::submit('Print Selected', array('class' => 'btn btn-md btn-warning', 'id' => 'bulkPrint-selected')) !!} --}}
-                    {!! Form::hidden('selected_products_bulkPrint', null, ['id' => 'selected_products_bulkPrint']); !!}
-                    {!! Form::hidden('selected_products_bulkPrint_qty', null, ['id' => 'selected_products_bulkPrint_qty']); !!}
-                    {!! Form::hidden('printing_location_id', 1, ['id' => 'printing_location_id']); !!}
 
-                    <button type="submit" class="btn btn-success pull-left" id="bulkPrint-selected" style="margin-left: 20px">
-                        <i class="fa fa-print"></i> 
-                        Print Selected
-                    </button>
-            {!! Form::close() !!}
-            {!! Form::open(['url' => action('ProductController@massTransfer'), 'method' => 'post', 'id' => 'bulkTransfer_form','class' => 'ml-5' ]) !!}
-            {!! Form::hidden('selected_products_bulkTransfer', null, ['id' => 'selected_products_bulkTransfer']); !!}
-            {!! Form::hidden('selected_products_qty_bulkTransfer', null, ['id' => 'selected_products_qty_bulkTransfer']); !!}
-            {!! Form::hidden('bussiness_bulkTransfer', null, ['id' => 'bussiness_bulkTransfer']); !!}
-            {!! Form::hidden('current_location', null, ['id' => 'current_location']); !!}
-            {{-- {!! Form::submit(' Transfer Selected', array('class' => 'btn btn-warning', 'id' => 'bulkTransfer-selected')) !!} --}}
-            <button type="submit" class="btn btn-warning" id="bulkTransfer-selected">
-                <i class="fa fa-random"></i>
-                Transfer Selected
-            </button>
-            {!! Form::close() !!}
-        </div>
-    </div>
-    <div class="row" style="margin-top: 20px;">
-        <div class="col-md-12">
-                @include('report.partials.stock_report_table')
+    @component('components.widget', ['class' => 'box-primary'])
+    <div class="form-row">
+        <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#psr_detailed_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-list"
+                        aria-hidden="true"></i> @lang('lang_v1.detailed')</a>
+                    </li>
+                    
+                    <li>
+                        <a href="#psr_grouped_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-cart-plus"
+                            aria-hidden="true"></i> Grouped Products</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="psr_detailed_tab">
+                    <div class="row" style="margin-bottom: 20px">
+                        <div class="col-12">
+                            {!! Form::open(['url' => action('ProductController@massBulkPrint'), 'method' => 'post', 'id' =>
+                            'bulkPrint_form' ]) !!}
+                            {{-- {!! Form::submit('Print Selected', array('class' => 'btn btn-md btn-warning', 'id' => 'bulkPrint-selected')) !!} --}}
+                            {!! Form::hidden('selected_products_bulkPrint', null, ['id' => 'selected_products_bulkPrint']); !!}
+                            {!! Form::hidden('selected_products_bulkPrint_qty', null, ['id' => 'selected_products_bulkPrint_qty']); !!}
+                            {!! Form::hidden('printing_location_id', 1, ['id' => 'printing_location_id']); !!}
+                
+                            <button type="submit" class="btn btn-success pull-left" id="bulkPrint-selected" style="margin-left: 20px">
+                                <i class="fa fa-print"></i>
+                                Print Selected
+                            </button>
+                            {!! Form::close() !!}
+                            {!! Form::open(['url' => action('ProductController@massTransfer'), 'method' => 'post', 'id' =>
+                            'bulkTransfer_form','class' => 'ml-5' ]) !!}
+                            {!! Form::hidden('selected_products_bulkTransfer', null, ['id' => 'selected_products_bulkTransfer']); !!}
+                            {!! Form::hidden('selected_products_qty_bulkTransfer', null, ['id' =>
+                            'selected_products_qty_bulkTransfer']); !!}
+                            {!! Form::hidden('bussiness_bulkTransfer', null, ['id' => 'bussiness_bulkTransfer']); !!}
+                            {!! Form::hidden('current_location', null, ['id' => 'current_location']); !!}
+                            {{-- {!! Form::submit(' Transfer Selected', array('class' => 'btn btn-warning', 'id' => 'bulkTransfer-selected')) !!} --}}
+                            <button type="submit" class="btn btn-warning" id="bulkTransfer-selected">
+                                <i class="fa fa-random"></i>
+                                Transfer Selected
+                            </button>
+                            {!! Form::close() !!}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            @include('report.partials.stock_report_table')
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="psr_grouped_tab">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @include('report.partials.grouped_stock_report_table')
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        @endcomponent
-        <div class="modal fade" id="view_product_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel"></div>
+    </div>
+    @endcomponent
+    <div class="modal fade" id="view_product_modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+    </div>
 </section>
 <!-- /.content -->
 
@@ -144,9 +184,9 @@
 
 @section('javascript')
 {{-- <script src="{{ asset('js/product.js?v=' . $asset_v) }}"></script> --}}
-    <script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
-    <script>
-        $(document).on('shown.bs.modal', 'div.view_product_modal, div.view_modal', function(){
+<script src="{{ asset('js/report.js?v=' . $asset_v) }}"></script>
+<script>
+    $(document).on('shown.bs.modal', 'div.view_product_modal, div.view_modal', function(){
             __currency_convert_recursively($(this));
         });
         // $(document).on('click', '#bulkPrint-selected', function(e){
@@ -301,5 +341,5 @@
                     swal('@lang("lang_v1.no_row_selected")');
                 }    
             })
-    </script>
+</script>
 @endsection
