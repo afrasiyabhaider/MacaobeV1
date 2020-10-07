@@ -284,14 +284,14 @@ $(document).ready(function() {
                 data: 'unit_price',
                 name: 'variations.sell_price_inc_tax'
             },
-            {
-                data: 'category_name',
-                name: 'categories.name'
-            },
-            {
-                data: 'sub_category_name',
-                name: 'sub_cat.name'
-            },
+            // {
+            //     data: 'category_name',
+            //     name: 'categories.name'
+            // },
+            // {
+            //     data: 'sub_category_name',
+            //     name: 'sub_cat.name'
+            // },
             {
                 data: 'stock',
                 name: 'stock',

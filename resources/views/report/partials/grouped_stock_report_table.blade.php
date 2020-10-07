@@ -11,8 +11,8 @@
                     <th>Location Name</th>
                     {{-- <th>Actions</th> --}}
                     <th>@lang('sale.unit_price')</th>
-                    <th>Category</th>
-                    <th>Sub-Category</th>
+                    {{-- <th>Category</th>
+                    <th>Sub-Category</th> --}}
                     <th>@lang('report.current_stock')</th>
                     <th>Description</th>
                     {{-- <th>@lang('lang_v1.total_unit_adjusted')</th> --}}
@@ -20,7 +20,7 @@
           </thead>
           <tfoot>
                <tr class="bg-gray font-17 text-center footer-total">
-                    <td colspan="8"><strong>@lang('sale.total'):</strong></td>
+                    <td colspan="6"><strong>@lang('sale.total'):</strong></td>
                     <td id="footer_group_total_stock"></td>
                     <td></td>
                </tr>
