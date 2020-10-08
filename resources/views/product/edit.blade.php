@@ -245,11 +245,16 @@
               </optgroup>
             </select>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-6">
           <button type="submit" class="btn btn-success col-12 fa-2x" style="width:150px;padding:10px;font-size:20px;margin-top: 20px;"
             id="btnSubmit">
             <i class="fa fa-save"></i>
-            @lang('messages.update')
+            Edit
+          </button>
+          <button class="btn btn-success col-12 fa-2x" onclick="updateAll(this);"
+            style="width:150px;padding:10px;font-size:20px;margin-top: 20px;" type="button">
+            <i class="fa fa-globe"></i>
+            Update All
           </button>
         </div>
       </div>
@@ -501,6 +506,14 @@
 //         //return;
 // 	  }
     });
+
+    function updateAll(e) {
+      var form = $("#product_update_form");
+      event.preventDefault();
+      form.attr('action','{{url("products/update-all")}}');
+      form.submit();
+    }
+
      objPNC = <?=$pnc?>;
      rowSize = 0;
      function editPnc(x)
