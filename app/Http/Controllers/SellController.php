@@ -130,11 +130,15 @@ class SellController extends Controller
             }
 
             if (!empty(request()->input('payment_status'))) {
+                // dd(request()->input('payment_status'));
                 if (request()->input('payment_status') == "hide") {
-                    //   $sells->where('transactions.status', request()->input('payment_status'));
+                      $sells->where('transactions.status', request()->input('payment_status'));
                 } else {
                     $sells->where('transactions.payment_status', request()->input('payment_status'));
                 }
+            }
+            if (!empty(request()->input('payment_method'))) {
+                $sells->where('tp.method', request()->input('payment_method'));
             }
 
             //Add condition for location,used in sales representative expense report
@@ -289,7 +293,7 @@ class SellController extends Controller
                         $userId = request()->session()->get('user.id');
                         if ($userId == "1") {
                             $html .= '</ul>
-                            <br/> <span><input type="checkbox" title="Hide Status"   class="     checkbox check" name="check[]" id="' . $row->id . '" value="' . $row->id . '"  >  
+                            <br/>   
                             </div>';
                         } else {
                             $html .= '</ul> 
@@ -299,6 +303,10 @@ class SellController extends Controller
                         return $html;
                     }
                 )
+                ->addColumn('select_all',function ($row)
+                {
+                    return '<span><input type="checkbox" title="Hide Status"   class="row-select checkbox check" name="check[]" id="' . $row->id . '" value="' . $row->id . '"  >';
+                })
                 ->removeColumn('id')
                 ->editColumn(
                     'final_total',
@@ -362,20 +370,23 @@ class SellController extends Controller
                     if (!empty($row->recur_parent_id)) {
                         $invoice_no .= ' &nbsp;<small class="label bg-info label-round no-print" title="' . __('lang_v1.subscription_invoice') . '"><i class="fa fa-recycle"></i></small>';
                     }
+                    // $data = <a data-href='{{url('sells/'".$row->id.")}}' href='#' data-container='.view_modal' class='btn-modal'>".$invoice_no."</a>";
 
-                    return $invoice_no;
-                })
-                ->setRowAttr([
-                    'data-href' => function ($row) {
-                        if (auth()->user()->can("sell.view")) {
-                            return  action('SellController@show', [$row->id]);
-                        } else {
-                            return '';
-                        }
-                    }
-                ]);
+                    $data = '<a data-href="' . action('SellController@show', [$row->id])
+                    . '" href="#" data-container=".view_modal" class="btn-modal">' . $invoice_no . '</a>';
+                    return $data;
+                });
+                // ->setRowAttr([
+                //     'data-href' => function ($row) {
+                //         if (auth()->user()->can("sell.view")) {
+                //             return  action('SellController@show', [$row->id]);
+                //         } else {
+                //             return '';
+                //         }
+                //     }
+                // ]);
 
-            $rawColumns = ['final_total', 'action', 'total_paid', 'total_remaining', 'payment_status', 'invoice_no', 'discount_amount', 'tax_amount', 'total_before_tax'];
+            $rawColumns = ['final_total', 'action', 'total_paid', 'total_remaining', 'payment_status', 'invoice_no', 'discount_amount', 'tax_amount', 'total_before_tax', 'select_all'];
 
             return $datatable->rawColumns($rawColumns)
                 ->make(true);

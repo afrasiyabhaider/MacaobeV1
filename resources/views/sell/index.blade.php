@@ -49,6 +49,10 @@
                 <table class="table table-bordered table-striped ajax_view" id="sell_table">
                     <thead>
                         <tr>
+                            <th>
+                                <input type="checkbox" id="select-all-row">
+                                Select All
+                            </th>
                             <th>@lang('messages.date')</th>
                             <th>@lang('sale.invoice_no')</th>
                             <th>@lang('sale.customer_name')</th>
@@ -63,7 +67,7 @@
                     </thead>
                     <tfoot>
                         <tr class="bg-gray font-17 footer-total text-center">
-                            <td colspan="5"><strong>@lang('sale.total'):</strong></td>
+                            <td colspan="6"><strong>@lang('sale.total'):</strong></td>
                             <td id="footer_payment_status_count"></td>
                             <td><span class="display_currency" id="footer_sale_total" data-currency_symbol ="true"></span></td>
                             <td><span class="display_currency" id="footer_total_paid" data-currency_symbol ="true"></span></td>
@@ -214,6 +218,7 @@ $(document).ready( function(){
                 d.location_id = $('#sell_list_filter_location_id').val();
                 d.customer_id = $('#sell_list_filter_customer_id').val();
                 d.payment_status = $('#sell_list_filter_payment_status').val();
+                d.payment_method = $('#sell_list_filter_payment_method').val();
 
                 @if($is_woocommerce)
                     if($('#synced_from_woocommerce').is(':checked')) {
@@ -228,6 +233,7 @@ $(document).ready( function(){
             "searchable": false
         } ],
         columns: [
+            { data: 'select_all', name: 'select_all',orderable:false, searchable: false},
             { data: 'transaction_date', name: 'transaction_date'  },
             { data: 'invoice_no', name: 'invoice_no'},
             { data: 'name', name: 'contacts.name'},
@@ -258,7 +264,7 @@ $(document).ready( function(){
         }
     });
 
-    $(document).on('change', '#sell_list_filter_location_id, #sell_list_filter_customer_id, #sell_list_filter_payment_status',  function() {
+    $(document).on('change', '#sell_list_filter_location_id, #sell_list_filter_customer_id, #sell_list_filter_payment_status, #sell_list_filter_payment_method',  function() {
         sell_table.ajax.reload();
     });
     @if($is_woocommerce)
