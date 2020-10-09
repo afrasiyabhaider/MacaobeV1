@@ -1414,8 +1414,8 @@ class ProductController extends Controller
                 }
                 $product[$i]->refference = $request->input('refference');
                 $product[$i]->color_id = $request->input('color');
-                $product[$i]->size_id = $size->parent_id;
-                $product[$i]->sub_size_id = $request->input('size');
+                // $product[$i]->size_id = $size->parent_id;
+                // $product[$i]->sub_size_id = $request->input('size');
                 $product[$i]->sku = $request->input('sku');
                 $product[$i]->description = $request->input('description');
                 $product[$i]->product_updated_at = Carbon::now();
