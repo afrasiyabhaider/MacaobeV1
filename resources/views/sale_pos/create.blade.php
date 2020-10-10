@@ -17,62 +17,83 @@
 {{-- @dd($pos_settings) --}}
 <section class="content no-print">
 	<div class="row">
-		<div
-			class="@if(!empty($pos_settings['hide_product_suggestion']) && !empty($pos_settings['hide_recent_trans'])) col-md-10 col-md-offset-1 @else col-md-7 @endif col-sm-12">
+		<div class="@if(!empty($pos_settings['hide_product_suggestion']) && !empty($pos_settings['hide_recent_trans'])) col-md-10 col-md-offset-1 @else col-md-7 @endif col-sm-12">
 			@component('components.widget', ['class' => 'box-success'])
 			@slot('header')
-			<div class="col-sm-6">
-				<h3 class="box-title">POS Terminal <i class="fa fa-keyboard-o hover-q text-muted" aria-hidden="true"
-						data-container="body" data-toggle="popover" data-placement="bottom"
-						data-content="@include('sale_pos.partials.keyboard_shortcuts_details')" data-html="true"
-						data-trigger="hover" data-original-title="" title=""></i></h3>
-			</div>
-			<div>
-				{{-- onclick="openReturnWindow();" --}}
-				<a title="Return Sale" data-toggle="tooltip" data-placement="bottom"
-					class="btn btn-danger btn-md pull-right" href="{{url('sell-return/add')}}" target="__blank">
-					<strong><i class="fa fa-undo"></i></strong>
-					Return
-					{{-- <strong><i class="fa fa-asl-interpreting"></i></strong> --}}
-					{{-- RETURN --}}
-				</a>
-				<button type="button" onclick="openPopupWindow('/products/transfer');" title="Transfer Products"
-					data-toggle="tooltip" data-placement="bottom" class="btn btn-warning pull-right"
-					style="margin-right: 5px">
-					<strong><i class="fa fa-random fa-lg"></i></strong>
-					Transfer
-				</button>
-				<button type="button" title="Gift Card" data-toggle="tooltip" data-placement="bottom"
-					class="btn btn-success pos_add_quick_product pull-right"
-					data-href="{{action('GiftCardController@quickAdd')}}" data-container=".quick_add_product_modal"
-					style="margin-right: 5px">
-					<i class="fa fa-archive fa-lg"></i>
-					Gift Card
-				</button>
-				<button type="button" title="Add Cupons" data-toggle="tooltip" data-placement="bottom"
-					class=" btn btn-success pos_add_quick_product pull-right"
-					data-href="{{action('CouponController@quickAdd')}}" data-container=".quick_add_product_modal"
-					style="margin-right: 5px">
-					<i class="fa fa-calendar-check-o fa-lg"></i>
-					Cupon
-				</button>
+			<div class="row" style="margin-bottom: 20px;">
+				<div class="col-sm-4">
+					<h3 class="box-title">POS Terminal <i class="fa fa-keyboard-o hover-q text-muted" aria-hidden="true"
+							data-container="body" data-toggle="popover" data-placement="bottom"
+							data-content="@include('sale_pos.partials.keyboard_shortcuts_details')" data-html="true"
+							data-trigger="hover" data-original-title="" title=""></i></h3>
+				</div>
+				<div class="col-sm-8">
+					{{-- onclick="openReturnWindow();" --}}
+					<a title="Return Sale" data-toggle="tooltip" data-placement="bottom" class="btn btn-danger btn-md pull-right"
+						href="{{url('sell-return/add')}}" target="__blank">
+						<strong><i class="fa fa-undo"></i></strong>
+						Return
+						{{-- <strong><i class="fa fa-asl-interpreting"></i></strong> --}}
+						{{-- RETURN --}}
+					</a>
+					<button type="button" onclick="openPopupWindow('/products/transfer');" title="Transfer Products"
+						data-toggle="tooltip" data-placement="bottom" class="btn btn-warning pull-right" style="margin-right: 5px">
+						<strong><i class="fa fa-random fa-lg"></i></strong>
+						Transfer
+					</button>
+					<button type="button" title="Gift Card" data-toggle="tooltip" data-placement="bottom"
+						class="btn btn-success pos_add_quick_product pull-right" data-href="{{action('GiftCardController@quickAdd')}}"
+						data-container=".quick_add_product_modal" style="margin-right: 5px">
+						<i class="fa fa-archive fa-lg"></i>
+						Gift Card
+					</button>
+					<button type="button" title="Add Cupons" data-toggle="tooltip" data-placement="bottom"
+						class=" btn btn-success pos_add_quick_product pull-right" data-href="{{action('CouponController@quickAdd')}}"
+						data-container=".quick_add_product_modal" style="margin-right: 5px">
+						<i class="fa fa-calendar-check-o fa-lg"></i>
+						Cupon
+					</button>
+					<br>
+					<br>
+					<a title="Return Sale" data-toggle="tooltip" data-placement="bottom" class="btn btn-info btn-md pull-right"
+						href="{{url('products/')}}" target="__blank" style="margin-right: 5px; margin-top: 10px;">
+						<strong><i class="fa fa-list-ul"></i></strong>
+						List Product
+						{{-- <strong><i class="fa fa-asl-interpreting"></i></strong> --}}
+						{{-- RETURN --}}
+					</a>
+					<a title="Return Sale" data-toggle="tooltip" data-placement="bottom" class="btn btn-info btn-md pull-right"
+						href="{{url('reports/product-sell-report')}}" target="__blank" style="margin-right: 5px; margin-top: 10px;">
+						<strong><i class="fa fa-dollar"></i></strong>
+						Sale Report
+					</a>
+					<a title="Return Sale" data-toggle="tooltip" data-placement="bottom" class="btn btn-info btn-md pull-right"
+						href="{{url('reports/stock-report')}}" target="__blank" style="margin-right: 5px; margin-top: 10px;">
+						<strong>
+							<i class="fa fa-inbox"></i>
+						</strong>
+						Stock Report
+					</a>
+				</div>
 			</div>
 			<input type="hidden" id="item_addition_method" value="{{$business_details->item_addition_method}}">
 			@if(is_null($default_location))
-			<div class="col-sm-6">
-				<div class="form-group" style="margin-bottom: 0px;">
-					<div class="input-group">
-						<span class="input-group-addon">
-							<i class="fa fa-map-marker"></i>
-						</span>
-						{!! Form::select('select_location_id', $business_locations, null, ['class' =>
-						'form-control input-sm mousetrap ',
-						'placeholder' => __('lang_v1.select_location'),
-						'id' => 'select_location_id',
-						'required', 'autofocus'], $bl_attributes); !!}
-						<span class="input-group-addon">
-							@show_tooltip(__('tooltip.sale_location'))
-						</span>
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="form-group" style="margin-bottom: 0px;">
+						<div class="input-group">
+							<span class="input-group-addon">
+								<i class="fa fa-map-marker"></i>
+							</span>
+							{!! Form::select('select_location_id', $business_locations, null, ['class' =>
+							'form-control input-sm mousetrap ',
+							'placeholder' => __('lang_v1.select_location'),
+							'id' => 'select_location_id',
+							'required', 'autofocus'], $bl_attributes); !!}
+							<span class="input-group-addon">
+								@show_tooltip(__('tooltip.sale_location'))
+							</span>
+						</div>
 					</div>
 				</div>
 			</div>

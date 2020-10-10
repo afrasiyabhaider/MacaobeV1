@@ -13,7 +13,10 @@
 	.margin-top {
 		margin-top: 20px !important;
 		margin-right: 20px !important;
-		margin-left: 60px !important;
+		margin-left: 40px !important;
+	}
+	.coupon-ml{
+		margin-left: 40px !important;
 	}
 </style>
 <div class="row">
@@ -503,7 +506,7 @@
 			<h1> Coupon Details</h1>
 		</p>
 		<p>
-			<img class="center-block margin-top"
+			<img class="center-block margin-top coupon-ml"
 				src="data:image/png;base64,{{DNS1D::getBarcodePNG($obj['barcode'], 'C128', 2,40,array(55, 55, 55), false)}}">
 		</p>
 		@php

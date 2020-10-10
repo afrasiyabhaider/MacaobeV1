@@ -554,12 +554,16 @@ $(document).ready(function() {
 
                     var total_payable = __read_number($('input#final_total_input'));
                     var total_paying = __read_number($('input#total_paying_input'));
+
+                    console.log(total_payable + ' - ' + total_paying);
+
                     var b_due = total_payable - total_paying;
                     $(appended).find('input.payment-amount').focus();
+                    // .val(__currency_trans_from_en(b_due, false))
                     $(appended)
                         .find('input.payment-amount')
                         .last()
-                        .val(__currency_trans_from_en(b_due, false))
+                        .val(b_due)
                         .change()
                         .select();
                     __select2($(appended).find('.select2'));
