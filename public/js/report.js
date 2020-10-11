@@ -367,8 +367,8 @@ $(document).ready(function() {
         $('#purchase_product_date_range').daterangepicker({
             ranges: ranges,
             // autoUpdateInput: true,
-            // startDate: dateFrom,
-            // endDate: dateTo,
+            startDate: financial_year.start,
+            endDate: financial_year.end,
             locale: {
                 format: moment_date_format,
                 cancelLabel: LANG.clear,
@@ -1153,7 +1153,19 @@ $(document).ready(function() {
 
     // Product Purchase Date
     if ($('#product_purchase_date_filter').length == 1) {
-        $('#product_purchase_date_filter').daterangepicker(dateRangeSettings, function(start, end) {
+        var purchasedateRangeSettings = {
+            ranges: ranges,
+            startDate: financial_year.start,
+            endDate: financial_year.end,
+            locale: {
+                cancelLabel: LANG.clear,
+                applyLabel: LANG.apply,
+                customRangeLabel: LANG.custom_range,
+                format: moment_date_format,
+                toLabel: '~',
+            },
+        };
+        $('#product_purchase_date_filter').daterangepicker(purchasedateRangeSettings, function(start, end) {
             $('#product_purchase_date_filter').val(
                 start.format(moment_date_format) + ' ~ ' + end.format(moment_date_format)
             );

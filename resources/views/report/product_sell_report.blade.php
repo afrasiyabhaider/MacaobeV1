@@ -85,15 +85,46 @@
             <div class="nav-tabs-custom">
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a href="#psr_detailed_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-list" aria-hidden="true"></i> @lang('lang_v1.detailed')</a>
+                        <a href="#psr_grouped_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-cart-plus" aria-hidden="true"></i>
+                            Grouped Sold Products</a>
                     </li>
-
-                    <li>
-                        <a href="#psr_grouped_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-cart-plus" aria-hidden="true"></i> Grouped Sold Products</a>
+                    <li >
+                        <a href="#psr_detailed_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-list" aria-hidden="true"></i> @lang('lang_v1.detailed')</a>
                     </li>
                 </ul>
                 <div class="tab-content">
-                    <div class="tab-pane active" id="psr_detailed_tab">
+                    <div class="tab-pane active" id="psr_grouped_tab">
+                        <div class="table-responsive">
+                            <table class="table table-bordered ajax_view table-striped dataTable" id="product_sell_grouped_report_table"
+                                style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>@lang('sale.product')</th>
+                                        {{-- <th>Purchase Date</th> --}}
+                                        <th>Reffernce</th>
+                                        {{-- <th>Total Sold</th> --}}
+                                        {{-- <th>Barcode</th>
+                                                            <th>@lang('messages.date')</th> --}}
+                                        <th>@lang('report.current_stock')</th>
+                                        <th>@lang('report.total_unit_sold')</th>
+                                        <th>Sale Percentage</th>
+                                        <th>@lang('sale.total')</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr class="bg-gray font-17 footer-total text-center">
+                                        <td colspan="4"><strong>@lang('sale.total'):</strong></td>
+                                        <td id="footer_total_grouped_sold"></td>
+                                        <td></td>
+                                        <td><span class="display_currency" id="footer_grouped_subtotal" data-currency_symbol="true"></span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="psr_detailed_tab">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped ajax_view dataTable" 
                             id="product_sell_report_table">
@@ -133,37 +164,6 @@
                                         <td colspan="5"></td>
                                         <td><span class="display_currency" id="footer_subtotal" data-currency_symbol ="true"></span></td>
                                         <td colspan="4"></td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="tab-pane" id="psr_grouped_tab">
-                        <div class="table-responsive">
-                            <table class="table table-bordered ajax_view table-striped dataTable" 
-                            id="product_sell_grouped_report_table" style="width: 100%;">
-                                <thead>
-                                    <tr>
-                                        <th>Image</th>
-                                        <th>@lang('sale.product')</th>
-                                        {{-- <th>Purchase Date</th> --}}
-                                        <th>Reffernce</th>
-                                        {{-- <th>Total Sold</th> --}}
-                                        {{-- <th>Barcode</th>
-                                        <th>@lang('messages.date')</th> --}}
-                                        <th>@lang('report.current_stock')</th>
-                                        <th>@lang('report.total_unit_sold')</th>
-                                        <th>Sale Percentage</th>
-                                        <th>@lang('sale.total')</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr class="bg-gray font-17 footer-total text-center">
-                                        <td colspan="4"><strong>@lang('sale.total'):</strong></td>
-                                        <td id="footer_total_grouped_sold"></td>
-                                        <td></td>
-                                        <td><span class="display_currency" id="footer_grouped_subtotal" data-currency_symbol ="true"></span></td>
                                     </tr>
                                 </tfoot>
                             </table>

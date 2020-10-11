@@ -118,17 +118,26 @@
         <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
                 <li class="active">
-                    <a href="#psr_detailed_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-list"
-                        aria-hidden="true"></i> @lang('lang_v1.detailed')</a>
-                    </li>
-                    
-                    <li>
-                        <a href="#psr_grouped_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-cart-plus"
-                            aria-hidden="true"></i> Grouped Products</a>
+                    <a href="#psr_grouped_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-cart-plus" aria-hidden="true"></i>
+                        Grouped Products</a>
                 </li>
+
+                <li>
+                <a href="#psr_detailed_tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-list"
+                    aria-hidden="true"></i> @lang('lang_v1.detailed')</a>
+                </li>
+                
+                
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active" id="psr_detailed_tab">
+                <div class="tab-pane active" id="psr_grouped_tab">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @include('report.partials.grouped_stock_report_table')
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="psr_detailed_tab">
                     <div class="row" style="margin-bottom: 20px">
                         <div class="col-12">
                             {!! Form::open(['url' => action('ProductController@massBulkPrint'), 'method' => 'post', 'id' =>
@@ -164,13 +173,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane" id="psr_grouped_tab">
-                    <div class="row">
-                        <div class="col-md-12">
-                            @include('report.partials.grouped_stock_report_table')
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
