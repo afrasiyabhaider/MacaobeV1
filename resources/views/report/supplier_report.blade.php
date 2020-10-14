@@ -80,11 +80,11 @@
         ],
         aaSorting: [2, 'asc'],
         columns: [
-            { data: 'supplier_name', name: 'supplier_name' },
-            { data: 'quantity_sold', name: 'quantity_sold' },
-            { data: 'quantity_available', name: 'quantity_available' },
-            { data: 'sale_percent', name: 'sale_percent' },
-            { data: 'total', name: 'total' },
+            { data: 'supplier_name', name: 'sup.name' },
+            { data: 'quantity_sold', name: 'quantity_sold',searchable:false },
+            { data: 'quantity_available', name: 'quantity_available',searchable:false },
+            { data: 'sale_percent', name: 'sale_percent',searchable:false },
+            { data: 'total', name: 'total',searchable:false },
           //   { data: 'transfered', name: 'transfered' },
         ],
     });

@@ -40,24 +40,24 @@
      <div class="row">
           <div class="col-md-12">
                @component('components.widget', ['class' => 'box-primary'])
-               <h4>Total Cash: <span class="display_currency" data-currency_symbol="false" id="total_cash"></span> €
+               <h4>Total Cash: <span class="display_currency total_cash" data-currency_symbol="false"></span> €
                </h4>
-               <h4>Total Card: <span class="display_currency" data-currency_symbol="false" id="total_card"></span> €
+               <h4>Total Card: <span class="display_currency total_card" data-currency_symbol="false"></span> €
                </h4>
-               <h4>Total Coupon: <span class="display_currency" data-currency_symbol="false" id="total_coupon"></span> €
+               <h4>Total Coupon: <span class="display_currency total_coupon" data-currency_symbol="false"></span> €
                </h4>
-               <h4>Total Gift Card: <span class="display_currency" data-currency_symbol="false"
-                         id="total_gift_card"></span>
+               <h4>Total Gift Card: <span class="display_currency total_gift_card" data-currency_symbol="false"></span>
                     €</h4>
-               {{-- <h4>Total Discount: <span class="display_currency" data-currency_symbol="false"
-                         id="total_discount"></span> € --}}
+               {{-- 
+                                   <h4>Total Discount: <span class="display_currency" data-currency_symbol="false"
+                                        id="total_discount"></span> € 
+                                   </h4>
+                                   <h4>Total Items: <span class="display_currency" data-currency_symbol="false" id="total_items"></span> 
+                              --}}
                </h4>
-               {{-- <h4>Total Items: <span class="display_currency" data-currency_symbol="false" id="total_items"></span>
-               </h4> --}}
-               <h4>Total Invoices: <span class="display_currency" data-currency_symbol="false"
-                         id="total_invoices"></span>
+               <h4>Total Invoices: <span class="display_currency total_invoices" data-currency_symbol="false"></span>
                </h4>
-               <h4>Total Amount: <span class="display_currency" data-currency_symbol="false" id="total_amount"></span> €
+               <h4>Total Amount: <span class="display_currency " data-currency_symbol="false" id="total_amount_top"></span> €
                </h4>
 
                <div class="table-responsive">
@@ -79,6 +79,33 @@
                                    </th>
                               </tr>
                          </thead>
+                         <tfoot>
+                              <tr>
+                                   <td></td>
+                                   <td>
+                                        Total
+                                   </td>
+                                   <td>
+                                        <span class="display_currency total_invoices" data-currency_symbol="false">
+                                   </td>
+                                   <td>
+                                        <span class="display_currency total_cash" data-currency_symbol="false"></span> €
+                                   </td>
+                                   <td>
+                                        <span class="display_currency total_card" data-currency_symbol="false"></span> €
+                                   </td>
+                                   <td>
+                                        <span class="display_currency total_gift_card" data-currency_symbol="false"></span>
+                                        €
+                                   </td>
+                                   <td>
+                                        <span class="display_currency total_coupon" data-currency_symbol="false"></span> €
+                                   </td>
+                                   <td>
+                                        <span class="display_currency" data-currency_symbol="false" id="total_amount"></span> €
+                                   </td>
+                              </tr>
+                         </tfoot>
                     </table>
                </div>
                @endcomponent
@@ -242,25 +269,28 @@
           ],
           fnDrawCallback: function(oSettings) {
                __currency_convert_recursively($('#daily_sale_report_table'));
+               $('#total_amount_top').text(
+               sum_table_col($('#daily_sale_report_table'), 'total_amount')
+               );
                $('#total_amount').text(
                sum_table_col($('#daily_sale_report_table'), 'total_amount')
                );
-               $('#total_cash').text(
+               $('.total_cash').text(
                sum_table_col($('#daily_sale_report_table'), 'cash_amount')
                );
-               $('#total_card').text(
+               $('.total_card').text(
                sum_table_col($('#daily_sale_report_table'), 'card_amount')
                );
-               $('#total_coupon').text(
+               $('.total_coupon').text(
                sum_table_col($('#daily_sale_report_table'), 'coupon_amount')
                );
-               $('#total_gift_card').text(
+               $('.total_gift_card').text(
                sum_table_col($('#daily_sale_report_table'), 'giftcard_amount')
                );
                // $('#total_discount').text(
                // sum_table_col($('#daily_sale_report_table'), 'discounted_amount')
                // );
-               $('#total_invoices').text(
+               $('.total_invoices').text(
                sum_table_col($('#daily_sale_report_table'), 'invoices')
                );
                // $('#total_items').text(

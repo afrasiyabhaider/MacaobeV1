@@ -90,11 +90,11 @@
         columns: [
             { data: 'image', sortable: false, searchable: false },
             { data: 'name', name: 'p.name' },
-            { data: 'refference', name: 'refference' },
-            { data: 'current_stock', name: 'current_stock' },
-            { data: 'total_sold', name: 'total_sold' },
-            { data: 'sizes', name: 'sizes' },
-            { data: 'transfered', name: 'transfered' },
+            { data: 'pro_refference', name: 'pro_refference', searchable: false },
+            { data: 'current_stock', name: 'current_stock', searchable: false },
+            { data: 'total_sold', name: 'total_sold', searchable: false },
+            { data: 'sizes', name: 'sizes', searchable: false },
+            { data: 'transfered', name: 'transfered', searchable: false },
         ],
     });
     $(
