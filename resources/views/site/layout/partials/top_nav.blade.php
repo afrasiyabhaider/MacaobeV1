@@ -48,6 +48,14 @@
                     <nav class="main-nav">
                          <ul class="menu sf-arrows">
                               {{-- <li class="active"><a href="index.html">Home</a></li> --}}
+                              @if (!Request::is('/'))
+                                   <li>
+                                        <a href="{{url('/')}}">
+                                             Home
+                                        </a>
+                                   </li>
+                                  
+                              @endif
                               <li>
                                     <a href="{{url('product/list')}}">
                                         All Products
