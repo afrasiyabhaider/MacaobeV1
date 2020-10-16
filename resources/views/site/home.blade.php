@@ -4,7 +4,7 @@
 
 @extends('site.layout.app')
 @section('title')
-    Home | {{config('app.site')}}
+    Home
 @endsection
 @section('content')
     <div class="home-slider-container">
@@ -84,6 +84,7 @@
                 @foreach ($featured as $item)
                     <div class="product-default inner-quickview inner-icon">
                         <figure>
+                            {{-- {{dd($item->products()->first())}} --}}
                             <a href="{{url('product/'.encrypt($item->products()->first()->id).'/detail')}}">
                                 @php
                                     $images = App\ProductImages::where('refference',$item->products()->first()->refference)->get();

@@ -27,7 +27,7 @@ class SiteController extends Controller
          *  so we did
          * 
         */
-        $data = VariationLocationDetails::where('location_id','=',$location_id)->join('products as p','p.id','=','variation_location_details.product_id')->groupBy('p.refference')->orderBy('p.created_at','Desc')->get();
+        $data = VariationLocationDetails::where('location_id','=',$location_id)->join('products as p','p.id','=','variation_location_details.product_id')->where('qty_available','>',0)->groupBy('p.refference')->orderBy('p.created_at','Desc')->get();
 
         $featured = SpecialCategoryProduct::where('featured',1)->get();
         $new_arrival = SpecialCategoryProduct::where('new_arrival',1)->get();
@@ -68,7 +68,7 @@ class SiteController extends Controller
         
         $product_ids = Product::where('refference',$product->refference)->pluck('id');
         
-        $web_product = VariationLocationDetails::whereIn('product_id',$product_ids)->where('location_id',$location_id)->get();
+        $web_product = VariationLocationDetails::whereIn('product_id',$product_ids)->where('location_id',$location_id)->where('qty_available','>',0)->get();
         
         // dd($web_product-);
 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\BusinessLocation;
 use App\LocationTransferDetail;
 use App\Product;
 use App\TransactionSellLine;
+use App\Variation;
 use App\VariationLocationDetails;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -124,6 +126,42 @@ class DataMigrationController extends Controller
 
             DB::commit();
             dd('Record Saved');
+        } catch (\Exception $ex) {
+            DB::rollback();
+            dd('Error Occured : '.$ex->getMessage().' in File: '.$ex->getFile().' on Line: '.$ex->getLine());
+        }
+    }
+    /**
+     *  Add Products to Web Shop in transaction_sell_lines
+     * 
+     **/
+    public function variation_location_details_web_shop()
+    {
+        try {
+            DB::beginTransaction();
+
+            $i=0;
+            $location_id = BusinessLocation::where('name', 'Web Shop')->orWhere('name', 'webshop')->orWhere('name', 'web shop')->orWhere('name', 'Website')->orWhere('name', 'website')->orWhere('name', 'MACAO WEBSHOP')->first()->id;
+            $products = Product::get();
+            foreach ($products as $key => $value) {
+                $variation = Variation::where('product_id',$value->id)
+                                        ->first();
+                $variation_location_d = new VariationLocationDetails();
+                $variation_location_d->variation_id = $variation->id;
+                $variation_location_d->product_id = $value->id;
+                $variation_location_d->product_refference = $value->refference;
+                $variation_location_d->location_id = $location_id;
+                $variation_location_d->product_variation_id = $variation->product_variation_id;
+                $variation_location_d->qty_available = 0;
+                $variation_location_d->printing_qty = 0;
+                $variation_location_d->product_updated_at = Carbon::now();
+
+                $variation_location_d->save();
+                $i++;
+            }
+
+            DB::commit();
+            dd($i.' of '.$products->count().' Record Saved');
         } catch (\Exception $ex) {
             DB::rollback();
             dd('Error Occured : '.$ex->getMessage().' in File: '.$ex->getFile().' on Line: '.$ex->getLine());

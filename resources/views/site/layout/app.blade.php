@@ -12,12 +12,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>
-        @yield('title')
+        @yield('title') - {{config('app.site')}}
     </title>
 
-    <meta name="keywords" content="HTML5 Template" />
-    <meta name="description" content="Porto - Bootstrap eCommerce Template">
-    <meta name="author" content="SW-THEMES">
+    <meta name="keywords" content="macao,belgium,shopping" />
+    <meta name="description" content="macaobe shop">
+    <meta name="author" content="Afrasiyab haider">
         
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{asset('site_assets/images/icons/favicon.ico')}}">

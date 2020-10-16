@@ -16,9 +16,9 @@ use Illuminate\Support\Facades\Auth;
 include_once('install_r.php');
 
 Route::middleware(['IsInstalled'])->group(function () {
-    Route::get('/', function () {
-        return redirect('/login');
-    });
+    // Route::get('/', function () {
+    //     return redirect('/login');
+    // });
 
     Auth::routes();
 
@@ -402,6 +402,7 @@ Route::middleware(['IsInstalled', 'auth', 'SetSessionData', 'language', 'timezon
     Route::get('location-transfer-details/product_data', 'DataMigrationController@location_transfer_detail_product_data');
     Route::get('transaction_sell_lines/product_data', 'DataMigrationController@transaction_sell_lines_product_data');
     Route::get('variation_location_details/product_data', 'DataMigrationController@variation_location_details_product_data');
+    Route::get('variation_location_details/web_shop', 'DataMigrationController@variation_location_details_web_shop');
 
     // Website Routes
     Route::get('website/product/list', 'WebsiteController@index');
@@ -454,8 +455,8 @@ Route::get('force-logout', function () {
  * 
  */
 
-Route::get('/', 'HomeController@index')->name('site.home');
-// Route::get('/', 'SiteController@home')->name('site.home');
+// Route::get('/', 'HomeController@index')->name('site.home');
+Route::get('/', 'SiteController@home')->name('site.home');
 Route::get('product/{id}/detail', 'SiteController@detail')->name('product.detail');
 
 Route::get('product/{ref}/color/{id}', 'SiteController@get_color_sizes');

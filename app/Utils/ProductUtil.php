@@ -437,7 +437,7 @@ class ProductUtil extends Util
         $variation = Variation::where('id', $variation_id)
                 ->where('product_id', $product_id)
                 ->first();
-        $locations= BusinessLocation::whereNotIn('id',[1,2])->pluck('id');
+        $locations= BusinessLocation::whereNotIn('id',[1])->pluck('id');
         // dd($locations);
 
         // New table for Purchase Report
