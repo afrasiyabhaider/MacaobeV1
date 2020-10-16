@@ -13,7 +13,7 @@
                     $logo = App\Business::first()->logo;
                @endphp
                <a href="{{url('/')}}">
-                    <img src="{{asset('uploads/business_logos/'.$logo)}}" alt="brand name" style="height:80px">
+                    <img src="{{asset('uploads/business_logos/'.$logo)}}" alt="{{config('app.name')}}" style="height:80px">
                </a>
           </div><!-- End .header-left -->
 
