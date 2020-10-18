@@ -489,7 +489,17 @@ class ProductController extends Controller
                             $html .=
                                 '<li><a href="' . action('ProductController@create', ["d" => $row->id]) . '"><i class="fa fa-copy"></i> ' . __("lang_v1.duplicate_product") . '</a></li>';
                         }
-
+                    if (auth()->user()->can('product.create')) {
+                        // $url = url("website/product/".$row->id."/special_category");
+                        $html .=
+                            '<li>
+                                    <a href="' . action('WebsiteController@specialCategoriesForm', [$row->id]) . '">
+                                    <i class="fa fa-sign-in"></i> Move To Special Category </a></li>';
+                        $html .=
+                            '<li>
+                                    <a href="' . action('WebsiteController@addImagesForm', [$row->id]) . '">
+                                    <i class="fa fa-image"></i> Add Images </a></li>';
+                    }
                         $html .= '</ul></div>';
 
                         return $html;
